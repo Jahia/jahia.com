@@ -17,5 +17,13 @@ jobs:
           path: dist/package.tgz
 
       # If the build is successful and the branch is main, push the module to Jahia
-      - if: success() && github.ref == 'refs/heads/main'
+      - if: github.ref == 'refs/heads/main'
         run: curl -s --user '${{ secrets.JAHIA_USER }}' --form bundle=@dist/package.tgz --form start=true '${{ secrets.JAHIA_HOST }}/modules/api/bundles'
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: browser-actions/setup-chrome@v1
+      - run: npx lighthouse@12 '${{ secrets.JAHIA_HOST }}/sites/jahiacom/home.html' --quiet --chrome-flags='--headless' --output=json | jq '.categories | map_values(.score)'
