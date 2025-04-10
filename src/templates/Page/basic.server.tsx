@@ -1,6 +1,7 @@
 import { Area, jahiaComponent } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { Layout } from "../Layout.jsx";
+import NavBar from "./NavBar.jsx";
 
 interface Props {
   "jcr:title": string;
@@ -16,18 +17,22 @@ jahiaComponent(
     name: "basic",
     displayName: "Basic page",
   },
-  ({
-    "jcr:title": title,
-    "jcr:description": description,
-    "seoKeywords": keywords,
-    openGraphImage,
-  }: Props) => (
+  (
+    {
+      "jcr:title": title,
+      "jcr:description": description,
+      "seoKeywords": keywords,
+      openGraphImage,
+    }: Props,
+    { renderContext, mainNode },
+  ) => (
     <Layout
       title={title}
       description={description}
       keywords={keywords}
       openGraphImage={openGraphImage}
     >
+      <NavBar root={renderContext.getSite().getHome()} current={mainNode} />
       <Area name="main" />
     </Layout>
   ),

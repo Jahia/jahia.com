@@ -1,0 +1,14 @@
+.nav {
+  display: flex;
+  padding: 1rem;
+  gap: 1rem;
+
+  > ul {
+    display: contents;
+    list-style: none;
+  }
+}
+
+.link[aria-current] {
+  font-weight: bold;
+}
