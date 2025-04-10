@@ -1,10 +1,9 @@
-# Build and upload the package on every push
-name: Build
+name: Build and Push
 
 on: push
 
 jobs:
-  build-and-upload:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,3 +15,7 @@ jobs:
         with:
           name: package.tgz
           path: dist/package.tgz
+
+      # If the build is successful and the branch is main, push the module to Jahia
+      - if: success() && github.ref == 'refs/heads/main'
+        run: curl -v --user ${{ secrets.JAHIA_USER }} --form bundle=@dist/package.tgz --form start=true ${{ secrets.JAHIA_HOST }}/modules/api/bundles
