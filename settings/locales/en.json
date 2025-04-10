@@ -1,0 +1,12 @@
+{
+  "Mbvdf2LrCB5sW9PUFXO48": "Hello <mark>{{name}}</mark>!",
+  "0U2mp51dWjqWXje4x-eUV": "Double-click to edit the name",
+  "7l9zetMbU4cKpL4NxSOtL": "Welcome to Jahia! You successfully created a new JavaScript Module and a Jahia Website built with it. Here are a few things you can do now:",
+  "8S0DVCRSnmQRKF9lZnNGj": "Illustrations by <a>Katerina Limpitsouni</a>",
+  "89D3xFLMZmCAencaqw68C": "Click this button to add a new content node",
+  "hBBhbeE0-a4KS9HVFPsOz": "Hydrated client-side",
+  "AI95bg1EJsr48SR-4f_pl": "Rendered server-side",
+  "OfBsezopuIko8aJ6X3kpw": "Despite being written with React, this page is fully rendered server-side. No JavaScript is sent to the client by default! This does not mean you cannot use client-side code:",
+  "nr31fYHB-RqO06BCl4rYO": "This pattern is named <a>Islands Architecture.</a>",
+  "JI87mYV8J5pAEST4RIUcb": "This page is available in:"
+}

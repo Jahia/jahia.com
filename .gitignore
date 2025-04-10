@@ -1,0 +1,15 @@
+# Intellij
+.idea
+!.idea/jsLinters/**
+!.idea/prettier.xml
+*.iml
+*.ipr
+
+# Node
+dist
+node_modules
+
+#Yarn
+.yarn
+yarn-error.log
+

@@ -1,0 +1,58 @@
+{
+  "name": "jahiacom",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist",
+    "src/**/*.cnd",
+    "settings",
+    "static"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit && vite build && run package",
+    "clean": "rm -rf dist/",
+    "deploy": "jahia-deploy",
+    "format": "prettier --write --list-different .",
+    "lint": "eslint .",
+    "package": "yarn pack --out dist/package.tgz",
+    "dev": "vite build --watch",
+    "watch": "run dev",
+    "watch:callback": "run package && run deploy"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.9.3",
+    "clsx": "^2.1.1",
+    "modern-normalize": "^3.0.1"
+  },
+  "devDependencies": {
+    "@eslint-react/eslint-plugin": "^1.26.2",
+    "@eslint/compat": "^1.2.6",
+    "@eslint/js": "^9.20.0",
+    "@jahia/javascript-modules-library": "latest",
+    "@jahia/vite-plugin": "latest",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/react": "^19.0.0",
+    "eslint": "^9.20.1",
+    "eslint-plugin-cypress": "^4.1.0",
+    "globals": "^15.15.0",
+    "i18next": "^23.10.1",
+    "prettier": "^3.5.1",
+    "react-i18next": "^15.4.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "typescript-plugin-css-modules": "^5.1.0",
+    "vite": "^6.1.0"
+  },
+  "packageManager": "yarn@4.7.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "yarn": ">=4.0.0"
+  },
+  "jahia": {
+    "snapshot": true,
+    "module-dependencies": "default",
+    "module-type": "templatesSet",
+    "server": "dist/server/index.js",
+    "static-resources": "/dist,/locales,/images,/icons"
+  }
+}

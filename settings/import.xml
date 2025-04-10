@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content
+  xmlns:j="http://www.jahia.org/jahia/1.0"
+  xmlns:jcr="http://www.jcp.org/jcr/1.0"
+  >
+  <modules jcr:primaryType="jnt:modules">
+    <jahiacom>
+      <home
+        j:isHomePage="true"
+        j:templateName="basic"
+        jcr:primaryType="jnt:page"
+        >
+        <j:translation_en
+          jcr:language="en"
+          jcr:mixinTypes="mix:title"
+          jcr:primaryType="jnt:translation"
+          jcr:title="Home"
+          />
+        <j:translation_fr
+          jcr:language="fr"
+          jcr:mixinTypes="mix:title"
+          jcr:primaryType="jnt:translation"
+          jcr:title="Accueil"
+          />
+        <main
+          jcr:mixinTypes="jmix:isAreaList"
+          jcr:primaryType="jnt:contentList"
+          >
+          <hello-world jcr:primaryType="jahiacom:helloWorld">
+            <j:translation_en
+              jcr:language="en"
+              jcr:primaryType="jnt:translation"
+              name="World"
+              />
+            <j:translation_fr
+              jcr:language="fr"
+              jcr:primaryType="jnt:translation"
+              name="le monde"
+              />
+            <read-the-documentation
+              jcr:primaryType="jahiacom:helloCard"
+              illustration="read"
+              >
+              <j:translation_en
+                jcr:language="en"
+                jcr:primaryType="jnt:translation"
+                title="Read the documentation"
+                />
+              <j:translation_fr
+                jcr:language="fr"
+                jcr:primaryType="jnt:translation"
+                title="Lire la documentation"
+                />
+            </read-the-documentation>
+            <code-a-new-component
+              jcr:primaryType="jahiacom:helloCard"
+              illustration="code"
+              >
+              <j:translation_en
+                jcr:language="en"
+                jcr:primaryType="jnt:translation"
+                title="Code a new component"
+                />
+              <j:translation_fr
+                jcr:language="fr"
+                jcr:primaryType="jnt:translation"
+                title="Coder un nouveau composant"
+                />
+            </code-a-new-component>
+            <explore-the-interface
+              jcr:primaryType="jahiacom:helloCard"
+              illustration="interface"
+              >
+              <j:translation_en
+                jcr:language="en"
+                jcr:primaryType="jnt:translation"
+                title="Explore the interface"
+                />
+              <j:translation_fr
+                jcr:language="fr"
+                jcr:primaryType="jnt:translation"
+                title="Explorer l'interface"
+                />
+            </explore-the-interface>
+            <create-content
+              jcr:primaryType="jahiacom:helloCard"
+              illustration="write"
+              >
+              <j:translation_en
+                jcr:language="en"
+                jcr:primaryType="jnt:translation"
+                title="Create content"
+                />
+              <j:translation_fr
+                jcr:language="fr"
+                jcr:primaryType="jnt:translation"
+                title="Créer du contenu"
+                />
+            </create-content>
+          </hello-world>
+        </main>
+      </home>
+    </jahiacom>
+  </modules>
+</content>

@@ -1,0 +1,18 @@
+# Build and upload the package on every push
+name: Build
+
+on: push
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: corepack enable
+      - run: yarn install
+      - run: yarn build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package.tgz
+          path: dist/package.tgz
