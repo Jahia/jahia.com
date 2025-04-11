@@ -1,4 +1,4 @@
-import { buildNodeUrl, getChildNodes } from "@jahia/javascript-modules-library";
+import { buildModuleFileUrl, buildNodeUrl, getChildNodes } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import classes from "./NavBar.module.css";
 
@@ -9,19 +9,27 @@ export default function NavBar({
   root: JCRNodeWrapper;
   current: JCRNodeWrapper;
 }) {
-  const link = (node: JCRNodeWrapper) => (
+  const link = (node: JCRNodeWrapper, children?: React.ReactNode) => (
     <a
       className={classes.link}
       href={buildNodeUrl(node)}
       aria-current={current.getIdentifier() === node.getIdentifier() ? "page" : undefined}
     >
-      {node.getProperty("jcr:title").getString()}
+      {children ?? node.getProperty("jcr:title").getString()}
     </a>
   );
 
   return (
     <nav className={classes.nav}>
-      {link(root)}
+      {link(
+        root,
+        <img
+          src={buildModuleFileUrl("static/logos/jahia.svg")}
+          alt="Jahia"
+          width="200"
+          height="96"
+        />,
+      )}
       <ul>
         {getChildNodes(root, -1, 0, (node) => node.isNodeType("jnt:page")).map((node) => (
           <li key={node.getIdentifier()}>
