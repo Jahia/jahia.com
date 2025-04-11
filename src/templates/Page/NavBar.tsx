@@ -15,7 +15,7 @@ export default function NavBar({
       href={buildNodeUrl(node)}
       aria-current={current.getIdentifier() === node.getIdentifier() ? "page" : undefined}
     >
-      {children ?? node.getProperty("jcr:title").getString()}
+      {children ?? node.getPropertyAsString("jcr:title")}
     </a>
   );
 

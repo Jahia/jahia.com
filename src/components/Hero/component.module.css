@@ -1,0 +1,44 @@
+.hero {
+  --cut: 2rem;
+  background-color: var(--jahia-background);
+  color: var(--jahia-color);
+  padding: 2rem 1rem;
+}
+
+.wrapper {
+  border: 1px solid var(--jahia-border);
+  border-bottom: 0;
+  padding: 2rem;
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut));
+  contain: paint;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -0.5px;
+    left: -0.5px;
+    width: var(--cut);
+    height: var(--cut);
+    background-color: var(--jahia-border);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+}
+
+.cta {
+  display: inline-block;
+  background: var(--jahia-blue);
+  color: var(--jahia-neutral-700);
+  padding: 1rem 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.image {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%
+  );
+  background-color: var(--jahia-border);
+}

@@ -33,6 +33,7 @@ jahiaComponent(
       openGraphImage={openGraphImage}
     >
       <NavBar root={renderContext.getSite().getHome()} current={mainNode} />
+      <Area name="hero" allowedNodeTypes={["jahiacom:hero"]} numberOfItems={1} />
       <Area name="main" />
     </Layout>
   ),

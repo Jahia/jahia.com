@@ -1,0 +1,24 @@
+:root {
+  /* Jahia color palette */
+  --jahia-light-blue: #e3f7ff;
+  --jahia-blue: #00a1e3;
+  --jahia-navy-blue: #001932;
+  --jahia-pink: #d6217d;
+  --jahia-orange: #ffab00;
+  --jahia-violet: #4f40d6;
+  --jahia-green: #12b08a;
+  --jahia-neutral-700: #001020;
+  --jahia-neutral-600: #3d556c;
+  --jahia-neutral-500: #727d87;
+  --jahia-neutral-400: #bac1c9;
+  --jahia-neutral-300: #dae0e7;
+  --jahia-neutral-200: #e6eaee;
+  --jahia-neutral-100: #f1f5f8;
+  --jahia-neutral-50: #ffffff;
+}
+
+[data-theme="night"] {
+  --jahia-background: var(--jahia-navy-blue);
+  --jahia-color: var(--jahia-neutral-50);
+  --jahia-border: var(--jahia-neutral-600);
+}
