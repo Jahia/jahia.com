@@ -7,7 +7,9 @@ import type { JCRNodeWrapper } from "org.jahia.services.content";
 import type { ReactNode } from "react";
 
 import "modern-normalize/modern-normalize.css";
+import "virtual:uno.css";
 import "./global.css";
+import "./themes.css";
 
 /** Places `children` in an html page. */
 export const Layout = ({
@@ -48,24 +50,24 @@ export const Layout = ({
             {openGraphImage.hasProperty("jcr:title") && (
               <meta
                 property="og:image:alt"
-                content={openGraphImage.getProperty("jcr:title").getString()}
+                content={openGraphImage.getPropertyAsString("jcr:title")}
               />
             )}
             {openGraphImage.hasProperty("j:width") && (
               <meta
                 property="og:image:width"
-                content={openGraphImage.getProperty("j:width").getString()}
+                content={openGraphImage.getPropertyAsString("j:width")}
               />
             )}
             {openGraphImage.hasProperty("j:height") && (
               <meta
                 property="og:image:height"
-                content={openGraphImage.getProperty("j:height").getString()}
+                content={openGraphImage.getPropertyAsString("j:height")}
               />
             )}
           </>
         )}
-        <AddResources type="css" resources={buildModuleFileUrl("dist/server/style.css")} />
+        <AddResources type="css" resources={buildModuleFileUrl("dist/server/index.css")} />
       </head>
       <body>{children}</body>
     </html>

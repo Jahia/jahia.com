@@ -1,9 +1,11 @@
 import { defineConfig } from "vite";
 import jahia from "@jahia/vite-plugin";
 import { spawnSync } from "node:child_process";
+import unocss from "unocss/vite";
 
 export default defineConfig({
   plugins: [
+    unocss(),
     jahia({
       client: {
         input: {
@@ -25,5 +27,12 @@ export default defineConfig({
         spawnSync("yarn", ["watch:callback"], { stdio: "inherit", shell: true });
       },
     }),
+    {
+      name: "bugfix",
+      enforce: "post",
+      config() {
+        return { builder: { sharedConfigBuild: false } };
+      },
+    },
   ],
 });

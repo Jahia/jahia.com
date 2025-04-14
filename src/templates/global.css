@@ -1,5 +1,6 @@
 * {
   max-width: 100%;
+  margin-block: 0;
 }
 
 body {
@@ -9,4 +10,8 @@ body {
 
 a {
   color: #06a;
+}
+
+img {
+  height: auto;
 }

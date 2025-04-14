@@ -1,0 +1,88 @@
+@value not-small from '../../breakpoints.css';
+
+.hero {
+  --cut: 2rem;
+  background: var(--jahia-background) url(./background.svg) center no-repeat;
+  color: var(--jahia-color);
+  padding: 2rem 1rem;
+}
+
+.column {
+  max-inline-size: 78rem;
+  margin-inline: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template: 1fr / auto;
+
+  @media (not-small) {
+    grid-template: 1fr / 1fr 1fr;
+  }
+}
+
+.wrapper {
+  border: 1px solid var(--jahia-border);
+  border-block-end: 0;
+
+  @media (not-small) {
+    border-block-end: 1px solid var(--jahia-border);
+    border-inline-end: 0;
+  }
+
+  padding: 2rem;
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut));
+  contain: paint;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset-block-start: -0.5px;
+    inset-inline-start: -0.5px;
+    inline-size: var(--cut);
+    block-size: var(--cut);
+    background-color: var(--jahia-border);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+}
+
+.cta {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  background: var(--jahia-blue);
+  color: var(--jahia-neutral-700);
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-family: monospace;
+  text-decoration: inherit;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ctaLine {
+  display: inline-block;
+  width: 1px;
+  height: 1rem;
+  opacity: 25%;
+  background: var(--jahia-neutral-700);
+}
+
+.image {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%
+  );
+  background-color: var(--jahia-border);
+  object-fit: cover;
+
+  /* On side-by-side view, nuke the native aspect-ratio of the image to fit the container. */
+  @media (not-small) {
+    height: 0;
+    min-height: 100%;
+  }
+}
