@@ -44,7 +44,6 @@ export default function NavBarClient({
               <a href={href} aria-current={current ? "page" : undefined} className={classes.link}>
                 {title}
               </a>
-              <span className={classes.line} />
               <button
                 type="button"
                 onClick={() => setSubmenu((prev) => (prev === href ? null : href))}
