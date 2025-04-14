@@ -30,7 +30,7 @@
 
 .cta {
   display: inline-flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   align-items: center;
   background: var(--jahia-blue);
   color: var(--jahia-neutral-700);
@@ -104,4 +104,30 @@
     padding-inline-start: 0.75rem;
     border-inline-start: 1px solid var(--jahia-border);
   }
+}
+
+.cta2 {
+  display: inline-flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: var(--jahia-navy-blue);
+  color: var(--jahia-neutral-50);
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-family: monospace;
+  font-size: 0.875rem;
+  line-height: 1;
+  text-decoration: inherit;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--jahia-neutral-600);
+  text-align: center;
+}
+
+.cta2Line {
+  width: 1px;
+  height: 1em;
+  background: var(--jahia-neutral-600);
+  transform: scaleY(calc(40 / 14)); /* Fill the height of the button */
 }

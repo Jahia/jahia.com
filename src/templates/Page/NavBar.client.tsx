@@ -70,6 +70,13 @@ export default function NavBarClient({
             </ul>
           </div>
         ))}
+        <div style={{ padding: ".5rem" }}>
+          <a href="#contact" className={classes.cta2}>
+            Contact
+            <span className={classes.cta2Line} />
+            <span className="i-ri:arrow-right-wide-line" />
+          </a>
+        </div>
       </div>
     </nav>
   );
