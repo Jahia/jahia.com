@@ -32,6 +32,7 @@ export default function NavBarClient({
             type="button"
             className={classes.menuButton}
             onClick={() => setOpen((prev) => !prev)}
+            aria-label={open ? "Close menu" : "Open menu"}
           >
             <span className={open ? "i-ri:close-large-line" : "i-ri:menu-line"} />
           </button>
@@ -47,6 +48,7 @@ export default function NavBarClient({
               <button
                 type="button"
                 onClick={() => setSubmenu((prev) => (prev === href ? null : href))}
+                aria-label={submenu === href ? "Close submenu" : "Open submenu"}
               >
                 <span
                   className={
