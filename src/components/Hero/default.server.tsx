@@ -49,6 +49,7 @@ jahiaComponent(
                   (cta["j:linkType"] === "internal"
                     ? cta["j:linknode"].getPropertyAsString("jcr:title")
                     : cta["j:linkTitle"])}
+                <span className={classes.ctaLine}></span>
                 <span className="i-ri:arrow-right-wide-line" />
               </a>
             </p>

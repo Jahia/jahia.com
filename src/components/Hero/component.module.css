@@ -47,16 +47,26 @@
 }
 
 .cta {
-  display: inline-block;
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
   background: var(--jahia-blue);
   color: var(--jahia-neutral-700);
-  padding: 1rem 0.75rem;
+  padding: 0.75rem;
   border-radius: 0.25rem;
   text-transform: uppercase;
   font-family: monospace;
   text-decoration: inherit;
   display: inline-flex;
   align-items: center;
+}
+
+.ctaLine {
+  display: inline-block;
+  width: 1px;
+  height: 1rem;
+  opacity: 25%;
+  background: var(--jahia-neutral-700);
 }
 
 .image {
