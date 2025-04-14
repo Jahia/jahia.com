@@ -16,7 +16,7 @@ This module comes with some scripts to help you develop your module. You can run
 | Code quality | `format`              | Runs Prettier (a code formatter) on your code                           |
 | Code quality | `lint`                | Runs ESLint (a linter) on your code                                     |
 | Utils        | `clean`               | Removes build artifacts                                                 |
-| Utils        | `package`             | Packs distributions files in a `.tgz` archive inside the `dist/` folder  |
+| Utils        | `package`             | Packs distributions files in a `.tgz` archive inside the `dist/` folder |
 | Utils        | `watch:callback`      | Called every time a build succeeds in watch mode                        |
 
 ## Configuration
