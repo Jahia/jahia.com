@@ -1,14 +1,108 @@
 .nav {
-  display: flex;
-  padding: 1rem;
-  gap: 1rem;
+  position: sticky;
+  inset-block-start: 0;
+  background: color-mix(in srgb, var(--jahia-background) 75%, transparent);
+  z-index: 1;
+  backdrop-filter: blur(0.5rem);
+  color: var(--jahia-color);
 
-  > ul {
-    display: contents;
-    list-style: none;
+  &[data-open="true"] {
+    background: var(--jahia-background);
   }
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.link {
+  color: inherit;
+  text-decoration: inherit;
 }
 
 .link[aria-current] {
   font-weight: bold;
+}
+
+.cta {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  background: var(--jahia-blue);
+  color: var(--jahia-neutral-700);
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-family: monospace;
+  font-size: 0.875rem;
+  line-height: 1;
+  text-decoration: inherit;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--jahia-blue);
+  text-align: center;
+}
+
+.menuButton {
+  border: 1px solid var(--jahia-border);
+  display: inline-flex;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--jahia-blue);
+  padding: calc(0.75rem - 1px);
+  align-items: center;
+}
+
+.menu {
+  position: fixed;
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--jahia-background);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 150ms ease-out;
+
+  [data-open="true"] & {
+    transform: scaleY(1);
+  }
+}
+
+.submenu {
+  > ul {
+    display: none;
+    list-style: none;
+    padding-inline-start: 1rem;
+  }
+
+  &[data-open="true"] > ul {
+    display: block;
+  }
+}
+
+.submenuLabel {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  > a {
+    flex: 1;
+    padding: 0.5rem;
+  }
+
+  > button {
+    padding: 0.5rem;
+    background: transparent;
+    border: transparent;
+    color: inherit;
+  }
+}
+
+.line {
+  display: inline-block;
+  width: 1px;
+  height: 2rem;
+  background: var(--jahia-border);
 }

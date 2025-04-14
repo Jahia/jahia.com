@@ -1,6 +1,11 @@
-import { buildModuleFileUrl, buildNodeUrl, getChildNodes } from "@jahia/javascript-modules-library";
+import {
+  buildModuleFileUrl,
+  buildNodeUrl,
+  getChildNodes,
+  HydrateInBrowser,
+} from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
-import classes from "./NavBar.module.css";
+import NavBarClient from "./NavBar.client.jsx";
 
 export default function NavBar({
   root,
@@ -9,39 +14,37 @@ export default function NavBar({
   root: JCRNodeWrapper;
   current: JCRNodeWrapper;
 }) {
-  const link = (node: JCRNodeWrapper, children?: React.ReactNode) => (
-    <a
-      className={classes.link}
-      href={buildNodeUrl(node)}
-      aria-current={current.getIdentifier() === node.getIdentifier() ? "page" : undefined}
-    >
-      {children ?? node.getPropertyAsString("jcr:title")}
-    </a>
-  );
-
   return (
-    <nav className={classes.nav}>
-      {link(
-        root,
+    <HydrateInBrowser
+      child={NavBarClient}
+      props={{
+        // This can quickly get out of hand, if there are too many pages in the menu we need
+        // to rethink the implementation
+        pages: getChildNodes(root, -1, 0, (node) => node.isNodeType("jnt:page")).map((node) => ({
+          href: buildNodeUrl(node),
+          current: current.getIdentifier() === node.getIdentifier(),
+          title: node.getPropertyAsString("jcr:title"),
+          children: getChildNodes(node, -1, 0, (child) => child.isNodeType("jnt:page")).map(
+            (child) => ({
+              href: buildNodeUrl(child),
+              current: current.getIdentifier() === child.getIdentifier(),
+              title: child.getPropertyAsString("jcr:title"),
+            }),
+          ),
+        })),
+      }}
+    >
+      <a
+        href={buildNodeUrl(root)}
+        aria-current={current.getIdentifier() === root.getIdentifier() ? "page" : undefined}
+      >
         <img
-          src={buildModuleFileUrl("static/logos/jahia.svg")}
+          src={buildModuleFileUrl("static/logos/jahia-light.svg")}
           alt="Jahia"
-          width="200"
-          height="96"
-        />,
-      )}
-      <ul>
-        {getChildNodes(root, -1, 0, (node) => node.isNodeType("jnt:page")).map((node) => (
-          <li key={node.getIdentifier()}>
-            {link(node)}
-            <ul>
-              {getChildNodes(node, -1, 0, (child) => child.isNodeType("jnt:page")).map((child) => (
-                <li key={child.getIdentifier()}>{link(child)}</li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </nav>
+          width="90"
+          height="40"
+        />
+      </a>
+    </HydrateInBrowser>
   );
 }

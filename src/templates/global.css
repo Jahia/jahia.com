@@ -4,7 +4,7 @@
 }
 
 body {
-  background: #fff;
+  background: var(--jahia-navy-blue);
   line-height: 1.5;
 }
 
@@ -14,4 +14,5 @@ a {
 
 img {
   height: auto;
+  vertical-align: bottom; /* Avoid that annoying 2px shift */
 }
