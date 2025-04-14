@@ -27,16 +27,16 @@ jahiaComponent(
         data-theme="night"
       >
         <div className={classes.column} style={{ textAlign: "center" }}>
-          <h1>{title}</h1>
-          <p>{subtitle}</p>
+          <h1>{title || "Title not defined"}</h1>
+          {subtitle && <p>{subtitle}</p>}
         </div>
       </header>
     ) : (
       <header className={classes.hero} data-theme="night">
         <div className={clsx(classes.column, classes.grid)}>
           <div className={clsx(classes.wrapper, "_stack-4")}>
-            <h1>{title}</h1>
-            <p>{subtitle}</p>
+            <h1>{title || "Title not defined"}</h1>
+            {subtitle && <p>{subtitle}</p>}
             <p>
               <a
                 className={classes.cta}
@@ -49,7 +49,7 @@ jahiaComponent(
                   (cta["j:linkType"] === "internal"
                     ? cta["j:linknode"].getPropertyAsString("jcr:title")
                     : cta["j:linkTitle"])}
-                <span className={classes.ctaLine}></span>
+                <span className={classes.ctaLine} />
                 <span className="i-ri:arrow-right-wide-line" />
               </a>
             </p>
