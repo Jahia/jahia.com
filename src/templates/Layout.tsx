@@ -4,7 +4,9 @@ import {
   useServerContext,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import prettyBytes from "pretty-bytes";
 import type { ReactNode } from "react";
+import EditorHints from "../components/EditorHints.jsx";
 
 import "modern-normalize/modern-normalize.css";
 import "virtual:uno.css";
@@ -40,7 +42,7 @@ export const Layout = ({
             <meta property="og:description" content={description} />
           </>
         )}
-        {keywords?.length && <meta name="keywords" content={keywords?.join(", ")} />}
+        {keywords && keywords.length > 0 && <meta name="keywords" content={keywords?.join(", ")} />}
         {openGraphImage && (
           <>
             <meta
@@ -69,7 +71,20 @@ export const Layout = ({
         )}
         <AddResources type="css" resources={buildModuleFileUrl("dist/server/index.css")} />
       </head>
-      <body>{children}</body>
+      <body>
+        <EditorHints
+          title={"Page SEO checklist:"}
+          hints={() => ({
+            "Title": title,
+            "Description": description,
+            "Keywords": keywords?.join(", "),
+            "OpenGraph image":
+              openGraphImage &&
+              `${openGraphImage.getPropertyAsString("jcr:title") ?? "No title"} (${openGraphImage.getPropertyAsString("j:width")}x${openGraphImage.getPropertyAsString("j:height")}, ${prettyBytes(openGraphImage.getNode("jcr:content").getProperty("jcr:data").getLength())})`,
+          })}
+        />
+        {children}
+      </body>
     </html>
   );
 };
