@@ -25,6 +25,15 @@ export default defineConfig({
         "gap": `${size / 4}rem`,
       }),
     ],
+    [
+      /^_row-(\d+)$/,
+      ([, size]) => ({
+        "display": "flex",
+        "align-items": "center",
+        "gap": `${size / 4}rem`,
+        "flex-wrap": "wrap",
+      }),
+    ],
   ],
   presets: [
     presetIcons({

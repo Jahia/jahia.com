@@ -2819,6 +2819,7 @@ __metadata:
     i18next: "npm:^23.16.8"
     modern-normalize: "npm:^3.0.1"
     prettier: "npm:^3.5.3"
+    pretty-bytes: "npm:^6.1.1"
     react-i18next: "npm:^15.4.1"
     typescript: "npm:^5.8.3"
     typescript-eslint: "npm:^8.29.1"
@@ -3592,6 +3593,13 @@ __metadata:
   bin:
     prettier: bin/prettier.cjs
   checksum: 10c0/3880cb90b9dc0635819ab52ff571518c35bd7f15a6e80a2054c05dbc8a3aa6e74f135519e91197de63705bcb38388ded7e7230e2178432a1468005406238b877
+  languageName: node
+  linkType: hard
+
+"pretty-bytes@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "pretty-bytes@npm:6.1.1"
+  checksum: 10c0/c7a660b933355f3b4587ad3f001c266a8dd6afd17db9f89ebc50812354bb142df4b9600396ba5999bdb1f9717300387dc311df91895c5f0f2a1780e22495b5f8
   languageName: node
   linkType: hard
 

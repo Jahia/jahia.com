@@ -42,8 +42,6 @@
   font-size: 0.875rem;
   line-height: 1;
   text-decoration: inherit;
-  display: inline-flex;
-  align-items: center;
   border: 1px solid var(--jahia-blue);
   text-align: center;
 }
@@ -93,8 +91,7 @@
 }
 
 .submenuLabel {
-  display: flex;
-  align-items: center;
+  @apply _pack-0;
 
   > a {
     flex: 1;
@@ -123,8 +120,6 @@
   font-size: 0.875rem;
   line-height: 1;
   text-decoration: inherit;
-  display: inline-flex;
-  align-items: center;
   border: 1px solid var(--jahia-neutral-600);
   text-align: center;
 }
