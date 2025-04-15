@@ -60,7 +60,7 @@
   }
 }
 
-.menu {
+.mobileMenu {
   position: fixed;
   inset-inline: 0;
   padding: 0.5rem;
@@ -80,6 +80,37 @@
     background: var(--jahia-background);
     transform: translateY(0.5rem) scaleY(1);
     color: inherit;
+  }
+
+  @screen md {
+    display: none;
+  }
+}
+
+.desktopMenu {
+  display: none;
+
+  @screen md {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--jahia-neutral-50);
+    padding: 1rem;
+    box-shadow: 0 0.25rem 1rem color-mix(in srgb, var(--jahia-neutral-700) 25%, transparent);
+    color: var(--jahia-neutral-700);
+    border-radius: 0.25rem;
+    opacity: 0;
+    transition: opacity 150ms ease-out;
+
+    [data-open="true"] & {
+      opacity: 1;
+    }
+  }
+
+  > ul {
+    list-style: none;
+    padding: 0;
   }
 }
 

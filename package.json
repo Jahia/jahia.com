@@ -20,7 +20,7 @@
     "watch:callback": "run package && run deploy"
   },
   "dependencies": {
-    "@floating-ui/react": "^0.27.7",
+    "@floating-ui/react-dom": "^2.1.2",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
     "modern-normalize": "^3.0.1",

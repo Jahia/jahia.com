@@ -1,7 +1,7 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import classes from "./NavBar.module.css";
 import clsx from "clsx";
-import { useFloating, autoUpdate } from "@floating-ui/react";
+import { useFloating, autoUpdate, offset } from "@floating-ui/react-dom";
 
 export default function NavBarClient({
   children,
@@ -21,28 +21,51 @@ export default function NavBarClient({
 }) {
   const [open, setOpen] = useState(false);
   const [submenu, setSubmenu] = useState<string | null>(null);
+
+  /** Used to disable the animation on first render */
+  const [animate, setAnimate] = useState(false);
+
   const { refs, floatingStyles } = useFloating({
     whileElementsMounted: autoUpdate,
+    middleware: [offset(16)],
   });
 
-  // Automatically close the menu when the screen is resized to a larger size
+  const close = useCallback(() => {
+    setOpen(false);
+    setAnimate(false);
+  }, []);
+
+  // Resizing the window should close the menu
   useEffect(() => {
     // Breakpoint defined in unocss.config.js
     const md = window.matchMedia("(min-width: 800px)");
+    md.addEventListener("change", close);
+    return () => md.removeEventListener("change", close);
+  }, [close]);
 
-    const handler = (event: MediaQueryListEvent) => {
-      if (event.matches) {
-        setOpen(false);
-        setSubmenu(null);
-      }
+  // All clicks outside the menu should close it
+  useEffect(() => {
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [close]);
+
+  // Pressing escape should also close the menu
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape") close();
     };
-
-    md.addEventListener("change", handler);
-    return () => md.removeEventListener("change", handler);
-  });
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [close]);
 
   return (
-    <nav className={classes.nav} data-theme="night" data-open={open}>
+    <nav
+      className={classes.nav}
+      data-theme="night"
+      data-open={open}
+      // Clicking within the menu should not close it
+      onClick={(event) => event.stopPropagation()}
+    >
       <div className="_pack-2" style={{ maxWidth: "var(--jahia-width)", marginInline: "auto" }}>
         {children}
         <div className="_pack-2" style={{ flex: 1, justifyContent: "end" }}>
@@ -53,7 +76,18 @@ export default function NavBarClient({
                 href={href}
                 aria-current={current ? "page" : undefined}
                 className={classes.barLink}
-                ref={refs.setReference}
+                onMouseMove={(event) => {
+                  refs.setReference(event.currentTarget);
+                  if (submenu) setAnimate(true);
+                  setOpen(true);
+                  setSubmenu(href);
+                }}
+                onFocus={(event) => {
+                  refs.setReference(event.currentTarget);
+                  if (submenu) setAnimate(true);
+                  setOpen(true);
+                  setSubmenu(href);
+                }}
               >
                 {title}
                 <span className="i-ri:arrow-down-wide-line" />
@@ -78,7 +112,7 @@ export default function NavBarClient({
           </button>
         </div>
       </div>
-      <div className={classes.menu}>
+      <div className={classes.mobileMenu} inert={!open}>
         {pages.map(({ href, current, title, children }) => (
           <div key={href} className={classes.submenu} data-open={submenu === href}>
             <div className={classes.submenuLabel}>
@@ -120,8 +154,27 @@ export default function NavBarClient({
           </a>
         </div>
       </div>
-      <div ref={refs.setFloating} style={floatingStyles}>
-        Desktop menu
+      <div
+        inert={!open}
+        ref={refs.setFloating}
+        style={{
+          ...floatingStyles,
+          transition: animate ? "transform 150ms ease-out, opacity 150ms ease-out" : undefined,
+        }}
+        onTransitionEnd={() => setAnimate(false)}
+        className={classes.desktopMenu}
+      >
+        <ul>
+          {pages
+            .find(({ href }) => href === submenu)
+            ?.children.map(({ href, current, title }) => (
+              <li key={href}>
+                <a href={href} aria-current={current ? "page" : undefined} className={classes.link}>
+                  {title}
+                </a>
+              </li>
+            ))}
+        </ul>
       </div>
     </nav>
   );
