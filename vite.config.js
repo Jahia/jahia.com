@@ -4,6 +4,9 @@ import { spawnSync } from "node:child_process";
 import unocss from "unocss/vite";
 
 export default defineConfig({
+  define: {
+    "process.env.NODE_ENV": '"production"',
+  },
   plugins: [
     unocss(),
     jahia({

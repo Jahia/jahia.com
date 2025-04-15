@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import classes from "./NavBar.module.css";
 import clsx from "clsx";
+import { useFloating, autoUpdate } from "@floating-ui/react";
 
 export default function NavBarClient({
   children,
@@ -20,6 +21,9 @@ export default function NavBarClient({
 }) {
   const [open, setOpen] = useState(false);
   const [submenu, setSubmenu] = useState<string | null>(null);
+  const { refs, floatingStyles } = useFloating({
+    whileElementsMounted: autoUpdate,
+  });
 
   // Automatically close the menu when the screen is resized to a larger size
   useEffect(() => {
@@ -42,13 +46,14 @@ export default function NavBarClient({
       <div className="_pack-2" style={{ maxWidth: "var(--jahia-width)", marginInline: "auto" }}>
         {children}
         <div className="_pack-2" style={{ flex: 1, justifyContent: "end" }}>
-          <div className={clsx(classes.desktop, "_pack-2")}>
+          <div className={clsx(classes.desktop, "_pack-4")}>
             {pages.map(({ href, current, title }) => (
               <a
                 key={href}
                 href={href}
                 aria-current={current ? "page" : undefined}
                 className={classes.barLink}
+                ref={refs.setReference}
               >
                 {title}
                 <span className="i-ri:arrow-down-wide-line" />
@@ -114,6 +119,9 @@ export default function NavBarClient({
             <span className="i-ri:arrow-right-wide-line" />
           </a>
         </div>
+      </div>
+      <div ref={refs.setFloating} style={floatingStyles}>
+        Desktop menu
       </div>
     </nav>
   );
