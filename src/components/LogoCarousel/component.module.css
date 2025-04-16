@@ -1,0 +1,67 @@
+.wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  max-inline-size: var(--jahia-width);
+  padding-block: 2rem;
+  margin-inline: auto;
+  color: var(--jahia-navy-blue);
+  contain: paint;
+
+  &[data-scrolling="true"]::before,
+  &[data-scrolling="true"]::after {
+    position: absolute;
+    z-index: 1;
+    width: 2rem;
+    content: "";
+  }
+
+  &[data-scrolling="true"]::before {
+    inset: 0 auto 0 0;
+    background: linear-gradient(to right, var(--jahia-neutral-50), transparent);
+  }
+
+  &[data-scrolling="true"]::after {
+    inset: 0 0 0 auto;
+    background: linear-gradient(to left, var(--jahia-neutral-50), transparent);
+  }
+}
+
+.carousel {
+  display: flex;
+
+  > * {
+    display: flex;
+    flex-shrink: 0;
+    gap: 4rem;
+    align-items: center;
+    max-width: none;
+  }
+}
+
+[data-scrolling="true"] .carousel > * {
+  padding-inline-end: 4rem;
+  animation: scroll 30s linear infinite;
+}
+
+/* Read https://antfu.me/posts/icons-in-pure-css to understand how it works. */
+.logo {
+  display: flex;
+  align-items: center;
+  width: 8rem;
+  height: 8rem;
+  color: transparent;
+  background: var(--logo) center no-repeat;
+
+  [data-mode="mono"] & {
+    color: inherit;
+    background: currentcolor;
+    mask: var(--logo) center no-repeat;
+  }
+}
+
+@keyframes scroll {
+  to {
+    transform: translateX(-100%);
+  }
+}
