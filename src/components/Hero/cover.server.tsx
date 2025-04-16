@@ -12,7 +12,8 @@ jahiaComponent(
   },
   ({ "jcr:title": title, subtitle, image, ...cta }: Props) => (
     <header
-      style={{ backgroundImage: `url(${buildNodeUrl(image)})`, paddingBlock: "4rem" }}
+      // Despite being mandatory, the image can be missing in some cases (e.g. new translation)
+      style={{ backgroundImage: image && `url(${buildNodeUrl(image)})`, paddingBlock: "4rem" }}
       className={classes.hero}
       data-theme="night"
     >

@@ -27,13 +27,16 @@ jahiaComponent(
             </p>
           )}
         </div>
-        <img
-          src={buildNodeUrl(image)}
-          alt={image.getPropertyAsString("jcr:title")}
-          className={classes.image}
-          width={image.getPropertyAsString("j:width")}
-          height={image.getPropertyAsString("j:height")}
-        />
+        {image && (
+          // Despite being mandatory, the image can be missing in some cases (e.g. new translation)
+          <img
+            src={buildNodeUrl(image)}
+            alt={image.getPropertyAsString("jcr:title")}
+            className={classes.image}
+            width={image.getPropertyAsString("j:width")}
+            height={image.getPropertyAsString("j:height")}
+          />
+        )}
       </div>
     </header>
   ),
