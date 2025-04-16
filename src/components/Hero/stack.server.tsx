@@ -8,27 +8,28 @@ jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:hero",
+    name: "stack",
   },
   ({ "jcr:title": title, subtitle, image, ...cta }: Props) => (
     <header className={classes.hero} data-theme="night">
-      <div className={clsx(classes.column, classes.grid)}>
-        <div className={clsx(classes.wrapper, "_stack-4")}>
+      <div className={clsx(classes.column, classes.center, "_stack-8")}>
+        <div className={"_stack-4"}>
           <h1>{title || "Title not defined"}</h1>
           {subtitle && <p>{subtitle}</p>}
-          {cta["j:linkType"] !== "none" && (
-            <p>
-              <CTA cta={cta} />
-            </p>
-          )}
         </div>
+        {cta["j:linkType"] !== "none" && (
+          <p>
+            <CTA cta={cta} />
+          </p>
+        )}
         {image && (
           // Despite being mandatory, the image can be missing in some cases (e.g. new translation)
           <img
             src={buildNodeUrl(image)}
             alt={image.getPropertyAsString("jcr:title")}
-            className={classes.image}
             width={image.getPropertyAsString("j:width")}
             height={image.getPropertyAsString("j:height")}
+            style={{ maxWidth: "60rem", marginInline: "auto" }}
           />
         )}
       </div>

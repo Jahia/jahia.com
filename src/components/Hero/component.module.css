@@ -11,6 +11,11 @@
   margin-inline: auto;
 }
 
+.center {
+  text-align: center;
+  text-wrap: balance;
+}
+
 .grid {
   display: grid;
   grid-template: 1fr / auto;
