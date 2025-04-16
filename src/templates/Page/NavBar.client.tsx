@@ -4,9 +4,13 @@ import clsx from "clsx";
 import { useFloating, autoUpdate, offset } from "@floating-ui/react-dom";
 
 export default function NavBarClient({
+  primaryCTA,
+  secondaryCTA,
   children,
   pages,
 }: {
+  primaryCTA?: { href: string; label: string } | false;
+  secondaryCTA?: { href: string; label: string } | false;
   children: ReactNode;
   pages: Array<{
     href: string;
@@ -93,15 +97,20 @@ export default function NavBarClient({
                 <span className="i-ri:arrow-down-wide-line" />
               </a>
             ))}
-            <a href="#contact" className={classes.cta2}>
-              Contact
-              <span className={classes.cta2Line} />
-              <span className="i-ri:arrow-right-wide-line" />
-            </a>
+            {secondaryCTA && (
+              <a href={secondaryCTA.href} className={classes.cta2}>
+                {secondaryCTA.label}
+                <span className={classes.cta2Line} />
+                <span className="i-ri:arrow-right-wide-line" />
+              </a>
+            )}
           </div>
-          <a href="#demo" className={classes.cta}>
-            Réserver une démo
-          </a>
+          {primaryCTA && (
+            <a href={primaryCTA.href} className={classes.cta}>
+              {primaryCTA.label}
+            </a>
+          )}
+
           <button
             type="button"
             className={classes.menuButton}
@@ -147,11 +156,13 @@ export default function NavBarClient({
           </div>
         ))}
         <div style={{ padding: ".5rem" }}>
-          <a href="#contact" className={classes.cta2}>
-            Contact
-            <span className={classes.cta2Line} />
-            <span className="i-ri:arrow-right-wide-line" />
-          </a>
+          {secondaryCTA && (
+            <a href={secondaryCTA.href} className={classes.cta2}>
+              {secondaryCTA.label}
+              <span className={classes.cta2Line} />
+              <span className="i-ri:arrow-right-wide-line" />
+            </a>
+          )}
         </div>
       </div>
       <div

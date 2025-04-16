@@ -32,7 +32,11 @@ jahiaComponent(
       keywords={keywords}
       openGraphImage={openGraphImage}
     >
-      <NavBar root={renderContext.getSite().getHome()} current={mainNode} />
+      <NavBar
+        site={renderContext.getSite()}
+        root={renderContext.getSite().getHome()}
+        current={mainNode}
+      />
       <Area name="hero" allowedNodeTypes={["jahiacom:hero"]} numberOfItems={1} />
       <div style={{ background: "var(--jahia-neutral-50)" }}>
         <Area name="main" />
