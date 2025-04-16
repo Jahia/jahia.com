@@ -10,8 +10,8 @@ jahiaComponent(
     nodeType: "jahiacom:hero",
     name: "stack",
   },
-  ({ "jcr:title": title, subtitle, image, ...cta }: Props) => (
-    <header className={classes.hero} data-theme="night">
+  ({ "jcr:title": title, subtitle, image, background, ...cta }: Props) => (
+    <header className={classes.hero} data-theme="night" data-bg={background}>
       <div className={clsx(classes.column, classes.center, "_stack-8")}>
         <div className={"_stack-4"}>
           <h1>{title || "Title not defined"}</h1>
@@ -29,7 +29,7 @@ jahiaComponent(
             alt={image.getPropertyAsString("jcr:title")}
             width={image.getPropertyAsString("j:width")}
             height={image.getPropertyAsString("j:height")}
-            style={{ maxWidth: "60rem", marginInline: "auto" }}
+            style={{ width: "60rem", marginInline: "auto" }}
           />
         )}
       </div>
