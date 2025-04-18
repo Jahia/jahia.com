@@ -1,0 +1,15 @@
+{
+  "name": "jahiacommix:seoOptions",
+  "fields": [
+    {
+      "name": "jsonLd",
+      "selectorType": "CodeMirror",
+      "selectorOptions": [
+        {
+          "name": "mode",
+          "value": "javascript"
+        }
+      ]
+    }
+  ]
+}
