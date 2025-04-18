@@ -17,8 +17,7 @@ import "./themes.css";
 const extractJsonLdType = (jsonLd: string) => {
   try {
     const parsedJsonLd = JSON.parse(jsonLd);
-    if (Array.isArray(parsedJsonLd["@type"])) return parsedJsonLd["@type"].join(", ");
-    return parsedJsonLd["@type"];
+    return parsedJsonLd["@type"] ? `@type ${parsedJsonLd["@type"]}` : "No @type";
   } catch {
     return false;
   }
