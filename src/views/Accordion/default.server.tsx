@@ -23,8 +23,8 @@ jahiaComponent(
       node.isNodeType("jahiacom:accordionItem"),
     ).map((node) => ({
       key: node.getName(),
-      title: node.getPropertyAsString("jcr:title"),
-      body: node.getPropertyAsString("body"),
+      title: node.getPropertyAsString("jcr:title") ?? "",
+      body: node.getPropertyAsString("body") ?? "",
     }));
 
     return (
