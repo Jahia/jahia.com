@@ -27,6 +27,25 @@ jahiaComponent(
       body: node.getPropertyAsString("body"),
     }));
 
-    return <HydrateInBrowser child={Accordion} props={{ items }} />;
+    return (
+      <>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": items.map(({ title, body }) => ({
+              "@type": "Question",
+              "name": title,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                // Basic HTML sanitization to remove tags
+                "text": body.replaceAll(/<[^>]+>/g, "").trim(),
+              },
+            })),
+          })}
+        </script>
+        <HydrateInBrowser child={Accordion} props={{ items }} />
+      </>
+    );
   },
 );
