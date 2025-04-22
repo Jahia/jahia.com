@@ -6,7 +6,7 @@
   color: var(--jahia-color);
   background-color: color-mix(in srgb, var(--jahia-background) 75%, transparent);
   backdrop-filter: blur(0.5rem);
-  transition: background 150ms ease-out;
+  transition: background var(--jahia-timing);
 
   &[data-open="true"] {
     background-color: var(--jahia-background);
@@ -28,23 +28,6 @@
 
 .link[aria-current] {
   font-weight: bold;
-}
-
-.cta {
-  display: inline-flex;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 0.75rem;
-  font-family: monospace;
-  font-size: 0.875rem;
-  line-height: 1;
-  color: var(--jahia-neutral-700);
-  text-align: center;
-  text-transform: uppercase;
-  text-decoration: inherit;
-  background: var(--jahia-blue);
-  border: 1px solid var(--jahia-blue);
-  border-radius: 0.25rem;
 }
 
 .menuButton {
@@ -76,9 +59,9 @@
     scaleY(0);
   transform-origin: top;
   transition:
-    transform 150ms ease-out,
-    color 150ms ease-out,
-    background-color 150ms ease-out;
+    transform var(--jahia-motion-timing),
+    color var(--jahia-timing),
+    background-color var(--jahia-timing);
 
   [data-open="true"] & {
     color: inherit;
@@ -105,7 +88,7 @@
     border-radius: 0.25rem;
     box-shadow: 0 0.25rem 1rem color-mix(in srgb, var(--jahia-neutral-700) 25%, transparent);
     opacity: 0;
-    transition: opacity 150ms ease-out;
+    transition: opacity var(--jahia-timing);
 
     [data-open="true"] & {
       opacity: 1;
@@ -126,8 +109,8 @@
     opacity: 0;
     transform: translateY(-1rem);
     transition:
-      transform 150ms ease-out,
-      opacity 150ms ease-out;
+      transform var(--jahia-motion-timing),
+      opacity var(--jahia-timing);
     contain: paint;
   }
 
@@ -154,29 +137,6 @@
     border: transparent;
     border-inline-start: 1px solid var(--jahia-border);
   }
-}
-
-.cta2 {
-  display: inline-flex;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 0.75rem;
-  font-family: monospace;
-  font-size: 0.875rem;
-  line-height: 1;
-  color: inherit;
-  text-align: center;
-  text-transform: uppercase;
-  text-decoration: inherit;
-  border: 1px solid var(--jahia-neutral-600);
-  border-radius: 0.25rem;
-}
-
-.cta2Line {
-  width: 1px;
-  height: 1em;
-  background: var(--jahia-neutral-600);
-  transform: scaleY(calc(40 / 14)); /* Fill the height of the button */
 }
 
 .desktop {

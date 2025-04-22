@@ -41,7 +41,7 @@
 
 [data-scrolling="true"] .carousel > * {
   padding-inline-end: 4rem;
-  animation: scroll 30s linear infinite;
+  animation: scroll 30s linear infinite; /* TODO: disable animation in reduced-motion mode */
 }
 
 /* Read https://antfu.me/posts/icons-in-pure-css to understand how it works. */

@@ -58,26 +58,6 @@
   }
 }
 
-.cta {
-  display: inline-flex;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 0.75rem;
-  font-family: monospace;
-  color: var(--jahia-neutral-700);
-  text-transform: uppercase;
-  text-decoration: inherit;
-  background: var(--jahia-blue);
-  border-radius: 0.25rem;
-}
-
-.ctaLine {
-  width: 1px;
-  height: 1rem;
-  background: var(--jahia-neutral-700);
-  opacity: 0.25;
-}
-
 .image {
   object-fit: cover;
   background-color: var(--jahia-border);

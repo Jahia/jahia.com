@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import classes from "./NavBar.module.css";
 import clsx from "clsx";
 import { useFloating, autoUpdate, offset } from "@floating-ui/react-dom";
+import { CTA } from "../../components/CTA.jsx";
 
 export default function NavBarClient({
   primaryCTA,
@@ -98,18 +99,12 @@ export default function NavBarClient({
               </a>
             ))}
             {secondaryCTA && (
-              <a href={secondaryCTA.href} className={classes.cta2}>
+              <CTA href={secondaryCTA.href} icon secondary>
                 {secondaryCTA.label}
-                <span className={classes.cta2Line} />
-                <span className="i-ri:arrow-right-wide-line" />
-              </a>
+              </CTA>
             )}
           </div>
-          {primaryCTA && (
-            <a href={primaryCTA.href} className={classes.cta}>
-              {primaryCTA.label}
-            </a>
-          )}
+          {primaryCTA && <CTA href={primaryCTA.href}>{primaryCTA.label}</CTA>}
 
           <button
             type="button"
@@ -157,11 +152,9 @@ export default function NavBarClient({
         ))}
         <div style={{ padding: ".5rem" }}>
           {secondaryCTA && (
-            <a href={secondaryCTA.href} className={classes.cta2}>
+            <CTA href={secondaryCTA.href} icon secondary>
               {secondaryCTA.label}
-              <span className={classes.cta2Line} />
-              <span className="i-ri:arrow-right-wide-line" />
-            </a>
+            </CTA>
           )}
         </div>
       </div>
@@ -170,7 +163,9 @@ export default function NavBarClient({
         ref={refs.setFloating}
         style={{
           ...floatingStyles,
-          transition: animate ? "transform 150ms ease-out, opacity 150ms ease-out" : undefined,
+          transition: animate
+            ? "transform var(--jahia-motion-timing), opacity var(--jahia-timing)"
+            : undefined,
         }}
         onTransitionEnd={() => setAnimate(false)}
         className={classes.desktopMenu}
