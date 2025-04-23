@@ -20,6 +20,11 @@
   /* Transition parameters */
   --jahia-timing: 150ms ease-out;
   --jahia-motion-timing: 0ms;
+
+  /* Default theme: Day */
+  --jahia-background: var(--jahia-neutral-50);
+  --jahia-color: var(--jahia-neutral-700);
+  --jahia-border: var(--jahia-neutral-300);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -27,6 +32,12 @@
   :root {
     --jahia-motion-timing: 150ms ease-out;
   }
+}
+
+[data-theme="cloudy"] {
+  --jahia-background: var(--jahia-neutral-100);
+  --jahia-color: var(--jahia-neutral-700);
+  --jahia-border: var(--jahia-neutral-100);
 }
 
 [data-theme="night"] {

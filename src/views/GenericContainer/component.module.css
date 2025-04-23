@@ -1,0 +1,11 @@
+.container {
+  padding: 2rem 1rem;
+  color: var(--jahia-color);
+  background: var(--jahia-background);
+
+  > div {
+    display: grid;
+    max-width: var(--jahia-width);
+    margin-inline: auto;
+  }
+}

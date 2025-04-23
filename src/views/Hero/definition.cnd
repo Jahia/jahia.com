@@ -1,4 +1,4 @@
-[jahiacom:hero] > jnt:content, jmix:droppableContent, mix:title
+[jahiacom:hero] > jnt:content, jahiacommix:container, mix:title
  - subtitle (string, textarea) i18n
  - image (weakreference, picker[type='image']) i18n mandatory < jmix:image
  - ctaType (string, choicelist[linkTypeInitializer]) mandatory
