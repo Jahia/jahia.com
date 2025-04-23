@@ -1,0 +1,25 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+
+  @screen sm {
+    grid-template-columns: repeat(2, 1fr);
+
+    > :nth-child(3n + 1) {
+      grid-column: span 2;
+    }
+  }
+
+  @screen md {
+    grid-template-columns: repeat(6, 1fr);
+
+    > * {
+      grid-column: span 2;
+    }
+
+    > :nth-child(5n + 1),
+    > :nth-child(5n + 2) {
+      grid-column: span 3;
+    }
+  }
+}

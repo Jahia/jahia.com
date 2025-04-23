@@ -1,7 +1,7 @@
 import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
 import type { Props } from "./types.js";
-import { HeroCTA } from "./HeroCTA.jsx";
+import { LinkTypeCTA } from "../LinkTypeCTA.jsx";
 import clsx from "clsx";
 
 jahiaComponent(
@@ -22,7 +22,7 @@ jahiaComponent(
         {subtitle && <p>{subtitle}</p>}
         {cta.ctaType !== "none" && (
           <p>
-            <HeroCTA cta={cta} />
+            <LinkTypeCTA cta={cta} />
           </p>
         )}
       </div>
