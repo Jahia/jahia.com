@@ -9,6 +9,7 @@
   color: var(--jahia-neutral-700);
   text-align: center;
   text-transform: uppercase;
+  text-wrap: balance;
   text-decoration: inherit;
   background: var(--jahia-blue);
   border: 1px solid var(--jahia-blue);
