@@ -15,7 +15,7 @@ jahiaComponent(
   ({ "jcr:title": title, body, ...cta }: Props) => (
     <article className={classes.item}>
       <h3>{title}</h3>
-      {body && <p>{body}</p>}
+      {body && <p style={{ flex: 1 }}>{body}</p>}
       {cta.ctaType !== "none" && (
         <p>
           <LinkTypeCTA cta={cta} />
