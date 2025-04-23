@@ -1,11 +1,14 @@
 import { useServerContext } from "@jahia/javascript-modules-library";
+import type { ReactNode } from "react";
 
 export default function EditorHints({
   title,
   hints,
+  children,
 }: {
   title: string;
   hints: () => Record<string, unknown>;
+  children?: ReactNode;
 }) {
   const { renderContext } = useServerContext();
   if (!renderContext.isEditMode()) return;
@@ -35,6 +38,7 @@ export default function EditorHints({
           </li>
         ))}
       </ul>
+      {children}
     </div>
   );
 }

@@ -1,6 +1,24 @@
+.container {
+  @apply _stack-8;
+
+  padding: 4rem 1rem;
+  background: var(--jahia-neutral-100);
+
+  > * {
+    max-width: var(--jahia-width);
+    margin-inline: auto;
+  }
+}
+
+.header {
+  text-align: center;
+  text-wrap: pretty;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;
+  gap: 1rem;
 
   @screen sm {
     grid-template-columns: repeat(2, 1fr);
@@ -22,4 +40,10 @@
       grid-column: span 3;
     }
   }
+}
+
+.grid > :first-child {
+  --cut: 2rem;
+
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut));
 }

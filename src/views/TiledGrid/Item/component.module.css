@@ -1,0 +1,6 @@
+.item {
+  @apply _stack-4;
+
+  padding: 1.5rem;
+  background: var(--jahia-neutral-50);
+}

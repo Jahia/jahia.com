@@ -1,5 +1,6 @@
 import { jahiaComponent } from "@jahia/javascript-modules-library";
 import { LinkTypeCTA, type LinkTypeProps } from "../../LinkTypeCTA.jsx";
+import classes from "./component.module.css";
 
 type Props = {
   "jcr:title"?: string;
@@ -12,10 +13,14 @@ jahiaComponent(
     nodeType: "jahiacom:tiledGridItem",
   },
   ({ "jcr:title": title, body, ...cta }: Props) => (
-    <article>
+    <article className={classes.item}>
       <h3>{title}</h3>
       {body && <p>{body}</p>}
-      {cta.ctaType !== "none" && <LinkTypeCTA cta={cta} />}
+      {cta.ctaType !== "none" && (
+        <p>
+          <LinkTypeCTA cta={cta} />
+        </p>
+      )}
     </article>
   ),
 );
