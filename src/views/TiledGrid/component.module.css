@@ -2,7 +2,8 @@
   @apply _stack-8;
 
   padding: 4rem 1rem;
-  background: var(--jahia-neutral-100);
+  color: var(--jahia-color);
+  background: var(--jahia-container-background);
 
   > * {
     max-width: var(--jahia-width);
@@ -46,4 +47,16 @@
   --cut: 2rem;
 
   clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut));
+  contain: paint;
+
+  &::before {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: var(--cut);
+    block-size: var(--cut);
+    content: "";
+    background-color: var(--jahia-border);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
 }

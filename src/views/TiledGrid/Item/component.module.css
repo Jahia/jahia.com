@@ -2,5 +2,6 @@
   @apply _stack-4;
 
   padding: 1.5rem;
-  background: var(--jahia-neutral-50);
+  background: var(--jahia-background);
+  border: 1px solid var(--jahia-border);
 }

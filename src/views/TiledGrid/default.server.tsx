@@ -1,19 +1,20 @@
 import { getChildNodes, jahiaComponent, RenderChildren } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
 import EditorHints from "../../components/EditorHints.jsx";
+import type { ThemeProps } from "../../theme.js";
 
-interface Props {
+type Props = ThemeProps & {
   "jcr:title"?: string;
   "subtitle"?: string;
-}
+};
 
 jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:tiledGrid",
   },
-  ({ "jcr:title": title, subtitle }: Props, { currentNode }) => (
-    <section className={classes.container}>
+  ({ theme, "jcr:title": title, subtitle }: Props, { currentNode }) => (
+    <section className={classes.container} data-theme={theme}>
       <header className={classes.header}>
         <h2>{title}</h2>
         {subtitle && <p>{subtitle}</p>}

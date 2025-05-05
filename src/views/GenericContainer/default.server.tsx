@@ -3,7 +3,6 @@ import {
   getChildNodes,
   jahiaComponent,
   Render,
-  RenderChildren,
 } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
 
