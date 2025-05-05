@@ -1,7 +1,6 @@
 .item {
   @apply _stack-4;
 
+  composes: item from "../../../theme.module.css";
   padding: 1.5rem;
-  background: var(--jahia-background);
-  border: 1px solid var(--jahia-border);
 }

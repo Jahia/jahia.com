@@ -2,9 +2,11 @@ import { defineConfig } from "vite";
 import jahia from "@jahia/vite-plugin";
 import { spawnSync } from "node:child_process";
 import unocss from "unocss/vite";
+import { patchCssModules } from "vite-css-modules";
 
 export default defineConfig({
   plugins: [
+    patchCssModules(),
     unocss(),
     jahia({
       client: {

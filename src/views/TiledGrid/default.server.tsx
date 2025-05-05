@@ -13,8 +13,8 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jahiacom:tiledGrid",
   },
-  ({ theme, "jcr:title": title, subtitle }: Props, { currentNode }) => (
-    <section className={classes.container} data-theme={theme}>
+  ({ theme, background, "jcr:title": title, subtitle }: Props, { currentNode }) => (
+    <section className={classes.container} data-theme={theme} data-bg={background}>
       <header className={classes.header}>
         <h2>{title}</h2>
         {subtitle && <p>{subtitle}</p>}
