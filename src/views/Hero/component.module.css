@@ -3,15 +3,15 @@
 
   padding: 2rem 1rem;
   color: var(--jahia-color);
-  background: var(--jahia-background) center / cover;
+  background: var(--jahia-container-background) center / cover;
 
   /* Visual variations, configurable in the "Layout" section of jContent */
   &[data-bg="plusses"] {
-    background: var(--jahia-background) url("./plusses.svg") center no-repeat;
+    background: var(--jahia-container-background) url("./plusses.svg") center no-repeat;
   }
 
   &[data-bg="stripes"] {
-    background: var(--jahia-background) url("./stripes.svg") center / cover no-repeat;
+    background: var(--jahia-container-background) url("./stripes.svg") center / cover no-repeat;
   }
 }
 
@@ -36,6 +36,7 @@
 
 .wrapper {
   padding: 2rem;
+  background: var(--jahia-background);
   border: 1px solid var(--jahia-border);
   border-block-end: 0;
   clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut));

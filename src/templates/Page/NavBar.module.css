@@ -4,12 +4,12 @@
   z-index: 1;
   padding: 0.5rem;
   color: var(--jahia-color);
-  background-color: color-mix(in srgb, var(--jahia-background) 75%, transparent);
+  background-color: color-mix(in srgb, var(--jahia-container-background) 75%, transparent);
   backdrop-filter: blur(0.5rem);
   transition: background var(--jahia-timing);
 
   &[data-open="true"] {
-    background-color: var(--jahia-background);
+    background-color: var(--jahia-container-background);
   }
 }
 
@@ -53,7 +53,7 @@
   color: transparent;
 
   /* Copy properties of the nav to make the transition smoother */
-  background-color: color-mix(in srgb, var(--jahia-background) 75%, transparent);
+  background-color: color-mix(in srgb, var(--jahia-container-background) 75%, transparent);
   backdrop-filter: blur(0.5rem);
   transform: translateY(0.5rem) /* The menu needs to be placed outside the padding of the nav */
     scaleY(0);
@@ -65,7 +65,7 @@
 
   [data-open="true"] & {
     color: inherit;
-    background: var(--jahia-background);
+    background: var(--jahia-container-background);
     transform: translateY(0.5rem) scaleY(1);
   }
 

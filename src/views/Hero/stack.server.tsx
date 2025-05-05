@@ -10,8 +10,8 @@ jahiaComponent(
     nodeType: "jahiacom:hero",
     name: "stack",
   },
-  ({ "jcr:title": title, subtitle, image, background, ...cta }: Props) => (
-    <header className={classes.hero} data-theme="night" data-bg={background}>
+  ({ theme, "jcr:title": title, subtitle, image, background, ...cta }: Props) => (
+    <header className={classes.hero} data-theme={theme} data-bg={background}>
       <div className={clsx(classes.column, classes.center, "_stack-8")}>
         <div className={"_stack-4"}>
           <h1>{title || "Title not defined"}</h1>

@@ -14,7 +14,7 @@
 [jahiacommix:component] > jmix:droppableContent, jmix:accessControllableContent mixin
 
 [jahiacommix:container] > jmix:droppableContent mixin
-  - theme (string, choicelist) = 'day' mandatory autocreated itemtype=layout < 'day', 'cloudy', 'night'
+ - theme (string, choicelist) = 'day' mandatory autocreated itemtype=layout < 'day', 'cloudy', 'night'
 
 [jahiacommix:menuCTAs] mixin extends=jnt:virtualsite
  - primaryCTALink (weakreference, picker[type='editoriallink']) i18n

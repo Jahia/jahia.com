@@ -10,12 +10,12 @@ jahiaComponent(
     nodeType: "jahiacom:hero",
     name: "cover",
   },
-  ({ "jcr:title": title, subtitle, image, ...cta }: Props) => (
+  ({ theme, "jcr:title": title, subtitle, image, ...cta }: Props) => (
     <header
       // Despite being mandatory, the image can be missing in some cases (e.g. new translation)
       style={{ backgroundImage: image && `url(${buildNodeUrl(image)})`, paddingBlock: "4rem" }}
       className={classes.hero}
-      data-theme="night"
+      data-theme={theme}
     >
       <div className={clsx(classes.column, classes.center, "_stack-4")}>
         <h1>{title || "Title not defined"}</h1>
