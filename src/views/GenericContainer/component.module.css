@@ -1,7 +1,6 @@
 .container {
+  composes: container from "../../theme.module.css";
   padding: 2rem 1rem;
-  color: var(--jahia-color);
-  background: var(--jahia-container-background);
 
   > div {
     display: grid;
