@@ -26,6 +26,7 @@
   --jahia-background: transparent;
   --jahia-color: var(--jahia-neutral-700);
   --jahia-border: var(--jahia-neutral-300);
+  --jahia-inner-border: var(--jahia-neutral-300);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -40,6 +41,7 @@
   --jahia-background: var(--jahia-neutral-50);
   --jahia-color: var(--jahia-neutral-700);
   --jahia-border: var(--jahia-neutral-100);
+  --jahia-inner-border: var(--jahia-neutral-300);
 }
 
 [data-theme="night"] {
@@ -47,4 +49,5 @@
   --jahia-background: transparent;
   --jahia-color: var(--jahia-neutral-50);
   --jahia-border: var(--jahia-neutral-600);
+  --jahia-inner-border: var(--jahia-neutral-600);
 }
