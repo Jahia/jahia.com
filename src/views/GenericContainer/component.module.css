@@ -1,11 +1,6 @@
-.container {
-  composes: container from "../../theme.module.css";
-  padding: 2rem 1rem;
-
-  > div {
-    display: grid;
-    gap: 1rem;
-    max-width: var(--jahia-width);
-    margin-inline: auto;
-  }
+.grid {
+  display: grid;
+  gap: 1rem;
+  max-width: var(--jahia-width);
+  margin-inline: auto;
 }

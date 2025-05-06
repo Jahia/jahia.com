@@ -1,15 +1,3 @@
-.container {
-  @apply _stack-8;
-
-  composes: container from "../../theme.module.css";
-  padding: 4rem 1rem;
-}
-
-.header {
-  text-align: center;
-  text-wrap: balance;
-}
-
 .grid {
   display: grid;
   grid-template-columns: 1fr;

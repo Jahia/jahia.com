@@ -1,3 +1,2 @@
-[jahiacom:tiledGrid] > jnt:content, jahiacommix:container, mix:title orderable
- - subtitle (string, textarea) i18n
+[jahiacom:tiledGrid] > jnt:content, jahiacommix:container orderable
  + * (jahiacom:tiledGridItem)

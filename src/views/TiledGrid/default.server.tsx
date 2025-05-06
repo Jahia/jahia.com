@@ -1,24 +1,15 @@
 import { getChildNodes, jahiaComponent, RenderChildren } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
 import EditorHints from "../../components/EditorHints.jsx";
-import type { ThemeProps } from "../../theme.js";
-
-type Props = ThemeProps & {
-  "jcr:title"?: string;
-  "subtitle"?: string;
-};
+import { Container, type ContainerProps } from "../../theme/index.js";
 
 jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:tiledGrid",
   },
-  ({ theme, background, "jcr:title": title, subtitle }: Props, { currentNode }) => (
-    <section className={classes.container} data-theme={theme} data-bg={background}>
-      <header className={classes.header}>
-        <h2>{title}</h2>
-        {subtitle && <p>{subtitle}</p>}
-      </header>
+  (props: ContainerProps, { currentNode }) => (
+    <Container {...props}>
       <EditorHints
         title="Optimal number of items"
         hints={() => {
@@ -38,6 +29,6 @@ jahiaComponent(
       <div className={classes.grid}>
         <RenderChildren />
       </div>
-    </section>
+    </Container>
   ),
 );

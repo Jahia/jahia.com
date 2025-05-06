@@ -1,5 +1,5 @@
 .item {
-  composes: item from "../../../theme.module.css";
+  composes: item from "../../../theme/theme.module.css";
 
   > h3 {
     font-size: 1rem;
