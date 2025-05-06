@@ -2,9 +2,6 @@
   display: flex;
   gap: 1rem;
   justify-content: center;
-  max-inline-size: var(--jahia-width);
-  padding-block: 2rem;
-  margin-inline: auto;
   color: var(--jahia-navy-blue);
   contain: paint;
 
@@ -41,7 +38,11 @@
 
 [data-scrolling="true"] .carousel > * {
   padding-inline-end: 4rem;
-  animation: scroll 30s linear infinite; /* TODO: disable animation in reduced-motion mode */
+  animation: scroll var(--duration) linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 /* Read https://antfu.me/posts/icons-in-pure-css to understand how it works. */
@@ -49,7 +50,7 @@
   display: flex;
   align-items: center;
   width: 8rem;
-  height: 8rem;
+  height: 6rem;
   color: transparent;
   user-select: none;
   background: var(--logo) center no-repeat;

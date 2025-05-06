@@ -16,14 +16,9 @@ export const Container = ({
   theme,
   background,
   children,
-  ...props
+  className,
 }: ContainerProps & HTMLAttributes<HTMLElement>) => (
-  <section
-    {...props}
-    className={clsx(props.className, classes.container)}
-    data-theme={theme}
-    data-bg={background}
-  >
+  <section className={clsx(className, classes.container)} data-theme={theme} data-bg={background}>
     {(title || subtitle) && (
       <header className={classes.header}>
         {title && <h2>{title}</h2>}

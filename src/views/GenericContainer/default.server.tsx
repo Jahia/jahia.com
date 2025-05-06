@@ -16,7 +16,10 @@ jahiaComponent(
     <Container {...props}>
       <div
         className={classes.grid}
-        style={{ gridTemplateColumns: { "50-50": "1fr 1fr" }[columns as never] ?? "1fr" }}
+        style={{
+          gridTemplateColumns:
+            { "50-50": "minmax(0, 1fr) minmax(0, 1fr)" }[columns as never] ?? "minmax(0, 1fr)",
+        }}
       >
         {getChildNodes(currentNode, -1, 0, (node) => node.isNodeType("jnt:content")).map((node) => (
           <div key={node.getIdentifier()}>

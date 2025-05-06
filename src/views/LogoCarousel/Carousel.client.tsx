@@ -3,9 +3,11 @@ import classes from "./component.module.css";
 
 export default function CarouselClient({
   mode,
+  length,
   children,
 }: {
   mode: "color" | "mono";
+  length: number;
   children: ReactNode;
 }) {
   const [scrolling, setScrolling] = useState(false);
@@ -28,7 +30,7 @@ export default function CarouselClient({
 
   return (
     <div ref={wrapper} className={classes.wrapper} data-scrolling={scrolling} data-mode={mode}>
-      <div className={classes.carousel}>
+      <div className={classes.carousel} style={{ "--duration": `${length * 5}s` }}>
         <div>{children}</div>
         <div style={{ display: scrolling ? undefined : "none" }}>{children}</div>
       </div>
