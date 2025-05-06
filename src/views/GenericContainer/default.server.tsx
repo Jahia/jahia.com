@@ -7,20 +7,20 @@ import {
 import { Container, type ContainerProps } from "../../theme/index.js";
 import classes from "./component.module.css";
 
+type Columns = "100" | "50-50" | "67-33" | "33-67" | "33-33-33" | "25-25-25-25";
+type Width = "100" | "75" | "50";
+
 jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:genericContainer",
   },
-  ({ columns, ...props }: { columns: "100" | "50-50" } & ContainerProps, { currentNode }) => (
+  (
+    { columns, width, ...props }: { columns: Columns; width: Width } & ContainerProps,
+    { currentNode },
+  ) => (
     <Container {...props}>
-      <div
-        className={classes.grid}
-        style={{
-          gridTemplateColumns:
-            { "50-50": "minmax(0, 1fr) minmax(0, 1fr)" }[columns as never] ?? "minmax(0, 1fr)",
-        }}
-      >
+      <div className={classes.grid} data-columns={columns} data-width={width}>
         {getChildNodes(currentNode, -1, 0, (node) => node.isNodeType("jnt:content")).map((node) => (
           <div key={node.getIdentifier()}>
             <Render node={node} />

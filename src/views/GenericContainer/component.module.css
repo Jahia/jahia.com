@@ -3,4 +3,34 @@
   gap: 1rem;
   max-width: var(--jahia-width);
   margin-inline: auto;
+
+  &[data-width="75"] {
+    max-width: calc(var(--jahia-width) * 0.75);
+  }
+
+  &[data-width="50"] {
+    max-width: calc(var(--jahia-width) * 0.5);
+  }
+
+  @screen sm {
+    &[data-columns="50-50"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &[data-columns="67-33"] {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+
+    &[data-columns="33-67"] {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+
+    &[data-columns="33-33-33"] {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    &[data-columns="25-25-25-25"] {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
 }
