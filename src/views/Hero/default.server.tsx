@@ -1,7 +1,7 @@
 import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
 import { clsx } from "clsx";
-import { HeroCTA } from "./HeroCTA.jsx";
+import { LinkTypeCTA } from "../LinkTypeCTA.jsx";
 import type { Props } from "./types.js";
 
 jahiaComponent(
@@ -9,15 +9,15 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jahiacom:hero",
   },
-  ({ "jcr:title": title, subtitle, image, background, ...cta }: Props) => (
-    <header className={classes.hero} data-theme="night" data-bg={background}>
-      <div className={clsx(classes.column, classes.grid)}>
+  ({ theme, "jcr:title": title, subtitle, image, background, ...cta }: Props) => (
+    <header className={classes.hero} data-theme={theme} data-bg={background}>
+      <div className={classes.grid}>
         <div className={clsx(classes.wrapper, "_stack-4")}>
           <h1>{title || "Title not defined"}</h1>
           {subtitle && <p>{subtitle}</p>}
           {cta.ctaType !== "none" && (
             <p>
-              <HeroCTA cta={cta} />
+              <LinkTypeCTA cta={cta} />
             </p>
           )}
         </div>

@@ -20,6 +20,13 @@
   /* Transition parameters */
   --jahia-timing: 150ms ease-out;
   --jahia-motion-timing: 0ms;
+
+  /* Default theme: Day */
+  --jahia-container-background: var(--jahia-neutral-50);
+  --jahia-background: transparent;
+  --jahia-color: var(--jahia-neutral-700);
+  --jahia-border: var(--jahia-neutral-300);
+  --jahia-inner-border: var(--jahia-neutral-300);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -29,8 +36,18 @@
   }
 }
 
+[data-theme="cloudy"] {
+  --jahia-container-background: var(--jahia-neutral-100);
+  --jahia-background: var(--jahia-neutral-50);
+  --jahia-color: var(--jahia-neutral-700);
+  --jahia-border: var(--jahia-neutral-100);
+  --jahia-inner-border: var(--jahia-neutral-300);
+}
+
 [data-theme="night"] {
-  --jahia-background: var(--jahia-navy-blue);
+  --jahia-container-background: var(--jahia-navy-blue);
+  --jahia-background: transparent;
   --jahia-color: var(--jahia-neutral-50);
   --jahia-border: var(--jahia-neutral-600);
+  --jahia-inner-border: var(--jahia-neutral-600);
 }

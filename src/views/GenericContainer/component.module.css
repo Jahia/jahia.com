@@ -1,0 +1,6 @@
+.grid {
+  display: grid;
+  gap: 1rem;
+  max-width: var(--jahia-width);
+  margin-inline: auto;
+}

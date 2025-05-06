@@ -1,6 +1,4 @@
-[jahiacom:hero] > jnt:content, jmix:droppableContent, mix:title
- - subtitle (string, textarea) i18n
+[jahiacom:hero] > jnt:content, jahiacommix:container
  - image (weakreference, picker[type='image']) i18n mandatory < jmix:image
  - ctaType (string, choicelist[linkTypeInitializer]) mandatory
  - ctaLabel (string) i18n
- - background (string, choicelist) = 'plusses' itemtype=layout < 'plusses', 'stripes'

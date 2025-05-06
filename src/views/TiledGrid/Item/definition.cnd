@@ -1,0 +1,4 @@
+[jahiacom:tiledGridItem] > jnt:content, mix:title
+ - body (string, textarea) i18n mandatory
+ - ctaType (string, choicelist[linkTypeInitializer]) mandatory
+ - ctaLabel (string) i18n

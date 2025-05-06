@@ -9,6 +9,9 @@ export default {
     "at-rule-no-deprecated": [true, { ignoreAtRules: ["apply"] }],
     "at-rule-no-unknown": [true, { ignoreAtRules: ["screen"] }],
 
+    // CSS Modules: allow "composes" rules
+    "property-no-unknown": [true, { ignoreProperties: ["composes"] }],
+
     // CSS Modules: require camelCase for class names to be used as JS identifiers
     "selector-class-pattern": [
       /^([a-z][a-zA-Z0-9]*)$/,

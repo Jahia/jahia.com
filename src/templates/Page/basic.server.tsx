@@ -40,10 +40,7 @@ jahiaComponent(
         root={renderContext.getSite().getHome()}
         current={mainNode}
       />
-      <Area name="hero" allowedNodeTypes={["jahiacom:hero"]} numberOfItems={1} />
-      <div style={{ background: "var(--jahia-neutral-50)" }}>
-        <Area name="main" />
-      </div>
+      <Area name="main" allowedNodeTypes={["jahiacommix:container"]} />
     </Layout>
   ),
 );

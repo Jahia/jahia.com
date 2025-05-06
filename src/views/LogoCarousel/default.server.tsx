@@ -9,12 +9,11 @@ jahiaComponent(
     nodeType: "jahiacom:logoCarousel",
   },
   ({ logos, mode }: { logos: JCRNodeWrapper[]; mode: "color" | "mono" }) => (
-    <HydrateInBrowser child={CarouselClient} props={{ mode }}>
+    <HydrateInBrowser child={CarouselClient} props={{ mode, length: logos.length }}>
       {logos.map((logo) => (
         <div
           key={logo.getName()}
           className={classes.logo}
-          // @ts-expect-error React.CSSProperties does not allow CSS variables
           style={{ "--logo": `url(${buildNodeUrl(logo)})` }}
         >
           {/* Include the alt text directly in the logo */}

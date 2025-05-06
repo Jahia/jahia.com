@@ -1,28 +1,11 @@
 .hero {
   --cut: 2rem;
 
-  padding: 2rem 1rem;
-  color: var(--jahia-color);
-  background: var(--jahia-background) center / cover;
-
-  /* Visual variations, configurable in the "Layout" section of jContent */
-  &[data-bg="plusses"] {
-    background: var(--jahia-background) url("./plusses.svg") center no-repeat;
-  }
-
-  &[data-bg="stripes"] {
-    background: var(--jahia-background) url("./stripes.svg") center / cover no-repeat;
-  }
+  composes: container from "../../theme/theme.module.css";
 }
 
-.column {
-  max-inline-size: var(--jahia-width);
-  margin-inline: auto;
-}
-
-.center {
-  text-align: center;
-  text-wrap: balance;
+.header {
+  composes: header from "../../theme/theme.module.css";
 }
 
 .grid {
@@ -35,8 +18,8 @@
 }
 
 .wrapper {
+  composes: item from "../../theme/theme.module.css";
   padding: 2rem;
-  border: 1px solid var(--jahia-border);
   border-block-end: 0;
   clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut));
   contain: paint;

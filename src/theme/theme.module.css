@@ -1,0 +1,31 @@
+.container {
+  @apply _stack-8;
+
+  padding: 2rem 1rem;
+  color: var(--jahia-color);
+  background: var(--jahia-container-background) center / cover;
+
+  /* Visual variations, configurable in the "Layout" section of jContent */
+  &[data-bg="plusses"] {
+    background: var(--jahia-container-background) url("./plusses.svg") center no-repeat;
+  }
+
+  &[data-bg="stripes"] {
+    background: var(--jahia-container-background) url("./stripes.svg") center / cover no-repeat;
+  }
+
+  > * {
+    max-width: var(--jahia-width);
+    margin-inline: auto;
+  }
+}
+
+.header {
+  text-align: center;
+  text-wrap: balance;
+}
+
+.item {
+  background: var(--jahia-background);
+  border: 1px solid var(--jahia-border);
+}
