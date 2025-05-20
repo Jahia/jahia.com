@@ -1,0 +1,1 @@
+- installOrUpgradeBundle: "mvn:org.jahia.modules/javascript-modules-engine/0.7.0"

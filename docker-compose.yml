@@ -1,0 +1,30 @@
+services:
+  jahia:
+    image: jahia/jahia-ee:8.2
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080
+      - 9229:9229
+    environment:
+      DB_VENDOR: postgresql
+      DB_URL: jdbc:postgresql://postgres:5432/jahia
+      DB_USER: jahia
+      DB_PASS: dbpassword
+      JPDA: true
+      EXECUTE_PROVISIONING_SCRIPT: "file:/mnt/jahia/provisioning.yml"
+    volumes:
+      - type: bind
+        source: ./docker
+        target: /mnt/jahia
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8080/start"]
+      interval: 5s
+      timeout: 1s
+      retries: 24
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: jahia
+      POSTGRES_PASSWORD: dbpassword
