@@ -124,18 +124,22 @@
 .submenuLabel {
   @apply _pack-0;
 
-  > a {
+  width: 100%;
+  padding: 0;
+  color: inherit;
+  text-align: start;
+  background: transparent;
+  border: transparent;
+
+  > :first-child {
     flex: 1;
     padding: 0.5rem;
+    border-inline-end: 1px solid var(--jahia-border);
   }
 
-  > button {
-    padding: 0.5rem;
-    padding-inline-start: 0.75rem;
-    color: inherit;
-    background: transparent;
-    border: transparent;
-    border-inline-start: 1px solid var(--jahia-border);
+  > :last-child {
+    margin: 0.5rem;
+    margin-inline-start: 0.75rem;
   }
 }
 

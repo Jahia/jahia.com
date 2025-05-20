@@ -4,25 +4,20 @@ import clsx from "clsx";
 import { useFloating, autoUpdate, offset } from "@floating-ui/react-dom";
 import { CTA } from "../../components/CTA.jsx";
 
+export type Group = { title: string; children: Entry[] };
+export type Page = { title: string; href: string; current: boolean };
+export type Entry = Group | Page;
+
 export default function NavBarClient({
   primaryCTA,
   secondaryCTA,
   children,
-  pages,
+  entries,
 }: {
   primaryCTA?: { href: string; label: string } | false;
   secondaryCTA?: { href: string; label: string } | false;
   children: ReactNode;
-  pages: Array<{
-    href: string;
-    current: boolean;
-    title: string;
-    children: Array<{
-      href: string;
-      current: boolean;
-      title: string;
-    }>;
-  }>;
+  entries: Entry[];
 }) {
   const [open, setOpen] = useState(false);
   const [submenu, setSubmenu] = useState<string | null>(null);
@@ -75,29 +70,41 @@ export default function NavBarClient({
         {children}
         <div className="_pack-2" style={{ flex: 1, justifyContent: "end" }}>
           <div className={clsx(classes.desktop, "_pack-4")}>
-            {pages.map(({ href, current, title }) => (
-              <a
-                key={href}
-                href={href}
-                aria-current={current ? "page" : undefined}
-                className={classes.barLink}
-                onMouseMove={(event) => {
-                  refs.setReference(event.currentTarget);
-                  if (submenu) setAnimate(true);
-                  setOpen(true);
-                  setSubmenu(href);
-                }}
-                onFocus={(event) => {
-                  refs.setReference(event.currentTarget);
-                  if (submenu) setAnimate(true);
-                  setOpen(true);
-                  setSubmenu(href);
-                }}
-              >
-                {title}
-                <span className="i-ri:arrow-down-wide-line" />
-              </a>
-            ))}
+            {entries.map((entry) =>
+              "href" in entry ? (
+                <a
+                  key={entry.href}
+                  href={entry.href}
+                  aria-current={entry.current ? "page" : undefined}
+                  className={classes.barLink}
+                  onMouseMove={() => {
+                    setOpen(false);
+                  }}
+                >
+                  {entry.title}
+                </a>
+              ) : (
+                <span
+                  key={entry.title}
+                  className={classes.barLink}
+                  onMouseMove={(event) => {
+                    refs.setReference(event.currentTarget);
+                    if (submenu) setAnimate(true);
+                    setOpen(true);
+                    setSubmenu(entry.title);
+                  }}
+                  onFocus={(event) => {
+                    refs.setReference(event.currentTarget);
+                    if (submenu) setAnimate(true);
+                    setOpen(true);
+                    setSubmenu(entry.title);
+                  }}
+                >
+                  {entry.title}
+                  <span className="i-ri:arrow-down-wide-line" />
+                </span>
+              ),
+            )}
             {secondaryCTA && (
               <CTA href={secondaryCTA.href} icon secondary>
                 {secondaryCTA.label}
@@ -117,39 +124,72 @@ export default function NavBarClient({
         </div>
       </div>
       <div className={classes.mobileMenu} inert={!open}>
-        {pages.map(({ href, current, title, children }) => (
-          <div key={href} className={classes.submenu} data-open={submenu === href}>
-            <div className={classes.submenuLabel}>
-              <a href={href} aria-current={current ? "page" : undefined} className={classes.link}>
-                {title}
-              </a>
+        {entries.map((entry) =>
+          "href" in entry ? (
+            <a
+              key={entry.href}
+              href={entry.href}
+              aria-current={entry.current ? "page" : undefined}
+              className={classes.link}
+              style={{ padding: ".5rem" }}
+            >
+              {entry.title}
+            </a>
+          ) : (
+            <div key={entry.title} className={classes.submenu} data-open={submenu === entry.title}>
               <button
                 type="button"
-                onClick={() => setSubmenu((prev) => (prev === href ? null : href))}
-                aria-label={submenu === href ? "Close submenu" : "Open submenu"}
+                className={classes.submenuLabel}
+                onClick={() => setSubmenu((prev) => (prev === entry.title ? null : entry.title))}
+                aria-label={submenu === entry.title ? "Close submenu" : "Open submenu"}
               >
+                <span>{entry.title}</span>
                 <span
                   className={
-                    submenu === href ? "i-ri:arrow-up-wide-line" : "i-ri:arrow-down-wide-line"
+                    submenu === entry.title
+                      ? "i-ri:arrow-up-wide-line"
+                      : "i-ri:arrow-down-wide-line"
                   }
                 />
               </button>
+              <ul>
+                {entry.children.map((entry) =>
+                  "href" in entry ? (
+                    <li key={entry.href}>
+                      <a
+                        href={entry.href}
+                        aria-current={entry.current ? "page" : undefined}
+                        className={classes.link}
+                      >
+                        {entry.title}
+                      </a>
+                    </li>
+                  ) : (
+                    <li key={entry.title}>
+                      {entry.title}
+                      <ul>
+                        {entry.children.map(
+                          (entry) =>
+                            "href" in entry && (
+                              <li key={entry.href}>
+                                <a
+                                  href={entry.href}
+                                  aria-current={entry.current ? "page" : undefined}
+                                  className={classes.link}
+                                >
+                                  {entry.title}
+                                </a>
+                              </li>
+                            ),
+                        )}
+                      </ul>
+                    </li>
+                  ),
+                )}
+              </ul>
             </div>
-            <ul>
-              {children.map(({ href, current, title }) => (
-                <li key={href}>
-                  <a
-                    href={href}
-                    aria-current={current ? "page" : undefined}
-                    className={classes.link}
-                  >
-                    {title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+          ),
+        )}
         <div style={{ padding: ".5rem" }}>
           {secondaryCTA && (
             <CTA href={secondaryCTA.href} icon secondary>
@@ -171,15 +211,41 @@ export default function NavBarClient({
         className={classes.desktopMenu}
       >
         <ul>
-          {pages
-            .find(({ href }) => href === submenu)
-            ?.children.map(({ href, current, title }) => (
-              <li key={href}>
-                <a href={href} aria-current={current ? "page" : undefined} className={classes.link}>
-                  {title}
-                </a>
-              </li>
-            ))}
+          {entries
+            .find((entry): entry is Group => !("href" in entry) && entry.title === submenu)
+            ?.children.map((entry) =>
+              "href" in entry ? (
+                <li key={entry.href}>
+                  <a
+                    href={entry.href}
+                    aria-current={entry.current ? "page" : undefined}
+                    className={classes.link}
+                  >
+                    {entry.title}
+                  </a>
+                </li>
+              ) : (
+                <li key={entry.title}>
+                  {entry.title}
+                  <ul>
+                    {entry.children.map(
+                      (entry) =>
+                        "href" in entry && (
+                          <li key={entry.href}>
+                            <a
+                              href={entry.href}
+                              aria-current={entry.current ? "page" : undefined}
+                              className={classes.link}
+                            >
+                              {entry.title}
+                            </a>
+                          </li>
+                        ),
+                    )}
+                  </ul>
+                </li>
+              ),
+            )}
         </ul>
       </div>
     </nav>

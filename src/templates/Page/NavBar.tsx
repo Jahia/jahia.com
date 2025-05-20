@@ -5,8 +5,27 @@ import {
   HydrateInBrowser,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
-import NavBarClient from "./NavBar.client.jsx";
+import NavBarClient, { type Entry } from "./NavBar.client.jsx";
 import type { JCRSiteNode } from "org.jahia.services.content.decorator";
+
+const getEntries = (root: JCRNodeWrapper, current: string): Entry[] =>
+  getChildNodes(
+    root,
+    -1,
+    0,
+    (node) => node.isNodeType("jnt:page") || node.isNodeType("jnt:navMenuText"),
+  ).map((node) =>
+    node.isNodeType("jnt:page")
+      ? {
+          title: node.getPropertyAsString("jcr:title"),
+          href: buildNodeUrl(node),
+          current: current === node.getIdentifier(),
+        }
+      : {
+          title: node.getPropertyAsString("jcr:title"),
+          children: getEntries(node, current),
+        },
+  );
 
 export default function NavBar({
   site,
@@ -42,18 +61,7 @@ export default function NavBar({
         },
         // This can quickly get out of hand, if there are too many pages in the menu we need
         // to rethink the implementation
-        pages: getChildNodes(root, -1, 0, (node) => node.isNodeType("jnt:page")).map((node) => ({
-          href: buildNodeUrl(node),
-          current: current.getIdentifier() === node.getIdentifier(),
-          title: node.getPropertyAsString("jcr:title"),
-          children: getChildNodes(node, -1, 0, (child) => child.isNodeType("jnt:page")).map(
-            (child) => ({
-              href: buildNodeUrl(child),
-              current: current.getIdentifier() === child.getIdentifier(),
-              title: child.getPropertyAsString("jcr:title"),
-            }),
-          ),
-        })),
+        entries: getEntries(root, current.getIdentifier()),
       }}
     >
       <a
