@@ -42,6 +42,7 @@
 }
 
 .image {
+  width: 100%;
   object-fit: cover;
   background-color: var(--jahia-border);
   clip-path: polygon(
