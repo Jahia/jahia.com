@@ -1,6 +1,4 @@
 .hero {
-  --cut: 2rem;
-
   composes: container from "../../theme/theme.module.css";
 }
 
@@ -18,26 +16,15 @@
 }
 
 .wrapper {
+  @apply _cut-before _stack-8;
+
   composes: item from "../../theme/theme.module.css";
   padding: 2rem;
   border-block-end: 0;
-  clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut));
-  contain: paint;
 
   @screen md {
     border-block-end: 1px solid var(--jahia-border);
     border-inline-end: 0;
-  }
-
-  &::before {
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-start: 0;
-    inline-size: var(--cut);
-    block-size: var(--cut);
-    content: "";
-    background-color: var(--jahia-border);
-    clip-path: polygon(0 0, 100% 0, 0 100%);
   }
 }
 
@@ -48,8 +35,8 @@
   clip-path: polygon(
     0 0,
     100% 0,
-    100% calc(100% - var(--cut)),
-    calc(100% - var(--cut)) 100%,
+    100% calc(100% - var(--jahia-cut)),
+    calc(100% - var(--jahia-cut)) 100%,
     0 100%
   );
 

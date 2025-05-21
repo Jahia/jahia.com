@@ -11,6 +11,7 @@ export default {
 
     // CSS Modules: allow "composes" rules
     "property-no-unknown": [true, { ignoreProperties: ["composes"] }],
+    "value-keyword-case": ["lower", { ignoreProperties: ["composes"] }],
 
     // CSS Modules: require camelCase for class names to be used as JS identifiers
     "selector-class-pattern": [

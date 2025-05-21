@@ -27,6 +27,9 @@
   --jahia-color: var(--jahia-neutral-700);
   --jahia-border: var(--jahia-neutral-300);
   --jahia-inner-border: var(--jahia-neutral-300);
+
+  /* Accent parameters */
+  --jahia-cut: 2rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -41,7 +44,7 @@
   --jahia-background: var(--jahia-neutral-50);
   --jahia-color: var(--jahia-neutral-700);
   --jahia-border: var(--jahia-neutral-100);
-  --jahia-inner-border: var(--jahia-neutral-300);
+  --jahia-inner-border: var(--jahia-neutral-200);
 }
 
 [data-theme="night"] {

@@ -15,6 +15,7 @@
   }
 
   > * {
+    width: 100%;
     max-width: var(--jahia-width);
     margin-inline: auto;
   }

@@ -1,0 +1,67 @@
+.panel {
+  display: grid;
+  gap: 0 1rem;
+}
+
+@screen sm {
+  .withImage.right {
+    grid-template-columns: 3fr minmax(16rem, 2fr);
+  }
+
+  .withImage.left {
+    grid-template-columns: minmax(16rem, 2fr) 3fr;
+  }
+}
+
+.withoutImage .text {
+  @apply _cut-both;
+}
+
+@screen lt-sm {
+  .withImage .text {
+    @apply _cut-after;
+  }
+}
+
+@screen sm {
+  .withImage.right .text {
+    @apply _cut-before;
+  }
+
+  .withImage.left .text {
+    @apply _cut-after;
+  }
+}
+
+.text {
+  @apply _stack-4;
+
+  composes: item from "../../../theme/theme.module.css";
+  padding: 1.5rem;
+}
+
+.image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--jahia-inner-border);
+
+  @screen lt-sm {
+    & {
+      @apply _cut-before;
+    }
+  }
+
+  @screen sm {
+    .left & {
+      @apply _cut-before;
+    }
+
+    .right & {
+      @apply _cut-after;
+
+      order: 1;
+    }
+  }
+}

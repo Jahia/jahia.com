@@ -1,0 +1,6 @@
+[jahiacom:panel] > jnt:content, mix:title
+ - body (string, richtext) i18n mandatory
+ - ctaType (string, choicelist[linkTypeInitializer]) mandatory
+ - ctaLabel (string) i18n
+ - image (weakreference, picker[type='image']) i18n < jmix:image
+ - swap (boolean) = false
