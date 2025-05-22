@@ -19,7 +19,11 @@ jahiaComponent(
       </h3>
       <div className={classes.body}>
         {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml */}
-        <div style={{ padding: "1rem" }} dangerouslySetInnerHTML={{ __html: body }} />
+        <div
+          className="_richtext"
+          style={{ padding: "1rem" }}
+          dangerouslySetInnerHTML={{ __html: body }}
+        />
       </div>
     </article>
   ),

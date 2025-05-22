@@ -10,6 +10,7 @@ import EditorHints from "../components/EditorHints.jsx";
 
 import "modern-normalize/modern-normalize.css";
 import "virtual:uno.css";
+import "@fontsource-variable/plus-jakarta-sans/wght";
 import "./global.css";
 import "./themes.css";
 

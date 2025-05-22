@@ -15,7 +15,7 @@ export default {
 
     // CSS Modules: require camelCase for class names to be used as JS identifiers
     "selector-class-pattern": [
-      /^([a-z][a-zA-Z0-9]*)$/,
+      /^_?([a-z][a-zA-Z0-9]*)$/,
       {
         message: (selector) => `Expected class selector "${selector}" to be camelCase`,
       },

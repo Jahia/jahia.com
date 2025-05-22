@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.2",
+    "@fontsource-variable/plus-jakarta-sans": "^5.2.5",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
     "modern-normalize": "^3.0.1",

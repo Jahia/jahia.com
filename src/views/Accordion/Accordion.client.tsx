@@ -26,6 +26,7 @@ export default function Accordion({
           </h3>
           <div className={classes.body} inert={current !== key}>
             <div
+              className="_richtext"
               style={{ padding: "1rem" }}
               // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
               dangerouslySetInnerHTML={{ __html: body }}

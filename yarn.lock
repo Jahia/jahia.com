@@ -526,6 +526,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource-variable/plus-jakarta-sans@npm:^5.2.5":
+  version: 5.2.5
+  resolution: "@fontsource-variable/plus-jakarta-sans@npm:5.2.5"
+  checksum: 10c0/f8f50d4b313662add9ad33e9926b0dcbedd17e7814b3aaa8087430d99be53218076424a8b714eab9fa58fa729fbc10ed78c24ae7ae19bf0f0cc64bf1d1961a9a
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -3141,6 +3148,7 @@ __metadata:
     "@eslint/compat": "npm:^1.2.9"
     "@eslint/js": "npm:^9.27.0"
     "@floating-ui/react-dom": "npm:^2.1.2"
+    "@fontsource-variable/plus-jakarta-sans": "npm:^5.2.5"
     "@iconify-json/ri": "npm:^1.2.5"
     "@jahia/javascript-modules-library": "npm:^0.7.0"
     "@jahia/vite-plugin": "npm:^0.7.0"

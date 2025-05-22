@@ -24,7 +24,8 @@
   /* Default theme: Day */
   --jahia-container-background: var(--jahia-neutral-50);
   --jahia-background: transparent;
-  --jahia-color: var(--jahia-neutral-700);
+  --jahia-color: var(--jahia-neutral-600);
+  --jahia-title-color: var(--jahia-neutral-700);
   --jahia-border: var(--jahia-neutral-300);
   --jahia-inner-border: var(--jahia-neutral-300);
 
@@ -42,7 +43,8 @@
 [data-theme="cloudy"] {
   --jahia-container-background: var(--jahia-neutral-100);
   --jahia-background: var(--jahia-neutral-50);
-  --jahia-color: var(--jahia-neutral-700);
+  --jahia-color: var(--jahia-neutral-600);
+  --jahia-title-color: var(--jahia-neutral-700);
   --jahia-border: var(--jahia-neutral-100);
   --jahia-inner-border: var(--jahia-neutral-200);
 }
@@ -50,7 +52,8 @@
 [data-theme="night"] {
   --jahia-container-background: var(--jahia-navy-blue);
   --jahia-background: transparent;
-  --jahia-color: var(--jahia-neutral-50);
+  --jahia-color: var(--jahia-neutral-100);
+  --jahia-title-color: var(--jahia-neutral-50);
   --jahia-border: var(--jahia-neutral-600);
   --jahia-inner-border: var(--jahia-neutral-600);
 }
