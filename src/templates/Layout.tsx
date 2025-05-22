@@ -21,6 +21,8 @@ export const Layout = ({
   keywords,
   openGraphImage,
   jsonLd,
+  noindex,
+  nofollow,
   children,
 }: {
   title: string;
@@ -28,6 +30,8 @@ export const Layout = ({
   keywords?: string[];
   openGraphImage?: JCRNodeWrapper;
   jsonLd?: string[];
+  noindex?: boolean;
+  nofollow?: boolean;
   children: ReactNode;
 }) => {
   const { currentResource, renderContext } = useServerContext();
@@ -77,6 +81,8 @@ export const Layout = ({
             {content}
           </script>
         ))}
+        {noindex && <meta name="robots" content="noindex" />}
+        {nofollow && <meta name="robots" content="nofollow" />}
         <AddResources type="css" resources={buildModuleFileUrl("dist/server/index.css")} />
       </head>
       <body>

@@ -9,6 +9,8 @@ interface Props {
   "seoKeywords"?: string[];
   "openGraphImage"?: JCRNodeWrapper;
   "jsonLd"?: string[];
+  "noindex"?: boolean;
+  "nofollow"?: boolean;
 }
 
 jahiaComponent(
@@ -25,6 +27,8 @@ jahiaComponent(
       "seoKeywords": keywords,
       openGraphImage,
       jsonLd,
+      noindex,
+      nofollow,
     }: Props,
     { renderContext, mainNode },
   ) => (
@@ -34,6 +38,8 @@ jahiaComponent(
       keywords={keywords}
       openGraphImage={openGraphImage}
       jsonLd={jsonLd}
+      noindex={noindex}
+      nofollow={nofollow}
     >
       <NavBar
         site={renderContext.getSite()}
