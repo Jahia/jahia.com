@@ -12,7 +12,7 @@ jahiaComponent(
   },
   ({ theme, "jcr:title": title, subtitle, image, ...cta }: Props) => (
     <>
-      {image && <link rel="preload" as="image" href={buildNodeUrl(image)} />}
+      {image && <link rel="preload" as="image" href={buildNodeUrl(image)} fetchPriority="high" />}
       <header
         // Despite being mandatory, the image can be missing in some cases (e.g. new translation)
         style={{ backgroundImage: image && `url(${buildNodeUrl(image)})`, paddingBlock: "4rem" }}
