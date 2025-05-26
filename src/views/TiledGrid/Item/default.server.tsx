@@ -1,11 +1,11 @@
 import { jahiaComponent } from "@jahia/javascript-modules-library";
-import { LinkTypeCTA, type LinkTypeProps } from "../../LinkTypeCTA.jsx";
 import classes from "./component.module.css";
+import { MixinCTA, type CTAProps } from "../../../mixins/CTA/server.jsx";
 
 type Props = {
   "jcr:title"?: string;
   "body"?: string;
-} & ({ ctaType: "none" } | LinkTypeProps);
+} & CTAProps;
 
 jahiaComponent(
   {
@@ -18,7 +18,7 @@ jahiaComponent(
       {body && <p style={{ flex: 1 }}>{body}</p>}
       {cta.ctaType !== "none" && (
         <p>
-          <LinkTypeCTA cta={cta} />
+          <MixinCTA cta={cta} />
         </p>
       )}
     </article>

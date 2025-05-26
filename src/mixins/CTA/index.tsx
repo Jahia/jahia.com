@@ -1,5 +1,5 @@
-import type { AnchorHTMLAttributes, ReactNode } from "react";
-import classes from "./CTA.module.css";
+import type { AnchorHTMLAttributes } from "react";
+import classes from "./component.module.css";
 
 export const CTA = ({
   children,
@@ -7,7 +7,6 @@ export const CTA = ({
   secondary,
   ...props
 }: {
-  children: ReactNode;
   icon?: boolean | string;
   secondary?: boolean;
 } & AnchorHTMLAttributes<HTMLAnchorElement>) => (

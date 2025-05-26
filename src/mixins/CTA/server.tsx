@@ -1,12 +1,25 @@
 import { buildNodeUrl } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
-import { CTA } from "../components/CTA.jsx";
+import { CTA } from "./index.jsx";
 
-export type LinkTypeProps =
-  | { "ctaType": "internal"; "j:linknode"?: JCRNodeWrapper; "ctaLabel"?: string }
-  | { "ctaType": "external"; "j:url"?: string; "j:linkTitle"?: string; "ctaLabel"?: string };
+export type CTAProps = MixinCTAProps | { ctaType: "none" };
 
-export const LinkTypeCTA = ({ cta }: { cta: LinkTypeProps }) => (
+type MixinCTAProps =
+  | {
+      "ctaType": "internal";
+      "j:linknode"?: JCRNodeWrapper;
+      "ctaLabel"?: string;
+      "ctaVariant"?: "primary" | "secondary";
+    }
+  | {
+      "ctaType": "external";
+      "j:url"?: string;
+      "j:linkTitle"?: string;
+      "ctaLabel"?: string;
+      "ctaVariant"?: "primary" | "secondary";
+    };
+
+export const MixinCTA = ({ cta }: { cta: MixinCTAProps }) => (
   <CTA
     href={
       cta.ctaType === "internal"
@@ -15,6 +28,7 @@ export const LinkTypeCTA = ({ cta }: { cta: LinkTypeProps }) => (
     }
     title={cta.ctaType === "external" ? cta["j:linkTitle"] : undefined}
     icon
+    secondary={cta.ctaVariant === "secondary"}
   >
     {cta.ctaLabel ||
       (cta.ctaType === "internal"

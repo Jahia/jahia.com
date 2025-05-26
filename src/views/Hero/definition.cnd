@@ -1,4 +1,2 @@
-[jahiacom:hero] > jnt:content, jahiacommix:container
+[jahiacom:hero] > jnt:content, jahiacommix:container, jahiacommix:cta
  - image (weakreference, picker[type='image']) i18n mandatory < jmix:image
- - ctaType (string, choicelist[linkTypeInitializer]) mandatory
- - ctaLabel (string) i18n

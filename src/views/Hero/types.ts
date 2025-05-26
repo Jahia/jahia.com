@@ -1,8 +1,5 @@
 import type { JCRNodeWrapper } from "org.jahia.services.content";
-import type { LinkTypeProps } from "../LinkTypeCTA.jsx";
 import type { ContainerProps } from "../../theme/index.js";
+import type { CTAProps } from "../../mixins/CTA/server.jsx";
 
-export type Props = ContainerProps & { image: JCRNodeWrapper } & (
-    | { ctaType: "none" }
-    | LinkTypeProps
-  );
+export type Props = ContainerProps & { image: JCRNodeWrapper } & CTAProps;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import classes from "./NavBar.module.css";
 import clsx from "clsx";
 import { useFloating, autoUpdate, offset } from "@floating-ui/react-dom";
-import { CTA } from "../../components/CTA.jsx";
+import { CTA } from "../../mixins/CTA/index.jsx";
 
 export type Group = { title: string; children: Entry[] };
 export type Page = { title: string; href: string; current: boolean };

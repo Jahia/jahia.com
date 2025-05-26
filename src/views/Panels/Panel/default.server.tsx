@@ -1,10 +1,10 @@
 import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
-import { LinkTypeCTA, type LinkTypeProps } from "../../LinkTypeCTA.jsx";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import classes from "./component.module.css";
 import clsx from "clsx";
+import { MixinCTA, type CTAProps } from "../../../mixins/CTA/server.jsx";
 
-type Props = (LinkTypeProps | { ctaType: "none" }) & {
+type Props = CTAProps & {
   "jcr:title"?: string;
   "body"?: string;
   "image"?: JCRNodeWrapper;
@@ -36,7 +36,7 @@ jahiaComponent(
         {body && <div className="_richtext" dangerouslySetInnerHTML={{ __html: body }}></div>}
         {cta.ctaType !== "none" && (
           <p>
-            <LinkTypeCTA cta={cta} />
+            <MixinCTA cta={cta} />
           </p>
         )}
       </div>

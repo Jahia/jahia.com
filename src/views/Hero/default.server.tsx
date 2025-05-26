@@ -1,8 +1,8 @@
 import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
 import { clsx } from "clsx";
-import { LinkTypeCTA } from "../LinkTypeCTA.jsx";
 import type { Props } from "./types.js";
+import { MixinCTA } from "../../mixins/CTA/server.jsx";
 
 jahiaComponent(
   {
@@ -17,7 +17,7 @@ jahiaComponent(
           {subtitle && <p>{subtitle}</p>}
           {cta.ctaType !== "none" && (
             <p>
-              <LinkTypeCTA cta={cta} />
+              <MixinCTA cta={cta} />
             </p>
           )}
         </div>
