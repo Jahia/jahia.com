@@ -1,8 +1,4 @@
-import {
-  AddContentButtons,
-  jahiaComponent,
-  RenderChildren,
-} from "@jahia/javascript-modules-library";
+import { jahiaComponent, RenderChildren } from "@jahia/javascript-modules-library";
 import { Container, type ContainerProps } from "../../theme/index.jsx";
 import classes from "./component.module.css";
 
@@ -25,7 +21,6 @@ jahiaComponent(
     <Container {...props}>
       <div className={classes.grid} data-columns={columns} data-width={width}>
         <RenderChildren />
-        <AddContentButtons />
       </div>
     </Container>
   ),

@@ -58,20 +58,3 @@
     }
   }
 }
-
-.item {
-  composes: item from "../../theme/theme.module.css";
-  padding: 1.5rem;
-}
-
-.item:only-child {
-  @apply _cut-both;
-}
-
-.item:first-child:not(:last-child) {
-  @apply _cut-before;
-}
-
-.item:last-child:not(:first-child) {
-  @apply _cut-after;
-}

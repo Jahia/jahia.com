@@ -3,6 +3,10 @@
 
   composes: item from "../../theme/theme.module.css";
   padding: 1.5rem;
+
+  &:first-child {
+    @apply _cut-before;
+  }
 }
 
 .collapsible {

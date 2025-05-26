@@ -10,7 +10,7 @@ jahiaComponent(
   },
   ({ "jcr:title": title, body, ...cta }: Props) => (
     <article className={classes.card}>
-      <h3>{title}</h3>
+      {title && <h3>{title}</h3>}
       {body && (
         <div className="_richtext" style={{ flex: 1 }} dangerouslySetInnerHTML={{ __html: body }} />
       )}
