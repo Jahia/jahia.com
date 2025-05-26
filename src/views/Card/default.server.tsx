@@ -1,6 +1,6 @@
 import { jahiaComponent } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
-import { MixinCTA, type CTAProps } from "../../../mixins/CTA/server.jsx";
+import { MixinCTA, type CTAProps } from "../../mixins/CTA/server.jsx";
 
 type Props = {
   "jcr:title"?: string;
@@ -10,12 +10,14 @@ type Props = {
 jahiaComponent(
   {
     componentType: "view",
-    nodeType: "jahiacom:tiledGridItem",
+    nodeType: "jahiacom:card",
   },
   ({ "jcr:title": title, body, ...cta }: Props) => (
-    <article className={classes.item}>
+    <article className={classes.card}>
       <h3>{title}</h3>
-      {body && <p style={{ flex: 1 }}>{body}</p>}
+      {body && (
+        <div className="_richtext" style={{ flex: 1 }} dangerouslySetInnerHTML={{ __html: body }} />
+      )}
       {cta.ctaType !== "none" && (
         <p>
           <MixinCTA cta={cta} />

@@ -1,4 +1,4 @@
-.item {
+.card {
   @apply _stack-4;
 
   composes: item from "../../../theme/theme.module.css";

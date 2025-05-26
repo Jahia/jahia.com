@@ -1,0 +1,2 @@
+[jahiacom:card] > jnt:content, mix:title, jahiacommix:cta
+ - body (string, richtext) i18n mandatory
