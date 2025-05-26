@@ -44,7 +44,9 @@ jahiaComponent(
             })),
           })}
         </script>
-        <HydrateInBrowser child={Accordion} props={{ items }} />
+        <HydrateInBrowser child={Accordion}>
+          <RenderChildren view="collapsible" />
+        </HydrateInBrowser>
       </>
     );
   },

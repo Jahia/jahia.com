@@ -1,2 +1,2 @@
 [jahiacom:accordion] > jnt:content, jahiacommix:component orderable
- + * (jahiacom:accordionItem)
+ + * (jahiacom:card)

@@ -1,39 +1,28 @@
-import { useState } from "react";
-import classes from "./Item/component.module.css";
+import { type ReactNode } from "react";
 
-export default function Accordion({
-  items,
-}: {
-  items: Array<{ key: string; title: string; body: string }>;
-}) {
-  const [current, setCurrent] = useState<string>();
-
+export default function Accordion({ children }: { children?: ReactNode }) {
   return (
-    <section className="_stack-3">
-      {items.map(({ key, title, body }) => (
-        <article key={key} className={classes.item} aria-expanded={current === key}>
-          <h3 className={classes.header}>
-            <button
-              type="button"
-              className={classes.toggle}
-              onClick={() => setCurrent((prev) => (prev === key ? undefined : key))}
-            >
-              <span style={{ flex: 1 }}>{title}</span>
-              <span className={classes.button}>
-                <span className="i-ri:add-line" aria-label={current === key ? "Close" : "Open"} />
-              </span>
-            </button>
-          </h3>
-          <div className={classes.body} inert={current !== key}>
-            <div
-              className="_richtext"
-              style={{ padding: "1rem" }}
-              // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
-              dangerouslySetInnerHTML={{ __html: body }}
-            />
-          </div>
-        </article>
-      ))}
+    <section
+      className="_stack-3"
+      onClick={(event) => {
+        const button = (event.target as HTMLElement | undefined)?.closest?.("button");
+        if (!button) return; // Ignore clicks outside of buttons
+
+        const card = button.closest("article");
+        if (!card) return;
+
+        if (card.getAttribute("aria-expanded") === "true") {
+          // If the card is expanded, collapse it
+          card.setAttribute("aria-expanded", "false");
+        } else {
+          // If the card is collapsed, collapse others and expand this one
+          const openCards = event.currentTarget.querySelectorAll("article[aria-expanded='true']");
+          for (const openCard of openCards) openCard.setAttribute("aria-expanded", "false");
+          card.setAttribute("aria-expanded", "true");
+        }
+      }}
+    >
+      {children}
     </section>
   );
 }

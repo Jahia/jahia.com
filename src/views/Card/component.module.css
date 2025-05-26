@@ -1,6 +1,69 @@
 .card {
   @apply _stack-4;
 
-  composes: item from "../../../theme/theme.module.css";
+  composes: item from "../../theme/theme.module.css";
   padding: 1.5rem;
+}
+
+.collapsible {
+  composes: item from "../../theme/theme.module.css";
+
+  > h3 {
+    font-size: 1rem;
+  }
+
+  .header {
+    @apply _pack-0;
+  }
+
+  .body {
+    @apply _stack-4;
+
+    display: none;
+    transition:
+      transform var(--jahia-motion-timing),
+      opacity var(--jahia-timing);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(-2rem);
+    }
+  }
+
+  /* https://gautier.dev/articles/a-text-like-button */
+  .toggle {
+    all: unset;
+    flex: 1;
+    padding: 1rem;
+    cursor: pointer;
+    outline: revert;
+
+    @apply _pack-2;
+  }
+
+  .button {
+    display: flex;
+    padding: calc(7rem / 16);
+    color: var(--jahia-blue);
+    border: 1px solid var(--jahia-inner-border);
+    border-radius: 0.25rem;
+
+    > * {
+      transition: transform var(--jahia-motion-timing);
+    }
+  }
+
+  &[aria-expanded="true"] {
+    .header {
+      border-block-end: 1px solid var(--jahia-inner-border);
+    }
+
+    .button > * {
+      transform: rotate(135deg);
+    }
+
+    .body {
+      display: block;
+    }
+  }
 }

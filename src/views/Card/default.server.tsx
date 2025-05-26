@@ -1,11 +1,7 @@
 import { jahiaComponent } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
-import { MixinCTA, type CTAProps } from "../../mixins/CTA/server.jsx";
-
-type Props = {
-  "jcr:title"?: string;
-  "body"?: string;
-} & CTAProps;
+import { MixinCTA } from "../../mixins/CTA/server.jsx";
+import type { Props } from "./types.js";
 
 jahiaComponent(
   {
