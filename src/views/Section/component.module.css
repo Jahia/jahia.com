@@ -33,6 +33,29 @@
     &[data-columns="25-25-25-25"] {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
+
+    &[data-columns="irregular-3-2"] {
+      grid-template-columns: repeat(2, 1fr);
+
+      > :nth-child(3n + 1) {
+        grid-column: span 2;
+      }
+    }
+  }
+
+  @screen md {
+    &[data-columns="irregular-3-2"] {
+      grid-template-columns: repeat(6, 1fr);
+
+      > * {
+        grid-column: span 2;
+      }
+
+      > :nth-child(5n + 1),
+      > :nth-child(5n + 2) {
+        grid-column: span 3;
+      }
+    }
   }
 }
 
