@@ -13,7 +13,7 @@ jahiaComponent(
     if (renderContext.isEditMode()) {
       return (
         <section className="_stack-3">
-          <RenderChildren />
+          <RenderChildren view="collapsible" />
         </section>
       );
     }
