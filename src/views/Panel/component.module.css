@@ -36,7 +36,7 @@
 .text {
   @apply _stack-4;
 
-  composes: item from "../../../theme/theme.module.css";
+  composes: item from "../../theme/theme.module.css";
   padding: 1.5rem;
 }
 

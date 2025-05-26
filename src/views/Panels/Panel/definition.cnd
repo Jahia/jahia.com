@@ -1,4 +1,0 @@
-[jahiacom:panel] > jnt:content, mix:title, jahiacommix:cta
- - body (string, richtext) i18n mandatory
- - image (weakreference, picker[type='image']) i18n < jmix:image
- - swap (boolean) = false

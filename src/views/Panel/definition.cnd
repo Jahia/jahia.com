@@ -1,0 +1,3 @@
+[jahiacom:panel] > jahiacom:card
+ - image (weakreference, picker[type='image']) i18n < jmix:image
+ - swap (boolean) = false
