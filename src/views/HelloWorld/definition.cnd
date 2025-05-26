@@ -1,3 +1,0 @@
-[jahiacom:helloWorld] > jnt:content, jahiacommix:component orderable
- - name (string) i18n mandatory
- + * (jahiacom:helloCard) = jahiacom:helloCard

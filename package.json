@@ -22,7 +22,6 @@
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.2",
     "@fontsource-variable/plus-jakarta-sans": "^5.2.5",
-    "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
     "modern-normalize": "^3.0.1",
     "pretty-bytes": "^7.0.0",
@@ -35,7 +34,6 @@
     "@iconify-json/ri": "^1.2.5",
     "@jahia/javascript-modules-library": "^0.7.0",
     "@jahia/vite-plugin": "^0.7.0",
-    "@types/canvas-confetti": "^1.9.0",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
     "eslint": "^9.27.0",
@@ -53,7 +51,7 @@
     "vite": "^6.3.5",
     "vite-css-modules": "^1.8.6"
   },
-  "packageManager": "yarn@4.7.0",
+  "packageManager": "yarn@4.9.1",
   "engines": {
     "node": ">=22.0.0",
     "yarn": ">=4.0.0"
