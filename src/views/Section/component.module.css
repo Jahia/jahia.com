@@ -13,6 +13,10 @@
     max-width: calc(var(--jahia-width) * 0.5);
   }
 
+  &[data-gap="2"] {
+    gap: 2rem;
+  }
+
   @screen sm {
     &[data-columns="50-50"] {
       grid-template-columns: repeat(2, minmax(0, 1fr));

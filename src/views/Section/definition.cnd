@@ -1,4 +1,5 @@
 [jahiacom:section] > jnt:content, jahiacommix:container orderable
  - columns (string, choicelist[resourceBundle]) = '100' < '100', '50-50', '67-33', '33-67', '33-33-33', '25-25-25-25', 'irregular-3-2'
  - width (string, choicelist[resourceBundle]) = '100' < '100', '75', '50'
+ - gap (string, choicelist[resourceBundle]) = '1' < '1', '2'
  + * (jmix:droppableContent)
