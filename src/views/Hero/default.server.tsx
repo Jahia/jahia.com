@@ -1,8 +1,9 @@
-import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
+import { jahiaComponent } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
 import { clsx } from "clsx";
 import type { Props } from "./types.js";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
+import { Image } from "../../components/Image.jsx";
 
 jahiaComponent(
   {
@@ -23,13 +24,7 @@ jahiaComponent(
         </div>
         {image && (
           // Despite being mandatory, the image can be missing in some cases (e.g. new translation)
-          <img
-            src={buildNodeUrl(image)}
-            alt={image.getPropertyAsString("jcr:title")}
-            className={classes.image}
-            width={image.getPropertyAsString("j:width")}
-            height={image.getPropertyAsString("j:height")}
-          />
+          <Image image={image} maxWidth={768} />
         )}
       </div>
     </header>

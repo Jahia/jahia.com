@@ -1,9 +1,10 @@
-import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
+import { jahiaComponent } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import classes from "./component.module.css";
 import clsx from "clsx";
 import type { Props as CardProps } from "../Card/types.js";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
+import { Image } from "../../components/Image.jsx";
 
 export type Props = CardProps & {
   image?: JCRNodeWrapper;
@@ -26,12 +27,7 @@ jahiaComponent(
     >
       {image && (
         <div className={classes.image}>
-          <img
-            src={buildNodeUrl(image)}
-            alt={image.getPropertyAsString("jcr:title")}
-            width={image.getPropertyAsString("j:width")}
-            height={image.getPropertyAsString("j:height")}
-          />
+          <Image image={image} maxWidth={520} />
         </div>
       )}
       <div className={classes.text}>
