@@ -5,7 +5,6 @@ import type { HTMLAttributes } from "react";
 /** This component creates a <picture> element for an image node, enhanced for Cloudimage. */
 export const Image = ({
   image,
-  maxWidth,
   ...props
 }: { image: JCRNodeWrapper; maxWidth: number } & HTMLAttributes<HTMLImageElement>) => {
   const src = buildNodeUrl(image);
@@ -15,8 +14,8 @@ export const Image = ({
 
   return (
     <img
-      src={`${src}?w=${maxWidth}`}
-      srcSet={`${src}?w=${maxWidth * 2} 2x`}
+      src={`${src}?w=400`}
+      srcSet={`${src}?w=800 800w, ${src}?w=1600 1600w, ${src}?w=2400 2400w`}
       alt={alt}
       width={width}
       height={height}
