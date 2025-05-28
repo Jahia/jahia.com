@@ -25,7 +25,7 @@ jahiaComponent(
         )}
         {image && (
           // Despite being mandatory, the image can be missing in some cases (e.g. new translation)
-          <Image image={image} maxWidth={960} style={{ width: "60rem", marginInline: "auto" }} />
+          <Image image={image} style={{ width: "60rem", marginInline: "auto" }} />
         )}
       </div>
     </header>

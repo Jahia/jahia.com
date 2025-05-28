@@ -27,7 +27,7 @@ jahiaComponent(
     >
       {image && (
         <div className={classes.image}>
-          <Image image={image} maxWidth={520} />
+          <Image image={image} />
         </div>
       )}
       <div className={classes.text}>

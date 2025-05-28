@@ -24,7 +24,7 @@ jahiaComponent(
         </div>
         {image && (
           // Despite being mandatory, the image can be missing in some cases (e.g. new translation)
-          <Image image={image} maxWidth={768} />
+          <Image image={image} />
         )}
       </div>
     </header>
