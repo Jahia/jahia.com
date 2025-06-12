@@ -626,9 +626,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/javascript-modules-library@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "@jahia/javascript-modules-library@npm:0.7.0"
+"@jahia/javascript-modules-library@npm:0.8.0-alpha-20250612074029128":
+  version: 0.8.0-alpha-20250612074029128
+  resolution: "@jahia/javascript-modules-library@npm:0.8.0-alpha-20250612074029128"
   dependencies:
     dotenv: "npm:^16.5.0"
   peerDependencies:
@@ -650,13 +650,13 @@ __metadata:
       optional: true
   bin:
     jahia-deploy: bin/jahia-deploy.mjs
-  checksum: 10c0/b7c0ab110bab1942cc54fc7c569282b1c4e32cb4757b2426aa2222b8d3ae64fa9f5033b9b58a14a13973429fa0e0d3f373cbfba2277b94b1c97f2917c254a49a
+  checksum: 10c0/3d5e2a04f196edbb69256db8dda8e9529fe53dc0fc1783c08e36715c7fdf1f1b922c105eb04b91d4d96b6ef5d601beef2e9bac20980127af21d6dfe00bf036d9
   languageName: node
   linkType: hard
 
-"@jahia/vite-plugin@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "@jahia/vite-plugin@npm:0.7.0"
+"@jahia/vite-plugin@npm:0.8.0-alpha-20250612074029128":
+  version: 0.8.0-alpha-20250612074029128
+  resolution: "@jahia/vite-plugin@npm:0.8.0-alpha-20250612074029128"
   dependencies:
     "@rollup/plugin-multi-entry": "npm:^6.0.1"
     "@rollup/pluginutils": "npm:^5.1.4"
@@ -664,7 +664,7 @@ __metadata:
     tinyglobby: "npm:^0.2.13"
   peerDependencies:
     vite: ">=6.0.0"
-  checksum: 10c0/6b1f912a658481e4fec61eaf922e18e7cb10a6135f4d8b439b90c3e37f8eaf98c3be5a3ab72389544550dcb028003b786f851a5d7f7e7a61d1d63a01f8c292e9
+  checksum: 10c0/040ed061dc73aff8150243471da65257e85037ad8f7191889c8b2887541b9c83077a9b9270f1221d9957fe0b2f7ed410a062d56f244c4d3a62c8ded945219b1c
   languageName: node
   linkType: hard
 
@@ -3136,8 +3136,8 @@ __metadata:
     "@floating-ui/react-dom": "npm:^2.1.2"
     "@fontsource-variable/plus-jakarta-sans": "npm:^5.2.5"
     "@iconify-json/ri": "npm:^1.2.5"
-    "@jahia/javascript-modules-library": "npm:^0.7.0"
-    "@jahia/vite-plugin": "npm:^0.7.0"
+    "@jahia/javascript-modules-library": "npm:0.8.0-alpha-20250612074029128"
+    "@jahia/vite-plugin": "npm:0.8.0-alpha-20250612074029128"
     "@types/react": "npm:^19.1.4"
     "@types/react-dom": "npm:^19.1.5"
     clsx: "npm:^2.1.1"

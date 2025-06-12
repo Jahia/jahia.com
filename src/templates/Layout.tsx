@@ -83,7 +83,7 @@ export const Layout = ({
         ))}
         {noindex && <meta name="robots" content="noindex" />}
         {nofollow && <meta name="robots" content="nofollow" />}
-        <AddResources type="css" resources={buildModuleFileUrl("dist/server/index.css")} />
+        <AddResources type="css" resources={buildModuleFileUrl("dist/assets/style.css")} />
       </head>
       <body>
         <EditorHints
