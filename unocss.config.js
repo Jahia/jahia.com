@@ -1,3 +1,4 @@
+// @ts-check
 import { defineConfig } from "unocss/vite";
 import { presetIcons } from "unocss";
 import { transformerDirectives } from "unocss";
@@ -15,7 +16,7 @@ export default defineConfig({
       ([, gap]) => ({
         "display": "flex",
         "flex-direction": "column",
-        "gap": `${gap / 4}rem`,
+        "gap": `${Number(gap) / 4}rem`,
       }),
     ],
     [
@@ -23,7 +24,7 @@ export default defineConfig({
       ([, size]) => ({
         "display": "flex",
         "align-items": "center",
-        "gap": `${size / 4}rem`,
+        "gap": `${Number(size) / 4}rem`,
       }),
     ],
     [
@@ -31,7 +32,7 @@ export default defineConfig({
       ([, size]) => ({
         "display": "flex",
         "align-items": "center",
-        "gap": `${size / 4}rem`,
+        "gap": `${Number(size) / 4}rem`,
         "flex-wrap": "wrap",
       }),
     ],

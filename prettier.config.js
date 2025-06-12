@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * @type {import("prettier").Config}
  * @see https://prettier.io/docs/en/configuration.html

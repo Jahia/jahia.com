@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * @type {import('stylelint').Config}
  * @see https://stylelint.io/user-guide/configure
