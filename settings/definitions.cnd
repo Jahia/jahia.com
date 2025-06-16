@@ -24,7 +24,7 @@
  - secondaryCTALink (weakreference, picker[type='editoriallink']) i18n
  - secondaryCTALabel (string) i18n
 
-[jahiacommix:seoOptions] mixin extends=jnt:page itemtype=seo
+[jahiacommix:seoOptions] mixin extends=jnt:page extends=jmix:mainResource itemtype=seo
  - jsonLd (string, textarea) i18n multiple
  - noindex (boolean) = false i18n
  - nofollow (boolean) = false i18n
