@@ -18,8 +18,10 @@
 .wrapper {
   @apply _cut-before _stack-8;
 
-  composes: item from "../../theme/theme.module.css";
+  /* Composing with conflicting properties is undefined behavior, we cannot compose .item here. */
   padding: 2rem;
+  background: var(--jahia-background);
+  border: 1px solid var(--jahia-border);
   border-block-end: 0;
 
   @screen md {
