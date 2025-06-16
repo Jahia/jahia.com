@@ -3,6 +3,10 @@
   margin-block: 0;
 }
 
+:root {
+  scrollbar-color: var(--jahia-neutral-300) var(--jahia-neutral-50);
+}
+
 body {
   font-weight: 300;
   line-height: 1.5;
