@@ -13,19 +13,29 @@ const getEntries = (root: JCRNodeWrapper, current: string): Entry[] =>
     root,
     -1,
     0,
-    (node) => node.isNodeType("jnt:page") || node.isNodeType("jnt:navMenuText"),
-  ).map((node) =>
-    node.isNodeType("jnt:page")
-      ? {
-          title: node.getPropertyAsString("jcr:title"),
-          href: buildNodeUrl(node),
-          current: current === node.getIdentifier(),
-        }
-      : {
-          title: node.getPropertyAsString("jcr:title"),
-          children: getEntries(node, current),
-        },
-  );
+    (node) =>
+      node.isNodeType("jnt:page") ||
+      node.isNodeType("jnt:navMenuText") ||
+      node.isNodeType("jnt:nodeLink"),
+  ).map((node) => {
+    // If the node is a menu entry, recursively get its children
+    if (node.isNodeType("jnt:navMenuText"))
+      return {
+        title: node.getPropertyAsString("jcr:title"),
+        children: getEntries(node, current),
+      };
+
+    // The node may be a page or a link to another node
+    const target = node.isNodeType("jnt:nodeLink")
+      ? node.getProperty("j:node").getValue().getNode()
+      : node;
+
+    return {
+      title: node.getPropertyAsString("jcr:title"),
+      href: buildNodeUrl(target),
+      current: current === target.getIdentifier(),
+    };
+  });
 
 export default function NavBar({
   site,
