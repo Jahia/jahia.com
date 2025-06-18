@@ -1,4 +1,4 @@
-[jahiacommix:cta] > jnt:content, mix:title
+[jahiacommix:cta] mixin
  - ctaType (string, choicelist[linkTypeInitializer]) mandatory
  - ctaLabel (string) i18n
  - ctaVariant (string, choicelist[resourceBundle]) = 'primary' < 'primary', 'secondary'
