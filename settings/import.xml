@@ -29,21 +29,10 @@
           jcr:primaryType="jnt:translation"
           jcr:title="Contents"
           />
-        <resource-kinds
-          jcr:primaryType="jnt:contentFolder"
-          jcr:mixinTypes="jmix:contributeMode"
-          j:contributeTypes="jahiacom:resourceKind"
-          >
-          <j:translation_en
-            jcr:language="en"
-            jcr:primaryType="jnt:translation"
-            jcr:title="Resource Kinds"
-            />
-        </resource-kinds>
         <resources
           jcr:primaryType="jnt:contentFolder"
           jcr:mixinTypes="jmix:contributeMode"
-          j:contributeTypes="jahiacom:resource"
+          j:contributeTypes="jahiacom:resourceCategory"
           >
           <j:translation_en
             jcr:language="en"

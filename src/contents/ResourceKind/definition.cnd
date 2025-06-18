@@ -1,1 +1,2 @@
-[jahiacom:resourceKind] > jnt:content, jahiacommix:content, mix:title, jmix:visibleInContentTree, jmix:mainResource
+[jahiacom:resourceCategory] > jnt:content, jahiacommix:content, mix:title, jmix:visibleInContentTree, jmix:mainResource
+ + * (jahiacom:resource)

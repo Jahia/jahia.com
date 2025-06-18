@@ -15,15 +15,13 @@ jahiaComponent(
     nodeType: "jahiacom:resource",
     name: "fullPage",
   },
-  ({ "jcr:title": title, kind, description, form }: Props) => (
+  ({ "jcr:title": title, description, form }: Props, { currentNode }) => (
     <article className={classes.article} data-theme="night" data-bg="plusses">
       <div className={classes.grid}>
         <div className="_stack-4">
-          {kind && (
-            <p>
-              <Render node={kind} />
-            </p>
-          )}
+          <p>
+            <Render node={currentNode.getParent() as JCRNodeWrapper} />
+          </p>
           <h1>{title}</h1>
           {description && (
             <div className="_richtext" dangerouslySetInnerHTML={{ __html: description }} />
