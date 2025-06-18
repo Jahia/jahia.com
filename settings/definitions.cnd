@@ -13,6 +13,8 @@
 // to see in this category.
 [jahiacommix:component] > jmix:droppableContent, jmix:accessControllableContent mixin
 
+[jahiacommix:content] > jmix:editorialContent, jmix:droppableContent mixin
+
 [jahiacommix:container] > mix:title mixin
  - subtitle (string, textarea) i18n
  - theme (string, choicelist[resourceBundle]) = 'day' mandatory autocreated itemtype=layout < 'day', 'cloudy', 'night'

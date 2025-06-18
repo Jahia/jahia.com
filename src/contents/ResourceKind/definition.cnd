@@ -1,1 +1,1 @@
-[jahiacom:resourceKind] > jnt:content, jmix:editorialContent, jmix:visibleInContentTree, jmix:structuredContent, jmix:mainResource, mix:title
+[jahiacom:resourceKind] > jnt:content, jahiacommix:content, mix:title, jmix:visibleInContentTree, jmix:mainResource

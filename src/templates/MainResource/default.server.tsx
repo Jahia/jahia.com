@@ -13,3 +13,17 @@ jahiaComponent(
     </Layout>
   ),
 );
+
+// Also register the "content folder" preview because reasons
+jahiaComponent(
+  {
+    componentType: "view",
+    nodeType: "jmix:mainResource",
+    name: "cm",
+  },
+  ({ "jcr:title": title }, { currentNode }) => (
+    <Layout title={title}>
+      <Render node={currentNode} view="fullPage" />
+    </Layout>
+  ),
+);
