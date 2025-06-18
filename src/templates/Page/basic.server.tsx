@@ -46,7 +46,7 @@ jahiaComponent(
         root={renderContext.getSite().getHome()}
         current={mainNode}
       />
-      <Area name="main" allowedNodeTypes={["jahiacommix:container"]} />
+      <Area name="main" nodeType="jahiacom:pageArea" />
     </Layout>
   ),
 );

@@ -1,0 +1,7 @@
+// Pages are limited to "jahiacommix:container" at the root level
+// We need a custom type to enforce this restriction
+[jahiacom:pageArea] > jnt:content,
+  jmix:list,      // Use the same renderer as jnt:contentList
+  jmix:hiddenType // Prevent this type from being suggested in the content picker
+  orderable
+ + * (jahiacommix:container)
