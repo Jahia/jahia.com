@@ -1,0 +1,4 @@
+[jahiacom:resource] > jnt:content, jahiacommix:content, mix:title, jmix:visibleInContentTree, jmix:mainResource
+ - kind (weakreference, choicelist[nodes='$currentSite/contents/resource-kinds;jahiacom:resourceKind;jcr:title']) mandatory
+ - description (string, richtext) mandatory i18n
+ - form (string, richtext) mandatory i18n

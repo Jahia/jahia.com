@@ -7,8 +7,8 @@ jahiaComponent(
     nodeType: "jmix:mainResource",
     priority: -1, // allow to overwrite this template by defining a component with a higher priority. When not specified, the default priority is 0
   },
-  ({ "jcr:title": title }, { currentNode }) => (
-    <Layout title={title}>
+  (props, { currentNode }) => (
+    <Layout props={props}>
       <Render node={currentNode} view="fullPage" />
     </Layout>
   ),
@@ -21,8 +21,8 @@ jahiaComponent(
     nodeType: "jmix:mainResource",
     name: "cm",
   },
-  ({ "jcr:title": title }, { currentNode }) => (
-    <Layout title={title}>
+  (props, { currentNode }) => (
+    <Layout props={props}>
       <Render node={currentNode} view="fullPage" />
     </Layout>
   ),

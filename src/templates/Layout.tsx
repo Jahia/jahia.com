@@ -5,7 +5,6 @@ import {
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import prettyBytes from "pretty-bytes";
-import type { ReactNode } from "react";
 import EditorHints from "../components/EditorHints.jsx";
 
 import "modern-normalize/modern-normalize.css";
@@ -13,29 +12,34 @@ import "virtual:uno.css";
 import "@fontsource-variable/plus-jakarta-sans/wght";
 import "./global.css";
 import "./themes.css";
+import type { ReactNode } from "react";
+import NavBar from "./Page/NavBar.jsx";
+
+interface Props {
+  "jcr:title": string;
+  "jcr:description"?: string;
+  "seoKeywords"?: string[];
+  "openGraphImage"?: JCRNodeWrapper;
+  "jsonLd"?: string[];
+  "noindex"?: boolean;
+  "nofollow"?: boolean;
+}
 
 /** Places `children` in an html page. */
-export const Layout = ({
-  title,
-  description,
-  keywords,
-  openGraphImage,
-  jsonLd,
-  noindex,
-  nofollow,
-  children,
-}: {
-  title: string;
-  description?: string;
-  keywords?: string[];
-  openGraphImage?: JCRNodeWrapper;
-  jsonLd?: string[];
-  noindex?: boolean;
-  nofollow?: boolean;
-  children: ReactNode;
-}) => {
-  const { currentResource, renderContext } = useServerContext();
+export const Layout = ({ props, children }: { props: Props; children: ReactNode }) => {
+  const { currentResource, renderContext, mainNode } = useServerContext();
   const lang = currentResource.getLocale().getLanguage();
+
+  const {
+    "jcr:title": title,
+    "jcr:description": description,
+    "seoKeywords": keywords,
+    "openGraphImage": openGraphImage,
+    "jsonLd": jsonLd,
+    "noindex": noindex,
+    "nofollow": nofollow,
+  } = props;
+
   return (
     <html lang={lang}>
       <head>
@@ -97,6 +101,11 @@ export const Layout = ({
               `${openGraphImage.getPropertyAsString("jcr:title") ?? "No title"} (${openGraphImage.getPropertyAsString("j:width")}x${openGraphImage.getPropertyAsString("j:height")}, ${prettyBytes(openGraphImage.getNode("jcr:content").getProperty("jcr:data").getLength())})`,
             "JSON-LD": jsonLd?.length,
           })}
+        />
+        <NavBar
+          site={renderContext.getSite()}
+          root={renderContext.getSite().getHome()}
+          current={mainNode}
         />
         {children}
       </body>
