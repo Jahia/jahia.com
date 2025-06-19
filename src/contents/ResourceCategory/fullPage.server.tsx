@@ -1,6 +1,7 @@
 import { jahiaComponent, RenderChildren } from "@jahia/javascript-modules-library";
 import type { Props } from "./types.js";
 import classes from "./component.module.css";
+import { HeroWithoutImage } from "../../views/HeroWithoutImage/default.server.jsx";
 
 jahiaComponent(
   {
@@ -8,11 +9,9 @@ jahiaComponent(
     nodeType: "jahiacom:resourceCategory",
     name: "fullPage",
   },
-  ({ "jcr:title": title }: Props) => (
+  (props: Props) => (
     <div>
-      <header className={classes.header} data-theme="night" data-bg="plusses">
-        <h1>{title}</h1>
-      </header>
+      <HeroWithoutImage {...props} ctaType="none" theme="night" background="plusses" />
       <main className={classes.main}>
         <div className={classes.grid}>
           <RenderChildren />

@@ -1,3 +1,4 @@
 [jahiacom:resourceCategory] > jnt:content, jahiacommix:content, mix:title, jmix:visibleInContentTree, jmix:mainResource
  - icon (weakreference, picker) mandatory i18n < jmix:image
+ - subtitle (string, richtext) mandatory i18n
  + * (jahiacom:resource)

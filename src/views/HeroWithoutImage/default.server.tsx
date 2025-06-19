@@ -3,7 +3,7 @@ import classes from "./component.module.css";
 import type { Props } from "./types.js";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
 
-jahiaComponent(
+export const HeroWithoutImage = jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:heroWithoutImage",
