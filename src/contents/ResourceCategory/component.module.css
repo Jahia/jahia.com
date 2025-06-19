@@ -1,0 +1,28 @@
+.badge {
+  display: inline-flex;
+  gap: 0.25em;
+  align-items: center;
+  padding: 0.25rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: var(--jahia-neutral-700);
+  text-decoration: inherit;
+  background-color: var(--jahia-neutral-50);
+  border: 1px solid var(--jahia-neutral-200);
+  border-radius: 0.25rem;
+}
+
+.header {
+  composes: container from "../../theme/theme.module.css";
+}
+
+.main {
+  composes: container from "../../theme/theme.module.css";
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 1rem;
+}

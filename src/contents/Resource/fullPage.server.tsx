@@ -1,13 +1,7 @@
 import { jahiaComponent, Render } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import classes from "./component.module.css";
-
-interface Props {
-  "jcr:title"?: string;
-  "kind"?: JCRNodeWrapper;
-  "description"?: string;
-  "form"?: string;
-}
+import type { Props } from "./types.js";
 
 jahiaComponent(
   {

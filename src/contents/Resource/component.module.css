@@ -8,3 +8,10 @@
   gap: 2rem;
   align-items: center;
 }
+
+.card {
+  @apply _stack-4;
+
+  composes: item from "../../theme/theme.module.css";
+  padding: 1rem;
+}
