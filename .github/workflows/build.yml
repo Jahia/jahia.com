@@ -19,7 +19,11 @@ jobs:
 
       # If the build is successful and the branch is main, push the module to Jahia
       - if: github.ref == 'refs/heads/main'
-        run: curl -s --user '${{ secrets.JAHIA_USER }}' --form bundle=@dist/package.tgz --form start=true '${{ secrets.JAHIA_HOST }}/modules/api/bundles'
+        run: yarn jahia-deploy
+        env:
+          JAHIA_USER: ${{ secrets.JAHIA_USER }}
+          JAHIA_HOST: ${{ secrets.JAHIA_HOST }}
+          JAHIA_IGNORE_CHECKS: "false"
 
   lighthouse:
     runs-on: ubuntu-latest
