@@ -1,3 +1,4 @@
-[jahiacom:panel] > jahiacom:card
- - image (weakreference, picker[type='image']) i18n < jmix:image
+[jahiacom:panel] > jnt:content, mix:title, jahiacommix:cta, jahiacommix:component
+ - body (string, richtext) i18n mandatory
+ - image (weakreference, picker) i18n mandatory < jmix:image
  - swap (boolean) = false

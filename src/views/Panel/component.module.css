@@ -4,31 +4,27 @@
 }
 
 @screen sm {
-  .withImage.right {
+  .right {
     grid-template-columns: 3fr minmax(16rem, 2fr);
   }
 
-  .withImage.left {
+  .left {
     grid-template-columns: minmax(16rem, 2fr) 3fr;
   }
 }
 
-.withoutImage .text {
-  @apply _cut-both;
-}
-
 @screen lt-sm {
-  .withImage .text {
+  .text {
     @apply _cut-after;
   }
 }
 
 @screen sm {
-  .withImage.right .text {
+  .right .text {
     @apply _cut-before;
   }
 
-  .withImage.left .text {
+  .left .text {
     @apply _cut-after;
   }
 }

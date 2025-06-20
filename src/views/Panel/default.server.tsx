@@ -18,13 +18,7 @@ jahiaComponent(
     priority: 1,
   },
   ({ "jcr:title": title, body, image, swap, ...cta }: Props) => (
-    <article
-      className={clsx(
-        classes.panel,
-        image ? classes.withImage : classes.withoutImage,
-        swap ? classes.left : classes.right,
-      )}
-    >
+    <article className={clsx(classes.panel, swap ? classes.left : classes.right)}>
       {image && (
         <div className={classes.image}>
           <Image image={image} />
