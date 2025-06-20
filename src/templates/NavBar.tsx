@@ -5,7 +5,7 @@ import {
   HydrateInBrowser,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
-import NavBarClient, { type Entry } from "./NavBar.client.jsx";
+import NavBarClient, { type Entry } from "./Page/NavBar.client.jsx";
 import type { JCRSiteNode } from "org.jahia.services.content.decorator";
 
 const getEntries = (root: JCRNodeWrapper, current: string): Entry[] =>
