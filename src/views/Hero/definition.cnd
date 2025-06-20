@@ -1,2 +1,2 @@
-[jahiacom:hero] > jnt:content, jahiacommix:container, jahiacommix:cta
- - image (weakreference, picker[type='image']) i18n mandatory < jmix:image
+[jahiacom:heroWithImage] > jnt:content, jahiacommix:container, jahiacommix:cta
+ - image (weakreference, picker) i18n mandatory < jmix:image

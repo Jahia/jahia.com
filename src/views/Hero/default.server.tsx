@@ -8,7 +8,7 @@ import { Image } from "../../components/Image.jsx";
 jahiaComponent(
   {
     componentType: "view",
-    nodeType: "jahiacom:hero",
+    nodeType: "jahiacom:heroWithImage",
   },
   ({ theme, "jcr:title": title, subtitle, image, background, ...cta }: Props) => (
     <header className={classes.hero} data-theme={theme} data-bg={background}>

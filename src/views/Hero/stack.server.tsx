@@ -8,7 +8,7 @@ import { Image } from "../../components/Image.jsx";
 jahiaComponent(
   {
     componentType: "view",
-    nodeType: "jahiacom:hero",
+    nodeType: "jahiacom:heroWithImage",
     name: "stack",
   },
   ({ theme, "jcr:title": title, subtitle, image, background, ...cta }: Props) => (
