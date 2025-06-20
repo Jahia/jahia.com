@@ -1,2 +1,3 @@
-[jahiacom:heroWithImage] > jnt:content, jahiacommix:container, jahiacommix:cta
+[jahiacom:heroWithImage] > jnt:content, jahiacommix:container, jahiacommix:cta, mix:title
+ - subtitle (string, richtext) i18n
  - image (weakreference, picker) i18n mandatory < jmix:image

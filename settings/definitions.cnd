@@ -9,23 +9,25 @@
 // Learn more about content types definitions here:
 // https://github.com/Jahia/javascript-modules/tree/main/docs/3-reference/1-cnd-format/
 
-// This mixin creates a category to regroup types in the content type selector UI. Apply it to any definition you want
-// to see in this category.
-[jahiacommix:component] > jmix:droppableContent, jmix:accessControllableContent mixin
-
-[jahiacommix:content] > jmix:editorialContent, jmix:droppableContent mixin
-
-[jahiacommix:container] > mix:title mixin
- - subtitle (string, textarea) i18n
+// Layout components
+[jahiacommix:container] mixin
  - theme (string, choicelist[resourceBundle]) = 'day' mandatory autocreated itemtype=layout < 'day', 'cloudy', 'night'
  - background (string, choicelist[resourceBundle]) itemtype=layout < 'plusses', 'stripes'
 
+// Page building blocks
+[jahiacommix:component] > jmix:droppableContent, jmix:accessControllableContent mixin
+
+// Content components
+[jahiacommix:content] > jmix:editorialContent, jmix:droppableContent mixin
+
+// Add menu items to the site navigation
 [jahiacommix:menuCTAs] mixin extends=jnt:virtualsite
  - primaryCTALink (weakreference, picker[type='editoriallink']) i18n
  - primaryCTALabel (string) i18n
  - secondaryCTALink (weakreference, picker[type='editoriallink']) i18n
  - secondaryCTALabel (string) i18n
 
+// Add SEO options to full-page resources
 [jahiacommix:seoOptions] mixin extends=jnt:page extends=jmix:mainResource itemtype=seo
  - jsonLd (string, textarea) i18n multiple
  - noindex (boolean) = false i18n
