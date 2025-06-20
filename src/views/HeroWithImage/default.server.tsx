@@ -8,14 +8,14 @@ import { Image } from "../../components/Image.jsx";
 jahiaComponent(
   {
     componentType: "view",
-    nodeType: "jahiacom:hero",
+    nodeType: "jahiacom:heroWithImage",
   },
   ({ theme, "jcr:title": title, subtitle, image, background, ...cta }: Props) => (
     <header className={classes.hero} data-theme={theme} data-bg={background}>
       <div className={classes.grid}>
         <div className={clsx(classes.wrapper, "_stack-4")}>
           <h1>{title || "Title not defined"}</h1>
-          {subtitle && <p>{subtitle}</p>}
+          {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
           {cta.ctaType !== "none" && (
             <p>
               <MixinCTA cta={cta} />

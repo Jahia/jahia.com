@@ -1,9 +1,0 @@
-{
-  "name": "jahiacom:logoCarousel",
-  "fields": [
-    {
-      "name": "logos",
-      "selectorType": "MultipleLeftRightSelector"
-    }
-  ]
-}

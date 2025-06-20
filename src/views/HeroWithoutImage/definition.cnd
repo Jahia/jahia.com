@@ -1,2 +1,2 @@
-[jahiacom:heroWithoutImage] > jnt:content, jahiacommix:container, jahiacommix:cta
+[jahiacom:heroWithoutImage] > jnt:content, jahiacommix:cta, jahiacommix:container, mix:title
  - subtitle (string, richtext) i18n

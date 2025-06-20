@@ -1,3 +1,11 @@
+.container {
+  composes: container from "../../theme/theme.module.css";
+}
+
+.header {
+  composes: header from "../../theme/theme.module.css";
+}
+
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

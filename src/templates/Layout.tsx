@@ -5,15 +5,15 @@ import {
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import prettyBytes from "pretty-bytes";
+import type { ReactNode } from "react";
 import EditorHints from "../components/EditorHints.jsx";
+import NavBar from "./NavBar.jsx";
 
+import "@fontsource-variable/plus-jakarta-sans/wght";
 import "modern-normalize/modern-normalize.css";
 import "virtual:uno.css";
-import "@fontsource-variable/plus-jakarta-sans/wght";
 import "./global.css";
 import "./themes.css";
-import type { ReactNode } from "react";
-import NavBar from "./Page/NavBar.jsx";
 
 interface Props {
   "jcr:title": string;
