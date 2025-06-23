@@ -4,12 +4,6 @@ import { presetIcons } from "unocss";
 import { transformerDirectives } from "unocss";
 
 export default defineConfig({
-  theme: {
-    breakpoints: {
-      sm: "600px",
-      md: "800px",
-    },
-  },
   rules: [
     [
       /^_stack-(\d+)$/,

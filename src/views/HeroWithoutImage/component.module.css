@@ -2,17 +2,13 @@
   composes: container from "../../theme/theme.module.css";
 }
 
-.header {
-  composes: header from "../../theme/theme.module.css";
-}
-
 .grid {
   display: grid;
   grid-template: 1fr / auto;
   gap: 1rem;
   align-items: center;
 
-  @screen md {
+  @container (width >= 800px) {
     grid-template: 1fr / 1fr 1fr;
   }
 }

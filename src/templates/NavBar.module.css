@@ -1,8 +1,16 @@
+/*
+This value needs to be updated manually when the menu grows or shrinks.
+While this value could be computed on page load, it would cause a layout shift
+to fold the menu if it overflows. Let's go with a static value for now.
+*/
+@value breakpoint: 700px;
+
 .nav {
   position: sticky;
   inset-block-start: 0;
   z-index: 1;
   padding: 0.5rem;
+  container-type: inline-size;
   color: var(--jahia-color);
   background-color: color-mix(in srgb, var(--jahia-container-background) 75%, transparent);
   backdrop-filter: blur(0.5rem);
@@ -39,7 +47,7 @@
   border: 1px solid var(--jahia-border);
   border-radius: 0.25rem;
 
-  @screen md {
+  @container (width >= breakpoint) {
     display: none;
   }
 }
@@ -69,7 +77,7 @@
     transform: translateY(0.5rem) scaleY(1);
   }
 
-  @screen md {
+  @container (width >= breakpoint) {
     display: none;
   }
 }
@@ -77,7 +85,7 @@
 .desktopMenu {
   display: none;
 
-  @screen md {
+  @container (width >= breakpoint) {
     position: absolute;
     top: 0;
     left: 0;
@@ -146,7 +154,7 @@
 .desktop {
   display: none;
 
-  @screen md {
+  @container (width >= breakpoint) {
     display: flex;
   }
 }

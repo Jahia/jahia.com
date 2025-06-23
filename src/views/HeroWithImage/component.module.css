@@ -10,7 +10,7 @@
   display: grid;
   grid-template: 1fr / auto;
 
-  @screen md {
+  @container (width >= 800px) {
     grid-template: 1fr / 1fr 1fr;
   }
 }
@@ -24,7 +24,7 @@
   border: 1px solid var(--jahia-border);
   border-block-end: 0;
 
-  @screen md {
+  @container (width >= 800px) {
     border-block-end: 1px solid var(--jahia-border);
     border-inline-end: 0;
   }
@@ -43,7 +43,7 @@
   );
 
   /* On side-by-side view, nuke the native aspect-ratio of the image to fit the container. */
-  @screen md {
+  @container (width >= 800px) {
     height: 0;
     min-height: 100%;
   }

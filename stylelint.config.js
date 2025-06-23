@@ -8,7 +8,9 @@ export default {
   rules: {
     // Allow UnoCSS directives: https://unocss.dev/transformers/directives#usage
     "at-rule-no-deprecated": [true, { ignoreAtRules: ["apply"] }],
-    "at-rule-no-unknown": [true, { ignoreAtRules: ["screen"] }],
+
+    // CSS modules: allow "value" at-rule
+    "at-rule-no-unknown": [true, { ignoreAtRules: ["value"] }],
 
     // CSS Modules: allow "composes" rules
     "property-no-unknown": [true, { ignoreProperties: ["composes"] }],

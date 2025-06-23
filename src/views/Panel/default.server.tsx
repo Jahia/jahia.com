@@ -18,26 +18,28 @@ jahiaComponent(
     priority: 1,
   },
   ({ "jcr:title": title, body, image, swap, ...cta }: Props) => (
-    <article className={clsx(classes.panel, swap ? classes.left : classes.right)}>
-      {image && (
-        <div className={classes.image}>
-          <Image image={image} />
+    <article className={classes.container}>
+      <div className={clsx(classes.panel, swap ? classes.left : classes.right)}>
+        {image && (
+          <div className={classes.image}>
+            <Image image={image} />
+          </div>
+        )}
+        <div className={classes.text}>
+          <h3>{title}</h3>
+          {body && (
+            <div
+              className="_richtext"
+              style={{ flex: 1 }}
+              dangerouslySetInnerHTML={{ __html: body }}
+            ></div>
+          )}
+          {cta.ctaType !== "none" && (
+            <p>
+              <MixinCTA cta={cta} />
+            </p>
+          )}
         </div>
-      )}
-      <div className={classes.text}>
-        <h3>{title}</h3>
-        {body && (
-          <div
-            className="_richtext"
-            style={{ flex: 1 }}
-            dangerouslySetInnerHTML={{ __html: body }}
-          ></div>
-        )}
-        {cta.ctaType !== "none" && (
-          <p>
-            <MixinCTA cta={cta} />
-          </p>
-        )}
       </div>
     </article>
   ),

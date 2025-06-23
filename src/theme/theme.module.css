@@ -2,6 +2,7 @@
   @apply _stack-8;
 
   padding: 2rem 1rem;
+  container-type: inline-size;
   color: var(--jahia-color);
   background: var(--jahia-container-background) center / cover;
 
