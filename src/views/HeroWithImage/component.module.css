@@ -23,7 +23,7 @@
 }
 
 .title {
-  flex: 1;
+  flex: 3;
 
   @container (width >= 800px) {
     margin-inline-start: max(-12.5vw, -10rem);
@@ -55,7 +55,7 @@
 }
 
 .image {
-  flex: 1;
+  flex: 4;
   min-width: 0;
 }
 
