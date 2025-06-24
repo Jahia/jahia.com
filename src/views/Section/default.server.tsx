@@ -1,8 +1,9 @@
 import { getChildNodes, jahiaComponent, RenderChildren } from "@jahia/javascript-modules-library";
-import type { ContainerProps } from "../../theme/index.jsx";
-import classes from "./component.module.css";
 import clsx from "clsx";
 import EditorHints from "../../components/EditorHints.jsx";
+import { MixinCTA, type CTAProps } from "../../mixins/CTA/server.jsx";
+import type { ContainerProps } from "../../theme/index.jsx";
+import classes from "./component.module.css";
 
 type Columns =
   | "100"
@@ -30,13 +31,15 @@ jahiaComponent(
       gap,
       theme,
       background,
+      ...cta
     }: {
       "jcr:title"?: string;
       "subtitle"?: string;
       "columns": Columns;
       "width": Width;
       "gap": Gap;
-    } & ContainerProps,
+    } & ContainerProps &
+      CTAProps,
     { currentNode },
   ) => (
     <section className={classes.container} data-theme={theme} data-bg={background}>
@@ -76,6 +79,11 @@ jahiaComponent(
       >
         <RenderChildren />
       </div>
+      {cta.ctaType !== "none" && (
+        <p className="_center-4">
+          <MixinCTA {...{ cta }} />
+        </p>
+      )}
     </section>
   ),
 );

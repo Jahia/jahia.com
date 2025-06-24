@@ -31,6 +31,15 @@ export default defineConfig({
       }),
     ],
     [
+      /^_center-(\d+)$/,
+      ([, size]) => ({
+        "display": "flex",
+        "align-items": "center",
+        "justify-content": "center",
+        "gap": `${Number(size) / 4}rem`,
+      }),
+    ],
+    [
       // Stylish corner cut
       /^_cut-(before|after|both)$/,
       function* (matches, { symbols }) {

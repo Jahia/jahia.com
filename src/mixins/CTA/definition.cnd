@@ -1,4 +1,4 @@
 [jahiacommix:cta] mixin
- - ctaType (string, choicelist[linkTypeInitializer]) mandatory
+ - ctaType (string, choicelist[linkTypeInitializer]) = 'none' autocreated
  - ctaLabel (string) i18n
  - ctaVariant (string, choicelist[resourceBundle]) = 'primary' < 'primary', 'secondary'

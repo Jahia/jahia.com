@@ -13,6 +13,11 @@
   max-width: var(--jahia-width);
   margin-inline: auto;
 
+  /* If there are no children, do not render the grid to prevent the double gap */
+  &:empty {
+    display: none;
+  }
+
   &[data-width="75"] {
     max-width: calc(var(--jahia-width) * 0.75);
   }

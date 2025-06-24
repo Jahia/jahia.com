@@ -1,4 +1,4 @@
-[jahiacom:section] > jnt:content, jahiacommix:container, mix:title orderable
+[jahiacom:section] > jnt:content, jahiacommix:cta, jahiacommix:container, mix:title orderable
  - subtitle (string, richtext) i18n
  - columns (string, choicelist[resourceBundle]) = '100' < '100', '50-50', '67-33', '33-67', 'irregular-67-33', '33-33-33', '25-25-25-25', 'irregular-3-2'
  - width (string, choicelist[resourceBundle]) = '100' < '100', '75', '50'
