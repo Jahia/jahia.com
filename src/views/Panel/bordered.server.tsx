@@ -22,7 +22,7 @@ jahiaComponent(
       <div className={clsx(classes.bordered, swap ? classes.left : classes.right)}>
         {image && <Image image={image} className={classes.borderedImage} />}
         <div className={classes.borderedText}>
-          <h3>{title}</h3>
+          {title && <h3>{title}</h3>}
           {body && <div className="_richtext" dangerouslySetInnerHTML={{ __html: body }}></div>}
           {cta.ctaType !== "none" && (
             <p>

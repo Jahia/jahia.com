@@ -26,7 +26,7 @@ jahiaComponent(
           </div>
         )}
         <div className={classes.text}>
-          <h3>{title}</h3>
+          {title && <h3>{title}</h3>}
           {body && (
             <div
               className="_richtext"
