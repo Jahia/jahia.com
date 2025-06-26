@@ -1,4 +1,5 @@
 import {
+  AbsoluteArea,
   AddResources,
   buildModuleFileUrl,
   useServerContext,
@@ -108,6 +109,11 @@ export const Layout = ({ props, children }: { props: Props; children: ReactNode 
           current={mainNode}
         />
         {children}
+        <AbsoluteArea
+          parent={renderContext.getSite()}
+          name="footer"
+          nodeType="jahiacom:pageFooter"
+        />
       </body>
     </html>
   );
