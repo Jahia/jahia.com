@@ -1,0 +1,16 @@
+[jahiacom:pageFooter] > jnt:content, jmix:hiddenType, mix:title, jahiacommix:cta
+ - bottomLinks (weakreference, picker) multiple < jnt:page, jmix:mainResource
+ + * (jnt:content)
+
+[jahiacom:footerColumns] > jnt:content, jmix:hiddenType orderable
+ + * (jahiacom:footerColumn)
+
+[jahiacom:footerColumn] > jnt:content, mix:title
+ - links (weakreference, picker) multiple mandatory < jnt:page, jmix:mainResource
+
+[jahiacom:footerIcons] > jnt:content, jmix:hiddenType orderable
+ + * (jahiacom:footerIcon)
+
+[jahiacom:footerIcon] > jnt:content, mix:title
+ - icon (weakreference, picker) mandatory < jmix:image
+ - href (string)
