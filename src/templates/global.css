@@ -13,7 +13,7 @@ body {
   background: var(--jahia-navy-blue);
 }
 
-a {
+:where(a) {
   color: #06a;
 }
 

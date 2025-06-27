@@ -5,6 +5,9 @@ import {
   RenderChildren,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { MixinCTA, type CTAProps } from "../mixins/CTA/server.jsx";
+import classes from "./footer.module.css";
+import clsx from "clsx";
 
 jahiaComponent(
   {
@@ -12,24 +15,42 @@ jahiaComponent(
     nodeType: "jahiacom:pageFooter",
   },
   (
-    { "jcr:title": title, legalLinks }: { "jcr:title"?: string; "legalLinks"?: JCRNodeWrapper[] },
-    { currentNode },
-  ) => {
-    return (
-      <footer style={{ background: "white", padding: "2em" }}>
-        <p>{title}</p>
-        <AbsoluteArea parent={currentNode} name="columns" nodeType="jahiacom:footerColumns" />
-        <AbsoluteArea parent={currentNode} name="socials" nodeType="jahiacom:footerSocials" />
-        <div className="_row-2">
-          {(legalLinks ?? []).map((node) => (
-            <a href={buildNodeUrl(node)} key={node.getIdentifier()}>
-              {node.getPropertyAsString("jcr:title")}
-            </a>
-          ))}
+    {
+      "jcr:title": title,
+      bottomLinks,
+      ...cta
+    }: { "jcr:title"?: string; "bottomLinks"?: JCRNodeWrapper[] } & CTAProps,
+    { currentNode, renderContext },
+  ) => (
+    <footer className={classes.footer} data-theme="night">
+      <div className={classes.wrapper}>
+        <div className={classes.card}>
+          <p className={classes.big}>{title || "(title missing!)"}</p>
+          {cta.ctaType !== "none" && (
+            <p>
+              <MixinCTA cta={cta} />
+            </p>
+          )}
         </div>
-      </footer>
-    );
-  },
+        <div>
+          <AbsoluteArea parent={currentNode} name="columns" nodeType="jahiacom:footerColumns" />
+          <hr />
+          <div className={renderContext.isEditMode() ? classes.padded : classes.icons}>
+            <AbsoluteArea parent={currentNode} name="iconsLeft" nodeType="jahiacom:footerIcons" />
+            <AbsoluteArea parent={currentNode} name="iconsRight" nodeType="jahiacom:footerIcons" />
+          </div>
+          <hr />
+          <div className={clsx("_row-2", classes.padded)}>
+            {bottomLinks?.map((node) => (
+              <a href={buildNodeUrl(node)} key={node.getIdentifier()}>
+                {node.getPropertyAsString("jcr:title")}
+              </a>
+            )) || <em>Add links here!</em>}
+          </div>
+        </div>
+      </div>
+    </footer>
+  ),
 );
 
 jahiaComponent(
@@ -38,7 +59,7 @@ jahiaComponent(
     nodeType: "jahiacom:footerColumns",
   },
   () => (
-    <div className="_row-4">
+    <div className={classes.columns}>
       <RenderChildren />
     </div>
   ),
@@ -64,10 +85,10 @@ jahiaComponent(
 jahiaComponent(
   {
     componentType: "view",
-    nodeType: "jahiacom:footerSocials",
+    nodeType: "jahiacom:footerIcons",
   },
-  () => (
-    <div className="_row-2">
+  (_, { renderContext }) => (
+    <div className={renderContext.isEditMode() ? "_stack-2" : "_row-2"}>
       <RenderChildren />
     </div>
   ),
@@ -76,29 +97,33 @@ jahiaComponent(
 jahiaComponent(
   {
     componentType: "view",
-    nodeType: "jahiacom:footerSocial",
+    nodeType: "jahiacom:footerIcon",
   },
   (
     {
       "jcr:title": title,
       icon,
       href,
-    }: {
-      "jcr:title"?: string;
-      "icon"?: JCRNodeWrapper;
-      "href"?: string;
-    },
+    }: { "jcr:title"?: string; "icon"?: JCRNodeWrapper; "href"?: string },
     { renderContext },
-  ) =>
-    renderContext.isEditMode() ? (
-      icon ? (
-        <img src={buildNodeUrl(icon)} alt={title} />
-      ) : (
-        <del>{title}</del>
-      )
-    ) : (
+  ) => {
+    if (renderContext.isEditMode()) {
+      return (
+        <span className="_pack-2">
+          {icon && <img src={buildNodeUrl(icon)} alt={title} style={{ maxHeight: "4rem" }} />}
+          {title || "(title missing!)"}
+        </span>
+      );
+    }
+
+    return href ? (
       <a href={href} target="_blank" rel="noopener noreferrer" title={title}>
-        {icon && <img src={buildNodeUrl(icon)} alt={title} />}
+        {icon && <img src={buildNodeUrl(icon)} alt={title} style={{ maxHeight: "4rem" }} />}
       </a>
-    ),
+    ) : icon ? (
+      <img src={buildNodeUrl(icon)} alt={title} style={{ maxHeight: "4rem" }} />
+    ) : (
+      <del>{title}</del>
+    );
+  },
 );

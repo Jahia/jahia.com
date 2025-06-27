@@ -1,0 +1,64 @@
+.footer {
+  composes: container from "../theme/theme.module.css";
+  font-size: 0.875em;
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--jahia-border);
+  }
+}
+
+.padded {
+  padding-block: 1.5rem;
+}
+
+@container (width >= 50rem) {
+  .wrapper {
+    display: grid;
+    grid-template-columns: 25rem 1fr;
+  }
+
+  .padded {
+    padding: 1.5rem;
+  }
+}
+
+/* Reduce the specificity of the selector to avoid conflict with CTA */
+:where(footer) a {
+  color: var(--jahia-neutral-400);
+  text-decoration: inherit;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  justify-content: end;
+  padding: 1.5rem;
+  background: var(--jahia-neutral-700) url("./card.svg") center / cover no-repeat;
+}
+
+/* Don't use a H3 tag here, it makes no sense to have a real heading in the footer */
+.big {
+  font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  font-size: 1.5em;
+  font-weight: 500;
+  color: var(--jahia-title-color);
+  text-wrap: balance;
+}
+
+.columns {
+  composes: padded;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+}
+
+.icons {
+  composes: padded;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}

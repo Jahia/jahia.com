@@ -1,18 +1,16 @@
-[jahiacom:pageFooter] > jnt:content, jmix:hiddenType, mix:title
- - ctaType (string, choicelist[linkTypeInitializer]) = 'none' autocreated
- - ctaLabel (string) i18n
- - legalLinks (weakreference, picker) multiple < jnt:page, jmix:mainResource
+[jahiacom:pageFooter] > jnt:content, jmix:hiddenType, mix:title, jahiacommix:cta
+ - bottomLinks (weakreference, picker) multiple < jnt:page, jmix:mainResource
  + * (jnt:content)
 
 [jahiacom:footerColumns] > jnt:content, jmix:hiddenType orderable
  + * (jahiacom:footerColumn)
 
 [jahiacom:footerColumn] > jnt:content, mix:title
- - links (weakreference, picker) multiple < jnt:page, jmix:mainResource
+ - links (weakreference, picker) multiple mandatory < jnt:page, jmix:mainResource
 
-[jahiacom:footerSocials] > jnt:content, jmix:hiddenType orderable
- + * (jahiacom:footerSocial)
+[jahiacom:footerIcons] > jnt:content, jmix:hiddenType orderable
+ + * (jahiacom:footerIcon)
 
-[jahiacom:footerSocial] > jnt:content, mix:title
- - icon (weakreference, picker) < jmix:image
+[jahiacom:footerIcon] > jnt:content, mix:title
+ - icon (weakreference, picker) mandatory < jmix:image
  - href (string)
