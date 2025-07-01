@@ -67,6 +67,11 @@
   object-fit: cover;
 }
 
+.borderedImage {
+  /* If the text is taller than the image, we want the image to stretch */
+  align-self: stretch;
+}
+
 @container (width < 600px) {
   .image,
   .lightImage {
