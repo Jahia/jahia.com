@@ -24,6 +24,7 @@ interface Props {
   "jsonLd"?: string[];
   "noindex"?: boolean;
   "nofollow"?: boolean;
+  "stylesheets"?: JCRNodeWrapper[];
 }
 
 /** Places `children` in an html page. */
@@ -39,6 +40,7 @@ export const Layout = ({ props, children }: { props: Props; children: ReactNode 
     "jsonLd": jsonLd,
     "noindex": noindex,
     "nofollow": nofollow,
+    "stylesheets": stylesheets,
   } = props;
 
   return (
@@ -85,6 +87,9 @@ export const Layout = ({ props, children }: { props: Props; children: ReactNode 
           <script type="application/ld+json" key={content}>
             {content}
           </script>
+        ))}
+        {stylesheets?.filter(Boolean).map((stylesheet) => (
+          <style key={stylesheet.getIdentifier()}>{stylesheet.getPropertyAsString("css")}</style>
         ))}
         {noindex && <meta name="robots" content="noindex" />}
         {nofollow && <meta name="robots" content="nofollow" />}

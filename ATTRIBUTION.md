@@ -15,3 +15,5 @@ This project uses resources from various authors, for its admin UI and other non
 - <a href="https://www.flaticon.com/free-icons/input" title="input icons">Input icons created by GOWI - Flaticon</a>
 - <a href="https://www.flaticon.com/free-icons/pillar" title="pillar icons">Pillar icons created by Freepik - Flaticon</a>
 - <a href="https://www.flaticon.com/free-icons/marketing" title="marketing icons">Marketing icons created by Freepik - Flaticon</a>
+- <a href="https://www.flaticon.com/free-icons/manufacturing" title="manufacturing icons">Manufacturing icons created by Uniconlabs - Flaticon</a>
+- <a href="https://www.flaticon.com/free-icons/css" title="css icons">Css icons created by Freepik - Flaticon</a>
