@@ -40,6 +40,17 @@
             jcr:title="Resources"
             />
         </resources>
+        <stylesheets
+          jcr:primaryType="jnt:contentFolder"
+          jcr:mixinTypes="jmix:contributeMode"
+          j:contributeTypes="jahiacom:stylesheet"
+          >
+          <j:translation_en
+            jcr:language="en"
+            jcr:primaryType="jnt:translation"
+            jcr:title="Stylesheets"
+            />
+        </stylesheets>
       </contents>
     </jahiacom>
   </modules>

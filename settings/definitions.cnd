@@ -37,8 +37,8 @@
 [jahiacommix:gadget] > jmix:droppableContent mixin
 
 // Custom stylesheet
-[jahiacom:stylesheet] > jnt:content, jahiacommix:gadget
- - css (string, textarea) mandatory primary
+[jahiacom:stylesheet] > jnt:content, jahiacommix:gadget, mix:title
+ - css (string, textarea) mandatory
 
 // Add custom CSS to full-page resources
 [jahiacommix:customCss] mixin extends=jnt:page extends=jmix:mainResource itemtype=layout
