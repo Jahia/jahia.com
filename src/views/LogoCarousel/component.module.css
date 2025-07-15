@@ -56,12 +56,12 @@
   height: 6rem;
   color: transparent;
   user-select: none;
-  background: var(--logo) center no-repeat;
+  background: var(--logo) center/contain no-repeat;
 
   [data-mode="mono"] & {
     color: inherit;
     background: currentcolor;
-    mask: var(--logo) center no-repeat;
+    mask: var(--logo) center/contain no-repeat;
   }
 }
 
