@@ -4,7 +4,24 @@ Your JavaScript module was successfully created. If this is your first time crea
 
 This README assumes you have a working development environment with Node.js, Yarn and Docker installed and configured. Please refer to the [Getting Started](https://github.com/Jahia/javascript-modules/tree/main/docs/1-getting-started/1-dev-environment#pre-requisites) guide if you need help setting up your environment.
 
-## Scripts
+## Getting Started
+
+This module is accompanied by a Docker-based development environment. To get started, follow these steps:
+
+```bash
+# Install dependencies
+yarn install
+
+# Start Jahia in Docker
+docker compose up --wait
+
+# Build the module and start the dev mode
+yarn build && yarn dev
+```
+
+These commands will start a Jahia instance in a Docker container, build your module and start a watcher that will rebuild the module every time you make changes to the source code.
+
+## Commands
 
 This module comes with some scripts to help you develop your module. You can run them with `yarn <script>`:
 
@@ -21,4 +38,4 @@ This module comes with some scripts to help you develop your module. You can run
 
 ## Configuration
 
-If you don't use default configuration for the Docker container name or for Jahia deployments, please modify the provided `.env` file
+If you don't use default configuration for the Docker container port and credentials, please modify the provided `.env` file.
