@@ -12,7 +12,7 @@
 // Layout components
 [jahiacommix:container] mixin
  - theme (string, choicelist[resourceBundle]) = 'day' mandatory autocreated < 'day', 'cloudy', 'night'
- - background (string, choicelist[resourceBundle]) < 'plusses', 'stripes'
+ - background (string, choicelist[resourceBundle]) < 'plusses', 'stripes', 'bottom-grid'
 
 // Page building blocks
 [jahiacommix:component] > jmix:droppableContent, jmix:accessControllableContent mixin

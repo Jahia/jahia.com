@@ -15,6 +15,10 @@
     background: var(--jahia-container-background) url("./stripes.svg") center / cover no-repeat;
   }
 
+  &[data-bg="bottom-grid"] {
+    background: var(--jahia-container-background) url("./bottom-grid.svg") center bottom repeat-x;
+  }
+
   > * {
     width: 100%;
     max-width: var(--jahia-width);
