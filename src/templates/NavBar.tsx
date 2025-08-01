@@ -1,12 +1,12 @@
 import {
-  buildModuleFileUrl,
+  // buildModuleFileUrl,
   buildNodeUrl,
   getChildNodes,
   HydrateInBrowser,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import type { JCRSiteNode } from "org.jahia.services.content.decorator";
-import jahia from "./jahia-light.svg?no-inline";
+// import jahia from "./jahia-light.svg?no-inline";
 import NavBarClient, { type Entry } from "./NavBar.client.jsx";
 
 const getEntries = (root: JCRNodeWrapper, current: string): Entry[] =>
@@ -79,7 +79,8 @@ export default function NavBar({
         href={buildNodeUrl(root)}
         aria-current={current.getIdentifier() === root.getIdentifier() ? "page" : undefined}
       >
-        <img src={buildModuleFileUrl(jahia)} alt="Jahia" width="90" height="40" />
+        {/* <img src={buildModuleFileUrl(jahia)} alt="Jahia" width="90" height="40" /> */}
+        TODO: coder le menu
       </a>
     </HydrateInBrowser>
   );
