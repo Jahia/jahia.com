@@ -15,7 +15,7 @@ jahiaComponent(
     <header className={classes.hero} data-theme={theme} data-bg={background}>
       <div className={classes.grid}>
         <div className={clsx(classes.compact, "_stack-4")}>
-          <h1>{title || "Title not defined"}</h1>
+          {title && <h1>{title}</h1>}
           {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
           {cta.ctaType !== "none" && (
             <p>

@@ -11,7 +11,7 @@ export const HeroWithoutImage = jahiaComponent(
   ({ theme, "jcr:title": title, subtitle, background, ...cta }: Props) => (
     <header className={classes.hero} data-theme={theme} data-bg={background}>
       <div className={classes.grid}>
-        <h1>{title || "Title not defined"}</h1>
+        {title && <h1>{title}</h1>}
         <div className="_stack-4">
           {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
           {cta.ctaType !== "none" && (
