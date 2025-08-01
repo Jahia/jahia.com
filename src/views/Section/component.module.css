@@ -57,7 +57,7 @@
     }
 
     &[data-columns="25-25-25-25"] {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     &[data-columns="irregular-3-2"] {
@@ -70,6 +70,10 @@
   }
 
   @container (width >= 800px) {
+    &[data-columns="25-25-25-25"] {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
     &[data-columns="irregular-3-2"] {
       grid-template-columns: repeat(6, 1fr);
 
