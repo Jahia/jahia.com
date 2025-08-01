@@ -71,13 +71,10 @@ jahiaComponent(
           (Use an even number of items)
         </EditorHints>
       )}
-      <div
-        className={clsx(classes.grid, "_container")}
-        data-columns={columns}
-        data-width={width}
-        data-gap={gap}
-      >
-        <RenderChildren />
+      <div className={classes.wrapper} data-width={width}>
+        <div className={clsx(classes.grid, "_container")} data-columns={columns} data-gap={gap}>
+          <RenderChildren />
+        </div>
       </div>
       {cta.ctaType !== "none" && (
         <p className="_center-4">

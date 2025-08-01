@@ -5,16 +5,22 @@
 
 .panel {
   display: grid;
+  grid-template-rows: auto 1fr;
   gap: 0 1rem;
+  height: 100%;
 }
 
 .light {
   display: grid;
+  grid-template-rows: auto 1fr;
   gap: 1rem 4rem;
+  height: 100%;
 }
 
 .bordered {
   display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
 }
 
 .text {
@@ -80,6 +86,12 @@
 
   .text {
     @apply _cut-after;
+  }
+
+  /* In vertical layout, make the rich text fill the available space */
+  .light :global(._richtext),
+  .bordered :global(._richtext) {
+    flex: 1;
   }
 }
 

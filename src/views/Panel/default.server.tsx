@@ -32,7 +32,7 @@ jahiaComponent(
               className="_richtext"
               style={{ flex: 1 }}
               dangerouslySetInnerHTML={{ __html: body }}
-            ></div>
+            />
           )}
           {cta.ctaType !== "none" && (
             <p>

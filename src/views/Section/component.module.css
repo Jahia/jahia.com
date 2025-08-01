@@ -6,17 +6,10 @@
   composes: header from "../../theme/theme.module.css";
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
+.wrapper {
   max-width: var(--jahia-width);
   margin-inline: auto;
-
-  /* If there are no children, do not render the grid to prevent the double gap */
-  &:empty {
-    display: none;
-  }
+  container-type: inline-size;
 
   &[data-width="75"] {
     max-width: calc(var(--jahia-width) * 0.75);
@@ -24,6 +17,17 @@
 
   &[data-width="50"] {
     max-width: calc(var(--jahia-width) * 0.5);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+
+  /* If there are no children, do not render the grid to prevent the double gap */
+  &:empty {
+    display: none;
   }
 
   &[data-gap="2"] {
