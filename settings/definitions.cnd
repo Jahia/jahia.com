@@ -9,8 +9,11 @@
 // Learn more about content types definitions here:
 // https://github.com/Jahia/javascript-modules/tree/main/docs/3-reference/1-cnd-format/
 
-// Layout components
-[jahiacommix:container] mixin
+// Page root components, includes containers and references to containers
+[jahiacommix:rootComponent] mixin
+
+// Themable containers (sections, heroes, etc.)
+[jahiacommix:container] > jahiacommix:rootComponent mixin
  - theme (string, choicelist[resourceBundle]) = 'day' mandatory autocreated < 'day', 'cloudy', 'night'
  - background (string, choicelist[resourceBundle]) < 'plusses', 'stripes', 'bottom-grid'
 

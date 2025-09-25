@@ -1,0 +1,2 @@
+[jahiacom:containerReference] > jnt:content, jahiacommix:rootComponent
+ - container (weakreference) < jahiacommix:container
