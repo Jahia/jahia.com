@@ -17,7 +17,6 @@ export default function CarouselClient({
   useEffect(() => {
     const handler = () => {
       if (!wrapper.current) return;
-      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
       setScrolling(wrapper.current?.scrollWidth > wrapper.current?.offsetWidth);
     };
 
