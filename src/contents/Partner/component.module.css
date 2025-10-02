@@ -41,3 +41,25 @@
   align-items: center;
   font-size: 0.875em;
 }
+
+.container {
+  composes: container from "../../theme/theme.module.css";
+}
+
+.header {
+  composes: header from "../../theme/theme.module.css";
+}
+
+.header img {
+  height: 6rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+
+  @container (width >= 600px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

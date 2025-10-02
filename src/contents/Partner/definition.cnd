@@ -1,6 +1,5 @@
-[jahiacom:partner] > jnt:content, jahiacommix:content, mix:title
+[jahiacom:partner] > jnt:content, jahiacommix:content, mix:title, jmix:visibleInContentTree, jmix:mainResource
  - certification (string, choicelist) mandatory < silver, gold, diamond
  - countries (string, choicelist[country]) multiple mandatory
  - description (string, richtext) mandatory i18n
  - logo (weakreference, picker) mandatory < jmix:image
- - website (string)
