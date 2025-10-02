@@ -17,7 +17,6 @@ export interface Props {
   "countries": string[];
   "description": string;
   "logo": JCRNodeWrapper;
-  "website"?: string;
 }
 
 export const levels = {

@@ -10,7 +10,7 @@ jahiaComponent(
     name: "fullPage",
   },
   (
-    { "jcr:title": title, logo, certification, countries, description, website }: Props,
+    { "jcr:title": title, logo, certification, countries, description }: Props,
     { currentNode, renderContext },
   ) => (
     <section className={classes.container}>

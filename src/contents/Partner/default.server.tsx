@@ -8,10 +8,7 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jahiacom:partner",
   },
-  (
-    { "jcr:title": title, certification, countries, description, logo, website }: Props,
-    { currentNode },
-  ) => (
+  ({ "jcr:title": title, certification, countries, description, logo }: Props, { currentNode }) => (
     <article className={classes.card}>
       <img src={buildNodeUrl(logo)} alt={title} title={title} />
       <p className={clsx("_pack-1", classes.small)}>{levels[certification]}</p>
