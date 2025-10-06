@@ -16,7 +16,8 @@ jahiaComponent(
                 )}
               >
                 view the original.
-              </a>
+              </a>{" "}
+              <strong>All changes will be shared across all references.</strong>
             </div>
             <Render node={container} readOnly />
           </>
