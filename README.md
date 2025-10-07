@@ -13,6 +13,8 @@ This module is accompanied by a Docker-based development environment. To get sta
 yarn install
 
 # Start Jahia in Docker
+docker login ghcr.io
+
 docker compose up --wait
 
 # Build the module and start the dev mode

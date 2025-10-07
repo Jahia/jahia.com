@@ -1,6 +1,6 @@
 services:
   jahia:
-    image: jahia/jahia-ee-dev:8.2-SNAPSHOT
+    image: ghcr.io/jahia/jahia-ee-dev:8.2-SNAPSHOT
     depends_on:
       - postgres
     ports:
