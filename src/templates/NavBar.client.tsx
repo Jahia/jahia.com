@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import classes from "./NavBar.module.css";
 import clsx from "clsx";
 import { useFloating, autoUpdate, offset, shift } from "@floating-ui/react-dom";
@@ -22,36 +22,37 @@ export default function NavBarClient({
   const [open, setOpen] = useState(false);
   const [submenu, setSubmenu] = useState<string | null>(null);
 
+  /** Used to disable the animation on first render */
+  const [animate, setAnimate] = useState(false);
+
   const subentries = entries.find(
     (entry): entry is Group => !("href" in entry) && entry.title === submenu,
   )?.children;
-
-  /** Used to disable the animation on first render */
-  const [animate, setAnimate] = useState(false);
 
   const { refs, floatingStyles } = useFloating({
     whileElementsMounted: autoUpdate,
     middleware: [offset(16), shift()],
   });
 
-  const close = useCallback(() => {
+  const close = () => {
     setOpen(false);
+    setSubmenu(null);
     setAnimate(false);
-  }, []);
+  };
 
   // Resizing the window should close the menu
   useEffect(() => {
-    // Breakpoint defined in unocss.config.js
-    const md = window.matchMedia("(min-width: 800px)");
+    // Breakpoint defined in NavBar.module.css (700px + 16px of padding)
+    const md = window.matchMedia("(min-width: 716px)");
     md.addEventListener("change", close);
     return () => md.removeEventListener("change", close);
-  }, [close]);
+  }, []);
 
   // All clicks outside the menu should close it
   useEffect(() => {
     document.addEventListener("click", close);
     return () => document.removeEventListener("click", close);
-  }, [close]);
+  }, []);
 
   // Pressing escape should also close the menu
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function NavBarClient({
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [close]);
+  }, []);
 
   return (
     <nav
@@ -73,7 +74,7 @@ export default function NavBarClient({
       <div className="_pack-2" style={{ maxWidth: "var(--jahia-width)", marginInline: "auto" }}>
         {children}
         <div className="_pack-2" style={{ flex: 1, justifyContent: "end" }}>
-          <div className={clsx(classes.desktop, "_pack-4")}>
+          <div className={classes.desktopBar}>
             {entries.map((entry) =>
               "href" in entry ? (
                 <a
@@ -88,7 +89,8 @@ export default function NavBarClient({
                   {entry.title}
                 </a>
               ) : (
-                <span
+                <button
+                  type="button"
                   key={entry.title}
                   className={classes.barLink}
                   onMouseMove={(event) => {
@@ -106,7 +108,7 @@ export default function NavBarClient({
                 >
                   {entry.title}
                   <span className="i-ri:arrow-down-wide-line" />
-                </span>
+                </button>
               ),
             )}
             {secondaryCTA && (
@@ -120,7 +122,10 @@ export default function NavBarClient({
           <button
             type="button"
             className={classes.menuButton}
-            onClick={() => setOpen((prev) => !prev)}
+            onClick={() => {
+              if (open) close();
+              else setOpen(true);
+            }}
             aria-label={open ? "Close menu" : "Open menu"}
           >
             <span className={open ? "i-ri:close-large-line" : "i-ri:menu-line"} />
@@ -131,13 +136,7 @@ export default function NavBarClient({
       <div className={classes.mobileMenu} inert={!open}>
         {entries.map((entry) =>
           "href" in entry ? (
-            <a
-              key={entry.href}
-              href={entry.href}
-              aria-current={entry.current ? "page" : undefined}
-              className={classes.link}
-              style={{ padding: ".5rem" }}
-            >
+            <a key={entry.href} href={entry.href} aria-current={entry.current ? "page" : undefined}>
               {entry.title}
             </a>
           ) : (
@@ -157,21 +156,24 @@ export default function NavBarClient({
                   }
                 />
               </button>
-              <ul>
+              <ul
+                inert={submenu !== entry.title}
+                className={clsx(
+                  entry.children.every((entry) => !("href" in entry))
+                    ? classes.columns
+                    : classes.singleColumn,
+                )}
+              >
                 {entry.children.map((entry) =>
                   "href" in entry ? (
                     <li key={entry.href}>
-                      <a
-                        href={entry.href}
-                        aria-current={entry.current ? "page" : undefined}
-                        className={classes.link}
-                      >
+                      <a href={entry.href} aria-current={entry.current ? "page" : undefined}>
                         {entry.title}
                       </a>
                     </li>
                   ) : (
-                    <li key={entry.title}>
-                      {entry.title}
+                    <li key={entry.title} className={classes.menuColumn}>
+                      <small>{entry.title}</small>
                       <ul>
                         {entry.children.map(
                           (entry) =>
@@ -180,7 +182,6 @@ export default function NavBarClient({
                                 <a
                                   href={entry.href}
                                   aria-current={entry.current ? "page" : undefined}
-                                  className={classes.link}
                                 >
                                   {entry.title}
                                 </a>
@@ -195,13 +196,13 @@ export default function NavBarClient({
             </div>
           ),
         )}
-        <div style={{ padding: ".5rem" }}>
-          {secondaryCTA && (
+        {secondaryCTA && (
+          <div style={{ padding: ".5rem" }}>
             <CTA href={secondaryCTA.href} icon secondary>
               {secondaryCTA.label}
             </CTA>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       {/* Desktop menu */}
       <div
@@ -227,11 +228,7 @@ export default function NavBarClient({
           {subentries?.map((entry) =>
             "href" in entry ? (
               <li key={entry.href}>
-                <a
-                  href={entry.href}
-                  aria-current={entry.current ? "page" : undefined}
-                  className={classes.link}
-                >
+                <a href={entry.href} aria-current={entry.current ? "page" : undefined}>
                   {entry.title}
                 </a>
               </li>
@@ -243,11 +240,7 @@ export default function NavBarClient({
                     (entry) =>
                       "href" in entry && (
                         <li key={entry.href}>
-                          <a
-                            href={entry.href}
-                            aria-current={entry.current ? "page" : undefined}
-                            className={classes.link}
-                          >
+                          <a href={entry.href} aria-current={entry.current ? "page" : undefined}>
                             {entry.title}
                           </a>
                         </li>

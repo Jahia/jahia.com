@@ -21,9 +21,9 @@ to fold the menu if it overflows. Let's go with a static value for now.
   }
 }
 
-.link {
-  color: inherit;
-  text-decoration: inherit;
+:where(.nav) ul {
+  padding: 0;
+  list-style: none;
 }
 
 .barLink {
@@ -32,11 +32,25 @@ to fold the menu if it overflows. Let's go with a static value for now.
   padding: 0.5rem;
   color: inherit;
   text-decoration: inherit;
+  background: none;
+  border: none;
 }
 
-.link[aria-current] {
-  font-weight: bold;
+.desktopMenu a,
+.mobileMenu a {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  color: inherit;
+  text-decoration: inherit;
+  border-radius: 0.125rem;
+
+  &[aria-current] {
+    font-weight: bold;
+  }
 }
+
+/* Mobile menu */
 
 .menuButton {
   display: inline-flex;
@@ -55,7 +69,12 @@ to fold the menu if it overflows. Let's go with a static value for now.
 .mobileMenu {
   position: fixed;
   inset-inline: 0;
+
+  /* Leave a small gap below, that, when clicked, closes the menu */
+  max-height: 80vh;
   padding: 0.5rem;
+  overflow: scroll;
+  overscroll-behavior: contain;
 
   /* Fading the color to avoid the compression effect of scaleY(0) */
   color: transparent;
@@ -77,10 +96,84 @@ to fold the menu if it overflows. Let's go with a static value for now.
     transform: translateY(0.5rem) scaleY(1);
   }
 
+  a:hover,
+  a:focus-visible {
+    background: var(--jahia-neutral-600);
+  }
+
   @container (width >= breakpoint) {
     display: none;
   }
 }
+
+.mobileMenu .columns {
+  display: grid;
+  grid-template-columns: auto;
+  gap: 0 1rem;
+  padding: 0;
+
+  > * {
+    min-width: 12rem;
+  }
+
+  @container (width >= 400px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.submenu {
+  > ul {
+    height: 0;
+    padding-inline: 1rem;
+    contain: paint;
+    opacity: 0;
+    transform: translateY(-1rem);
+    transition:
+      transform var(--jahia-motion-timing),
+      opacity var(--jahia-timing);
+  }
+
+  &[data-open="true"] > ul {
+    height: auto;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.submenuLabel {
+  @apply _pack-0;
+
+  width: 100%;
+  padding: 0;
+  line-height: 1.5;
+  color: inherit;
+  text-align: start;
+  background: transparent;
+  border: transparent;
+  border-radius: 0.125rem;
+
+  > :first-child {
+    flex: 1;
+    padding: 0.5rem;
+    border-inline-end: 1px solid var(--jahia-border);
+  }
+
+  > :last-child {
+    margin: 0.5rem;
+    margin-inline-start: 0.75rem;
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: var(--jahia-neutral-600);
+
+    > :first-child {
+      border-inline-end: 1px solid var(--jahia-container-background);
+    }
+  }
+}
+
+/* Desktop menu */
 
 .desktopMenu {
   display: none;
@@ -103,28 +196,17 @@ to fold the menu if it overflows. Let's go with a static value for now.
     }
   }
 
-  ul {
-    list-style: none;
-  }
-
-  a {
-    display: block;
-    width: 100%;
-    padding: 0.5rem;
-
-    &:hover,
-    &:focus-visible {
-      background: var(--jahia-neutral-100);
-      border-radius: 0.125rem;
-    }
+  a:hover,
+  a:focus-visible {
+    background: var(--jahia-neutral-100);
   }
 }
 
-.singleColumn {
+.desktopMenu .singleColumn {
   padding: 1rem;
 }
 
-.columns {
+.desktopMenu .columns {
   display: flex;
   padding: 0;
 
@@ -138,6 +220,8 @@ to fold the menu if it overflows. Let's go with a static value for now.
   }
 }
 
+/* Shared */
+
 .menuColumn {
   display: flex;
   flex-direction: column;
@@ -148,58 +232,15 @@ to fold the menu if it overflows. Let's go with a static value for now.
     color: var(--jahia-blue);
     text-transform: uppercase;
   }
-
-  ul {
-    padding: 0;
-  }
 }
 
-.submenu {
-  > ul {
-    height: 0;
-    padding-inline-start: 1rem;
-    contain: paint;
-    list-style: none;
-    opacity: 0;
-    transform: translateY(-1rem);
-    transition:
-      transform var(--jahia-motion-timing),
-      opacity var(--jahia-timing);
-  }
-
-  &[data-open="true"] > ul {
-    height: auto;
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.submenuLabel {
-  @apply _pack-0;
-
-  width: 100%;
-  padding: 0;
-  color: inherit;
-  text-align: start;
-  background: transparent;
-  border: transparent;
-
-  > :first-child {
-    flex: 1;
-    padding: 0.5rem;
-    border-inline-end: 1px solid var(--jahia-border);
-  }
-
-  > :last-child {
-    margin: 0.5rem;
-    margin-inline-start: 0.75rem;
-  }
-}
-
-.desktop {
+.desktopBar {
   display: none;
+}
 
-  @container (width >= breakpoint) {
-    display: flex;
+@container (width >= breakpoint) {
+  /* Unocss does not support nested @apply, so we need to repeat .desktopBar */
+  .desktopBar {
+    @apply _pack-4;
   }
 }

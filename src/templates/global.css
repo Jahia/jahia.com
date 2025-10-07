@@ -4,11 +4,11 @@
 }
 
 :root {
+  contain: paint;
   scrollbar-color: var(--jahia-neutral-300) var(--jahia-neutral-50);
 }
 
 body {
-  overflow-x: hidden;
   font-weight: 300;
   line-height: 1.5;
   background: var(--jahia-navy-blue);
