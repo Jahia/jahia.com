@@ -36,8 +36,9 @@ export default function NavBarClient({
 
   const close = () => {
     setOpen(false);
-    setSubmenu(null);
     setAnimate(false);
+    // The submenu is "closed" when the animation is over
+    // (to avoid showing an empty menu during the animation)
   };
 
   // Resizing the window should close the menu
@@ -139,7 +140,13 @@ export default function NavBarClient({
         </div>
       </div>
       {/* Mobile menu */}
-      <div className={classes.mobileMenu} inert={!open}>
+      <div
+        className={classes.mobileMenu}
+        inert={!open}
+        onTransitionEnd={() => {
+          if (!open) setSubmenu(null);
+        }}
+      >
         {entries.map((entry) =>
           "href" in entry ? (
             <a key={entry.href} href={entry.href} aria-current={entry.current ? "page" : undefined}>
@@ -220,7 +227,10 @@ export default function NavBarClient({
             ? "transform var(--jahia-motion-timing), opacity var(--jahia-timing)"
             : undefined,
         }}
-        onTransitionEnd={() => setAnimate(false)}
+        onTransitionEnd={() => {
+          setAnimate(false);
+          if (!open) setSubmenu(null);
+        }}
         className={classes.desktopMenu}
         data-theme="cloudy"
       >
