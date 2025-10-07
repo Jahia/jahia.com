@@ -6,12 +6,12 @@
 :root {
   contain: paint;
   scrollbar-color: var(--jahia-neutral-300) var(--jahia-neutral-50);
+  background: var(--jahia-navy-blue);
 }
 
 body {
   font-weight: 300;
   line-height: 1.5;
-  background: var(--jahia-navy-blue);
 }
 
 :where(a) {
