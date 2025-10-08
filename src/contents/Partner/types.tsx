@@ -27,13 +27,13 @@ export const levels = (level: Props["certification"], locale: Locale) =>
   ({
     silver: (
       <>
-        <span className={clsx("i-ri:triangle-fill", classes.silver)} />{" "}
+        <span className={clsx("i-ri:star-fill", classes.silver)} />{" "}
         {getMessage("jahiacom_partner.certification.silver", locale, "Silver Partner")}
       </>
     ),
     gold: (
       <>
-        <span className={clsx("i-ri:circle-fill", classes.gold)} />{" "}
+        <span className={clsx("i-ri:vip-crown-2-fill", classes.gold)} />{" "}
         {getMessage("jahiacom_partner.certification.gold", locale, "Gold Partner")}
       </>
     ),
