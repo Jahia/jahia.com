@@ -29,5 +29,9 @@ jobs:
     needs: build-and-push
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: browser-actions/setup-chrome@v1
-      - run: npx lighthouse@12 '${{ secrets.JAHIA_HOST }}/sites/jahiacom/home.html' --quiet --chrome-flags='--headless' --output=json | jq '.categories | map_values(.score)'
+      - uses: browser-actions/setup-chrome@v2
+      - run: |
+          npx lighthouse@12 '${{ secrets.JAHIA_HOST }}/sites/jahiacom/home.html' \
+            --extra-headers '{"Authorization": "${{ secrets.JAHIA_AUTHORIZATION }}"}' \
+            --quiet --chrome-flags='--headless' --output=json \
+          | jq '.categories | map_values(.score)'
