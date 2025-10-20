@@ -19,10 +19,10 @@ jobs:
 
       # If the build is successful and the branch is main, push the module to Jahia
       - if: github.ref == 'refs/heads/main'
-        run: yarn jahia-deploy
+        run: node jahia-deploy.js
         env:
-          JAHIA_USER: ${{ secrets.JAHIA_USER }}
           JAHIA_HOST: ${{ secrets.JAHIA_HOST }}
+          JAHIA_AUTHORIZATION: ${{ secrets.JAHIA_AUTHORIZATION }}
 
   lighthouse:
     runs-on: ubuntu-latest
