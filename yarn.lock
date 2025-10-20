@@ -675,16 +675,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/javascript-modules-library@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@jahia/javascript-modules-library@npm:1.0.0"
+"@jahia/javascript-modules-library@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@jahia/javascript-modules-library@npm:1.0.1"
   dependencies:
     dotenv: "npm:^17.2.2"
   peerDependencies:
     i18next: ^25.0.0
     react: ^19.0.0
     react-dom: ^19.0.0
-    react-i18next: ^15.4.0
+    react-i18next: ^15.4.0 || ^16.0.0
   peerDependenciesMeta:
     i18next:
       optional: true
@@ -694,13 +694,13 @@ __metadata:
       optional: true
     react-i18next:
       optional: true
-  checksum: 10c0/e9dcca62106cbd515813af5e09515d421f69747c839458548b069f0f57cdb3976024938afc0a8132925725f2cab31ff8addfb8ba4a090ac47242b486df0328d6
+  checksum: 10c0/8ecb87fa217dbd2e96ae555299beba29fd9f745c26d54d5ad1d77586955d52fdd65281f17a554c37440a893393d29056cccf06cde3903b4dbbbac9874c837ef9
   languageName: node
   linkType: hard
 
-"@jahia/vite-plugin@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@jahia/vite-plugin@npm:1.0.0"
+"@jahia/vite-plugin@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@jahia/vite-plugin@npm:1.0.1"
   dependencies:
     "@rollup/pluginutils": "npm:^5.2.0"
     magic-string: "npm:^0.30.18"
@@ -709,7 +709,7 @@ __metadata:
     vite: ">=6.0.0"
   bin:
     jahia-deploy: bin/jahia-deploy.js
-  checksum: 10c0/ed43f59a5bc05236f0ecd98f7b39f497f86fa2fb1848989349be0ae8ca0138a5b0049780120373a2cd1ba0841d769d7a421ac0f8bbee532cfb34cce22f90cf97
+  checksum: 10c0/2528d3e116081cdeade2826c4307c55d918990bd53eb634de0d676914964f5e73ae6c61f4bc7d703b3f4cd03a534025536ce543934e397a544d80efd66675f7c
   languageName: node
   linkType: hard
 
@@ -3094,8 +3094,8 @@ __metadata:
     "@floating-ui/react-dom": "npm:^2.1.6"
     "@fontsource-variable/plus-jakarta-sans": "npm:^5.2.8"
     "@iconify-json/ri": "npm:^1.2.6"
-    "@jahia/javascript-modules-library": "npm:^1.0.0"
-    "@jahia/vite-plugin": "npm:^1.0.0"
+    "@jahia/javascript-modules-library": "npm:^1.0.1"
+    "@jahia/vite-plugin": "npm:^1.0.1"
     "@types/react": "npm:^19.2.2"
     "@types/react-dom": "npm:^19.2.2"
     clsx: "npm:^2.1.1"
