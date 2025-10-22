@@ -2,7 +2,8 @@ services:
   jahia:
     image: jahia/jahia-ee:8.2
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - 8080:8080
       - 9229:9229
@@ -30,3 +31,8 @@ services:
     environment:
       POSTGRES_USER: jahia
       POSTGRES_PASSWORD: dbpassword
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "jahia"]
+      interval: 5s
+      timeout: 1s
+      retries: 30
