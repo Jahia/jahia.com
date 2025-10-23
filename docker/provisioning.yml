@@ -1,6 +1,6 @@
 - installOrUpgradeBundle: "mvn:org.jahia.community/translation-deepl/1.1.2"
 - installOrUpgradeBundle: "mvn:org.jahia.modules/content-reports/2.2.1"
-- installOrUpgradeBundle: "mvn:org.jahia.modules/javascript-modules-engine/0.9.2"
+- installOrUpgradeBundle: "mvn:org.jahia.modules/javascript-modules-engine/1.0.1"
 - installOrUpgradeBundle: "mvn:org.jahia.modules/linkchecker/8.2.0"
 - installOrUpgradeBundle: "mvn:org.jahia.modules/robots/3.0.0"
 - installOrUpgradeBundle: "mvn:org.jahia.modules/siteimprove-connector/3.0.2"
