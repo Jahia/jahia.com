@@ -1,0 +1,4 @@
+[jahiacom:testimony] > jnt:content, jahiacommix:cta, jahiacommix:container
+ - author (string) i18n
+ - quote (string, richtext) i18n mandatory
+ - image (weakreference, picker) i18n mandatory < jmix:image
