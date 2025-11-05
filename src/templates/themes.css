@@ -6,6 +6,7 @@
   --jahia-pink: #d6217d;
   --jahia-orange: #ffab00;
   --jahia-violet: #4f40d6;
+  --jahia-light-violet: #e0ddf8;
   --jahia-green: #12b08a;
   --jahia-neutral-700: #001020;
   --jahia-neutral-600: #3d556c;
@@ -29,6 +30,8 @@
   --jahia-icon-color: var(--jahia-neutral-400);
   --jahia-border: var(--jahia-neutral-300);
   --jahia-inner-border: var(--jahia-neutral-300);
+  --jahia-testimony-color: var(--jahia-neutral-600);
+  --jahia-testimony-background: var(--jahia-light-violet);
 
   /* Accent parameters */
   --jahia-cut: 2rem;
@@ -49,6 +52,8 @@
   --jahia-icon-color: var(--jahia-neutral-400);
   --jahia-border: var(--jahia-neutral-100);
   --jahia-inner-border: var(--jahia-neutral-200);
+  --jahia-testimony-color: var(--jahia-neutral-600);
+  --jahia-testimony-background: var(--jahia-neutral-200);
 }
 
 [data-theme="night"] {
@@ -59,4 +64,6 @@
   --jahia-icon-color: var(--jahia-neutral-600);
   --jahia-border: var(--jahia-neutral-600);
   --jahia-inner-border: var(--jahia-neutral-600);
+  --jahia-testimony-color: var(--jahia-light-violet);
+  --jahia-testimony-background: var(--jahia-navy-blue);
 }

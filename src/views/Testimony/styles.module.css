@@ -1,3 +1,63 @@
 .container {
-  composes: container from "../../theme/theme.module.css";
+  container-type: inline-size;
+  color: var(--jahia-testimony-color);
+  background: var(--jahia-testimony-background) cover / center no-repeat;
+}
+
+.testimony {
+  display: grid;
+
+  @container (width >= 800px) {
+    grid-template-columns: minmax(15rem, 25rem) auto;
+  }
+}
+
+.image {
+  height: 100%;
+  object-fit: cover;
+
+  @container (width < 800px) {
+    max-height: 15rem;
+  }
+}
+
+.text {
+  @apply _stack-4;
+
+  padding: 2rem;
+  background-color: var(--jahia-testimony-background);
+
+  blockquote {
+    margin-inline: 0;
+    font-size: 1.5em;
+  }
+
+  blockquote::before,
+  blockquote::after {
+    background: currentcolor;
+  }
+
+  @container (width >= 800px) {
+    padding: 3rem;
+
+    blockquote {
+      font-size: 2em;
+      line-height: 1.25;
+    }
+
+    blockquote::before,
+    blockquote::after {
+      height: 3rem;
+      margin-block: 1rem;
+    }
+  }
+}
+
+.cover .text {
+  background-color: color-mix(in srgb, var(--jahia-testimony-background) 80%, transparent);
+  backdrop-filter: blur(0.25rem);
+
+  @container (width >= 800px) {
+    padding: 4rem 8rem;
+  }
 }
