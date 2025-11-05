@@ -1,0 +1,102 @@
+.container {
+  composes: container from "../../theme/theme.module.css";
+  padding: 0;
+}
+
+.testimony {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  height: 100%;
+  position: relative;
+  max-width: 100%;
+
+  @container (width < 600px) {
+    flex-direction: column;
+  }
+}
+
+.imageTestimony {
+  order: 0;
+  flex: 0 0 400px;
+  position: relative;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+.text {
+  order: 1;
+  padding: 3rem;
+  background-color: var(--jahia-testimony-background);
+
+  @container (width < 600px) {
+    padding: 2rem;
+  }
+
+  blockquote {
+    margin: 0;
+  }
+
+  p {
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--jahia-testimony-text);
+
+    strong {
+      font-weight: 700;
+    }
+
+    @container (width < 600px) {
+      font-size: 1.5rem;
+      line-height: 1.5;
+    }
+  }
+
+  .author {
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 1rem;
+  }
+
+  blockquote:before,
+  blockquote:after {
+    background: var(--jahia-testimony-text);
+    height: 3rem;
+    margin-block: 1rem;
+  }
+
+  @container (width < 600px) {
+    blockquote:before,
+    blockquote:after {
+      height: 2rem;
+    }
+  }
+}
+
+.testimonyCover {
+  padding: 0rem;
+  max-width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  .text {
+    padding: 4rem 8rem;
+    background-color: color-mix(in srgb, var(--jahia-testimony-background) 80%, transparent);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+
+    @container (width < 600px) {
+      padding: 2rem;
+    }
+  }
+}
