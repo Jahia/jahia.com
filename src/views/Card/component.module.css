@@ -2,13 +2,22 @@
   @apply _stack-4;
 
   composes: item from "../../theme/theme.module.css";
-  padding: 1.5rem;
+  padding: 3rem;
+
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 /** Cut off the first card in a container */
 :global(._container) > .card:first-of-type,
 :global(._container) > :first-child > .card:first-of-type {
   @apply _cut-before;
+}
+
+/** Cut off the last card in a container */
+:global(._container) > .card:last-of-type,
+:global(._container) > :last-child > .card:last-of-type {
+  @apply _cut-after;
 }
 
 .collapsible {
