@@ -1,15 +1,20 @@
 .hero {
   composes: container from "../../theme/theme.module.css";
+  padding: 5rem 1rem;
 }
 
 .grid {
   display: grid;
   grid-template: 1fr / auto;
   gap: 1rem;
-  align-items: center;
+  align-items: start;
 
   @container (width >= 800px) {
     grid-template: 1fr / 1fr 1fr;
+  }
+
+  p {
+    margin-top: 0rem;
   }
 }
 
