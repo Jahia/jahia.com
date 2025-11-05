@@ -3,9 +3,8 @@
 
   composes: item from "../../theme/theme.module.css";
   padding: 3rem;
-
   backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 
 /** Cut off the first card in a container */
