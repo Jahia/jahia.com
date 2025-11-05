@@ -5,5 +5,5 @@ import type { CTAProps } from "../../mixins/CTA/server.jsx";
 export type Props = ContainerProps & {
   "jcr:title"?: string;
   "subtitle"?: string;
-  "image": JCRNodeWrapper;
+  "image"?: JCRNodeWrapper;
 } & CTAProps;

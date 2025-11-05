@@ -19,7 +19,7 @@ jahiaComponent(
       "jcr:title": title,
       bottomLinks,
       ...cta
-    }: { "jcr:title"?: string; "bottomLinks"?: JCRNodeWrapper[] } & CTAProps,
+    }: { "jcr:title"?: string; "bottomLinks"?: Array<JCRNodeWrapper | null> } & CTAProps,
     { currentNode, renderContext },
   ) => (
     <footer className={classes.footer} data-theme="night">
@@ -41,11 +41,13 @@ jahiaComponent(
           </div>
           <hr />
           <div className={clsx("_row-2", classes.padded)}>
-            {bottomLinks?.map((node) => (
-              <a href={buildNodeUrl(node)} key={node.getIdentifier()}>
-                {node.getPropertyAsString("jcr:title")}
-              </a>
-            )) || <em>Add links here!</em>}
+            {bottomLinks
+              ?.filter((node) => node !== null)
+              .map((node) => (
+                <a href={buildNodeUrl(node)} key={node.getIdentifier()}>
+                  {node.getPropertyAsString("jcr:title")}
+                </a>
+              )) || <em>Add links here!</em>}
           </div>
         </div>
       </div>
@@ -70,14 +72,22 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jahiacom:footerColumn",
   },
-  ({ "jcr:title": title, links }: { "jcr:title"?: string; "links"?: JCRNodeWrapper[] }) => (
+  ({
+    "jcr:title": title,
+    links,
+  }: {
+    "jcr:title"?: string;
+    "links"?: Array<JCRNodeWrapper | null>;
+  }) => (
     <div className="_stack-2">
       <strong>{title}</strong>
-      {(links ?? []).map((node) => (
-        <a href={buildNodeUrl(node)} key={node.getIdentifier()}>
-          {node.getPropertyAsString("jcr:title")}
-        </a>
-      ))}
+      {links
+        ?.filter((node) => node !== null)
+        .map((node) => (
+          <a href={buildNodeUrl(node)} key={node.getIdentifier()}>
+            {node.getPropertyAsString("jcr:title")}
+          </a>
+        ))}
     </div>
   ),
 );

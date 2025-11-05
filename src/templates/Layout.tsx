@@ -22,7 +22,7 @@ interface Props {
   "openGraphImage"?: JCRNodeWrapper;
   "htmlTitle"?: string;
   "jsonLd"?: string[];
-  "stylesheets"?: JCRNodeWrapper[];
+  "stylesheets"?: Array<JCRNodeWrapper | null>;
 }
 
 /** Places `children` in an html page. */
@@ -81,9 +81,11 @@ export const Layout = ({ props, children }: { props: Props; children: ReactNode 
           </>
         )}
         <link rel="stylesheet" href={buildModuleFileUrl("dist/assets/style.css")} />
-        {stylesheets?.filter(Boolean).map((stylesheet) => (
-          <style key={stylesheet.getIdentifier()}>{stylesheet.getPropertyAsString("css")}</style>
-        ))}
+        {stylesheets
+          ?.filter((stylesheet) => stylesheet !== null)
+          .map((stylesheet) => (
+            <style key={stylesheet.getIdentifier()}>{stylesheet.getPropertyAsString("css")}</style>
+          ))}
         {jsonLd?.map((content) => (
           <script type="application/ld+json" key={content}>
             {content}

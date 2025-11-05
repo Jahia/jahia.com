@@ -8,10 +8,10 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jahiacom:logoCarousel",
   },
-  ({ logos, mode }: { logos: Array<JCRNodeWrapper | null>; mode: "color" | "mono" }) => (
-    <Island component={CarouselClient} props={{ mode, length: logos.length }}>
+  ({ logos, mode }: { logos?: Array<JCRNodeWrapper | null>; mode: "color" | "mono" }) => (
+    <Island component={CarouselClient} props={{ mode, length: logos?.length ?? 0 }}>
       {logos
-        .filter((logo) => logo !== null)
+        ?.filter((logo) => logo !== null)
         .map((logo) => (
           <div
             key={logo.getName()}
