@@ -1,0 +1,22 @@
+name: Lint
+
+on: [pull_request]
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 50
+      - uses: actions/setup-node@v6
+      - run: corepack enable
+      - run: yarn install
+      - run: yarn fix
+      - name: Commit changes (if any)
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git diff --cached --quiet || git commit -m "style: autofixed linting issues"
+          git push origin HEAD:${{ github.head_ref }}

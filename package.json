@@ -14,6 +14,7 @@
     "deploy": "jahia-deploy",
     "format": "prettier --write --list-different .",
     "lint": "eslint . && stylelint 'src/**/*.css'",
+    "fix": "eslint . --fix && stylelint 'src/**/*.css' --fix && run format",
     "package": "yarn pack --out dist/package.tgz",
     "dev": "vite build --watch",
     "watch": "run dev",
