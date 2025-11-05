@@ -2,6 +2,6 @@
   <rule>
     <name>Display partners under the partners page</name>
     <from>^(.*)/find-a-partner/(?!main/)(.*)$</from>
-    <to>$1/find-a-partner/main/section/content-stack/display-a-content-folder%40/implementation-partners/$2</to>
+    <to>$1/find-a-partner/main/section/content-stack/display-a-content-folder@/implementation-partners/$2</to>
   </rule>
 </urlrewrite>
