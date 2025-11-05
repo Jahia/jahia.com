@@ -1,0 +1,60 @@
+.container {
+  composes: container from "../../theme/theme.module.css";
+  padding: 5rem 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template: 1fr / auto;
+  gap: 1rem;
+  align-items: start;
+
+  @container (width >= 800px) {
+    grid-template: 1fr / 1fr 1fr;
+  }
+
+  p {
+    margin-top: 0rem;
+  }
+}
+
+.discover {
+  display: flex;
+  flex-direction: row;
+  align-items: top;
+  gap: 1rem;
+  position: relative;
+  padding: 5rem 0;
+
+  h2 {
+    font-size: 3rem;
+    line-height: 1.25;
+    min-width: 50%;
+    /* color: var(--jahia-light-blue); */
+  }
+}
+
+.imageDiscover {
+  position: absolute;
+  z-index: 0;
+  width: auto;
+  height: auto;
+  /* bottom: -6.1rem;
+  right: -17.5rem; */
+
+  left: calc(50% - 550px / 2);
+  bottom: 0;
+  filter: blur(4px);
+  opacity: 0.6;
+
+  img {
+    width: 550px;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+.center {
+  text-align: center;
+  text-wrap: balance;
+}
