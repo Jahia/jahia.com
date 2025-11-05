@@ -1,0 +1,4 @@
+[jahiacom:discover] > jnt:content, jahiacommix:cta, jahiacommix:container
+ - title (string) i18n mandatory
+ - subtitle (string, richtext) i18n mandatory
+ - image (weakreference, picker) i18n < jmix:image

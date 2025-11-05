@@ -4,6 +4,10 @@
 
 .header {
   composes: header from "../../theme/theme.module.css";
+
+  h2 {
+    padding-top: 1.5rem;
+  }
 }
 
 .wrapper {
@@ -30,6 +34,37 @@
     display: none;
   }
 
+  &[data-gap="0"] {
+    gap: 0;
+
+    /* retirer les border-left des articles sauf le premier */
+    > article:not(:first-of-type) {
+      border-left: 0;
+    }
+
+    /* remettre pour le premier article la border-left */
+    > article:first-of-type {
+      border-left: 1px solid var(--jahia-inner-border);
+    }
+
+    @container (width < 600px) {
+      /* remettre les border-left */
+      > article:not(:first-of-type) {
+        border-left: 1px solid var(--jahia-inner-border);
+      }
+
+      /* retirer les border-top des articles sauf le premier */
+      > article:not(:first-of-type) {
+        border-top: 0;
+      }
+
+      /* remettre pour le premier article la border-top */
+      > article:first-of-type {
+        border-top: 1px solid var(--jahia-inner-border);
+      }
+    }
+  }
+
   &[data-gap="2"] {
     gap: 2rem;
   }
@@ -50,8 +85,8 @@
     &[data-columns="irregular-67-33"] {
       grid-template-columns: repeat(3, minmax(0, 1fr));
 
-      > :nth-child(4n),
-      > :nth-child(4n + 1) {
+      > :nth-child(3n),
+      > :nth-child(3n + 1) {
         grid-column: span 2;
       }
     }

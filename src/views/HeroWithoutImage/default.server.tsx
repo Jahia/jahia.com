@@ -15,7 +15,7 @@ export const HeroWithoutImage = jahiaComponent(
         <div className="_stack-4">
           {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
           {cta.ctaType !== "none" && (
-            <p>
+            <p style={{ marginTop: "1rem" }}>
               <MixinCTA cta={cta} />
             </p>
           )}
