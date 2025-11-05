@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 export default function Accordion({ children }: { children?: ReactNode }) {
   return (
     <section
-      className="_stack-3"
+      className="_stack-0"
       onClick={(event) => {
         const button = (event.target as HTMLElement | undefined)?.closest?.("button");
         if (!button) return; // Ignore clicks outside of buttons
