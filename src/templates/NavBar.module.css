@@ -8,7 +8,7 @@ to fold the menu if it overflows. Let's go with a static value for now.
 .nav {
   position: sticky;
   inset-block-start: 0;
-  z-index: 9;
+  z-index: 25001; /* Above jContent area bars */
   padding: 0.5rem;
   container-type: inline-size;
   color: var(--jahia-color);
