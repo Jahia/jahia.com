@@ -1,0 +1,4 @@
+[jcnt:blogAuthor] > jnt:content, jahiacommix:content
+ - name (string) mandatory
+ - image (weakreference) < 'jmix:image'
+ - text (string, richtext) i18n

@@ -1,0 +1,12 @@
+[jahiacom:blogEntry] > jnt:content, mix:title, jahiacommix:content, jmix:mainResource
+ - author (weakreference) mandatory
+ - summary (string) i18n
+ - date (date) = now()
+ - blogType (weakreference) multiple facetable hierarchical
+ - image (weakreference) < 'jmix:image'
+ - text (string, richtext) i18n
+// The lines below are legacy props copied from https://github.com/Jahia/jahiacom/blob/master/jahiacom-templates/src/main/resources/META-INF/definitions.cnd
+// - displayImageOnDetail (boolean) = 'true' indexed=no
+// - hideBackButton (boolean) = 'false' indexed=no
+// - hideRelated (boolean) = 'false' indexed=no
+// + * (jmix:droppableContent) = jmix:droppableContent
