@@ -12,10 +12,10 @@ export const HeroWithoutImage = jahiaComponent(
     <header className={classes.hero} data-theme={theme} data-bg={background}>
       <div className={classes.grid}>
         {title && <h1>{title}</h1>}
-        <div className="_stack-4">
+        <div className="_stack-8">
           {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
           {cta.ctaType !== "none" && (
-            <p style={{ marginTop: "1rem" }}>
+            <p>
               <MixinCTA cta={cta} />
             </p>
           )}
