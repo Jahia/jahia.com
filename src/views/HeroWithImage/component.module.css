@@ -102,3 +102,23 @@
   user-select: none;
   object-fit: cover;
 }
+
+.inlay {
+  display: grid;
+  gap: 1rem;
+  padding-block: 3rem;
+  background: transparent center / contain no-repeat;
+
+  @container (width >= 800px) {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding-block: 6rem;
+    background: var(--img) center / contain no-repeat;
+  }
+
+  h2 {
+    /* Copy h1 style, but h2 for semantics */
+    font-size: 3rem;
+    line-height: 1.25;
+  }
+}
