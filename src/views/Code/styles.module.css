@@ -1,0 +1,78 @@
+.container {
+  padding: 4rem;
+  container-type: inline-size;
+  /* background:
+    radial-gradient(closest-side at 25% 60%, var(--jahia-pink), transparent),
+    radial-gradient(closest-side at 50% 60%, var(--jahia-orange), transparent),
+    radial-gradient(closest-side at 75% 60%, var(--jahia-violet), transparent); */
+}
+
+.grid {
+  display: grid;
+  gap: 0.5rem;
+  background: radial-gradient(
+      circle at right center,
+      #56327780,
+      #4a378c80 30%,
+      #4172c280 55%,
+      #32517380
+    )
+    color-mix(in srgb, var(--jahia-neutral-700) 75%, transparent);
+  border: 0.25rem solid color-mix(in srgb, var(--jahia-neutral-700) 25%, transparent);
+  border-radius: 0.25rem;
+  backdrop-filter: blur(0.5rem);
+
+  @container (width >= 600px) {
+    grid-template-columns: auto 1fr;
+  }
+}
+
+.tabs {
+  @apply _pack-2;
+
+  padding: 0.25rem;
+  overflow: auto;
+
+  @container (width >= 600px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  label {
+    @apply _pack-1;
+
+    flex-shrink: 0;
+    padding: 0.25rem 0.5rem;
+    contain: paint;
+    color: var(--jahia-neutral-50);
+    background: color-mix(in srgb, var(--jahia-neutral-500) 25%, transparent);
+    border: 2px solid color-mix(in srgb, var(--jahia-neutral-500) 25%, transparent);
+    border-radius: 0.25rem;
+    transition:
+      background 0.3s,
+      border-color 0.3s;
+
+    &:hover,
+    &:has(input:focus-visible) {
+      background: color-mix(in srgb, var(--jahia-neutral-500) 50%, transparent);
+    }
+
+    &:has(input:checked) {
+      background: color-mix(in srgb, var(--jahia-neutral-700) 75%, transparent);
+      border-color: var(--jahia-navy-blue);
+    }
+  }
+
+  input {
+    position: absolute;
+    opacity: 0;
+  }
+}
+
+.panel {
+  @apply _stack-2;
+
+  padding: 1rem;
+  overflow: auto;
+  color: var(--jahia-neutral-50);
+}
