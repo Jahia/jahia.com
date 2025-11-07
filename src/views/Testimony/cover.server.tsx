@@ -22,7 +22,11 @@ jahiaComponent(
       className={classes.container}
       data-theme={theme}
       data-bg={background}
-      style={{ background: image && `url("${buildNodeUrl(image)}")` }}
+      style={{
+        background: image && `url("${buildNodeUrl(image)}")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       <div className={classes.testimonyCover}>
         <div className={classes.text}>
