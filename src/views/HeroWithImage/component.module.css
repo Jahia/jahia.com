@@ -11,41 +11,23 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0rem;
-  /* margin-block-end: -25vw; Clip the end of the hero for a cool effect */
-  margin-inline: 0; /* Remove the inherited margin-inline: auto */
+  gap: 0;
 
-  @container (width >= 1080px) {
+  @container (width >= 800px) {
     flex-direction: row;
+    gap: 1rem;
     align-items: center;
-    justify-content: end;
     margin-block-end: 0;
-    /* margin-inline-end: max(-25vw, -20rem); Clip horizontally on desktop */
-
-    max-width: 100%;
   }
 }
 
 .title {
   flex: 3;
-  flex-grow: 0;
-  padding: 4rem 0;
-  max-width: 700px;
-  min-width: 550px;
-
-  @container (width < 1080px) {
-    padding: 4rem 4rem 0 4rem;
-    max-width: 100%;
-    /* background-color: var(--jahia-navy-blue-70); */
-  }
+  max-width: 100%;
+  padding: 2rem 2rem 3rem;
 
   @container (width >= 800px) {
-    /* margin-inline-start: max(12.5vw, 10rem); */
-  }
-
-  li {
-    font-size: 1.2rem;
-    font-weight: 200;
+    max-width: 50%;
   }
 }
 
@@ -63,57 +45,48 @@
 
   /* Composing with conflicting properties is undefined behavior, we cannot compose .item here. */
   padding: 2rem;
-  padding-left: calc(100% - var(--jahia-width) / 2 + 2rem);
-  /* background: var(--jahia-background);
-  border: 1px solid var(--jahia-border); */
+  background: var(--jahia-background);
+  border: 1px solid var(--jahia-border);
   border-block-end: 0;
 
-  backdrop-filter: blur(2px);
-
   @container (width >= 800px) {
-    /* border-block-end: 1px solid var(--jahia-border); */
+    border-block-end: 1px solid var(--jahia-border);
     border-inline-end: 0;
-  }
-
-  :global(._grid) {
-    grid-template: 1fr / 2fr 1fr;
   }
 }
 
 .image {
   flex: 4;
-  flex-grow: 0;
-  min-width: 50%;
+  min-width: 0;
   object-fit: cover;
-  object-position: 100% 100%;
-  overflow: visible;
-  background-color: transparent;
-  transition: object-position var(--jahia-motion-timing) ease-in-out;
+  object-position: center left;
 
-  /* @container (width < 1080px) {
+  @container (width >= 800px) {
     position: absolute;
-    z-index: -1;
-    object-fit: scale-down;
-  } */
-
-  /* On side-by-side view, nuke the native aspect-ratio of the image to fit the container. */
-  @container (width >= 1080px) {
+    right: 0;
+    bottom: 0;
+    max-width: 50vw;
     height: 100%;
-    min-height: 100%;
-    max-height: 700px;
-  }
-
-  @container (width >= 1600px) {
-    object-position: center right;
-  }
-
-  @container (width >= 2000px) {
-    object-position: center right;
   }
 }
 
 .compactImage {
   width: 100%;
+  object-fit: cover;
+  background-color: var(--jahia-border);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--jahia-cut)),
+    calc(100% - var(--jahia-cut)) 100%,
+    0 100%
+  );
+
+  /* On side-by-side view, nuke the native aspect-ratio of the image to fit the container. */
+  @container (width >= 800px) {
+    height: 0;
+    min-height: 100%;
+  }
 }
 
 .cover {
@@ -139,4 +112,24 @@
   height: 100%;
   user-select: none;
   object-fit: cover;
+}
+
+.inlay {
+  display: grid;
+  gap: 1rem;
+  padding-block: 3rem;
+  background: transparent center / contain no-repeat;
+
+  @container (width >= 800px) {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding-block: 6rem;
+    background: var(--img) center / contain no-repeat;
+  }
+
+  h2 {
+    /* Copy h1 style, but h2 for semantics */
+    font-size: 3rem;
+    line-height: 1.25;
+  }
 }
