@@ -1,6 +1,7 @@
 .hero {
   composes: container from "../../theme/theme.module.css";
   contain: paint;
+  padding: 0;
 }
 
 .header {
@@ -10,23 +11,41 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  margin-block-end: -25vw; /* Clip the end of the hero for a cool effect */
+  gap: 0rem;
+  /* margin-block-end: -25vw; Clip the end of the hero for a cool effect */
   margin-inline: 0; /* Remove the inherited margin-inline: auto */
 
-  @container (width >= 800px) {
+  @container (width >= 1080px) {
     flex-direction: row;
     align-items: center;
+    justify-content: end;
     margin-block-end: 0;
-    margin-inline-end: max(-25vw, -20rem); /* Clip horizontally on desktop */
+    /* margin-inline-end: max(-25vw, -20rem); Clip horizontally on desktop */
+
+    max-width: 100%;
   }
 }
 
 .title {
   flex: 3;
+  flex-grow: 0;
+  padding: 4rem 0;
+  max-width: 700px;
+  min-width: 550px;
+
+  @container (width < 1080px) {
+    padding: 4rem 4rem 0 4rem;
+    max-width: 100%;
+    /* background-color: var(--jahia-navy-blue-70); */
+  }
 
   @container (width >= 800px) {
-    margin-inline-start: max(-12.5vw, -10rem);
+    /* margin-inline-start: max(12.5vw, 10rem); */
+  }
+
+  li {
+    font-size: 1.2rem;
+    font-weight: 200;
   }
 }
 
@@ -44,38 +63,57 @@
 
   /* Composing with conflicting properties is undefined behavior, we cannot compose .item here. */
   padding: 2rem;
-  background: var(--jahia-background);
-  border: 1px solid var(--jahia-border);
+  padding-left: calc(100% - var(--jahia-width) / 2 + 2rem);
+  /* background: var(--jahia-background);
+  border: 1px solid var(--jahia-border); */
   border-block-end: 0;
 
+  backdrop-filter: blur(2px);
+
   @container (width >= 800px) {
-    border-block-end: 1px solid var(--jahia-border);
+    /* border-block-end: 1px solid var(--jahia-border); */
     border-inline-end: 0;
+  }
+
+  :global(._grid) {
+    grid-template: 1fr / 2fr 1fr;
   }
 }
 
 .image {
   flex: 4;
-  min-width: 0;
+  flex-grow: 0;
+  min-width: 50%;
+  object-fit: cover;
+  object-position: 100% 100%;
+  overflow: visible;
+  background-color: transparent;
+  transition: object-position var(--jahia-motion-timing) ease-in-out;
+
+  /* @container (width < 1080px) {
+    position: absolute;
+    z-index: -1;
+    object-fit: scale-down;
+  } */
+
+  /* On side-by-side view, nuke the native aspect-ratio of the image to fit the container. */
+  @container (width >= 1080px) {
+    height: 100%;
+    min-height: 100%;
+    max-height: 700px;
+  }
+
+  @container (width >= 1600px) {
+    object-position: center right;
+  }
+
+  @container (width >= 2000px) {
+    object-position: center right;
+  }
 }
 
 .compactImage {
   width: 100%;
-  object-fit: cover;
-  background-color: var(--jahia-border);
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(100% - var(--jahia-cut)),
-    calc(100% - var(--jahia-cut)) 100%,
-    0 100%
-  );
-
-  /* On side-by-side view, nuke the native aspect-ratio of the image to fit the container. */
-  @container (width >= 800px) {
-    height: 0;
-    min-height: 100%;
-  }
 }
 
 .cover {

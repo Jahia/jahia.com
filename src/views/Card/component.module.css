@@ -2,7 +2,10 @@
   @apply _stack-4;
 
   composes: item from "../../theme/theme.module.css";
-  padding: 1.5rem;
+  padding: 3rem;
+
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 /** Cut off the first card in a container */
@@ -11,8 +14,20 @@
   @apply _cut-before;
 }
 
+/** Cut off the last card in a container */
+:global(._container) > .card:last-of-type,
+:global(._container) > :last-child > .card:last-of-type {
+  @apply _cut-after;
+}
+
 .collapsible {
   composes: item from "../../theme/theme.module.css";
+
+  border-bottom: 0px;
+
+  &:last-child {
+    border-bottom: 1px solid var(--jahia-border);
+  }
 
   > h3 {
     font-size: 1rem;
@@ -60,9 +75,9 @@
   }
 
   &[aria-expanded="true"] {
-    .header {
+    /* .header {
       border-block-end: 1px solid var(--jahia-inner-border);
-    }
+    } */
 
     .button > * {
       transform: rotate(135deg);

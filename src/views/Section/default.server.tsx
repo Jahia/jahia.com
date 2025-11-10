@@ -15,7 +15,7 @@ type Columns =
   | "25-25-25-25"
   | "irregular-3-2"; // It should be 2-3 because it starts with 2...
 type Width = "100" | "75" | "50";
-type Gap = "1" | "2";
+type Gap = "0" | "1" | "2";
 
 jahiaComponent(
   {
