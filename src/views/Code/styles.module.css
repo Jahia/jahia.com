@@ -1,0 +1,82 @@
+.container {
+  contain: paint;
+  container-type: inline-size;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5em;
+    color: red;
+    pointer-events: none;
+    content: "work in progress";
+    opacity: 0.25;
+  }
+}
+
+.grid {
+  @apply _cut-after;
+
+  display: grid;
+  color: var(--jahia-neutral-700);
+  background: var(--jahia-background);
+  backdrop-filter: blur(0.5rem);
+
+  @container (width >= 600px) {
+    grid-template-columns: auto 1fr;
+  }
+}
+
+.tabs {
+  @apply _pack-1;
+
+  padding: 0.25rem;
+  overflow: auto;
+
+  @container (width >= 600px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  label {
+    @apply _pack-2;
+
+    flex-shrink: 0;
+    padding: 0.5rem 0.75rem;
+    contain: paint;
+    font-size: 0.875em;
+    text-transform: uppercase;
+    background: var(--jahia-neutral-100);
+    transition:
+      background 0.3s,
+      border-color 0.3s;
+
+    &:hover {
+      background: var(--jahia-neutral-200);
+    }
+
+    &:has(input:focus-visible) {
+      outline: 2px solid var(--jahia-blue);
+    }
+
+    &:has(input:checked) {
+      color: var(--jahia-neutral-50);
+      background: var(--jahia-navy-blue);
+    }
+  }
+
+  input {
+    position: absolute;
+    opacity: 0;
+  }
+}
+
+.panel {
+  @apply _stack-2;
+
+  padding: 1rem;
+  overflow: auto;
+}

@@ -629,6 +629,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@iconify-json/simple-icons@npm:^1.2.57":
+  version: 1.2.57
+  resolution: "@iconify-json/simple-icons@npm:1.2.57"
+  dependencies:
+    "@iconify/types": "npm:*"
+  checksum: 10c0/5c037b5944760616e496257808d70dea23a962dfcd7ba25f72dced94fd07d1620d97ed66e5019a703a026a4d48357280de177d6649625098bde7ead8060ba994
+  languageName: node
+  linkType: hard
+
 "@iconify/types@npm:*, @iconify/types@npm:^2.0.0":
   version: 2.0.0
   resolution: "@iconify/types@npm:2.0.0"
@@ -3094,6 +3103,7 @@ __metadata:
     "@floating-ui/react-dom": "npm:^2.1.6"
     "@fontsource-variable/plus-jakarta-sans": "npm:^5.2.8"
     "@iconify-json/ri": "npm:^1.2.6"
+    "@iconify-json/simple-icons": "npm:^1.2.57"
     "@jahia/javascript-modules-library": "npm:^1.0.1"
     "@jahia/vite-plugin": "npm:^1.0.1"
     "@types/react": "npm:^19.2.2"
