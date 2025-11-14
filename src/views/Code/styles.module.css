@@ -1,25 +1,28 @@
 .container {
-  padding: 4rem;
+  contain: paint;
   container-type: inline-size;
-  /* background:
-    radial-gradient(closest-side at 25% 60%, var(--jahia-pink), transparent),
-    radial-gradient(closest-side at 50% 60%, var(--jahia-orange), transparent),
-    radial-gradient(closest-side at 75% 60%, var(--jahia-violet), transparent); */
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5em;
+    color: red;
+    pointer-events: none;
+    content: "work in progress";
+    opacity: 0.25;
+  }
 }
 
 .grid {
+  @apply _cut-after;
+
   display: grid;
-  gap: 0.5rem;
-  background: radial-gradient(
-      circle at right center,
-      #56327780,
-      #4a378c80 30%,
-      #4172c280 55%,
-      #32517380
-    )
-    color-mix(in srgb, var(--jahia-neutral-700) 75%, transparent);
-  border: 0.25rem solid color-mix(in srgb, var(--jahia-neutral-700) 25%, transparent);
-  border-radius: 0.25rem;
+  color: var(--jahia-neutral-700);
+  background: var(--jahia-background);
   backdrop-filter: blur(0.5rem);
 
   @container (width >= 600px) {
@@ -28,7 +31,7 @@
 }
 
 .tabs {
-  @apply _pack-2;
+  @apply _pack-1;
 
   padding: 0.25rem;
   overflow: auto;
@@ -39,27 +42,29 @@
   }
 
   label {
-    @apply _pack-1;
+    @apply _pack-2;
 
     flex-shrink: 0;
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem 0.75rem;
     contain: paint;
-    color: var(--jahia-neutral-50);
-    background: color-mix(in srgb, var(--jahia-neutral-500) 25%, transparent);
-    border: 2px solid color-mix(in srgb, var(--jahia-neutral-500) 25%, transparent);
-    border-radius: 0.25rem;
+    font-size: 0.875em;
+    text-transform: uppercase;
+    background: var(--jahia-neutral-100);
     transition:
       background 0.3s,
       border-color 0.3s;
 
-    &:hover,
+    &:hover {
+      background: var(--jahia-neutral-200);
+    }
+
     &:has(input:focus-visible) {
-      background: color-mix(in srgb, var(--jahia-neutral-500) 50%, transparent);
+      outline: 2px solid var(--jahia-blue);
     }
 
     &:has(input:checked) {
-      background: color-mix(in srgb, var(--jahia-neutral-700) 75%, transparent);
-      border-color: var(--jahia-navy-blue);
+      color: var(--jahia-neutral-50);
+      background: var(--jahia-navy-blue);
     }
   }
 
@@ -74,5 +79,4 @@
 
   padding: 1rem;
   overflow: auto;
-  color: var(--jahia-neutral-50);
 }

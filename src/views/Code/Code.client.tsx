@@ -1,85 +1,113 @@
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import classes from "./styles.module.css";
 
-const files = {
-  "definition.cnd": (
-    <>
-      <p>
-        Describe the structure of your data and Jahia takes care of storing and generating
-        interfaces for you.
-      </p>
-      <pre>
-        <code>{`[example:codeSnippet] > jnt:content
+interface File {
+  name: string;
+  icon: ReactNode;
+  contents: ReactNode;
+}
+
+const files: File[] = [
+  {
+    name: "definition.cnd",
+    icon: <span className="i-custom:jackrabbit" />,
+    contents: (
+      <>
+        <p>
+          Describe the structure of your data and Jahia takes care of storing and generating
+          interfaces for you.
+        </p>
+        <pre>
+          <code>{`[example:codeSnippet] > jnt:content
  - language (string, choicelist) mandatory < 'html', 'css', 'js'
  - code (string, textarea) mandatory
  - lineNumbers (boolean) autocreated`}</code>
-      </pre>
-    </>
-  ),
-  "default.server.tsx": (
-    <>
-      <p>Default server configuration</p>
-      <pre>
-        <code>{`import { Island, jahiaComponent } from "@jahia/javascript-modules-library";`}</code>
-      </pre>
-    </>
-  ),
-  "Code.client.tsx": (
-    <>
-      <p>Client-side code for the Code module</p>
-      <pre>
-        <code>{`import { useState } from "react";`}</code>
-      </pre>
-    </>
-  ),
-  "styles.module.css": (
-    <>
-      <p>Styles for the Code module</p>
-      <pre>
-        <code>{`.codeContainer {}`}</code>
-      </pre>
-    </>
-  ),
-  "vite.config.js": (
-    <>
-      <p>Vite configuration for the Code module</p>
-      <pre>
-        <code>{`import jahia from "@jahia/vite-plugin";
+        </pre>
+      </>
+    ),
+  },
+  {
+    name: "default.server.tsx",
+    icon: <span className="i-ri:reactjs-line" />,
+    contents: (
+      <>
+        <p>Default server configuration</p>
+        <pre>
+          <code>{`import { Island, jahiaComponent } from "@jahia/javascript-modules-library";
+
+// ...`}</code>
+        </pre>
+      </>
+    ),
+  },
+  {
+    name: "Code.client.tsx",
+    icon: <span className="i-ri:reactjs-line" />,
+    contents: (
+      <>
+        <p>Client-side code for the Code module</p>
+        <pre>
+          <code>{`import { useState } from "react";`}</code>
+        </pre>
+      </>
+    ),
+  },
+  {
+    name: "styles.module.css",
+    icon: <span className="i-simple-icons:css" />,
+    contents: (
+      <>
+        <p>Styles for the Code module</p>
+        <pre>
+          <code>{`.codeContainer {}`}</code>
+        </pre>
+      </>
+    ),
+  },
+  {
+    name: "vite.config.js",
+    icon: <span className="i-simple-icons:vite" />,
+    contents: (
+      <>
+        <p>Vite configuration for the Code module</p>
+        <pre>
+          <code>{`import jahia from "@jahia/vite-plugin";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-	plugins: [
-		jahia(),
-		// Add tailwind, svg processing, ...
-	],
+  plugins: [
+    jahia(),
+    // Add tailwind, svg processing, ...
+  ],
 });`}</code>
-      </pre>
-    </>
-  ),
-};
+        </pre>
+      </>
+    ),
+  },
+];
 
 export default function Code() {
-  const [file, setFile] = useState<keyof typeof files>("definition.cnd");
-  const name = useId();
+  const [{ name, contents }, setFile] = useState<File>(files[0]);
+  const id = useId();
 
   return (
     <div className={classes.container}>
       <div className={classes.grid}>
         <div className={classes.tabs}>
-          {Object.keys(files).map((key) => (
-            <label key={key}>
+          {files.map((file) => (
+            <label key={file.name}>
               <input
                 type="radio"
-                checked={file === key}
-                name={name}
-                onClick={() => setFile(key as keyof typeof files)}
+                checked={file.name === name}
+                name={id}
+                onClick={() => setFile(file)}
               />
-              <span className="i-simple-icons:vite" />
-              {key}
+              {file.icon}
+              {file.name}
             </label>
           ))}
         </div>
-        <div className={classes.panel}>{files[file]}</div>
+        <div className={classes.panel}>{contents}</div>
       </div>
     </div>
   );
