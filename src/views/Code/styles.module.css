@@ -20,10 +20,8 @@
 .grid {
   @apply _cut-after;
 
+  composes: item from "../../theme/theme.module.css";
   display: grid;
-  color: var(--jahia-neutral-700);
-  background: var(--jahia-background);
-  backdrop-filter: blur(0.5rem);
 
   @container (width >= 600px) {
     grid-template-columns: auto 1fr;
