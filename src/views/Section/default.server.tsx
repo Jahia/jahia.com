@@ -8,14 +8,19 @@ import classes from "./component.module.css";
 type Columns =
   | "100"
   | "50-50"
+  | "irregular-100-50-50"
+  | "irregular-50-50-100"
   | "67-33"
   | "33-67"
   | "irregular-67-33"
+  | "irregular-100-33-33-33"
+  | "irregular-33-33-33-100"
   | "33-33-33"
   | "25-25-25-25"
   | "irregular-3-2"; // It should be 2-3 because it starts with 2...
 type Width = "100" | "75" | "50";
 type Gap = "0" | "1" | "2";
+type Cut = "before" | "after" | "both";
 
 jahiaComponent(
   {
@@ -29,6 +34,7 @@ jahiaComponent(
       columns,
       width,
       gap,
+      cut,
       theme,
       background,
       ...cta
@@ -38,6 +44,7 @@ jahiaComponent(
       "columns": Columns;
       "width": Width;
       "gap": Gap;
+      "cut": Cut;
     } & ContainerProps &
       CTAProps,
     { currentNode },
@@ -71,7 +78,7 @@ jahiaComponent(
           (Use an even number of items)
         </EditorHints>
       )}
-      <div className={classes.wrapper} data-width={width}>
+      <div className={classes.wrapper} data-width={width} data-cut={cut}>
         <div className={clsx(classes.grid, "_container")} data-columns={columns} data-gap={gap}>
           <RenderChildren />
         </div>

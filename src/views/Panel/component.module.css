@@ -21,10 +21,6 @@
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100%;
-
-  /* img {
-    background-color: var(--jahia-neutral-50);
-  } */
 }
 
 .text {
@@ -47,7 +43,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 0rem;
   background: var(--jahia-inner-border);
   position: relative;
 
@@ -58,6 +54,10 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
+
+    @container (width < 600px) {
+      position: static;
+    }
   }
 }
 
@@ -67,6 +67,7 @@
   align-self: center;
   aspect-ratio: 1;
   object-fit: cover;
+  height: 100%;
 }
 
 .borderedImage {
@@ -76,19 +77,6 @@
 }
 
 @container (width < 600px) {
-  .borderedText {
-    @apply _cut-after;
-  }
-
-  .image,
-  .lightImage {
-    @apply _cut-before;
-  }
-
-  .text {
-    @apply _cut-after;
-  }
-
   /* In vertical layout, make the rich text fill the available space */
   .light :global(._richtext),
   .bordered :global(._richtext) {
@@ -101,52 +89,32 @@
     /* Make side-by-side panels fill the same height */
     grid-template-rows: 1fr;
     border: 1px solid var(--jahia-border);
-    @apply _cut-both;
   }
 
   .right {
     grid-template-columns: 3fr minmax(16rem, 2fr);
-
-    img {
-      /* @apply _cut-after; */
-    }
   }
 
   .left {
     grid-template-columns: minmax(16rem, 2fr) 3fr;
-
-    img {
-      /* @apply _cut-before; */
-    }
   }
 
   .right .text,
   .right .borderedText {
-    /* @apply _cut-before; */
     border: 0;
   }
 
   .left .text,
   .left .borderedText {
-    /* @apply _cut-after; */
     border: 0;
   }
 
   .left .borderedText {
-    /* border-block-start: 1px solid var(--jahia-border);
-    border-inline-start: 0; */
     border: 0;
   }
 
   .right .borderedText {
-    /* border-block-start: 1px solid var(--jahia-border);
-    border-inline-end: 0; */
     border: 0;
-  }
-
-  .left .image,
-  .left .lightImage {
-    /* @apply _cut-before; */
   }
 
   .right .image,
@@ -156,7 +124,5 @@
 
   .right .borderedImage {
     order: 1;
-    /* border: 1px solid var(--jahia-border);
-    border-left: 0; */
   }
 }

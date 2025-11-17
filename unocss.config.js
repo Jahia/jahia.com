@@ -60,8 +60,9 @@ export default defineConfig({
           yield {
             [symbols.selector]: (selector) => `${selector}::before`,
             "position": "absolute",
-            "inset-block-start": "0",
-            "inset-inline-start": "0",
+            "inset-block-start": "0.05rem" /* does not work without the 0.05rem */,
+            "inset-inline-start": "0.05rem" /* does not work without the 0.05rem */,
+            "z-index": "100",
             "inline-size": "var(--jahia-cut)",
             "block-size": "var(--jahia-cut)",
             "content": '""',
@@ -74,8 +75,9 @@ export default defineConfig({
           yield {
             [symbols.selector]: (selector) => `${selector}::after`,
             "position": "absolute",
-            "inset-block-end": "0",
-            "inset-inline-end": "0",
+            "inset-block-end": "0.05rem" /* does not work without the 0.05rem */,
+            "inset-inline-end": "0.05rem" /* does not work without the 0.05rem */,
+            "z-index": "100",
             "inline-size": "var(--jahia-cut)",
             "block-size": "var(--jahia-cut)",
             "content": '""',
