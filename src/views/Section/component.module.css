@@ -23,11 +23,23 @@
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
 
   /* If there are no children, do not render the grid to prevent the double gap */
   &:empty {
     display: none;
+  }
+
+  &[data-gap="0"] {
+    @apply _cut-both;
+
+    /* In this mode, we create a compact, bordered grid, faking a border using gap */
+    gap: 1px;
+    background-color: var(--jahia-inner-border);
+    border: 1px solid var(--jahia-inner-border);
+  }
+
+  &[data-gap="1"] {
+    gap: 1rem;
   }
 
   &[data-gap="2"] {
@@ -63,6 +75,14 @@
 
     &[data-columns="25-25-25-25"] {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &[data-columns="irregular-1-2"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      > :nth-child(3n + 1 of :not(link)) {
+        grid-column: span 2;
+      }
     }
 
     &[data-columns="irregular-3-2"] {

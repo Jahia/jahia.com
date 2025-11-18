@@ -6,6 +6,13 @@
   backdrop-filter: blur(2px);
 }
 
+.borderless {
+  @apply _stack-4;
+
+  padding: 2rem;
+  background: var(--jahia-container-background);
+}
+
 /** Cut off the first card in a container */
 :global(._container) > .card:first-of-type,
 :global(._container) > :first-child > .card:first-of-type {

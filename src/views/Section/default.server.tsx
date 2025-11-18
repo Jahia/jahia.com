@@ -13,9 +13,10 @@ type Columns =
   | "irregular-67-33"
   | "33-33-33"
   | "25-25-25-25"
+  | "irregular-1-2"
   | "irregular-3-2"; // It should be 2-3 because it starts with 2...
 type Width = "100" | "75" | "50";
-type Gap = "1" | "2";
+type Gap = "0" | "1" | "2";
 
 jahiaComponent(
   {
@@ -53,6 +54,18 @@ jahiaComponent(
           {title && <h2>{title}</h2>}
           {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
         </header>
+      )}
+      {columns === "irregular-1-2" && (
+        <EditorHints
+          hints={() => {
+            const { length } = getChildNodes(currentNode, -1);
+            return {
+              "Optimal number of items": [0, 1].includes(length % 3),
+            };
+          }}
+        >
+          (Use 1, 3, 4, 6, 7, 9...)
+        </EditorHints>
       )}
       {columns === "irregular-3-2" && (
         <EditorHints
