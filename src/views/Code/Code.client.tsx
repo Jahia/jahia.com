@@ -19,9 +19,8 @@ const files: File[] = [
         </p>
         <pre>
           <code>{`[example:codeSnippet] > jnt:content
- - language (string, choicelist) mandatory < 'html', 'css', 'js'
- - code (string, textarea) mandatory
- - lineNumbers (boolean) autocreated`}</code>
+ - language (string, choicelist) mandatory < 'js', 'html', 'css'
+ - code (string, textarea) mandatory`}</code>
         </pre>
       </>
     ),
@@ -31,11 +30,20 @@ const files: File[] = [
     icon: <span className="i-ri:reactjs-line" />,
     contents: (
       <>
-        <p>Default server configuration</p>
+        <p>Server rendered view of the component</p>
         <pre>
           <code>{`import { Island, jahiaComponent } from "@jahia/javascript-modules-library";
+import Copy from "./Copy.client.jsx";
 
-// ...`}</code>
+jahiaComponent(
+  { componentType: "view", nodeType: "training:codeSnippet" },
+  ({ code, language }) => (
+    <div>
+      <Island component={Copy} props={{ code }} />
+      <pre>{code}</pre>
+    </div>
+  ),
+);`}</code>
         </pre>
       </>
     ),
@@ -47,7 +55,23 @@ const files: File[] = [
       <>
         <p>Client-side code for the Code module</p>
         <pre>
-          <code>{`import { useState } from "react";`}</code>
+          <code>{`import { useState } from "react"
+import classes from "./styles.module.css"
+
+export default function Copy({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false)
+
+  return <button
+    className={classes.copy}
+    onClick={() => {
+      navigator.clipboard.writeText(code)
+      setCopied(true)
+    }}
+  >
+    {copied ? "Copied!" : "Copy"}
+  </button>
+}
+`}</code>
         </pre>
       </>
     ),
@@ -59,13 +83,21 @@ const files: File[] = [
       <>
         <p>Styles for the Code module</p>
         <pre>
-          <code>{`.codeContainer {}`}</code>
+          <code>{`.wrapper {
+  position: relative;
+}
+
+.copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}`}</code>
         </pre>
       </>
     ),
   },
   {
-    name: "vite.config.js",
+    name: "vite.config.ts",
     icon: <span className="i-simple-icons:vite" />,
     contents: (
       <>
