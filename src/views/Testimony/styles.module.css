@@ -1,6 +1,7 @@
 .container {
   composes: container from "../../theme/theme.module.css";
   padding: 0;
+  background-color: var(--jahia-testimony-background);
 }
 
 .testimony {
@@ -11,8 +12,12 @@
   position: relative;
   max-width: 100%;
 
-  @container (width < 600px) {
+  @container (width < 800px) {
     flex-direction: column;
+  }
+
+  @container (width > 1600px) {
+    max-width: calc(var(--jahia-width) * 1.3);
   }
 }
 
@@ -34,10 +39,23 @@
 .text {
   order: 1;
   padding: 3rem;
-  background-color: var(--jahia-testimony-background);
 
   @container (width < 600px) {
     padding: 2rem;
+  }
+
+  /* CTA styles */
+  :global(a[class*="cta"]) {
+    color: var(--jahia-testimony-text);
+    border-color: var(--jahia-testimony-text);
+
+    :global([class*="line"]) {
+      background-color: var(--jahia-testimony-text);
+    }
+
+    &:hover {
+      background: color-mix(in srgb, var(--jahia-testimony-text) 10%, transparent);
+    }
   }
 
   blockquote {
@@ -88,15 +106,32 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.3;
+    filter: blur(4px);
+  }
 
   .text {
     padding: 4rem 8rem;
-    background-color: color-mix(in srgb, var(--jahia-testimony-background) 80%, transparent);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
+    margin: auto;
 
     @container (width < 600px) {
       padding: 2rem;
+    }
+
+    @container (width > 1600px) {
+      max-width: calc(var(--jahia-width) * 1.3);
     }
   }
 }
