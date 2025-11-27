@@ -1,0 +1,78 @@
+._richtext {
+  > * + * {
+    margin-block-start: 1rem;
+  }
+
+  p {
+    font-size: 1.125em; /* 18px */
+  }
+
+  ul,
+  ol {
+    padding-left: 1.5rem;
+  }
+
+  li + li {
+    margin-block-start: 0.25rem;
+  }
+
+  li::marker {
+    /* Fancy ✓ SVG */
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' width='1em' viewBox='0 0 20 14'%3E%3Cpath stroke='%2300a1e3' stroke-width='2' stroke-linecap='square' d='M1.5 7.5L6 12H8L18.5 1.5'/%3E%3C/svg%3E")
+      "  ";
+  }
+
+  [data-theme="night"] & li::marker {
+    content: url("data:image/svg+xml,%3Csvg width='1em' viewBox='0 0 20 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='10' y='3' width='8' height='8' rx='4' fill='%2300a1e3'/%3E%3Crect x='1' y='2' width='18' height='10' rx='5' stroke='white'/%3E%3C/svg%3E")
+      "  ";
+  }
+
+  blockquote > * + * {
+    margin-block-start: 0.5rem;
+  }
+
+  blockquote {
+    margin-inline: 1rem;
+    overflow: hidden;
+
+    &::before,
+    &::after {
+      display: block;
+      height: 1.5rem;
+      margin-block: 0.5rem;
+      content: "";
+      background: var(--jahia-icon-color);
+    }
+
+    &::before {
+      /* Quote icon from https://iconmonstr.com/?s=quote */
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z'/%3E%3C/svg%3E")
+        left/contain no-repeat;
+    }
+
+    &::after {
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z'/%3E%3C/svg%3E")
+        right/contain no-repeat;
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--jahia-inner-border);
+
+    @container (width > 800px) {
+      max-width: 100%;
+    }
+  }
+
+  td,
+  th {
+    padding: 1rem;
+    border: 1px solid var(--jahia-inner-border);
+  }
+
+  tr:nth-child(odd) {
+    background: color-mix(in srgb, var(--jahia-neutral-200), transparent 97%);
+  }
+}
