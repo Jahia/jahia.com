@@ -1,47 +1,77 @@
 .cta {
+  --reflection: color-mix(in srgb, var(--jahia-neutral-50) 60%, transparent);
+
   display: inline-flex;
   gap: 0.75rem;
   align-items: center;
   padding: 0.75rem;
+  contain: paint;
   font-family: monospace;
   font-size: 0.875rem;
   line-height: 1;
-  color: var(--jahia-neutral-700);
+  color: var(--jahia-neutral-50);
   text-align: left;
   text-transform: uppercase;
   text-wrap: balance;
   text-decoration: inherit;
-  background: var(--jahia-blue);
-  border: 1px solid var(--jahia-blue);
+  background: var(--jahia-a11y-blue);
+  border: 1px solid var(--jahia-a11y-blue);
   border-radius: 0.25rem;
+  transition: transform var(--jahia-motion-timing);
 
   .line {
     width: 1px;
     height: 1em;
-    background: var(--jahia-neutral-700);
+    background: var(--jahia-neutral-50);
     opacity: 0.25;
-    transition: transform var(--jahia-motion-timing);
+    transform: scaleY(calc(40 / 14)); /* Fill the height of the button */
   }
 
-  &:hover .line,
-  &:focus-visible .line {
-    transform: scaleY(calc(40 / 14));
+  &::after {
+    position: absolute;
+    inset: 0 calc(-50% - 1rem) 0 auto;
+    z-index: 1;
+    width: 50%;
+    content: "";
+    background: linear-gradient(to right, transparent, var(--reflection), transparent);
+    transform: skewX(-30deg);
+  }
+
+  &:hover {
+    text-decoration: none;
+
+    @media (prefers-reduced-motion: no-preference) {
+      &::after {
+        animation: shine 0.35s forwards ease-out;
+      }
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 
   &[data-variant="secondary"] {
-    color: inherit;
+    --reflection: color-mix(in srgb, var(--jahia-neutral-50) 20%, transparent);
+
+    color: var(--jahia-a11y-blue);
     background: transparent;
-    border: 1px solid var(--jahia-neutral-600);
+    border: 1px solid currentcolor;
 
     .line {
-      background: var(--jahia-neutral-600);
+      background: currentcolor;
       opacity: 1;
-      transform: scaleY(calc(40 / 14)); /* Fill the height of the button */
     }
 
-    &:hover .line,
-    &:focus-visible .line {
-      transform: none;
+    &:hover {
+      background: color-mix(in srgb, currentcolor 10%, transparent);
     }
+  }
+}
+
+@keyframes shine {
+  /* For best performance, the "to" is the same as the default style */
+  from {
+    right: calc(150% + 1rem);
   }
 }
