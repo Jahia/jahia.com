@@ -22,6 +22,10 @@
 .collapsible {
   composes: item from "../../theme/theme.module.css";
 
+  + .collapsible {
+    border-block-start: 0;
+  }
+
   > h3 {
     font-size: 1rem;
   }
@@ -68,10 +72,6 @@
   }
 
   &[aria-expanded="true"] {
-    .header {
-      border-block-end: 1px solid var(--jahia-inner-border);
-    }
-
     .button > * {
       transform: rotate(135deg);
     }
