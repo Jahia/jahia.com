@@ -16,6 +16,8 @@ to fold the menu if it overflows. Let's go with a static value for now.
   backdrop-filter: blur(0.5rem);
   transition: background var(--jahia-timing);
 
+  &:hover,
+  &:focus-within,
   &[data-open="true"] {
     background-color: var(--jahia-container-background);
   }
