@@ -2,7 +2,7 @@
   /* Jahia color palette */
   --jahia-light-blue: #e3f7ff;
   --jahia-blue: #00a1e3; /* Primary brand color */
-  --jahia-a11y-blue: #0096d4; /* Passes AA combined with --jahia-neutral-50 */
+  --jahia-a11y-blue: #037cc2; /* Passes AA combined with --jahia-neutral-50 */
   --jahia-navy-blue: #001932;
   --jahia-pink: #d6217d;
   --jahia-orange: #ffab00;
@@ -33,6 +33,7 @@
   --jahia-inner-border: var(--jahia-neutral-300);
   --jahia-testimony-color: var(--jahia-neutral-600);
   --jahia-testimony-background: var(--jahia-light-violet);
+  --jahia-primary-color: var(--jahia-a11y-blue); /* Accessible primary color */
 
   /* Accent parameters */
   --jahia-cut: 2rem;
@@ -55,6 +56,7 @@
   --jahia-inner-border: var(--jahia-neutral-200);
   --jahia-testimony-color: var(--jahia-neutral-600);
   --jahia-testimony-background: var(--jahia-neutral-200);
+  --jahia-primary-color: var(--jahia-a11y-blue);
 }
 
 [data-theme="night"] {
@@ -67,4 +69,5 @@
   --jahia-inner-border: var(--jahia-neutral-600);
   --jahia-testimony-color: var(--jahia-light-violet);
   --jahia-testimony-background: var(--jahia-navy-blue);
+  --jahia-primary-color: var(--jahia-blue);
 }

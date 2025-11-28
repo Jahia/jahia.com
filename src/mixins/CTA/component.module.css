@@ -55,13 +55,13 @@
   &[data-variant="secondary"] {
     --reflection: color-mix(in srgb, var(--jahia-neutral-50) 20%, transparent);
 
-    color: var(--jahia-a11y-blue);
+    color: var(--jahia-primary-color);
     background: transparent;
-    border: 1px solid currentcolor;
+    border: 1px solid var(--jahia-a11y-blue);
     transition: background var(--jahia-motion-timing);
 
     .line {
-      background: currentcolor;
+      background: var(--jahia-a11y-blue);
       opacity: 1;
     }
 

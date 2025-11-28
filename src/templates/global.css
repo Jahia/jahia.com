@@ -19,7 +19,7 @@ body {
 }
 
 :where(a) {
-  color: var(--jahia-a11y-blue);
+  color: var(--jahia-primary-color);
   text-decoration: none;
 
   &:hover,
