@@ -19,7 +19,7 @@
   border-radius: 0.25rem;
   transition:
     transform var(--jahia-motion-timing),
-    background var(--jahia-motion-timing);
+    background var(--jahia-timing);
 
   .line {
     width: 1px;
