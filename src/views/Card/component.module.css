@@ -7,9 +7,19 @@
 }
 
 /** Cut off the first card in a container */
-:global(._container) > .card:first-of-type,
-:global(._container) > :first-child > .card:first-of-type {
+:global(._container) > .card:first-of-type:not(:only-of-type),
+:global(._container) > :first-child > .card:first-of-type:not(:only-of-type) {
   @apply _cut-before;
+}
+
+:global(._container) > .card:last-of-type:not(:only-of-type),
+:global(._container) > :last-child > .card:last-of-type:not(:only-of-type) {
+  @apply _cut-after;
+}
+
+:global(._container) > .card:only-of-type,
+:global(._container) > :only-child > .card:only-of-type {
+  @apply _cut-both;
 }
 
 .collapsible {

@@ -10,6 +10,10 @@
   @apply _cut-before;
 }
 
+:global(._container) > .card:last-of-type {
+  @apply _cut-after;
+}
+
 .card img {
   height: 10rem;
   padding: 2rem 4rem;
