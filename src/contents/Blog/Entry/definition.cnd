@@ -1,5 +1,5 @@
-[jahiacom:blogEntry] > jnt:content, mix:title, jahiacommix:content, jmix:mainResource
- - author (weakreference) mandatory
+[jahiacom:blogEntry] > jnt:content, mix:title, jahiacommix:content, jmix:mainResource, jmix:visibleInContentTree
+ - author (weakreference) mandatory < jahiacom:blogAuthor
  - summary (string) i18n
  - date (date) = now()
  - blogType (weakreference) multiple facetable hierarchical

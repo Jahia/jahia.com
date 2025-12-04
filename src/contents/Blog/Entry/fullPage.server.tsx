@@ -5,9 +5,10 @@ jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:blogEntry",
+    name: "fullPage",
   },
   ({ "jcr:title": title, author, blogType, date, image, summary, text }: Props) => (
-    <ul>
+    <ul style={{ background: "white" }}>
       <li>title: {title || "no title"}</li>
       <li>author: {author ? author.getPath() : "no author"}</li>
       <li>date: {date || "no date"}</li>
