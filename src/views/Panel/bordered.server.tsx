@@ -25,7 +25,7 @@ jahiaComponent(
           {title && <h3>{title}</h3>}
           {body && <div className="_richtext" dangerouslySetInnerHTML={{ __html: body }}></div>}
           {cta.ctaType !== "none" && (
-            <p>
+            <p style={{ marginTop: "1rem" }}>
               <MixinCTA cta={cta} />
             </p>
           )}

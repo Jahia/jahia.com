@@ -5,14 +5,14 @@
 .panel {
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 0 1rem;
+  gap: 0;
   height: 100%;
 }
 
 .light {
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 1rem 4rem;
+  gap: 0;
   height: 100%;
 }
 
@@ -20,21 +20,22 @@
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100%;
+  backdrop-filter: var(--jahia-backdrop-filter);
 }
 
 .text {
-  @apply _stack-4;
+  @apply _stack-2;
 
-  composes: item from "../../theme/theme.module.css";
-  padding: 1.5rem;
+  padding: 2.5rem;
+  background: var(--jahia-background);
 }
 
 .borderedText {
-  @apply _stack-4;
+  @apply _stack-2;
 
   composes: item from "../../theme/theme.module.css";
   justify-content: center;
-  padding: 1.5rem;
+  padding: 2.5rem;
   border-block-start: 0;
 }
 
@@ -42,8 +43,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  background: var(--jahia-inner-border);
+  background-color: var(--jahia-background);
 }
 
 .lightImage,
@@ -56,9 +56,12 @@
 .borderedImage {
   /* If the text is taller than the image, we want the image to stretch */
   align-self: stretch;
+  background-color: var(--jahia-background);
+  border: 1px solid var(--jahia-border);
+  border-bottom: 0;
 }
 
-@container (width < 600px) {
+@container (width < 800px) {
   :global(._container) .borderedText {
     /* Only apply the cut in a container-style parent (e.g. non-0-gapped section) */
     @apply _cut-after;
@@ -78,9 +81,17 @@
   .bordered :global(._richtext) {
     flex: 1;
   }
+
+  .borderedText {
+    padding: 1.5rem 1.5rem 2rem;
+  }
 }
 
-@container (width >= 600px) {
+@container (width >= 800px) {
+  .borderedImage {
+    border: 1px solid var(--jahia-border);
+  }
+
   .light,
   .bordered {
     /* Make side-by-side panels fill the same height */
@@ -89,10 +100,19 @@
 
   .right {
     grid-template-columns: 3fr minmax(16rem, 2fr);
+
+    .borderedImage {
+      order: 1;
+      border-inline-start: 0;
+    }
   }
 
   .left {
     grid-template-columns: minmax(16rem, 2fr) 3fr;
+
+    .borderedImage {
+      border-inline-end: 0;
+    }
   }
 
   .right .text,
@@ -127,7 +147,35 @@
     order: 1;
   }
 
-  .right .borderedImage {
-    order: 1;
+  .left .lightImage {
+    animation: panel-push-in-left;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+
+  .right .lightImage {
+    animation: panel-push-in-right;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+}
+
+@keyframes panel-push-in-left {
+  from {
+    transform: translateX(-10%);
+  }
+
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes panel-push-in-right {
+  from {
+    transform: translateX(10%);
+  }
+
+  to {
+    transform: translateX(0%);
   }
 }

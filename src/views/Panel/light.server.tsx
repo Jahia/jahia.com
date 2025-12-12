@@ -21,11 +21,11 @@ jahiaComponent(
     <article className={classes.container}>
       <div className={clsx(classes.light, swap ? classes.left : classes.right)}>
         {image && <Image image={image} className={classes.lightImage} />}
-        <div className="_stack-4" style={{ justifyContent: "center" }}>
+        <div className="_stack-2" style={{ justifyContent: "center" }}>
           {title && <h3>{title}</h3>}
           {body && <div className="_richtext" dangerouslySetInnerHTML={{ __html: body }}></div>}
           {cta.ctaType !== "none" && (
-            <p>
+            <p style={{ marginTop: "1rem" }}>
               <MixinCTA cta={cta} />
             </p>
           )}

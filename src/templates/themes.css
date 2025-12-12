@@ -37,6 +37,7 @@
 
   /* Accent parameters */
   --jahia-cut: 2rem;
+  --jahia-backdrop-filter: blur(0.5rem);
 }
 
 @media (prefers-reduced-motion: no-preference) {
