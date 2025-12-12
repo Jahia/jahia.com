@@ -29,7 +29,7 @@ jahiaComponent(
         </button>
       </h3>
       <div className={classes.body}>
-        <div className="_stack-4" style={{ padding: "0 1rem 1rem" }}>
+        <div className="_stack-4" style={{ padding: "0 1rem 2rem" }}>
           {body && <div className="_richtext" dangerouslySetInnerHTML={{ __html: body }} />}
           {cta.ctaType !== "none" && (
             <p>

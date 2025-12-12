@@ -16,14 +16,19 @@ jahiaComponent(
           alt={icon.getPropertyAsString("jcr:title")}
           width="48"
           height="48"
+          style={{ marginTop: "-0.5rem" }}
         />
       )}
       {title && <h3>{title}</h3>}
       {body && (
-        <div className="_richtext" style={{ flex: 1 }} dangerouslySetInnerHTML={{ __html: body }} />
+        <div
+          className="_richtext"
+          style={{ flex: 1, marginBottom: "1rem" }}
+          dangerouslySetInnerHTML={{ __html: body }}
+        />
       )}
       {cta.ctaType !== "none" && (
-        <p>
+        <p style={{ marginTop: "1rem" }}>
           <MixinCTA cta={cta} />
         </p>
       )}

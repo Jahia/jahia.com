@@ -1,9 +1,9 @@
 .card {
-  @apply _stack-4;
+  @apply _stack-2;
 
   composes: item from "../../theme/theme.module.css";
-  padding: 1.5rem;
-  backdrop-filter: blur(2px);
+  padding: 2.5rem;
+  backdrop-filter: var(--jahia-backdrop-filter);
 }
 
 /** Cut off the first card in a container */
