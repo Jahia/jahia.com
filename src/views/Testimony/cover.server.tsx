@@ -1,6 +1,7 @@
-import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
+import { jahiaComponent } from "@jahia/javascript-modules-library";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
 import classes from "./styles.module.css";
+import { Image } from "../../components/Image.jsx";
 import type { Props } from "./types.js";
 import clsx from "clsx";
 
@@ -15,8 +16,8 @@ jahiaComponent(
       id={currentNode.getName()}
       className={clsx(classes.container, classes.cover)}
       data-theme={theme}
-      style={{ backgroundImage: image && `url("${buildNodeUrl(image)}")` }}
     >
+      {image && <Image image={image} className={classes.image} />}
       <div className={classes.text}>
         <div className="_richtext">
           <blockquote dangerouslySetInnerHTML={{ __html: quote }}></blockquote>

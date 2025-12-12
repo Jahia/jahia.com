@@ -9,6 +9,8 @@
 
   @container (width >= 800px) {
     grid-template-columns: minmax(15rem, 25rem) auto;
+    max-width: calc(var(--jahia-width) * 1.2);
+    margin: auto;
   }
 }
 
@@ -24,6 +26,9 @@
     /* Prevent the image from making the testimony taller than the text */
     height: 0;
     min-height: 100%;
+    animation: testimony-push-in-left;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
   }
 }
 
@@ -31,11 +36,11 @@
   @apply _stack-4;
 
   padding: 2rem;
-  background-color: var(--jahia-testimony-background);
 
   blockquote {
     margin-inline: 0;
     font-size: 1.5em;
+    font-weight: 500;
   }
 
   blockquote::before,
@@ -59,11 +64,49 @@
   }
 }
 
-.cover .text {
-  background-color: color-mix(in srgb, var(--jahia-testimony-background) 80%, transparent);
-  backdrop-filter: blur(0.25rem);
+.cover {
+  position: relative;
+  overflow: hidden;
+  view-timeline: --cover;
+  view-timeline-axis: block;
 
-  @container (width >= 800px) {
-    padding: 4rem 8rem;
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    opacity: 0.2;
+    animation: testimony-cover-float linear;
+    animation-timeline: --cover;
+    animation-range: entry 0% exit 100%;
+  }
+
+  .text {
+    position: relative;
+    z-index: 1;
+    max-width: calc(var(--jahia-width) * 1.2);
+    margin: auto;
+  }
+}
+
+@keyframes testimony-cover-float {
+  from {
+    transform: translateY(20%) scale(1.4);
+  }
+
+  to {
+    transform: translateY(-20%) scale(1.4);
+  }
+}
+
+@keyframes testimony-push-in-left {
+  0% {
+    transform: translateX(-15%);
+  }
+
+  50% {
+    transform: translateX(0%);
   }
 }
