@@ -1,0 +1,4 @@
+[jahiacom:listChildren] > jnt:content, jahiacommix:gadget
+ - parent (path) mandatory
+ - type (string) = 'jnt:page' mandatory
+ - view (string) = 'default' mandatory
