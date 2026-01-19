@@ -1,5 +1,7 @@
-import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
+import { jahiaComponent } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { Image } from "../../../components/Image.jsx";
+import classes from "./styles.module.css";
 
 interface Props {
   name: string;
@@ -10,13 +12,17 @@ interface Props {
 jahiaComponent(
   {
     componentType: "view",
-    nodeType: "jcnt:blogAuthor",
+    nodeType: "jahiacom:blogAuthor",
   },
   ({ name, image, text }: Props) => (
-    <ul>
-      <li>name: {name}</li>
-      <li>image: {image ? buildNodeUrl(image) : "no image"}</li>
-      <li>text: {text || "no text"}</li>
-    </ul>
+    <aside className={classes.wrapper} data-theme="night">
+      <div className={classes.author}>
+        {image && <Image image={image} />}
+        <div className={classes.bio}>
+          <h3>{name}</h3>
+          <div className="_richtext" dangerouslySetInnerHTML={{ __html: text || "" }} />
+        </div>
+      </div>
+    </aside>
   ),
 );
