@@ -30,6 +30,9 @@
  - secondaryCTALink (weakreference, picker[type='editoriallink']) i18n
  - secondaryCTALabel (string) i18n
 
+[jahiacommix:analytics] mixin extends=jnt:virtualsite
+ - gtmId (string)
+
 // Add SEO options to full-page resources
 [jahiacommix:seoOptions] mixin extends=jnt:page extends=jmix:mainResource itemtype=seo
  - htmlTitle (string) i18n
