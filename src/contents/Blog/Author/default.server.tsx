@@ -15,14 +15,12 @@ jahiaComponent(
     nodeType: "jahiacom:blogAuthor",
   },
   ({ name, image, text }: Props) => (
-    <aside className={classes.wrapper} data-theme="night">
-      <div className={classes.author}>
-        {image && <Image image={image} />}
-        <div className={classes.bio}>
-          <h3>{name}</h3>
-          <div className="_richtext" dangerouslySetInnerHTML={{ __html: text || "" }} />
-        </div>
+    <div className={classes.author} data-theme="night">
+      {image && <Image image={image} />}
+      <div className={classes.bio}>
+        <h3>{name}</h3>
+        <div className="_richtext" dangerouslySetInnerHTML={{ __html: text || "" }} />
       </div>
-    </aside>
+    </div>
   ),
 );
