@@ -34,7 +34,7 @@ jahiaComponent(
   },
   (
     { "jcr:title": title, author, blogType, date, text, image, summary, seoKeywords }: Props,
-    { currentNode },
+    { currentNode, currentResource },
   ) => {
     const { body, headings } = createToc(text || "");
 
@@ -121,6 +121,7 @@ jahiaComponent(
               },
             },
             "keywords": seoKeywords,
+            "inLanguage": currentResource.getLocale().getLanguage(),
           })}
         </script>
       </article>
