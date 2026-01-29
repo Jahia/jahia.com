@@ -240,4 +240,10 @@
   @media (width >= 800px) {
     padding: 2rem;
   }
+
+  @media (width < 800px) {
+    * {
+      scroll-margin-block-start: 8rem;
+    }
+  }
 }
