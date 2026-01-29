@@ -1,4 +1,4 @@
-import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
+import { jahiaComponent } from "@jahia/javascript-modules-library";
 import type { Props } from "./types.js";
 import classes from "./styles.module.css";
 import { Image } from "../../../components/Image.jsx";
