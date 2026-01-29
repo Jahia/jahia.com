@@ -8,4 +8,5 @@ export interface Props {
   "blogType"?: Array<JCRNodeWrapper | null>;
   "image"?: JCRNodeWrapper;
   "text"?: string;
+  "seoKeywords"?: string[];
 }

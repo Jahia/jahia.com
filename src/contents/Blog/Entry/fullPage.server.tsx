@@ -1,4 +1,4 @@
-import { jahiaComponent } from "@jahia/javascript-modules-library";
+import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
 import type { Props } from "./types.js";
 import classes from "./styles.module.css";
 import { Image } from "../../../components/Image.jsx";
@@ -32,7 +32,10 @@ jahiaComponent(
     nodeType: "jahiacom:blogEntry",
     name: "fullPage",
   },
-  ({ "jcr:title": title, author, blogType, date, text, image }: Props) => {
+  (
+    { "jcr:title": title, author, blogType, date, text, image, summary, seoKeywords }: Props,
+    { currentNode },
+  ) => {
     const { body, headings } = createToc(text || "");
 
     return (
@@ -78,6 +81,48 @@ jahiaComponent(
             <Render node={author} />
           </footer>
         )}
+
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org/",
+            "@type": "BlogPosting",
+            "@id": `https://www.jahia.com${buildNodeUrl(currentNode)}`,
+            "headline": title,
+            "name": title,
+            "description": summary,
+            "datePublished": date,
+            "dateModified": date,
+            "author": author && {
+              "@type": "Person",
+              "@id": `https://www.jahia.com${buildNodeUrl(author)}`,
+              "name": author.getPropertyAsString("jcr:title"),
+              "url": `https://www.jahia.com${buildNodeUrl(author)}`,
+            },
+            "publisher": {
+              "@type": "Organization",
+              "@id": "https://www.jahia.com",
+              "name": "Jahia",
+            },
+            "image": image && {
+              "@type": "ImageObject",
+              "@id": `https://www.jahia.com${buildNodeUrl(image)}`,
+              "url": `https://www.jahia.com${buildNodeUrl(image)}`,
+            },
+            "url": `https://www.jahia.com${buildNodeUrl(currentNode)}`,
+            "isPartOf": {
+              "@type": "Blog",
+              "@id": "https://www.jahia.com/blog/",
+              "name": "Jahia Blog",
+              "url": "https://www.jahia.com/blog/",
+              "publisher": {
+                "@type": "Organization",
+                "@id": "https://www.jahia.com",
+                "name": "Jahia",
+              },
+            },
+            "keywords": seoKeywords,
+          })}
+        </script>
       </article>
     );
   },
