@@ -1,3 +1,6 @@
+/* stylelint-disable no-descending-specificity */
+
+/* MARK: Default */
 .item {
   composes: item from "../../../theme/theme.module.css";
   position: relative;
@@ -57,11 +60,11 @@
   color: color-mix(in srgb, var(--jahia-color) 75%, transparent);
 }
 
-.image {
+.cover {
   position: relative;
   flex: 1;
   min-height: 12.5rem;
-  background: var(--jahia-gradient) no-repeat center center;
+  background: var(--jahia-gradient);
 
   img {
     position: absolute;
@@ -69,5 +72,178 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+}
+
+/* MARK: Full page */
+.article {
+  display: grid;
+  grid-template:
+    "cover  " 15rem
+    "header " auto
+    "index  " auto
+    "content" auto
+    "author " auto / 1fr;
+  background: var(--jahia-container-background);
+
+  @media (width >= 800px) {
+    grid-template:
+      "cover .      .       .     " 15rem
+      ".     .      header  header" auto
+      ".     index  content .     " auto
+      ".     .      author  author" auto / 1fr 20rem minmax(auto, 55rem) 1fr;
+  }
+}
+
+.article .cover {
+  grid-area: cover-start / cover-start / header-end / header-end;
+
+  img {
+    mix-blend-mode: luminosity;
+    animation: float linear;
+    animation-timeline: --header;
+    animation-range: entry 0% exit 100%;
+  }
+}
+
+.article header {
+  @apply _cut-before;
+
+  z-index: 1; /* Required because of the negative margin-bottom of .index */
+  grid-area: header;
+  view-timeline: --header;
+  padding: 2rem 1rem 0;
+  background-color: var(--jahia-container-background);
+  border: 1px solid var(--jahia-border);
+  border-width: 1px 0 0;
+
+  @media (width >= 800px) {
+    padding: 2rem 2rem 0;
+    border-width: 1px 0 0 1px;
+  }
+
+  .info {
+    @apply _row-4;
+
+    .blogType {
+      display: flex;
+      flex-flow: row wrap;
+      gap: 0.25rem;
+
+      a {
+        --jahia-cut: 0.5rem;
+
+        @apply _cut-both;
+
+        padding: 0.25rem 0.5rem;
+        text-decoration: none;
+        border: 1px solid var(--jahia-border);
+        transition: transform var(--jahia-timing);
+
+        &:hover {
+          background-color: var(--jahia-light-blue);
+        }
+
+        &:active {
+          transform: scale(0.98);
+        }
+      }
+    }
+  }
+
+  .content {
+    @apply _stack-4;
+
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    max-width: var(--jahia-width);
+    padding: 1rem;
+    margin: auto;
+    color: var(--jahia-neutral-600);
+
+    @media (width <= 800px) {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+}
+
+.article footer {
+  grid-area: author;
+}
+
+.index {
+  position: sticky;
+  top: 0;
+  grid-area: index;
+  align-self: start;
+  padding: 4rem 0.5rem 0;
+  margin-top: -2.5rem; /* To underlap the navbar */
+  overflow: auto;
+  background: var(--jahia-container-background);
+
+  @media (width >= 800px) {
+    top: 3.5rem; /* Right under the navbar */
+    padding: 2rem 0 2rem 2rem;
+    margin-top: 0;
+    border-top: 1px solid var(--jahia-border);
+  }
+
+  ul {
+    display: flex;
+    padding: 0;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    list-style: none;
+
+    @media (width >= 800px) {
+      flex-direction: column;
+      white-space: normal;
+    }
+  }
+
+  li {
+    max-width: none;
+    transition: background-color var(--jahia-timing);
+
+    &:hover,
+    &:focus {
+      background-color: var(--jahia-light-blue);
+
+      a {
+        transform: translateX(0.25rem);
+      }
+    }
+
+    @media (width >= 800px) {
+      overflow: hidden;
+
+      + li {
+        border-top: 1px solid var(--jahia-border);
+      }
+    }
+  }
+
+  a {
+    display: block;
+    padding: 0.5rem;
+    text-decoration: none;
+    transition: transform var(--jahia-motion-timing);
+  }
+}
+
+.article > :global(._richtext) {
+  grid-area: content;
+  padding: 1rem;
+
+  @media (width >= 800px) {
+    padding: 2rem;
+  }
+
+  @media (width < 800px) {
+    * {
+      scroll-margin-block-start: 8rem;
+    }
   }
 }

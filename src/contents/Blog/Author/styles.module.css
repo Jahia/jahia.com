@@ -1,0 +1,40 @@
+.author {
+  @apply _cut-before;
+
+  display: flex;
+  flex-direction: row;
+  color: var(--jahia-color);
+  background-color: var(--jahia-container-background);
+
+  @media (width >= 800px) {
+    animation: push-in linear;
+    animation-timeline: view();
+    animation-range: entry entry 200%;
+  }
+
+  img {
+    @apply _cut-after;
+
+    flex-shrink: 1;
+    width: 15rem;
+    height: 15rem;
+    object-fit: cover;
+    mix-blend-mode: luminosity;
+  }
+
+  .bio {
+    flex: 1;
+    padding: 2rem;
+  }
+
+  .bio p {
+    font-size: 0.875rem;
+  }
+}
+
+@keyframes push-in {
+  from {
+    opacity: 0;
+    transform: translateX(50%);
+  }
+}

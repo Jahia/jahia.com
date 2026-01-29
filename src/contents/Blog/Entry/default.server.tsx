@@ -13,7 +13,7 @@ jahiaComponent(
   ({ "jcr:title": title, author, date, image, summary }: Props, { currentNode }) => {
     return (
       <article className={classes.item}>
-        <div className={clsx(classes.image, "hideWhenSmall")}>
+        <div className={clsx(classes.cover, "hideWhenSmall")}>
           {image && <Image image={image} />}
         </div>
         <div className="_stack-1" style={{ padding: "1rem" }}>
