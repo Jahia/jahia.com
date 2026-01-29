@@ -95,7 +95,7 @@ jahiaComponent(
             "author": author && {
               "@type": "Person",
               "@id": `https://www.jahia.com${buildNodeUrl(author)}`,
-              "name": author.getPropertyAsString("jcr:title"),
+              "name": author.getPropertyAsString("name"),
               "url": `https://www.jahia.com${buildNodeUrl(author)}`,
             },
             "publisher": {
