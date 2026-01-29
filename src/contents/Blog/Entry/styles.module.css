@@ -118,6 +118,7 @@
   border-width: 1px 0 0;
 
   @media (width >= 800px) {
+    padding: 2rem 2rem 0;
     border-width: 1px 0 0 1px;
   }
 
@@ -177,7 +178,7 @@
   top: 0;
   grid-area: index;
   align-self: start;
-  padding: 4rem 1.5rem 0;
+  padding: 4rem 0.5rem 0;
   margin-top: -2.5rem; /* To underlap the navbar */
   overflow: auto;
   background: var(--jahia-container-background);
@@ -192,6 +193,7 @@
   ul {
     display: flex;
     padding: 0;
+    font-size: 0.875rem;
     white-space: nowrap;
     list-style: none;
 
@@ -203,7 +205,6 @@
 
   li {
     max-width: none;
-    overflow: hidden;
     transition: background-color var(--jahia-timing);
 
     &:hover,
@@ -212,6 +213,14 @@
 
       a {
         transform: translateX(0.25rem);
+      }
+    }
+
+    @media (width >= 800px) {
+      overflow: hidden;
+
+      + li {
+        border-top: 1px solid var(--jahia-border);
       }
     }
   }
@@ -226,5 +235,9 @@
 
 .article > :global(._richtext) {
   grid-area: content;
-  padding: 2rem;
+  padding: 1rem;
+
+  @media (width >= 800px) {
+    padding: 2rem;
+  }
 }
