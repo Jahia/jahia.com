@@ -6,13 +6,13 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
       - run: corepack enable
       - run: yarn install
       - run: yarn lint
       - run: yarn build
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: package.tgz
           path: dist/package.tgz
@@ -29,6 +29,7 @@ jobs:
     needs: build-and-push
     if: github.ref == 'refs/heads/main'
     steps:
+      - uses: actions/setup-node@v6
       - uses: browser-actions/setup-chrome@v2
       - run: |
           npx lighthouse@13 '${{ secrets.JAHIA_HOST }}/sites/jahiacom/home.html' \
