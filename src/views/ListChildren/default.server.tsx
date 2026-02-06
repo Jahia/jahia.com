@@ -98,6 +98,7 @@ jahiaComponent(
             <div
               key={child.getIdentifier()}
               data-categories={[...categories]
+                .filter((category) => reverseCategoryMap.has(category))
                 .map((category) => `${reverseCategoryMap.get(category)}=${category}`)
                 .join("&")}
               hidden={
