@@ -85,7 +85,7 @@ jahiaComponent(
     return (
       <Island component={Filter}>
         {filters.size > 0 && (
-          <div className="_center-4">
+          <div className="_center-4" style={{ flexWrap: "wrap" }}>
             {[...filters].map(([categoryPicker, categoryList]) => {
               const name = categoryPicker.getName();
               return (
@@ -108,7 +108,6 @@ jahiaComponent(
         <div className={classes.grid}>
           {childrenAndCategories.map(({ child, categories }) => (
             <div
-              style={{ display: "flex" }}
               key={child.getIdentifier()}
               data-categories={[...categories]
                 .filter((category) => reverseCategoryMap.has(category))
