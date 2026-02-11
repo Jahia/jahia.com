@@ -101,6 +101,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         ))}
       </head>
       <body>
+        <script>{
+          /* Because WEM does not support registering callbacks before the lib is loaded, we place this here */
+          `window.wem?._registerCallback(()=>{window.dataLayer.push({user_id:cxs.profileId})})`
+        }</script>
         {site.hasProperty("gtmId") && (
           <noscript>
             <iframe
