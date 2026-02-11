@@ -23,6 +23,12 @@ interface Props {
   "htmlTitle"?: string;
   "jsonLd"?: string[];
   "stylesheets"?: Array<JCRNodeWrapper | null>;
+  "j:tagList"?: string[];
+  "j:defaultCategory"?: Array<JCRNodeWrapper | null>;
+  "pageType"?: string;
+  "j:lastPublished"?: string;
+  "jcr:created"?: string;
+  "jcr:lastModified"?: string;
 }
 
 /** Places `children` in an html page. */
@@ -44,6 +50,17 @@ export const Layout = ({ props, children }: { props: Props; children: ReactNode 
   return (
     <html lang={lang}>
       <head>
+        <script>{`(window.dataLayer??=[]).push(${JSON.stringify({
+          page_type: props.pageType,
+          page_tags: props["j:tagList"],
+          cluster_name: props["j:defaultCategory"]?.map((category) =>
+            category?.getPath().slice("/sites/systemsite/categories/".length),
+          ),
+          content_language: currentResource.getLocale().toString(),
+          publish_date /* [sic] */: props["j:lastPublished"],
+          creation_date: props["jcr:created"],
+          last_modified_date: props["jcr:lastModified"],
+        })})`}</script>
         {site.hasProperty("gtmId") && (
           <script>{`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
