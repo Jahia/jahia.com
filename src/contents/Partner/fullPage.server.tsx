@@ -1,7 +1,25 @@
-import { AbsoluteArea, buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
+import {
+  AbsoluteArea,
+  buildNodeUrl,
+  jahiaComponent,
+  Render,
+} from "@jahia/javascript-modules-library";
 import { levels, Locale, type Props } from "./types.js";
 import classes from "./component.module.css";
 import clsx from "clsx";
+import { Layout } from "../../templates/Layout.jsx";
+
+jahiaComponent(
+  {
+    componentType: "template",
+    nodeType: "jahiacom:partner",
+  },
+  (props, { currentNode }) => (
+    <Layout props={props} pageType="partner_page">
+      <Render node={currentNode} view="fullPage" />
+    </Layout>
+  ),
+);
 
 jahiaComponent(
   {

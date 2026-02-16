@@ -3,6 +3,7 @@ import type { Props } from "./types.js";
 import classes from "./styles.module.css";
 import { Image } from "../../../components/Image.jsx";
 import { Render } from "@jahia/javascript-modules-library";
+import { Layout } from "../../../templates/Layout.jsx";
 
 /** Add #anchors to <h2> tags */
 const createToc = (text: string) => {
@@ -25,6 +26,18 @@ const createToc = (text: string) => {
     headings,
   };
 };
+
+jahiaComponent(
+  {
+    componentType: "template",
+    nodeType: "jahiacom:blogEntry",
+  },
+  (props, { currentNode }) => (
+    <Layout props={props} pageType="blog_post">
+      <Render node={currentNode} view="fullPage" />
+    </Layout>
+  ),
+);
 
 jahiaComponent(
   {

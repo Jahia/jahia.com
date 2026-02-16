@@ -32,7 +32,15 @@ interface Props {
 }
 
 /** Places `children` in an html page. */
-export const Layout = ({ props, children }: { props: Props; children: ReactNode }) => {
+export const Layout = ({
+  props,
+  children,
+  pageType,
+}: {
+  props: Props;
+  children: ReactNode;
+  pageType?: string;
+}) => {
   const { currentResource, renderContext, mainNode } = useServerContext();
   const lang = currentResource.getLocale().getLanguage();
   const site = renderContext.getSite();
@@ -51,7 +59,7 @@ export const Layout = ({ props, children }: { props: Props; children: ReactNode 
     <html lang={lang}>
       <head>
         <script>{`(window.dataLayer??=[]).push(${JSON.stringify({
-          page_type: props.pageType,
+          page_type: pageType ?? props.pageType,
           page_tags: props["j:tagList"],
           cluster_name: props["j:defaultCategory"]?.map((category) =>
             category?.getPath().slice("/sites/systemsite/categories/".length),

@@ -8,8 +8,8 @@ jahiaComponent(
     name: "basic",
     displayName: "Basic page",
   },
-  (props) => (
-    <Layout props={props}>
+  (props: { pageType: string }) => (
+    <Layout props={props as never} pageType={props.pageType}>
       <Area name="main" nodeType="jahiacom:pageArea" />
     </Layout>
   ),
