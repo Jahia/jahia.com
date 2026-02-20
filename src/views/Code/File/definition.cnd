@@ -1,0 +1,3 @@
+[jahiacom:codeFile] > jnt:content
+ - contents (string, richtext) mandatory i18n
+ - icon (string, choicelist) mandatory < jackrabbit, react, css, vite

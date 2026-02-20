@@ -1,0 +1,73 @@
+/* stylelint-disable selector-class-pattern */
+:root {
+  --prism-color: #1c1b1d;
+  --prism-bg: #fafaff;
+  --prism-highlight: #e9e9ff;
+  --prism-function: #0077bf;
+  --prism-keyword: #5c33bd;
+  --prism-class: #ab6000;
+  --prism-scalar: #bd2a33;
+  --prism-string: #4e7e06;
+  --prism-comment: #355454;
+}
+
+.token.cdata,
+.token.comment,
+.token.doc,
+.token.doctype,
+.token.namespace,
+.token.operator,
+.token.prolog,
+.token.punctuation,
+.token.url {
+  color: var(--prism-comment);
+}
+
+.token.boolean,
+.token.entity,
+.token.number,
+.token.symbol {
+  color: var(--prism-scalar);
+}
+
+.token.builtin,
+.token.class-name,
+.token.constant,
+.token.selector,
+.token.tag {
+  color: var(--prism-class);
+}
+
+.token.attr-value,
+.token.char,
+.token.important,
+.token.regex,
+.token.string {
+  color: var(--prism-string);
+}
+
+.token.keyword,
+.token.atrule {
+  color: var(--prism-keyword);
+}
+
+.token.attr-name,
+.token.function,
+.token.property {
+  color: var(--prism-function);
+}
+
+.token.bold,
+.token.important {
+  font-weight: 700;
+}
+
+.token.italic,
+.token.comment,
+.token.doc {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
