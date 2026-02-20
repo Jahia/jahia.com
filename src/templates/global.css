@@ -1,5 +1,6 @@
 @import url("./richtext.css");
 @import url("./forms.css");
+@import url("./prism.css");
 
 * {
   max-width: 100%;
@@ -85,4 +86,11 @@ hr {
 
 [hidden] {
   display: none !important;
+}
+
+pre {
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.875em;
+  background: var(--jahia-neutral-100);
 }
