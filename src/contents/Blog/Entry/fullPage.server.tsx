@@ -60,7 +60,9 @@ jahiaComponent(
           <div className={classes.info}>
             <div className={classes.blogType}>
               {blogType && blogType.length > 0
-                ? blogType.map((bt, i) => (bt ? <Render key={i} node={bt} view="link" /> : null))
+                ? blogType.map((bt, i) =>
+                    bt ? <span key={i}>{bt.getDisplayableName()}</span> : null,
+                  )
                 : null}
             </div>
 

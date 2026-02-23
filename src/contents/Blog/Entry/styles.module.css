@@ -130,7 +130,7 @@
       flex-flow: row wrap;
       gap: 0.25rem;
 
-      a {
+      span {
         --jahia-cut: 0.5rem;
 
         @apply _cut-both;
