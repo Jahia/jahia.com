@@ -1,4 +1,4 @@
 [jahiacom:blogAuthor] > jnt:content, jahiacommix:content
- - name (string) mandatory
+ - name (string) mandatory primary
  - image (weakreference) < 'jmix:image'
  - text (string, richtext) i18n

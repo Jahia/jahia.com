@@ -65,7 +65,7 @@ jahiaComponent(
             </div>
 
             <p style={{ fontSize: ".875rem" }} className="_row-3">
-              {author && <Render node={author} view="link" />}
+              {author && <span>{author.getDisplayableName()}</span>}
               {date && <time dateTime={date}>{new Date(date).toLocaleDateString()}</time>}
             </p>
           </div>
