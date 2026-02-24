@@ -115,11 +115,15 @@ export default function NavBarClient({
                     setOpen(true);
                     setSubmenu(entry.title);
                   }}
-                  onFocus={(event) => {
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter" && event.key !== " ") return;
                     refs.setReference(event.currentTarget);
                     if (submenu) setAnimate(true);
                     setOpen(true);
                     setSubmenu(entry.title);
+                    queueMicrotask(() => {
+                      refs.floating.current?.focus();
+                    });
                   }}
                 >
                   {entry.title}
@@ -281,6 +285,7 @@ export default function NavBarClient({
       {/* Desktop menu */}
       <div
         inert={!open}
+        tabIndex={-1}
         ref={refs.setFloating}
         style={{
           ...floatingStyles,
