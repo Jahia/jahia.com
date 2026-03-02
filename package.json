@@ -1,6 +1,6 @@
 {
   "name": "jahiacom",
-  "version": "1.0.1",
+  "version": "1.0.2-SNAPSHOT",
   "type": "module",
   "files": [
     "dist",
@@ -9,7 +9,8 @@
     "static"
   ],
   "scripts": {
-    "build": "tsc --noEmit && vite build && run package",
+    "build": "tsc --noEmit && vite build && run build:lottie && run package",
+    "build:lottie": "rolldown @lottiefiles/dotlottie-wc -mo dist/assets/lottie.js",
     "clean": "rm -rf dist/",
     "deploy": "jahia-deploy",
     "format": "prettier --write --list-different .",
@@ -18,11 +19,12 @@
     "package": "yarn pack --out dist/package.tgz",
     "dev": "vite build --watch",
     "watch": "run dev",
-    "watch:callback": "run package && run deploy"
+    "watch:callback": "run build:lottie && run package && run deploy"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.6",
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
+    "@lottiefiles/dotlottie-wc": "^0.9.4",
     "clsx": "^2.1.1",
     "modern-normalize": "^3.0.1",
     "pretty-bytes": "^7.1.0",
@@ -44,6 +46,7 @@
     "i18next": "^25.6.3",
     "prettier": "^3.7.1",
     "react-i18next": "^16.3.5",
+    "rolldown": "^1.0.0-rc.6",
     "stylelint": "^16.26.1",
     "stylelint-config-recess-order": "^7.4.0",
     "stylelint-config-standard": "^39.0.1",
