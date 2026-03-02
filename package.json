@@ -1,6 +1,6 @@
 {
   "name": "jahiacom",
-  "version": "1.0.1",
+  "version": "1.0.2-SNAPSHOT",
   "type": "module",
   "files": [
     "dist",
@@ -19,7 +19,7 @@
     "package": "yarn pack --out dist/package.tgz",
     "dev": "vite build --watch",
     "watch": "run dev",
-    "watch:callback": "run package && run deploy"
+    "watch:callback": "run build:lottie && run package && run deploy"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.6",
