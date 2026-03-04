@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.0.3
+
+* Add hidden language links in NavBar for SEO crawlability
+
 ## 1.0.2
 
 * Expose Lottie at `<jahia>/modules/jahiacom/dist/assets/lottie.js`
