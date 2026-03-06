@@ -2,15 +2,15 @@
 
 ## 1.0.3
 
-* Add hidden language links in NavBar for SEO crawlability
+- Add hidden language links in NavBar for SEO crawlability
 
 ## 1.0.2
 
-* Expose Lottie at `<jahia>/modules/jahiacom/dist/assets/lottie.js`
+- Expose Lottie at `<jahia>/modules/jahiacom/dist/assets/lottie.js`
 
 ## 1.0.1
 
-* Add support for script\[nonce] for GTM-injected script
+- Add support for script\[nonce] for GTM-injected script
 
 ## 1.0.0
 
