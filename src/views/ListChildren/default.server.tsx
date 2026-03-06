@@ -15,6 +15,9 @@ jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:listChildren",
+    properties: {
+      "cache.requestParameters": "*", // Without it, server-side filtering would not work
+    },
   },
   (
     { parent, nodeType = "jnt:page", categoryFilters, emptyState, clearButtonLabel }: Props,
@@ -35,6 +38,7 @@ jahiaComponent(
     const allUsedCategories = new Set<string>();
     const childrenAndCategories: Array<{ child: JCRNodeWrapper; categories: Set<string> }> = [];
     for (const child of children) {
+      server.render.addCacheDependency({ path: child.getPath() }, renderContext);
       if (!child.hasProperty("j:defaultCategory")) {
         childrenAndCategories.push({ child, categories: new Set() });
         continue;
@@ -53,6 +57,7 @@ jahiaComponent(
     const reverseCategoryMap = new Map<string, string>();
     for (const categoryFilter of categoryFilters ?? []) {
       if (!categoryFilter) continue;
+      server.render.addCacheDependency({ path: categoryFilter.getPath() }, renderContext);
       const categoryList = [];
       // Keep only the categories that are used by at least one child
       for (const category of useJCRQuery({
@@ -61,6 +66,7 @@ jahiaComponent(
           WHERE ISDESCENDANTNODE(${JSON.stringify(categoryFilter.getPath())})
         `,
       })) {
+        server.render.addCacheDependency({ path: category.getPath() }, renderContext);
         const name = category.getName();
         if (allUsedCategories.has(name)) {
           reverseCategoryMap.set(name, categoryFilter.getName());
