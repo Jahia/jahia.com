@@ -1,5 +1,6 @@
 import {
   AbsoluteArea,
+  AddResources,
   buildModuleFileUrl,
   useServerContext,
 } from "@jahia/javascript-modules-library";
@@ -103,7 +104,7 @@ n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertB
             )}
           </>
         )}
-        <link rel="stylesheet" href={buildModuleFileUrl("dist/assets/style.css")} />
+        <AddResources type="css" resources={buildModuleFileUrl("dist/assets/style.css")} />
         {stylesheets
           ?.filter((stylesheet) => stylesheet !== null)
           .map((stylesheet) => (
