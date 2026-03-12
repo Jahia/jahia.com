@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.0.5
+
+* Enable style cache busting on live using `AddResources`
+
 ## 1.0.4
 
 * Work around Cloudimage bug (one path being a substring of the other in srcset)
