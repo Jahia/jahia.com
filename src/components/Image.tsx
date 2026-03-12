@@ -38,7 +38,7 @@ export const Image = ({
   for (const size of sizes.slice(1)) {
     if (size >= width) {
       // If the size is larger than the image's width, use the original image
-      srcSet.push(`${baseSrc} ${width}w`);
+      srcSet.push(`${baseSrc}?w=${width} ${width}w`);
       break; // No need to add larger sizes
     }
 
