@@ -6,6 +6,10 @@ import unocss from "unocss/vite";
 import { patchCssModules } from "vite-css-modules";
 
 export default defineConfig({
+  build: {
+    // Workaround for https://github.com/Jahia/jahia-private/issues/3637
+    assetsInlineLimit: 0,
+  },
   plugins: [
     patchCssModules(),
     unocss(),
