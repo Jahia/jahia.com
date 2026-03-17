@@ -1,5 +1,15 @@
 # Jahia.com Template Set Changelog
 
+## 1.0.6
+
+* Small render fix in partners view
+
+* Remove url rewrite rules
+
+* Workaround for resource agregator bug
+
+* Add loading="lazy" to all images to prevent automatic <link> insertion
+
 ## 1.0.5
 
 * Enable style cache busting on live using `AddResources`
