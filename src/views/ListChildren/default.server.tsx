@@ -45,7 +45,9 @@ jahiaComponent(
       }
       const categories = new Set<string>();
       for (const category of child.getProperty("j:defaultCategory").getValues()) {
-        const name = category.getNode().getName();
+        const categoryNode = category.getNode();
+        if (!categoryNode) continue;
+        const name = categoryNode.getName();
         allUsedCategories.add(name);
         categories.add(name);
       }
