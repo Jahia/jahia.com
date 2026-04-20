@@ -45,9 +45,8 @@ jahiaComponent(
       }
       const categories = new Set<string>();
       for (const category of child.getProperty("j:defaultCategory").getValues()) {
-        const categoryNode = category.getNode();
-        if (!categoryNode) continue;
-        const name = categoryNode.getName();
+        const name = category.getNode()?.getName();
+        if (!name) continue; // j:defaultCategory can contain null values for deleted categories
         allUsedCategories.add(name);
         categories.add(name);
       }
