@@ -44,7 +44,6 @@ export const Layout = ({
 }) => {
   const { currentResource, renderContext, mainNode } = useServerContext();
   const lang = currentResource.getLocale().getLanguage();
-  const site = renderContext.getSite();
 
   const {
     "jcr:title": title,
@@ -59,14 +58,6 @@ export const Layout = ({
   return (
     <html lang={lang}>
       <head>
-        {site.hasProperty("gtmId") && (
-          <script>{`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;var n=d.querySelector('[nonce]');
-n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer',${JSON.stringify(site.getPropertyAsString("gtmId"))});`}</script>
-        )}
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{htmlTitle || title}</title>
@@ -136,14 +127,6 @@ n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertB
             },
           )}})})`
         }</script>
-        {site.hasProperty("gtmId") && (
-          <noscript>
-            <iframe
-              src={`https://www.googletagmanager.com/ns.html?id=${site.getPropertyAsString("gtmId")}`}
-              style={{ display: "none" }}
-            />
-          </noscript>
-        )}
         <EditorHints
           title={"Page SEO checklist:"}
           hints={() => ({
