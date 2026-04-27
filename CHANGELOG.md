@@ -1,5 +1,11 @@
 # Jahia.com Template Set Changelog
 
+## 1.0.7
+
+* Removed GTM script and iframe from Layout, use AddStuff instead.
+
+* Guard against `null` categories in listChildren (#107)
+
 ## 1.0.6
 
 * Small render fix in partners view
