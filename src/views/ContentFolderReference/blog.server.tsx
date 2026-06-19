@@ -22,7 +22,7 @@ jahiaComponent(
             WHERE ISDESCENDANTNODE(${JSON.stringify(folder.getPath())})
             ORDER BY [date] DESC
           `,
-        }).map((entry) => <Render key={entry.getIdentifier()} node={entry} />)}
+        }).map((entry) => <Render key={entry.getIdentifier()} node={entry} view="previewBlog"/>)}
     </div>
   ),
 );
