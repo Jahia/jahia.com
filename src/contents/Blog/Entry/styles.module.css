@@ -261,18 +261,18 @@
 
 .latestArticlesHeader {
   display: flex;
+  gap: 1rem;
   align-items: end;
   justify-content: space-between;
-  gap: 1rem;
   margin-bottom: 1rem;
 
   p {
     margin: 0;
-    color: color-mix(in srgb, var(--jahia-color) 65%, transparent);
     font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    color: color-mix(in srgb, var(--jahia-color) 65%, transparent);
     text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
   h2 {
