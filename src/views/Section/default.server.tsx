@@ -1,4 +1,9 @@
-import { getChildNodes, jahiaComponent, RenderChildren } from "@jahia/javascript-modules-library";
+import {
+  getChildNodes,
+  jahiaComponent,
+  Render,
+  RenderChildren,
+} from "@jahia/javascript-modules-library";
 import clsx from "clsx";
 import EditorHints from "../../components/EditorHints.jsx";
 import { MixinCTA, type CTAProps } from "../../mixins/CTA/server.jsx";
@@ -111,4 +116,12 @@ jahiaComponent(
       )}
     </section>
   ),
+);
+
+jahiaComponent(
+  {
+    componentType: "template",
+    nodeType: "jahiacom:section",
+  },
+  (props, { currentNode }) => <Render node={currentNode} />,
 );
