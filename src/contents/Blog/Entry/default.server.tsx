@@ -49,13 +49,3 @@ jahiaComponent(
   },
   BlogCard,
 );
-
-jahiaComponent(
-  {
-    componentType: "view",
-    nodeType: "jahiacom:blogEntry",
-    name: "previewBlog",
-    displayName: "Preview Blog",
-  },
-  BlogCard,
-);
