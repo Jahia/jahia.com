@@ -2,7 +2,7 @@
   @apply _cut-before;
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   color: var(--jahia-color);
   background-color: var(--jahia-container-background);
 
@@ -29,6 +29,10 @@
 
   .bio p {
     font-size: 0.875rem;
+  }
+
+  @container (width >= 600px) {
+    flex-direction: row;
   }
 }
 
