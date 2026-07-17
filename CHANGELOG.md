@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.0.8
+
+* Improved mobile render of full page blog entries.
+
 ## 1.0.7
 
 * Removed GTM script and iframe from Layout, use AddStuff instead.
