@@ -247,3 +247,45 @@
     }
   }
 }
+
+/* MARK: Latest articles */
+.latestArticles {
+  grid-area: content;
+  padding: 2rem 1rem 3rem;
+  border-top: 1px solid var(--jahia-border);
+
+  @media (width >= 800px) {
+    padding: 2rem;
+  }
+}
+
+.latestArticlesHeader {
+  display: flex;
+  gap: 1rem;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  p {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: color-mix(in srgb, var(--jahia-color) 65%, transparent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.latestArticlesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (width >= 800px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

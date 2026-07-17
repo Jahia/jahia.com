@@ -1,8 +1,7 @@
-import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
+import { buildNodeUrl, jahiaComponent, Render, useJCRQuery } from "@jahia/javascript-modules-library";
 import type { Props } from "./types.js";
 import classes from "./styles.module.css";
 import { Image } from "../../../components/Image.jsx";
-import { Render } from "@jahia/javascript-modules-library";
 import { Layout } from "../../../templates/Layout.jsx";
 
 /** Add #anchors to <h2> tags */
@@ -60,6 +59,16 @@ jahiaComponent(
     { currentNode, currentResource },
   ) => {
     const { body, headings } = createToc(text || "");
+    const parentPath = currentNode.getParent().getPath();
+    const latestArticles = useJCRQuery({
+      query: `
+        SELECT * FROM [jahiacom:blogEntry]
+        WHERE ISDESCENDANTNODE(${JSON.stringify(parentPath)})
+        ORDER BY [date] DESC
+      `,
+    })
+      .filter((entry) => entry.getIdentifier() !== currentNode.getIdentifier())
+      .slice(0, 3);
 
     return (
       <article className={classes.article}>
@@ -105,6 +114,20 @@ jahiaComponent(
           <footer>
             <Render node={author} />
           </footer>
+        )}
+
+        {latestArticles.length > 0 && (
+          <aside className={classes.latestArticles} aria-labelledby="latest-blog-articles-title">
+            <div className={classes.latestArticlesHeader}>
+              <p>Blog</p>
+              <h2 id="latest-blog-articles-title">Derniers articles</h2>
+            </div>
+            <div className={classes.latestArticlesGrid}>
+              {latestArticles.map((entry) => (
+                <Render key={entry.getIdentifier()} node={entry} view="previewBlog" />
+              ))}
+            </div>
+          </aside>
         )}
 
         <script type="application/ld+json">
