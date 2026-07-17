@@ -2,7 +2,7 @@
 
 ## 1.0.8
 
-* Improved mobile render of full page blog entries.
+* Improved mobile render of full page blog entries. (#115)
 
 ## 1.0.7
 
