@@ -102,7 +102,7 @@ jahiaComponent(
         {body && <div className="_richtext" dangerouslySetInnerHTML={{ __html: body }} />}
 
         {author && (
-          <footer>
+          <footer style={{ containerType: "inline-size" }}>
             <Render node={author} />
           </footer>
         )}
