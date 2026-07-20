@@ -75,4 +75,10 @@
   tbody tr:nth-child(odd) {
     background: color-mix(in srgb, var(--jahia-neutral-200), transparent 97%);
   }
+
+  /* Make tables scrollable on small screens, only works if the table was created in ck5 */
+  figure.table {
+    margin-inline: 0;
+    overflow: auto;
+  }
 }

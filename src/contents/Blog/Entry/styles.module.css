@@ -235,6 +235,7 @@
 
 .article > :global(._richtext) {
   grid-area: content;
+  min-width: 0;
   padding: 1rem;
 
   @media (width >= 800px) {
