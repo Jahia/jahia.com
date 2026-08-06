@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.1.1
+
+* Stop the blog table of contents before the resource carousel
+
 ## 1.1.0
 
 * Add resource carousel to blog posts (#118)
