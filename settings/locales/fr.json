@@ -1,1 +1,14 @@
-{}
+{
+  "resourceCarousel": {
+    "eyebrow": "À découvrir",
+    "defaultTitle": "Ressources associées",
+    "discover": "Découvrir",
+    "previous": "Page précédente",
+    "next": "Page suivante",
+    "pagination": "Pagination du carrousel de ressources",
+    "goToPage": "Aller à la page {{page}}",
+    "blog": "Blog",
+    "hiddenInEdit": "Le carrousel de ressources est masqué en dehors du mode édition.",
+    "emptyInEdit": "Le carrousel nécessite au moins six articles de blog publiés correspondant aux critères."
+  }
+}
