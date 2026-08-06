@@ -85,19 +85,21 @@ jahiaComponent(
         </header>
 
         {headings.length > 0 && (
-          <nav className={classes.index}>
-            <ul>
-              {headings.map((heading) => (
-                <li key={heading.id}>
-                  <a
-                    href={`#${heading.id}`}
-                    // Not sure about this, but old posts have accents encoded as HTML entities
-                    dangerouslySetInnerHTML={{ __html: heading.label }}
-                  />
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <div className={classes.indexColumn}>
+            <nav className={classes.index}>
+              <ul>
+                {headings.map((heading) => (
+                  <li key={heading.id}>
+                    <a
+                      href={`#${heading.id}`}
+                      // Not sure about this, but old posts have accents encoded as HTML entities
+                      dangerouslySetInnerHTML={{ __html: heading.label }}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
         )}
 
         {body && <div className="_richtext" dangerouslySetInnerHTML={{ __html: body }} />}
