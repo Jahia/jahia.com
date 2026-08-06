@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.1.0
+
+* Add resource carousel to blog posts (#118)
+
 ## 1.0.8
 
 * Improved mobile render of full page blog entries. (#115)
