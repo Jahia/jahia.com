@@ -1,0 +1,9 @@
+[jahiacom:resourceCarousel] > jnt:content, mix:title, jahiacommix:cta, jahiacommix:container, jmix:editorialContent
+ - subtitle (string) i18n
+ - itemCount (long) = 9 mandatory < '[6,12]'
+ - selectionMode (string, choicelist[resourceBundle]) = automatic mandatory < automatic, filtered, manual
+ - clusters (weakreference, picker) multiple
+ - manualItems (weakreference, picker) multiple < jahiacom:blogEntry
+ - completeFallback (boolean) = true mandatory
+ - sourceRoot (weakreference, picker) < jnt:page, jnt:contentFolder
+ - hidden (boolean) = false mandatory

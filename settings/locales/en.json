@@ -1,1 +1,14 @@
-{}
+{
+  "resourceCarousel": {
+    "eyebrow": "Discover",
+    "defaultTitle": "Related resources",
+    "discover": "Discover",
+    "previous": "Previous page",
+    "next": "Next page",
+    "pagination": "Resource carousel pagination",
+    "goToPage": "Go to page {{page}}",
+    "blog": "Blog",
+    "hiddenInEdit": "The resource carousel is hidden outside edit mode.",
+    "emptyInEdit": "The resource carousel needs at least six matching published blog entries."
+  }
+}

@@ -83,7 +83,8 @@
     "header " auto
     "index  " auto
     "content" auto
-    "author " auto / 1fr;
+    "author " auto
+    "resources" auto / 1fr;
   background: var(--jahia-container-background);
 
   @media (width >= 800px) {
@@ -91,7 +92,8 @@
       "cover .      .       .     " 15rem
       ".     .      header  header" auto
       ".     index  content .     " auto
-      ".     .      author  author" auto / 1fr 20rem minmax(auto, 55rem) 1fr;
+      ".     .      author  author" auto
+      "resources resources resources resources" auto / 1fr 20rem minmax(auto, 55rem) 1fr;
   }
 }
 
@@ -171,6 +173,11 @@
 
 .article footer {
   grid-area: author;
+}
+
+.resourceCarousel {
+  grid-area: resources;
+  max-width: none;
 }
 
 .index {

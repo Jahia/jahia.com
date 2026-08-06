@@ -4,6 +4,7 @@ import classes from "./styles.module.css";
 import { Image } from "../../../components/Image.jsx";
 import { Render } from "@jahia/javascript-modules-library";
 import { Layout } from "../../../templates/Layout.jsx";
+import { ResourceCarousel } from "../../../views/ResourceCarousel/default.server.jsx";
 
 /** Add #anchors to <h2> tags */
 const createToc = (text: string) => {
@@ -70,8 +71,8 @@ jahiaComponent(
           <div className={classes.info}>
             <div className={classes.blogType}>
               {blogType && blogType.length > 0
-                ? blogType.map((bt, i) =>
-                    bt ? <span key={i}>{bt.getDisplayableName()}</span> : null,
+                ? blogType.map((bt) =>
+                    bt ? <span key={bt.getIdentifier()}>{bt.getDisplayableName()}</span> : null,
                   )
                 : null}
             </div>
@@ -149,6 +150,15 @@ jahiaComponent(
             "inLanguage": currentResource.getLocale().getLanguage(),
           })}
         </script>
+        <div className={classes.resourceCarousel}>
+          <ResourceCarousel
+            itemCount={9}
+            minimumItems={1}
+            selectionMode="filtered"
+            clusters={blogType}
+            completeFallback
+          />
+        </div>
       </article>
     );
   },
