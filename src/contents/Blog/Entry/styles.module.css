@@ -180,6 +180,16 @@
   max-width: none;
 }
 
+.indexColumn {
+  display: contents;
+
+  @media (width >= 800px) {
+    display: block;
+    grid-area: index;
+    min-width: 0;
+  }
+}
+
 .index {
   position: sticky;
   top: 0;
@@ -192,6 +202,7 @@
 
   @media (width >= 800px) {
     top: 3.5rem; /* Right under the navbar */
+    grid-area: auto;
     padding: 2rem 0 2rem 2rem;
     margin-top: 0;
     border-top: 1px solid var(--jahia-border);
