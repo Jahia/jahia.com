@@ -1,5 +1,11 @@
 # Jahia.com Template Set Changelog
 
+## 1.1.2
+
+* Flush the blog feed fragment when a new blog entry is published. (#123)
+
+* Make the blog resource carousel editable and adapt its filters to the selected mode.
+
 ## 1.1.1
 
 * Stop the blog table of contents before the resource carousel
