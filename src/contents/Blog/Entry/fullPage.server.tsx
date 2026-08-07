@@ -1,8 +1,24 @@
 import { Area, buildNodeUrl, jahiaComponent, Render } from "@jahia/javascript-modules-library";
+import type { JCRNodeWrapper } from "org.jahia.services.content";
 import type { Props } from "./types.js";
 import classes from "./styles.module.css";
 import { Image } from "../../../components/Image.jsx";
 import { Layout } from "../../../templates/Layout.jsx";
+import { ResourceCarousel } from "../../../views/ResourceCarousel/default.server.jsx";
+
+const hasEditableResourceCarousel = (blogEntry: JCRNodeWrapper) => {
+  if (!blogEntry.hasNode("resourceCarousel")) return false;
+
+  const area = blogEntry.getNode("resourceCarousel");
+  if (area.isNodeType("jahiacom:resourceCarousel")) return true;
+
+  const children = area.getNodes();
+  while (children.hasNext()) {
+    if (children.nextNode().isNodeType("jahiacom:resourceCarousel")) return true;
+  }
+
+  return false;
+};
 
 /** Add #anchors to <h2> tags */
 const createToc = (text: string) => {
@@ -56,9 +72,10 @@ jahiaComponent(
       summary,
       seoKeywords,
     }: Props,
-    { currentNode, currentResource },
+    { currentNode, currentResource, renderContext },
   ) => {
     const { body, headings } = createToc(text || "");
+    const hasEditableCarousel = hasEditableResourceCarousel(currentNode);
 
     return (
       <article className={classes.article}>
@@ -151,7 +168,21 @@ jahiaComponent(
           })}
         </script>
         <div className={classes.resourceCarousel}>
-          <Area name="resourceCarousel" nodeType="jahiacom:blogResourceCarouselArea" />
+          <Area
+            name="resourceCarousel"
+            nodeType="jahiacom:blogResourceCarouselArea"
+            allowedNodeTypes={["jahiacom:resourceCarousel"]}
+            numberOfItems={1}
+          />
+          {!hasEditableCarousel && !renderContext.isEditMode() && (
+            <ResourceCarousel
+              itemCount={9}
+              minimumItems={1}
+              selectionMode="filtered"
+              clusters={blogType}
+              completeFallback
+            />
+          )}
         </div>
       </article>
     );
