@@ -10,3 +10,10 @@
 // - hideBackButton (boolean) = 'false' indexed=no
 // - hideRelated (boolean) = 'false' indexed=no
 // + * (jmix:droppableContent) = jmix:droppableContent
+
+// Dedicated editable area for the resource carousel displayed after a blog entry.
+[jahiacom:blogResourceCarouselArea] > jnt:content,
+  jmix:list,
+  jmix:hiddenType
+  orderable
+ + * (jahiacom:resourceCarousel)

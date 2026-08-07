@@ -105,7 +105,8 @@ export function selectResources({
     const manual = unique(
       manualNodes.map(toCard).filter((item): item is ResourceCardData => Boolean(item)),
     ).filter((item) => item.id !== currentId);
-    const selected = completeFallback ? unique([...manual, ...all]).slice(0, count) : manual;
+    const fallback = all.filter((item) => matchesClusters(item, clusterIds));
+    const selected = completeFallback ? unique([...manual, ...fallback]).slice(0, count) : manual;
     return selected.length >= minimum ? selected.slice(0, count) : [];
   }
 

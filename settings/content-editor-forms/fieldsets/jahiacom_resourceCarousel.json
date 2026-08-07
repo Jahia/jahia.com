@@ -1,0 +1,53 @@
+{
+  "name": "jahiacom:resourceCarousel",
+  "priority": 2.0,
+  "fields": [
+    {
+      "name": "selectionMode",
+      "valueConstraints": [
+        {
+          "value": {
+            "type": "String",
+            "value": "automatic"
+          },
+          "displayValue": "Automatic — no filters",
+          "propertyList": []
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "filtered"
+          },
+          "displayValue": "By blog type — blog labels only",
+          "propertyList": [
+            {
+              "name": "addMixin",
+              "value": "jahiacommix:resourceCarouselFilteredSelection"
+            }
+          ]
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "manual"
+          },
+          "displayValue": "Manual — resources and blog labels",
+          "propertyList": [
+            {
+              "name": "addMixin",
+              "value": "jahiacommix:resourceCarouselManualSelection"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "clusters",
+      "hide": true
+    },
+    {
+      "name": "manualItems",
+      "hide": true
+    }
+  ]
+}

@@ -1,10 +1,8 @@
-import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
+import { Area, buildNodeUrl, jahiaComponent, Render } from "@jahia/javascript-modules-library";
 import type { Props } from "./types.js";
 import classes from "./styles.module.css";
 import { Image } from "../../../components/Image.jsx";
-import { Render } from "@jahia/javascript-modules-library";
 import { Layout } from "../../../templates/Layout.jsx";
-import { ResourceCarousel } from "../../../views/ResourceCarousel/default.server.jsx";
 
 /** Add #anchors to <h2> tags */
 const createToc = (text: string) => {
@@ -153,13 +151,7 @@ jahiaComponent(
           })}
         </script>
         <div className={classes.resourceCarousel}>
-          <ResourceCarousel
-            itemCount={9}
-            minimumItems={1}
-            selectionMode="filtered"
-            clusters={blogType}
-            completeFallback
-          />
+          <Area name="resourceCarousel" nodeType="jahiacom:blogResourceCarouselArea" />
         </div>
       </article>
     );

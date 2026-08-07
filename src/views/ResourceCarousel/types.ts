@@ -14,6 +14,9 @@ export type ResourceCarouselProps = {
   "selectionMode"?: SelectionMode;
   "clusters"?: Array<JCRNodeWrapper | null>;
   "manualItems"?: Array<JCRNodeWrapper | null>;
+  "filteredBlogTypes"?: Array<JCRNodeWrapper | null>;
+  "manualBlogTypes"?: Array<JCRNodeWrapper | null>;
+  "selectedResources"?: Array<JCRNodeWrapper | null>;
   "completeFallback"?: boolean;
   "sourceRoot"?: JCRNodeWrapper;
   "hidden"?: boolean;
