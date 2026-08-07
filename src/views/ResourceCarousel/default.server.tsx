@@ -83,6 +83,7 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
   }
 
   const count = sanitizeCount(props.itemCount);
+  const mode = props.selectionMode || "automatic";
   const rootPath = props.sourceRoot?.getPath() || getSiteRoot(mainNode || currentNode);
   const candidates = useJCRQuery({
     query: `
@@ -91,19 +92,25 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
         ORDER BY [${RESOURCE_MODEL.properties.date}] DESC
       `,
   });
-  const manualNodes = nodes(props.manualItems);
+  const clusterNodes =
+    mode === "filtered"
+      ? nodes(props.filteredBlogTypes ?? props.clusters)
+      : mode === "manual"
+        ? nodes(props.manualBlogTypes ?? props.clusters)
+        : [];
+  const manualNodes = mode === "manual" ? nodes(props.selectedResources ?? props.manualItems) : [];
   const items = selectResources({
     candidates,
     manualNodes,
     currentNode: mainNode || currentNode,
     count,
-    mode: props.selectionMode || "automatic",
-    clusterIds: nodeIds(props.clusters),
+    mode,
+    clusterIds: nodeIds(clusterNodes),
     completeFallback: props.completeFallback !== false,
     minimumItems: props.minimumItems ?? 6,
   });
 
-  for (const dependency of [...candidates, ...manualNodes, ...nodes(props.clusters)]) {
+  for (const dependency of [...candidates, ...manualNodes, ...clusterNodes]) {
     server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
   }
 
