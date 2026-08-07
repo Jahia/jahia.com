@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.1.3
+
+* Restore the resource carousel on existing blog pages and automatically create an editable carousel for every blog entry.
+
 ## 1.1.2
 
 * Flush the blog feed fragment when a new blog entry is published. (#123)
