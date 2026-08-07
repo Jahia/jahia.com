@@ -99,6 +99,7 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
         ? nodes(props.manualBlogTypes ?? props.clusters)
         : [];
   const manualNodes = mode === "manual" ? nodes(props.selectedResources ?? props.manualItems) : [];
+  const isBlogCarousel = currentNode.getParent().isNodeType("jahiacom:blogResourceCarouselArea");
   const items = selectResources({
     candidates,
     manualNodes,
@@ -107,7 +108,7 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
     mode,
     clusterIds: nodeIds(clusterNodes),
     completeFallback: props.completeFallback !== false,
-    minimumItems: props.minimumItems ?? 6,
+    minimumItems: props.minimumItems ?? (isBlogCarousel ? 1 : 6),
   });
 
   for (const dependency of [...candidates, ...manualNodes, ...clusterNodes]) {
