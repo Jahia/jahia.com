@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.1.4
+
+* Filter the resource carousel by thematic and content-type categories, and allow editors to manually combine blog entries with resource pages.
+
 ## 1.1.3
 
 * Restore the resource carousel on existing blog pages and automatically create an editable carousel for every blog entry.
