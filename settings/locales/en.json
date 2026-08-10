@@ -8,7 +8,16 @@
     "pagination": "Resource carousel pagination",
     "goToPage": "Go to page {{page}}",
     "blog": "Blog",
+    "types": {
+      "blog": "Blog",
+      "webinar": "Webinar",
+      "whitepaper": "Whitepaper",
+      "customerCase": "Customer case",
+      "video": "Video",
+      "infographic": "Infographic",
+      "resource": "Resource"
+    },
     "hiddenInEdit": "The resource carousel is hidden outside edit mode.",
-    "emptyInEdit": "The resource carousel needs at least six matching published blog entries."
+    "emptyInEdit": "The resource carousel does not have enough matching published content."
   }
 }

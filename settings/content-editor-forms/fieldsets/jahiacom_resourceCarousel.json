@@ -18,7 +18,7 @@
             "type": "String",
             "value": "filtered"
           },
-          "displayValue": "By blog type — blog labels only",
+          "displayValue": "By categories — themes and content types",
           "propertyList": [
             {
               "name": "addMixin",
@@ -31,7 +31,7 @@
             "type": "String",
             "value": "manual"
           },
-          "displayValue": "Manual — resources and blog labels",
+          "displayValue": "Manual — blog pages and resources",
           "propertyList": [
             {
               "name": "addMixin",

@@ -27,12 +27,12 @@ const nodeIds = (value?: Array<JCRNodeWrapper | null>) =>
 
 const Card = ({
   item,
-  blogLabel,
+  typeLabel,
   discoverLabel,
   locale,
 }: {
   item: ResourceCardData;
-  blogLabel: string;
+  typeLabel: string;
   discoverLabel: string;
   locale: string;
 }) => (
@@ -50,13 +50,13 @@ const Card = ({
         {item.image ? (
           <Image image={item.image} sizes={[360, 720]} />
         ) : (
-          <span className={classes.imageFallback}>{blogLabel}</span>
+          <span className={classes.imageFallback}>{typeLabel}</span>
         )}
-        <span className={classes.badge}>{blogLabel}</span>
+        <span className={classes.badge}>{typeLabel}</span>
       </div>
       <div className={classes.content}>
         <div className={classes.meta}>
-          <span>{blogLabel}</span>
+          <span>{typeLabel}</span>
           {item.date && (
             <time dateTime={item.date}>{new Date(item.date).toLocaleDateString(locale)}</time>
           )}
@@ -89,16 +89,30 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
     query: `
         SELECT * FROM [${RESOURCE_MODEL.nodeType}]
         WHERE ISDESCENDANTNODE(${JSON.stringify(rootPath)})
-        ORDER BY [${RESOURCE_MODEL.properties.date}] DESC
       `,
   });
-  const clusterNodes =
+  const thematicNodes =
+    mode === "filtered"
+      ? nodes(props.filteredThemes)
+      : mode === "manual"
+        ? nodes(props.manualThemes)
+        : [];
+  const contentTypeNodes =
+    mode === "filtered"
+      ? nodes(props.filteredContentTypes)
+      : mode === "manual"
+        ? nodes(props.manualContentTypes)
+        : [];
+  const legacyNodes =
     mode === "filtered"
       ? nodes(props.filteredBlogTypes ?? props.clusters)
       : mode === "manual"
         ? nodes(props.manualBlogTypes ?? props.clusters)
         : [];
-  const manualNodes = mode === "manual" ? nodes(props.selectedResources ?? props.manualItems) : [];
+  const manualNodes =
+    mode === "manual"
+      ? nodes(props.selectedItems ?? props.selectedResources ?? props.manualItems)
+      : [];
   const isBlogCarousel = currentNode.getParent().isNodeType("jahiacom:blogResourceCarouselArea");
   const items = selectResources({
     candidates,
@@ -106,12 +120,20 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
     currentNode: mainNode || currentNode,
     count,
     mode,
-    clusterIds: nodeIds(clusterNodes),
+    thematicIds: nodeIds(thematicNodes),
+    contentTypeIds: nodeIds(contentTypeNodes),
+    legacyIds: nodeIds(legacyNodes),
     completeFallback: props.completeFallback !== false,
     minimumItems: props.minimumItems ?? (isBlogCarousel ? 1 : 6),
   });
 
-  for (const dependency of [...candidates, ...manualNodes, ...clusterNodes]) {
+  for (const dependency of [
+    ...candidates,
+    ...manualNodes,
+    ...thematicNodes,
+    ...contentTypeNodes,
+    ...legacyNodes,
+  ]) {
     server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
   }
 
@@ -123,7 +145,6 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
 
   const id = `resource-carousel-${currentNode.getIdentifier()}`;
   const locale = currentResource.getLocale().getLanguage();
-  const blogLabel = t("resourceCarousel.blog");
   const discoverLabel = t("resourceCarousel.discover");
 
   return (
@@ -144,7 +165,7 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
             <Card
               key={item.id}
               item={item}
-              blogLabel={blogLabel}
+              typeLabel={item.typeLabel || t(`resourceCarousel.types.${item.kind}`)}
               discoverLabel={discoverLabel}
               locale={locale}
             />
