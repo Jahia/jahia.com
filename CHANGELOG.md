@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.1.6
+
+* Restore upgrade compatibility for manual resource carousel selections and migrate them to a page-compatible field.
+
 ## 1.1.5
 
 * Include resource pages in carousel queries and manual selection, and calculate pagination from the number of visible cards.
