@@ -1,5 +1,4 @@
 export const RESOURCE_MODEL = {
-  nodeType: "jmix:mainResource",
   blogNodeType: "jahiacom:blogEntry",
   pageNodeType: "jnt:page",
   properties: {

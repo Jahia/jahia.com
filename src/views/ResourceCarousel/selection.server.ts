@@ -128,7 +128,12 @@ const toCard = (
   node: JCRNodeWrapper,
   { allowGenericResource = false }: { allowGenericResource?: boolean } = {},
 ): ResourceCardData | null => {
-  if (!node.isNodeType(RESOURCE_MODEL.nodeType)) return null;
+  if (
+    !node.isNodeType(RESOURCE_MODEL.blogNodeType) &&
+    !node.isNodeType(RESOURCE_MODEL.pageNodeType)
+  ) {
+    return null;
+  }
 
   const categories = referencedNodes(node, [RESOURCE_MODEL.properties.categories]);
   const resourceType = resolveResourceType(node, categories, allowGenericResource);
