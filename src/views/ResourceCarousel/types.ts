@@ -30,6 +30,7 @@ export type ResourceCarouselProps = {
   "manualContentTypes"?: Array<JCRNodeWrapper | null>;
   "selectedResources"?: Array<JCRNodeWrapper | null>;
   "selectedItems"?: Array<JCRNodeWrapper | null>;
+  "selectedContent"?: Array<JCRNodeWrapper | null>;
   "completeFallback"?: boolean;
   "sourceRoot"?: JCRNodeWrapper;
   "hidden"?: boolean;

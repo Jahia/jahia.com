@@ -118,7 +118,12 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
         : [];
   const manualNodes =
     mode === "manual"
-      ? nodes(props.selectedItems ?? props.selectedResources ?? props.manualItems)
+      ? nodes(
+          props.selectedContent ??
+            props.selectedItems ??
+            props.selectedResources ??
+            props.manualItems,
+        )
       : [];
   const isBlogCarousel = currentNode.getParent().isNodeType("jahiacom:blogResourceCarouselArea");
   const items = selectResources({
