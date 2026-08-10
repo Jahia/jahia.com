@@ -39,6 +39,8 @@
 }
 
 .viewport {
+  --items-per-page: 3;
+
   overflow-x: auto;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
@@ -239,6 +241,10 @@
 }
 
 @media (width <= 68.75rem) {
+  .viewport {
+    --items-per-page: 2;
+  }
+
   .track {
     grid-auto-columns: calc((100% - 1.5rem) / 2);
   }
@@ -253,6 +259,10 @@
 }
 
 @media (width <= 45rem) {
+  .viewport {
+    --items-per-page: 1;
+  }
+
   .track {
     grid-auto-columns: 86%;
     gap: 0.875rem;

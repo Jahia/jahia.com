@@ -2,6 +2,26 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { useTranslation } from "react-i18next";
 import classes from "./component.module.css";
 
+const paginationMetrics = (element: HTMLDivElement, itemCount: number) => {
+  const track = element.firstElementChild as HTMLElement | null;
+  const cards = track ? (Array.from(track.children) as HTMLElement[]) : [];
+  const itemsPerPage =
+    Number.parseInt(getComputedStyle(element).getPropertyValue("--items-per-page"), 10) || 3;
+  const count = Math.max(1, Math.ceil(itemCount / itemsPerPage));
+  const viewportLeft = element.getBoundingClientRect().left;
+  const maxScroll = Math.max(0, element.scrollWidth - element.clientWidth);
+  const offsets = Array.from({ length: count }, (_, index) => {
+    const card = cards[index * itemsPerPage];
+    const measuredOffset = card
+      ? card.getBoundingClientRect().left - viewportLeft + element.scrollLeft
+      : index * element.clientWidth;
+    const cardOffset = measuredOffset > 0 ? measuredOffset : index * element.clientWidth;
+    return Math.min(maxScroll, Math.max(0, cardOffset));
+  });
+
+  return { count, offsets };
+};
+
 export default function Carousel({
   children,
   itemCount,
@@ -19,29 +39,7 @@ export default function Carousel({
     const element = viewport.current;
     if (!element) return;
 
-    const track = element.firstElementChild as HTMLElement | null;
-    const cards = track ? (Array.from(track.children) as HTMLElement[]) : [];
-    if (!track || cards.length === 0) {
-      pageOffsets.current = [0];
-      setPageCount(1);
-      setPage(0);
-      return;
-    }
-
-    const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
-    const cardWidth = cards[0].getBoundingClientRect().width;
-    const itemsPerPage = Math.max(
-      1,
-      Math.floor((element.clientWidth + gap + 0.5) / Math.max(1, cardWidth + gap)),
-    );
-    const count = Math.max(1, Math.ceil(itemCount / itemsPerPage));
-    const viewportLeft = element.getBoundingClientRect().left;
-    const maxScroll = Math.max(0, element.scrollWidth - element.clientWidth);
-    const offsets = Array.from({ length: count }, (_, index) => {
-      const card = cards[Math.min(index * itemsPerPage, cards.length - 1)];
-      const cardOffset = card.getBoundingClientRect().left - viewportLeft + element.scrollLeft;
-      return Math.min(maxScroll, Math.max(0, cardOffset));
-    });
+    const { count, offsets } = paginationMetrics(element, itemCount);
 
     pageOffsets.current = offsets;
     setPageCount(count);
@@ -77,8 +75,10 @@ export default function Carousel({
   const goTo = (target: number) => {
     const element = viewport.current;
     if (!element) return;
-    const safeTarget = Math.max(0, Math.min(target, pageOffsets.current.length - 1));
-    element.scrollTo({ left: pageOffsets.current[safeTarget], behavior: "smooth" });
+    const { offsets } = paginationMetrics(element, itemCount);
+    pageOffsets.current = offsets;
+    const safeTarget = Math.max(0, Math.min(target, offsets.length - 1));
+    element.scrollTo({ left: offsets[safeTarget], behavior: "smooth" });
   };
 
   return (
