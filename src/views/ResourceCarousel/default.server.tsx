@@ -85,12 +85,19 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
   const count = sanitizeCount(props.itemCount);
   const mode = props.selectionMode || "automatic";
   const rootPath = props.sourceRoot?.getPath() || getSiteRoot(mainNode || currentNode);
-  const candidates = useJCRQuery({
+  const blogCandidates = useJCRQuery({
     query: `
-        SELECT * FROM [${RESOURCE_MODEL.nodeType}]
+        SELECT * FROM [${RESOURCE_MODEL.blogNodeType}]
         WHERE ISDESCENDANTNODE(${JSON.stringify(rootPath)})
       `,
   });
+  const pageCandidates = useJCRQuery({
+    query: `
+        SELECT * FROM [${RESOURCE_MODEL.pageNodeType}]
+        WHERE ISDESCENDANTNODE(${JSON.stringify(rootPath)})
+      `,
+  });
+  const candidates = [...blogCandidates, ...pageCandidates];
   const thematicNodes =
     mode === "filtered"
       ? nodes(props.filteredThemes)
