@@ -18,7 +18,9 @@
 
 [jahiacommix:resourceCarouselManualSelection] > jmix:dynamicFieldset mixin
  extends = jahiacom:resourceCarousel
- - selectedItems (weakreference, picker) multiple < jnt:page, jahiacom:blogEntry
+ // Do not change this legacy definition: Jahia rejects value-constraint changes as major updates.
+ - selectedItems (weakreference, picker) multiple < jmix:mainResource
+ - selectedContent (weakreference, picker) multiple < jnt:page, jahiacom:blogEntry
  - manualThemes (weakreference, category[autoSelectParent=false]) multiple
  - manualContentTypes (weakreference, category[autoSelectParent=false]) multiple
  // Retained for carousels configured before mixed manual selection was introduced.

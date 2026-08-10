@@ -48,6 +48,10 @@
     {
       "name": "manualItems",
       "hide": true
+    },
+    {
+      "name": "selectedItems",
+      "hide": true
     }
   ]
 }
