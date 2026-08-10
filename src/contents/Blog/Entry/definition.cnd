@@ -1,4 +1,4 @@
-[jahiacom:blogEntry] > jnt:content, mix:title, jahiacommix:content, jmix:mainResource, jmix:visibleInContentTree
+[jahiacom:blogEntry] > jnt:content, mix:title, jahiacommix:content, jmix:mainResource, jmix:visibleInContentTree, jmix:categorized
  - author (weakreference) mandatory < jahiacom:blogAuthor
  - summary (string) i18n
  - date (date) = now()

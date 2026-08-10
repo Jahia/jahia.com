@@ -3,6 +3,14 @@ import type { CTAProps } from "../../mixins/CTA/server.jsx";
 import type { ContainerProps } from "../../theme/index.jsx";
 
 export type SelectionMode = "automatic" | "filtered" | "manual";
+export type ResourceKind =
+  | "blog"
+  | "webinar"
+  | "whitepaper"
+  | "customerCase"
+  | "video"
+  | "infographic"
+  | "resource";
 
 type OptionalCTAProps = CTAProps | { ctaType?: undefined };
 
@@ -15,8 +23,13 @@ export type ResourceCarouselProps = {
   "clusters"?: Array<JCRNodeWrapper | null>;
   "manualItems"?: Array<JCRNodeWrapper | null>;
   "filteredBlogTypes"?: Array<JCRNodeWrapper | null>;
+  "filteredThemes"?: Array<JCRNodeWrapper | null>;
+  "filteredContentTypes"?: Array<JCRNodeWrapper | null>;
   "manualBlogTypes"?: Array<JCRNodeWrapper | null>;
+  "manualThemes"?: Array<JCRNodeWrapper | null>;
+  "manualContentTypes"?: Array<JCRNodeWrapper | null>;
   "selectedResources"?: Array<JCRNodeWrapper | null>;
+  "selectedItems"?: Array<JCRNodeWrapper | null>;
   "completeFallback"?: boolean;
   "sourceRoot"?: JCRNodeWrapper;
   "hidden"?: boolean;
@@ -31,5 +44,7 @@ export type ResourceCardData = {
   date: string;
   timestamp: number;
   image?: JCRNodeWrapper;
-  clusters: string[];
+  kind: ResourceKind;
+  typeLabel?: string;
+  taxonomyIds: string[];
 };

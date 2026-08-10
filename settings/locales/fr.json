@@ -8,7 +8,16 @@
     "pagination": "Pagination du carrousel de ressources",
     "goToPage": "Aller à la page {{page}}",
     "blog": "Blog",
+    "types": {
+      "blog": "Blog",
+      "webinar": "Webinaire",
+      "whitepaper": "Livre blanc",
+      "customerCase": "Cas client",
+      "video": "Vidéo",
+      "infographic": "Infographie",
+      "resource": "Ressource"
+    },
     "hiddenInEdit": "Le carrousel de ressources est masqué en dehors du mode édition.",
-    "emptyInEdit": "Le carrousel nécessite au moins six articles de blog publiés correspondant aux critères."
+    "emptyInEdit": "Le carrousel ne contient pas assez de contenus publiés correspondant aux critères."
   }
 }

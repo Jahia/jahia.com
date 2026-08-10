@@ -178,8 +178,7 @@ jahiaComponent(
             <ResourceCarousel
               itemCount={9}
               minimumItems={1}
-              selectionMode="filtered"
-              clusters={blogType}
+              selectionMode="automatic"
               completeFallback
             />
           )}
