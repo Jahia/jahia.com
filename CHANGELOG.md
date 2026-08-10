@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.1.7
+
+* Keep resource carousel pagination available while its server-rendered cards hydrate in the browser.
+
 ## 1.1.6
 
 * Restore upgrade compatibility for manual resource carousel selections and migrate them to a page-compatible field.
