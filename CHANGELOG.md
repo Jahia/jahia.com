@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.1.8
+
+* Add optional image credits to Hero, Panel, Testimony, and full-page blog images.
+
 ## 1.1.7
 
 * Keep resource carousel pagination available while its server-rendered cards hydrate in the browser.
