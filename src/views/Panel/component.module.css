@@ -53,12 +53,33 @@
   object-fit: cover;
 }
 
+.lightFigure,
+.borderedFigure {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lightFigure {
+  align-self: center;
+}
+
 .borderedImage {
   /* If the text is taller than the image, we want the image to stretch */
   align-self: stretch;
   background-color: var(--jahia-background);
   border: 1px solid var(--jahia-border);
   border-bottom: 0;
+}
+
+.lightFigure .lightImage,
+.borderedFigure .borderedImage {
+  width: 100%;
+}
+
+.borderedFigure .borderedImage {
+  flex: 1;
+  min-height: 0;
 }
 
 @container (width < 800px) {

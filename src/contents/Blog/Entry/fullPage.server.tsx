@@ -20,6 +20,13 @@ const hasEditableResourceCarousel = (blogEntry: JCRNodeWrapper) => {
   return false;
 };
 
+/** Turn legacy image + credit paragraphs into semantic figures. */
+const formatImageCredits = (text: string) =>
+  text.replaceAll(
+    /<p(?:\s[^>]*)?>\s*(<img\b[^>]*>)\s*<\/p>\s*<p(?:\s[^>]*)?>\s*((?:Image Credit|Crédit(?: de l['’]image| image| photo)?)\s*:[\s\S]*?)\s*<\/p>/gi,
+    '<figure class="image image-with-credit">$1<figcaption>$2</figcaption></figure>',
+  );
+
 /** Add #anchors to <h2> tags */
 const createToc = (text: string) => {
   const headings: Array<{ id: string; label: string }> = [];
@@ -74,7 +81,7 @@ jahiaComponent(
     }: Props,
     { currentNode, currentResource, renderContext },
   ) => {
-    const { body, headings } = createToc(text || "");
+    const { body, headings } = createToc(formatImageCredits(text || ""));
     const hasEditableCarousel = hasEditableResourceCarousel(currentNode);
 
     return (

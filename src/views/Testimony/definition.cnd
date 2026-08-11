@@ -2,3 +2,4 @@
  - author (string) i18n primary
  - quote (string, richtext) i18n mandatory
  - image (weakreference, picker) i18n mandatory < jmix:image
+ - imageCredit (string) i18n

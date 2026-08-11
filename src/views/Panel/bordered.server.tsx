@@ -4,10 +4,11 @@ import classes from "./component.module.css";
 import clsx from "clsx";
 import type { Props as CardProps } from "../Card/types.js";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
-import { Image } from "../../components/Image.jsx";
+import { CreditedImage } from "../../components/CreditedImage.jsx";
 
 export type Props = CardProps & {
   image?: JCRNodeWrapper;
+  imageCredit?: string;
   swap?: boolean;
 };
 
@@ -17,10 +18,17 @@ jahiaComponent(
     nodeType: "jahiacom:panel",
     name: "bordered",
   },
-  ({ "jcr:title": title, body, image, swap, ...cta }: Props, { currentNode }) => (
+  ({ "jcr:title": title, body, image, imageCredit, swap, ...cta }: Props, { currentNode }) => (
     <article className={classes.container}>
       <div className={clsx(classes.bordered, swap ? classes.left : classes.right)}>
-        {image && <Image image={image} className={classes.borderedImage} />}
+        {image && (
+          <CreditedImage
+            image={image}
+            credit={imageCredit}
+            className={classes.borderedImage}
+            figureClassName={classes.borderedFigure}
+          />
+        )}
         <div className={classes.borderedText}>
           {title && <h3>{title}</h3>}
           {body && <div className="_richtext" dangerouslySetInnerHTML={{ __html: body }}></div>}
