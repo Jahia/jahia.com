@@ -6,4 +6,5 @@ export type Props = ContainerProps & {
   author?: string;
   quote: string;
   image?: JCRNodeWrapper;
+  imageCredit?: string;
 } & CTAProps;

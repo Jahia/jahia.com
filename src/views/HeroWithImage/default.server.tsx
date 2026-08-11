@@ -1,6 +1,6 @@
 import { jahiaComponent } from "@jahia/javascript-modules-library";
 import clsx from "clsx";
-import { Image } from "../../components/Image.jsx";
+import { CreditedImage } from "../../components/CreditedImage.jsx";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
 import classes from "./component.module.css";
 import type { Props } from "./types.js";
@@ -10,7 +10,10 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jahiacom:heroWithImage",
   },
-  ({ "jcr:title": title, subtitle, image, theme, background, ...cta }: Props, { currentNode }) => (
+  (
+    { "jcr:title": title, subtitle, image, imageCredit, theme, background, ...cta }: Props,
+    { currentNode },
+  ) => (
     <header
       className={classes.hero}
       data-theme={theme}
@@ -29,7 +32,12 @@ jahiaComponent(
         </div>
         {image && (
           // Despite being mandatory, the image can be missing in some cases (e.g. new translation)
-          <Image image={image} className={classes.image} />
+          <CreditedImage
+            image={image}
+            credit={imageCredit}
+            className={classes.image}
+            figureClassName={classes.imageFigure}
+          />
         )}
       </div>
     </header>

@@ -9,7 +9,10 @@ jahiaComponent(
     nodeType: "jahiacom:heroWithImage",
     name: "inlay",
   },
-  ({ "jcr:title": title, subtitle, image, theme, background, ...cta }: Props, { currentNode }) => (
+  (
+    { "jcr:title": title, subtitle, image, imageCredit, theme, background, ...cta }: Props,
+    { currentNode },
+  ) => (
     <section className={classes.hero} data-theme={theme} data-bg={background}>
       <div
         className={classes.inlay}
@@ -26,6 +29,7 @@ jahiaComponent(
           )}
         </div>
       </div>
+      {image && imageCredit && <p className={classes.inlayCredit}>{imageCredit}</p>}
     </section>
   ),
 );
