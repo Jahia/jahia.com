@@ -6,6 +6,7 @@
     "dist",
     "src/**/*.cnd",
     "settings",
+    "javascript",
     "static"
   ],
   "scripts": {
@@ -67,6 +68,6 @@
     "module-dependencies": "default",
     "module-type": "templatesSet",
     "server": "dist/server/index.js",
-    "static-resources": "/dist/client,/dist/assets,/locales,/images,/icons"
+    "static-resources": "/dist/client,/dist/assets,/locales,/images,/icons,/javascript"
   }
 }

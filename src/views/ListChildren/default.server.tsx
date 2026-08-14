@@ -11,6 +11,17 @@ interface Props {
   clearButtonLabel?: string;
 }
 
+const pageAncestor = (node: JCRNodeWrapper): JCRNodeWrapper | undefined => {
+  let current: JCRNodeWrapper | undefined = node;
+
+  while (!current.isNodeType("jnt:page")) {
+    if (current.getPath() === "/") return undefined;
+    current = current.getParent() as JCRNodeWrapper;
+  }
+
+  return current;
+};
+
 jahiaComponent(
   {
     componentType: "view",
@@ -21,15 +32,16 @@ jahiaComponent(
   },
   (
     { parent, nodeType = "jnt:page", categoryFilters, emptyState, clearButtonLabel }: Props,
-    { renderContext },
+    { currentNode, renderContext },
   ) => {
-    if (!parent) return null;
+    const source = parent ?? pageAncestor(currentNode);
+    if (!source) return null;
 
-    // Retrieve all direct and indirect children objects of `parent`
+    // Fall back to the containing page when an imported weak reference is missing.
     const children = useJCRQuery({
       query: `
         SELECT * FROM [${nodeType}]
-        WHERE ISDESCENDANTNODE(${JSON.stringify(parent.getPath())})
+        WHERE ISDESCENDANTNODE(${JSON.stringify(source.getPath())})
         ORDER BY [jcr:created] DESC
       `,
     });

@@ -1,5 +1,38 @@
 [jahiacom:partner] > jnt:content, jahiacommix:content, mix:title, jmix:visibleInContentTree, jmix:mainResource
  - certification (string, choicelist[resourceBundle]) mandatory < silver, gold, diamond
+ // Kept exactly as released for repository compatibility; hidden from Content Editor.
  - countries (string, choicelist[country]) multiple mandatory
  - description (string, richtext) mandatory i18n
  - logo (weakreference, picker) < jmix:image
+ // Optional fields keep existing Partner nodes valid when the module is upgraded.
+ - partnerType (string, choicelist[resourceBundle]) = 'integrator' < integrator, technology
+ - shortDescription (string) i18n
+ - website (string) i18n
+ - partnerSince (date)
+ // Legacy location fields kept unchanged for repository compatibility and hidden in Content Editor.
+ - regions (string, choicelist[resourceBundle]) multiple < europe, americas, apac
+ - locationCountries (string) multiple
+ // Optional composite editor. Existing location properties remain available as a fallback.
+ - partnerLocationsData (string)
+ - tags (weakreference, category[autoSelectParent=false]) multiple
+ - aboutTitle (string) i18n
+ - expertiseTitle (string) i18n
+ - expertise (string) multiple i18n
+ - partnership (string, richtext) i18n
+ - certifiedConsultants (long)
+ - scope (string) i18n
+ - quote (string, richtext) i18n
+ - quoteAuthor (string) i18n
+ - quoteAuthorTitle (string) i18n
+ + * (jahiacom:partnerProject)
+ + * (jahiacom:partnerLocation)
+
+[jahiacom:partnerLocation] > jnt:content, jmix:visibleInContentTree
+ - region (string, choicelist[resourceBundle]) mandatory < europe, americas, apac
+ - country (string)
+
+[jahiacom:partnerProject] > jnt:content, mix:title, jmix:visibleInContentTree orderable
+ - sector (string) i18n
+ - projectType (string) i18n
+ - description (string) i18n
+ - image (weakreference, picker) i18n < jmix:image

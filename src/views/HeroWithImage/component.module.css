@@ -32,6 +32,13 @@
   }
 }
 
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+  align-items: center;
+}
+
 .grid {
   display: grid;
   grid-template: 1fr / auto;
