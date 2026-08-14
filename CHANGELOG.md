@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.1.9
+
+* Add the editable Partner directory and profile experience while preserving legacy Partner content and contact areas.
+
 ## 1.1.8
 
 * Add optional image credits to Hero, Panel, Testimony, and full-page blog images.
