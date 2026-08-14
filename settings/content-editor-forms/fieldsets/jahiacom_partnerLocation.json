@@ -1,0 +1,12 @@
+{
+  "name": "jahiacom:partnerLocation",
+  "priority": 2.0,
+  "fields": [
+    {
+      "name": "region"
+    },
+    {
+      "name": "country"
+    }
+  ]
+}

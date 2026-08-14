@@ -1,6 +1,7 @@
 import { jahiaComponent } from "@jahia/javascript-modules-library";
 import clsx from "clsx";
 import { CreditedImage } from "../../components/CreditedImage.jsx";
+import { CTA } from "../../mixins/CTA/index.jsx";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
 import classes from "./component.module.css";
 import type { Props } from "./types.js";
@@ -11,7 +12,17 @@ jahiaComponent(
     nodeType: "jahiacom:heroWithImage",
   },
   (
-    { "jcr:title": title, subtitle, image, imageCredit, theme, background, ...cta }: Props,
+    {
+      "jcr:title": title,
+      subtitle,
+      image,
+      imageCredit,
+      secondaryCTALabel,
+      secondaryCTAUrl,
+      theme,
+      background,
+      ...cta
+    }: Props,
     { currentNode },
   ) => (
     <header
@@ -24,9 +35,21 @@ jahiaComponent(
         <div className={clsx(classes.title, "_stack-8")}>
           {title && <h1>{title}</h1>}
           {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
-          {cta.ctaType !== "none" && (
-            <p>
-              <MixinCTA cta={cta} location="hero_banner" name={currentNode.getName()} />
+          {(cta.ctaType !== "none" || (secondaryCTALabel && secondaryCTAUrl)) && (
+            <p className={classes.actions}>
+              {cta.ctaType !== "none" && (
+                <MixinCTA cta={cta} location="hero_banner" name={currentNode.getName()} />
+              )}
+              {secondaryCTALabel && secondaryCTAUrl && (
+                <CTA
+                  href={secondaryCTAUrl}
+                  secondary
+                  location="hero_banner"
+                  name={`${currentNode.getName()}-secondary`}
+                >
+                  {secondaryCTALabel}
+                </CTA>
+              )}
             </p>
           )}
         </div>

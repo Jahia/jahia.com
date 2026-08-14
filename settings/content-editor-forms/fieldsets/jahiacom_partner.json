@@ -1,0 +1,57 @@
+{
+  "name": "jahiacom:partner",
+  "priority": 2.0,
+  "fields": [
+    {
+      "name": "countries",
+      "hide": true,
+      "defaultValues": [
+        {
+          "type": "String",
+          "value": "ZZ"
+        }
+      ]
+    },
+    {
+      "name": "regions",
+      "hide": true
+    },
+    {
+      "name": "locationCountries",
+      "hide": true
+    },
+    {
+      "name": "partnerType",
+      "mandatory": true
+    },
+    {
+      "name": "partnerLocationsData",
+      "selectorType": "PartnerLocationsPicker",
+      "mandatory": true
+    },
+    {
+      "name": "partnerSince"
+    },
+    {
+      "name": "aboutTitle"
+    },
+    {
+      "name": "expertiseTitle"
+    },
+    {
+      "name": "expertise"
+    },
+    {
+      "name": "tags"
+    },
+    {
+      "name": "quote"
+    },
+    {
+      "name": "quoteAuthor"
+    },
+    {
+      "name": "quoteAuthorTitle"
+    }
+  ]
+}

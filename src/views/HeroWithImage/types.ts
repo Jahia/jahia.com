@@ -7,4 +7,6 @@ export type Props = ContainerProps & {
   "subtitle"?: string;
   "image"?: JCRNodeWrapper;
   "imageCredit"?: string;
+  "secondaryCTALabel"?: string;
+  "secondaryCTAUrl"?: string;
 } & CTAProps;

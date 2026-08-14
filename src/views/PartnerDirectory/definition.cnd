@@ -1,0 +1,4 @@
+// Editable Section child. Extending jnt:contentList keeps the standard Jahia List
+// semantics while the renderer resolves Partner content dynamically.
+[jahiacom:partnerList] > jnt:contentList, jahiacommix:component
+ - sourceRoot (weakreference, picker) < jnt:contentFolder, jnt:page
