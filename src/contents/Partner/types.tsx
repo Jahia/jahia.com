@@ -20,6 +20,7 @@ export interface Props {
   "description": string;
   "logo"?: JCRNodeWrapper;
   "partnerType"?: "integrator" | "technology";
+  "partnerLevel"?: string;
   "shortDescription"?: string;
   "website"?: string;
   "partnerSince"?: string;
@@ -27,7 +28,6 @@ export interface Props {
   "regions"?: Region[];
   "locationCountries"?: string[];
   "partnerLocationsData"?: string;
-  "locations"?: PartnerLocation[];
   "tags"?: Array<JCRNodeWrapper | null>;
   "aboutTitle"?: string;
   "expertiseTitle"?: string;
@@ -80,26 +80,6 @@ export const compositePartnerLocations = (value?: string): PartnerLocation[] => 
   }
 };
 
-export const partnerLocations = (node: JCRNodeWrapper): PartnerLocation[] => {
-  const locations: PartnerLocation[] = [];
-  const children = node.getNodes();
-
-  while (children.hasNext()) {
-    const child = children.nextNode() as JCRNodeWrapper;
-    if (!child.isNodeType("jahiacom:partnerLocation") || !child.hasProperty("region")) continue;
-
-    const region = child.getProperty("region").getString();
-    if (!isRegion(region)) continue;
-
-    const country = child.hasProperty("country")
-      ? child.getProperty("country").getString().trim()
-      : undefined;
-    locations.push({ region, country: country || undefined });
-  }
-
-  return locations;
-};
-
 export const legacyRegion = (node: JCRNodeWrapper): Region => {
   const context = node.getParent().getPath().toLowerCase();
   if (context.includes("america") || context.includes("amérique")) return "americas";
@@ -109,10 +89,7 @@ export const legacyRegion = (node: JCRNodeWrapper): Region => {
 };
 
 export const regionCountries = (
-  props: Pick<
-    Props,
-    "partnerLocationsData" | "locations" | "regions" | "locationCountries" | "countries"
-  >,
+  props: Pick<Props, "partnerLocationsData" | "regions" | "locationCountries" | "countries">,
   region: Region,
 ): string[] => {
   const compositeLocations = compositePartnerLocations(props.partnerLocationsData);
@@ -131,13 +108,6 @@ export const regionCountries = (
 
   if (props.regions?.length) return props.countries || [];
 
-  if (props.locations?.length) {
-    return props.locations
-      .filter((location) => location.region === region)
-      .map((location) => location.country?.trim() || "")
-      .filter(Boolean);
-  }
-
   return props.countries || [];
 };
 
@@ -148,10 +118,6 @@ export const configuredRegions = (props: Props, fallbackRegion: Region = "europe
   if (compositeRegions.length) return [...new Set(compositeRegions)];
 
   if (props.regions?.length) return [...new Set(props.regions)];
-
-  const locationRegions = props.locations?.map(({ region }) => region) || [];
-  const uniqueLocationRegions = [...new Set(locationRegions)];
-  if (uniqueLocationRegions.length) return uniqueLocationRegions;
 
   return [fallbackRegion];
 };
@@ -203,26 +169,36 @@ export const htmlToText = (html: string) =>
 const getMessage = (key: string, locale: Locale, defaultValue: string): string =>
   Messages.get("resources.jahiacom", key, locale, defaultValue);
 
-export const levels = (level: Props["certification"], locale: Locale) =>
-  ({
-    silver: (
-      <span className={classes.level}>
-        <span className={clsx("i-ri:star-fill", classes.silver)} aria-hidden="true" />
-        <span>{getMessage("jahiacom_partner.certification.silver", locale, "Silver Partner")}</span>
-      </span>
-    ),
-    gold: (
-      <span className={classes.level}>
-        <span className={clsx("i-ri:vip-crown-2-fill", classes.gold)} aria-hidden="true" />
-        <span>{getMessage("jahiacom_partner.certification.gold", locale, "Gold Partner")}</span>
-      </span>
-    ),
-    diamond: (
-      <span className={classes.level}>
-        <span className={clsx("i-ri:vip-diamond-fill", classes.diamond)} aria-hidden="true" />
-        <span>
-          {getMessage("jahiacom_partner.certification.diamond", locale, "Diamond Partner")}
+export const levels = (
+  level: Props["certification"],
+  locale: Locale,
+  partnerLevel?: Props["partnerLevel"],
+) =>
+  partnerLevel?.trim() ? (
+    <span className={classes.level}>{partnerLevel.trim()}</span>
+  ) : (
+    {
+      silver: (
+        <span className={classes.level}>
+          <span className={clsx("i-ri:star-fill", classes.silver)} aria-hidden="true" />
+          <span>
+            {getMessage("jahiacom_partner.certification.silver", locale, "Silver Partner")}
+          </span>
         </span>
-      </span>
-    ),
-  })[level];
+      ),
+      gold: (
+        <span className={classes.level}>
+          <span className={clsx("i-ri:vip-crown-2-fill", classes.gold)} aria-hidden="true" />
+          <span>{getMessage("jahiacom_partner.certification.gold", locale, "Gold Partner")}</span>
+        </span>
+      ),
+      diamond: (
+        <span className={classes.level}>
+          <span className={clsx("i-ri:vip-diamond-fill", classes.diamond)} aria-hidden="true" />
+          <span>
+            {getMessage("jahiacom_partner.certification.diamond", locale, "Diamond Partner")}
+          </span>
+        </span>
+      ),
+    }[level]
+  );

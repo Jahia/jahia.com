@@ -10,7 +10,6 @@ import {
   htmlToText,
   legacyRegion,
   levels,
-  partnerLocations,
   regionCodes,
   regionCountries,
   type Props,
@@ -56,7 +55,7 @@ export const PartnerCard = ({
       <div className={classes.cardHeading}>
         <h3>{props["jcr:title"]}</h3>
         <span className={clsx("_pack-1", classes.small)}>
-          {levels(props.certification, locale)}
+          {levels(props.certification, locale, props.partnerLevel)}
         </span>
       </div>
       <div className={classes.cardMeta}>
@@ -107,7 +106,7 @@ const SimilarPartnerCard = ({
   const { t } = useTranslation();
   const countries = countryNames(regionCountries(props, region), locale);
   return (
-    <article className={classes.similarCard}>
+    <article className={classes.similarCard} data-carousel-item="">
       <div className={clsx(classes.similarLogo, !props.logo && classes.similarLogoFallback)}>
         {props.logo ? (
           <Image image={props.logo} sizes={[160, 320]} />
@@ -117,7 +116,8 @@ const SimilarPartnerCard = ({
       </div>
       <h3>{props["jcr:title"]}</h3>
       <p>
-        {countries || regionCodes[region]} · {levels(props.certification, locale)}
+        {countries || regionCodes[region]} ·{" "}
+        {levels(props.certification, locale, props.partnerLevel)}
       </p>
       <a href={`${buildNodeUrl(currentNode)}?region=${region}`}>{t("partner.viewProfile")} →</a>
     </article>
@@ -129,16 +129,9 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jahiacom:partner",
   },
-  (props: Props, { currentNode, currentResource }) => {
-    const locations = partnerLocations(currentNode);
-    return (
-      <PartnerCard
-        props={locations.length ? { ...props, locations } : props}
-        currentNode={currentNode}
-        locale={currentResource.getLocale()}
-      />
-    );
-  },
+  (props: Props, { currentNode, currentResource }) => (
+    <PartnerCard props={props} currentNode={currentNode} locale={currentResource.getLocale()} />
+  ),
 );
 
 jahiaComponent(
@@ -148,15 +141,13 @@ jahiaComponent(
     name: "similarCard",
   },
   (props: Props, { currentNode, currentResource, renderContext }) => {
-    const locations = partnerLocations(currentNode);
-    const locationProps = locations.length ? { ...props, locations } : props;
-    const regions = configuredRegions(locationProps, legacyRegion(currentNode));
+    const regions = configuredRegions(props, legacyRegion(currentNode));
     const requestedRegion = renderContext.getRequest().getParameter("region") as Region | null;
     const region =
       requestedRegion && regions.includes(requestedRegion) ? requestedRegion : regions[0];
     return (
       <SimilarPartnerCard
-        props={locationProps}
+        props={props}
         currentNode={currentNode}
         locale={currentResource.getLocale()}
         region={region}

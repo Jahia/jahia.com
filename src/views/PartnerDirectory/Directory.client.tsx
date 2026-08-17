@@ -137,6 +137,16 @@ export default function Directory({
     setRegion("all");
   };
 
+  const selectType = (value: PartnerType) => {
+    setType(value);
+    setRegion("all");
+  };
+
+  const selectRegion = (value: Region) => {
+    setType("all");
+    setRegion(value);
+  };
+
   return (
     <div ref={root} id="partner-directory-results">
       <div className={classes.filters}>
@@ -146,7 +156,7 @@ export default function Directory({
               key={value}
               type="button"
               aria-pressed={activeType === value}
-              onClick={() => setType(value)}
+              onClick={() => selectType(value)}
             >
               {t(
                 value === "all"
@@ -169,7 +179,7 @@ export default function Directory({
         </div>
         <label>
           <span>{t("partner.region")}</span>
-          <select value={region} onChange={(event) => setRegion(event.target.value as Region)}>
+          <select value={region} onChange={(event) => selectRegion(event.target.value as Region)}>
             <option value="all">{t("partner.allRegions")}</option>
             <option value="europe">
               {t("partner.regions.europe")}

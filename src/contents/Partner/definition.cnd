@@ -6,6 +6,8 @@
  - logo (weakreference, picker) < jmix:image
  // Optional fields keep existing Partner nodes valid when the module is upgraded.
  - partnerType (string, choicelist[resourceBundle]) = 'integrator' < integrator, technology
+ // Optional display label for partners whose relationship is not a Silver/Gold/Diamond certification.
+ - partnerLevel (string) i18n
  - shortDescription (string) i18n
  - website (string) i18n
  - partnerSince (date)

@@ -1,0 +1,17 @@
+{
+  "name": "jahiacom:partnerList",
+  "priority": 2.0,
+  "fields": [
+    {
+      "name": "sourceRoot",
+      "selectorType": "Picker",
+      "selectorOptionsMap": {
+        "pickerConfig": {
+          "accordions": ["picker-content-folders"],
+          "searchContentType": "jnt:contentFolder",
+          "selectableTypesTable": ["jnt:contentFolder"]
+        }
+      }
+    }
+  ]
+}

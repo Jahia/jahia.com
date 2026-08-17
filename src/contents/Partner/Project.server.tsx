@@ -17,7 +17,7 @@ jahiaComponent(
     nodeType: "jahiacom:partnerProject",
   },
   ({ "jcr:title": title, sector, projectType, description, image }: Props) => (
-    <article className={classes.project}>
+    <article className={classes.project} data-carousel-item="">
       <div className={classes.projectImage}>
         {image ? <Image image={image} sizes={[360, 720]} /> : <span>{sector || title}</span>}
       </div>

@@ -18,7 +18,6 @@ import {
   htmlToText,
   legacyRegion,
   levels,
-  partnerLocations,
   regionCodes,
   regionCountries,
   type Props,
@@ -43,9 +42,6 @@ const nodeRegions = (node: JCRNodeWrapper): Region[] => {
   if (compositeLocations.length > 0) {
     return [...new Set(compositeLocations.map(({ region }) => region))];
   }
-
-  const locations = partnerLocations(node);
-  if (locations.length > 0) return [...new Set(locations.map(({ region }) => region))];
 
   const regions = stringProperties(node, "regions") as Region[];
   return regions.length > 0 ? regions : [legacyRegion(node)];
@@ -94,9 +90,7 @@ jahiaComponent(
   (props: Props, { currentNode, renderContext, currentResource }) => {
     const { t } = useTranslation();
     const fallbackRegion = legacyRegion(currentNode);
-    const locations = partnerLocations(currentNode);
-    const locationProps = locations.length ? { ...props, locations } : props;
-    const regions = configuredRegions(locationProps, fallbackRegion);
+    const regions = configuredRegions(props, fallbackRegion);
     const requested = renderContext.getRequest().getParameter("region");
     const activeRegion =
       isRegion(requested) && regions.includes(requested) ? requested : regions[0];
@@ -125,17 +119,9 @@ jahiaComponent(
         ORDER BY [jcr:title]
       `,
     });
-    const locationNodes = useJCRQuery({
-      query: `
-        SELECT * FROM [jahiacom:partnerLocation]
-        WHERE ISDESCENDANTNODE(${JSON.stringify(siteRoot)})
-      `,
-    });
     const currentTitle = props["jcr:title"].trim().toLocaleLowerCase();
     const currentCountries = new Set(
-      regionCountries(locationProps, activeRegion).map((country) =>
-        normalizedCountry(country, locale),
-      ),
+      regionCountries(props, activeRegion).map((country) => normalizedCountry(country, locale)),
     );
     const eligibleSimilar = partnerCandidates.filter((node) => {
       if (node.getIdentifier() === currentNode.getIdentifier()) return false;
@@ -154,7 +140,6 @@ jahiaComponent(
           locationCountries: stringProperties(node, "locationCountries"),
           partnerLocationsData: stringProperty(node, "partnerLocationsData"),
           countries: stringProperties(node, "countries"),
-          locations: partnerLocations(node),
         },
         activeRegion,
       );
@@ -173,7 +158,7 @@ jahiaComponent(
     const tagNodes = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
     const expertise = props.expertise || [];
 
-    for (const dependency of [...projects, ...similar, ...locationNodes]) {
+    for (const dependency of [...projects, ...similar]) {
       server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
     }
 
@@ -211,7 +196,7 @@ jahiaComponent(
               </div>
               <div>
                 <span>{t("partner.level")}</span>
-                <strong>{levels(props.certification, locale)}</strong>
+                <strong>{levels(props.certification, locale, props.partnerLevel)}</strong>
               </div>
               {partnerSince !== undefined && (
                 <div>
@@ -223,8 +208,8 @@ jahiaComponent(
                 <span>{t("partner.region")}</span>
                 <strong>
                   {t(`partner.regions.${activeRegion}`)}
-                  {regionCountries(locationProps, activeRegion).length > 0 &&
-                    ` · ${countryNames(regionCountries(locationProps, activeRegion), locale)}`}
+                  {regionCountries(props, activeRegion).length > 0 &&
+                    ` · ${countryNames(regionCountries(props, activeRegion), locale)}`}
                 </strong>
               </div>
             </div>
@@ -286,7 +271,7 @@ jahiaComponent(
               <div className={classes.partnershipFacts}>
                 <div>
                   <span>{t("partner.level")}</span>
-                  <strong>{levels(props.certification, locale)}</strong>
+                  <strong>{levels(props.certification, locale, props.partnerLevel)}</strong>
                 </div>
                 {props.certifiedConsultants !== undefined && (
                   <div>

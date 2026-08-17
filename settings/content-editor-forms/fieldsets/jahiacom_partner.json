@@ -3,6 +3,16 @@
   "priority": 2.0,
   "fields": [
     {
+      "name": "certification",
+      "hide": true,
+      "defaultValues": [
+        {
+          "type": "String",
+          "value": "silver"
+        }
+      ]
+    },
+    {
       "name": "countries",
       "hide": true,
       "defaultValues": [
@@ -23,6 +33,9 @@
     {
       "name": "partnerType",
       "mandatory": true
+    },
+    {
+      "name": "partnerLevel"
     },
     {
       "name": "partnerLocationsData",
