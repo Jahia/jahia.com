@@ -4,13 +4,17 @@ import classes from "./component.module.css";
 
 const paginationMetrics = (element: HTMLDivElement, itemCount: number) => {
   const track = element.firstElementChild as HTMLElement | null;
-  const cards = track ? (Array.from(track.children) as HTMLElement[]) : [];
+  const cards = track
+    ? (Array.from(track.querySelectorAll("[data-carousel-item]")) as HTMLElement[])
+    : [];
   const itemsPerPage =
     Number.parseInt(getComputedStyle(element).getPropertyValue("--items-per-page"), 10) || 3;
   const count = Math.max(1, Math.ceil(itemCount / itemsPerPage));
   const viewportLeft = element.getBoundingClientRect().left;
   const maxScroll = Math.max(0, element.scrollWidth - element.clientWidth);
   const offsets = Array.from({ length: count }, (_, index) => {
+    if (index === 0) return 0;
+
     const card = cards[index * itemsPerPage];
     const measuredOffset = card
       ? card.getBoundingClientRect().left - viewportLeft + element.scrollLeft
@@ -31,7 +35,8 @@ export default function Carousel({
 }) {
   const { t } = useTranslation();
   const viewport = useRef<HTMLDivElement>(null);
-  const pageOffsets = useRef([0]);
+  const activePage = useRef(0);
+  const targetPage = useRef<number | null>(null);
   const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(1);
 
@@ -41,17 +46,23 @@ export default function Carousel({
 
     const { count, offsets } = paginationMetrics(element, itemCount);
 
-    pageOffsets.current = offsets;
     setPageCount(count);
-    setPage(
-      offsets.reduce(
-        (closest, offset, index) =>
-          Math.abs(offset - element.scrollLeft) < Math.abs(offsets[closest] - element.scrollLeft)
-            ? index
-            : closest,
-        0,
-      ),
+    const closestPage = offsets.reduce(
+      (closest, offset, index) =>
+        Math.abs(offset - element.scrollLeft) < Math.abs(offsets[closest] - element.scrollLeft)
+          ? index
+          : closest,
+      0,
     );
+
+    if (targetPage.current !== null) {
+      const safeTarget = Math.min(targetPage.current, offsets.length - 1);
+      if (Math.abs(offsets[safeTarget] - element.scrollLeft) > 1) return;
+      targetPage.current = null;
+    }
+
+    activePage.current = closestPage;
+    setPage(closestPage);
   }, [itemCount]);
 
   useEffect(() => {
@@ -76,9 +87,16 @@ export default function Carousel({
     const element = viewport.current;
     if (!element) return;
     const { offsets } = paginationMetrics(element, itemCount);
-    pageOffsets.current = offsets;
     const safeTarget = Math.max(0, Math.min(target, offsets.length - 1));
+    targetPage.current = safeTarget;
+    activePage.current = safeTarget;
+    setPage(safeTarget);
     element.scrollTo({ left: offsets[safeTarget], behavior: "smooth" });
+  };
+
+  const releaseTarget = () => {
+    targetPage.current = null;
+    requestAnimationFrame(measure);
   };
 
   return (
@@ -88,11 +106,17 @@ export default function Carousel({
         type="button"
         aria-label={t("resourceCarousel.previous")}
         disabled={page === 0}
-        onClick={() => goTo(page - 1)}
+        onClick={() => goTo(activePage.current - 1)}
       >
         <span aria-hidden="true">←</span>
       </button>
-      <div ref={viewport} className={classes.viewport}>
+      <div
+        ref={viewport}
+        className={classes.viewport}
+        onPointerDown={releaseTarget}
+        onTouchStart={releaseTarget}
+        onWheel={releaseTarget}
+      >
         <div className={classes.track}>{children}</div>
       </div>
       <button
@@ -100,7 +124,7 @@ export default function Carousel({
         type="button"
         aria-label={t("resourceCarousel.next")}
         disabled={page >= pageCount - 1}
-        onClick={() => goTo(page + 1)}
+        onClick={() => goTo(activePage.current + 1)}
       >
         <span aria-hidden="true">→</span>
       </button>

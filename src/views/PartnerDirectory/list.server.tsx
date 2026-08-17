@@ -9,7 +9,6 @@ import { PartnerCard } from "../../contents/Partner/default.server.jsx";
 import {
   configuredRegions,
   legacyRegion,
-  partnerLocations,
   regionCountries,
   type Props as PartnerProps,
   type Region,
@@ -47,12 +46,12 @@ const partnerProps = (node: JCRNodeWrapper): PartnerProps => ({
   "description": stringProperty(node, "description") || "",
   "logo": node.hasProperty("logo") ? node.getProperty("logo").getValue().getNode() : undefined,
   "partnerType": stringProperty(node, "partnerType") as PartnerProps["partnerType"],
+  "partnerLevel": stringProperty(node, "partnerLevel"),
   "shortDescription": stringProperty(node, "shortDescription"),
   "countries": stringProperties(node, "countries"),
   "regions": stringProperties(node, "regions") as Region[] | undefined,
   "locationCountries": stringProperties(node, "locationCountries"),
   "partnerLocationsData": stringProperty(node, "partnerLocationsData"),
-  "locations": partnerLocations(node),
 });
 
 jahiaComponent(
@@ -70,14 +69,7 @@ jahiaComponent(
         ORDER BY [jcr:title]
       `,
     });
-    const locationNodes = useJCRQuery({
-      query: `
-        SELECT * FROM [jahiacom:partnerLocation]
-        WHERE ISDESCENDANTNODE(${JSON.stringify(rootPath)})
-      `,
-    });
-
-    for (const dependency of [...partners, ...locationNodes]) {
+    for (const dependency of partners) {
       server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
     }
 
@@ -122,11 +114,6 @@ jahiaComponent(
                 ? countries[region].map((country) => ({ region, country }))
                 : [{ region }],
             ),
-          ),
-          locations: regions.flatMap((region) =>
-            countries[region].length > 0
-              ? countries[region].map((country) => ({ region, country }))
-              : [{ region }],
           ),
         },
         regionUrls,

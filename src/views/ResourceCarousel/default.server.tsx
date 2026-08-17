@@ -36,7 +36,7 @@ const Card = ({
   discoverLabel: string;
   locale: string;
 }) => (
-  <article className={classes.card}>
+  <article className={classes.card} data-carousel-item="">
     <a
       className={classes.cardLink}
       href={item.url}
