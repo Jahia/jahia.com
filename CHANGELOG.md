@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.1.10
+
+* Use the combined Partner location field consistently, remove obsolete location child nodes, and include the latest Partner directory, filtering, level, and carousel fixes.
+
 ## 1.1.9
 
 * Add the editable Partner directory and profile experience while preserving legacy Partner content and contact areas.
