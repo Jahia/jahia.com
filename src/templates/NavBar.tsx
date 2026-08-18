@@ -4,6 +4,9 @@ import {
   getChildNodes,
   getSiteLocales,
   Island,
+  server,
+  useJCRQuery,
+  useServerContext,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import type { JCRSiteNode } from "org.jahia.services.content.decorator";
@@ -11,6 +14,31 @@ import jahia from "./jahia-light.svg?no-inline";
 import NavBarClient, { type Entry } from "./NavBar.client.jsx";
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+const emptySearchTerm = "jahia_no_search_requested_92f4c7";
+
+const searchTerms = (value: string) => {
+  const normalized = [...value.normalize("NFKC")]
+    .map((character) => {
+      const code = character.codePointAt(0) || 0;
+      return code <= 31 ||
+        (code >= 127 && code <= 159) ||
+        (code >= 8234 && code <= 8238) ||
+        (code >= 8294 && code <= 8297)
+        ? " "
+        : character;
+    })
+    .join("")
+    .replace(/\s+/g, " ")
+    .trim();
+  const terms = normalized.match(/[\p{L}\p{N}]+/gu) || [];
+  const valid =
+    normalized.length >= 2 &&
+    normalized.length <= 120 &&
+    terms.length > 0 &&
+    terms.length <= 12 &&
+    terms.every((term) => term.length <= 40);
+  return { normalized, terms: valid ? terms : [], valid };
+};
 
 const getEntries = (root: JCRNodeWrapper, current: string): Entry[] =>
   getChildNodes(
@@ -62,11 +90,14 @@ export default function NavBar({
   site,
   root,
   current,
+  language,
 }: {
   site: JCRSiteNode;
   root: JCRNodeWrapper;
   current: JCRNodeWrapper;
+  language: string;
 }) {
+  const { renderContext } = useServerContext();
   const primaryCTALink =
     site.hasProperty("primaryCTALink") && site.getProperty("primaryCTALink").getValue().getNode();
   const secondaryCTALink =
@@ -88,6 +119,35 @@ export default function NavBar({
       name: capitalize(locale.getDisplayLanguage(locale)),
       href: buildNodeUrl(current, { language }),
     }));
+  const rawSearch = renderContext.getRequest().getParameter("search") || "";
+  const requestedSearch = rawSearch.trim().length > 0;
+  const parsedSearch = searchTerms(rawSearch);
+  const fullText = parsedSearch.valid ? parsedSearch.terms.join(" ") : emptySearchTerm;
+  const searchNodes = useJCRQuery({
+    query: `
+      SELECT * FROM [jmix:mainResource] AS result
+      WHERE ISDESCENDANTNODE(result, ${JSON.stringify(site.getPath())})
+      AND CONTAINS(result.*, '${fullText}')
+      ORDER BY SCORE(result) DESC
+    `,
+  });
+  const searchResults = searchNodes.slice(0, 20).map((node) => {
+    server.render.addCacheDependency({ path: node.getPath() }, renderContext);
+    return {
+      url: buildNodeUrl(node, { language }),
+      title: node.getDisplayableName(),
+      snippet: node.hasProperty("jcr:description")
+        ? node.getPropertyAsString("jcr:description").slice(0, 190)
+        : "",
+    };
+  });
+  const search = {
+    query: parsedSearch.normalized.slice(0, 120),
+    requested: requestedSearch,
+    invalid: requestedSearch && !parsedSearch.valid,
+    results: searchResults,
+  };
+  const searchPayload = encodeURIComponent(JSON.stringify(search));
 
   return (
     <>
@@ -110,6 +170,8 @@ export default function NavBar({
           // to rethink the implementation
           entries: getEntries(root, current.getIdentifier()),
           langs,
+          language,
+          search,
         }}
       >
         {root && (
@@ -132,6 +194,7 @@ export default function NavBar({
           </a>
         )}
       </Island>
+      <span hidden data-jahia-search-payload={searchPayload} />
       {langs.length > 1 && (
         <div
           style={{

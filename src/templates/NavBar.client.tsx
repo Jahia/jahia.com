@@ -3,6 +3,7 @@ import classes from "./NavBar.module.css";
 import clsx from "clsx";
 import { useFloating, autoUpdate, offset, shift } from "@floating-ui/react-dom";
 import { CTA } from "../mixins/CTA/index.jsx";
+import SearchDialog, { type SearchState } from "./Search.client.jsx";
 
 export type Group = { title: string; children: Entry[] };
 export type Page = { title: string; href: string; current: boolean };
@@ -14,14 +15,19 @@ export default function NavBarClient({
   children,
   entries,
   langs,
+  language,
+  search,
 }: {
   primaryCTA?: { href: string; label: string } | false;
   secondaryCTA?: { href: string; label: string } | false;
   children: ReactNode;
   entries: Entry[];
   langs: Array<{ language: string; name: string; href: string }>;
+  language: string;
+  search: SearchState;
 }) {
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(search.requested);
   const [submenu, setSubmenu] = useState<string | null>(null);
 
   /** Used to disable the animation on first render */
@@ -68,6 +74,11 @@ export default function NavBarClient({
   // Pressing escape should also close the menu
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setSearchOpen(true);
+        return;
+      }
       if (event.key === "Escape") close();
     };
     document.addEventListener("keydown", handler);
@@ -151,6 +162,15 @@ export default function NavBarClient({
                 <span className="i-ri:global-line" aria-label="Language / Langue" />
               </button>
             )}
+            <button
+              type="button"
+              className={clsx(classes.barLink, classes.searchButton)}
+              onClick={() => setSearchOpen(true)}
+              aria-label={language === "fr" ? "Rechercher" : "Search"}
+            >
+              <span className="i-ri:search-line" aria-hidden="true" />
+              <span>{language === "fr" ? "Rechercher" : "Search"}</span>
+            </button>
             {secondaryCTA && (
               <CTA href={secondaryCTA.href} icon secondary location="header" name="nav-secondary">
                 {secondaryCTA.label}
@@ -281,6 +301,17 @@ export default function NavBarClient({
             </CTA>
           </div>
         )}
+        <button
+          type="button"
+          className={classes.mobileSearch}
+          onClick={() => {
+            close();
+            setSearchOpen(true);
+          }}
+        >
+          <span className="i-ri:search-line" aria-hidden="true" />
+          {language === "fr" ? "Rechercher" : "Search"}
+        </button>
       </div>
       {/* Desktop menu */}
       <div
@@ -350,6 +381,12 @@ export default function NavBarClient({
           )}
         </ul>
       </div>
+      <SearchDialog
+        open={searchOpen}
+        language={language}
+        initialSearch={search}
+        onClose={() => setSearchOpen(false)}
+      />
     </nav>
   );
 }

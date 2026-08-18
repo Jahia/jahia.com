@@ -2,6 +2,7 @@
  - author (weakreference) mandatory < jahiacom:blogAuthor
  - summary (string) i18n
  - date (date) = now()
+ - useLastModifiedDate (boolean) = false
  - blogType (weakreference) multiple facetable hierarchical
  - image (weakreference) < 'jmix:image'
  - text (string, richtext) i18n

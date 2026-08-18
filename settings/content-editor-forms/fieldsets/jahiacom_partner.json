@@ -35,7 +35,11 @@
       "mandatory": true
     },
     {
-      "name": "partnerLevel"
+      "name": "partnerLevel",
+      "hide": true
+    },
+    {
+      "name": "integrationPartner"
     },
     {
       "name": "partnerLocationsData",

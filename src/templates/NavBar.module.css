@@ -6,21 +6,12 @@ to fold the menu if it overflows. Let's go with a static value for now.
 @value breakpoint: 900px;
 
 .nav {
-  position: sticky;
-  inset-block-start: 0;
-  z-index: 1000001; /* Above jContent buttons */
+  position: relative;
+  z-index: 1; /* Above the breadcrumb when a menu is open */
   padding: 0.5rem;
   container-type: inline-size;
   color: var(--jahia-color);
-  background-color: color-mix(in srgb, var(--jahia-container-background) 75%, transparent);
-  backdrop-filter: blur(0.5rem);
-  transition: background var(--jahia-timing);
-
-  &:hover,
-  &:focus-within,
-  &[data-open="true"] {
-    background-color: var(--jahia-container-background);
-  }
+  background-color: transparent;
 }
 
 :where(.nav) ul {
@@ -36,6 +27,56 @@ to fold the menu if it overflows. Let's go with a static value for now.
   text-decoration: inherit;
   background: none;
   border: none;
+}
+
+.searchButton {
+  --reflection: color-mix(in srgb, var(--jahia-neutral-50) 55%, transparent);
+
+  position: relative;
+  contain: paint;
+  color: var(--jahia-neutral-50);
+  cursor: pointer;
+  background: color-mix(in srgb, var(--jahia-neutral-50) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--jahia-neutral-50) 38%, transparent);
+  border-radius: 0.25rem;
+  transition:
+    background-color var(--jahia-timing),
+    border-color var(--jahia-timing),
+    transform var(--jahia-motion-timing);
+}
+
+.searchButton::after {
+  position: absolute;
+  inset: 0 calc(-50% - 1rem) 0 auto;
+  z-index: 1;
+  width: 50%;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(to right, transparent, var(--reflection), transparent);
+  transform: skewX(-30deg);
+}
+
+.searchButton:hover,
+.searchButton:focus-visible {
+  background: color-mix(in srgb, var(--jahia-neutral-50) 14%, transparent);
+  border-color: color-mix(in srgb, var(--jahia-neutral-50) 65%, transparent);
+}
+
+.searchButton:active {
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .searchButton:hover::after,
+  .searchButton:focus-visible::after {
+    animation: search-shine 0.6s forwards ease-out;
+  }
+}
+
+@keyframes search-shine {
+  from {
+    right: calc(150% + 1rem);
+  }
 }
 
 .desktopMenu a,
@@ -121,6 +162,26 @@ to fold the menu if it overflows. Let's go with a static value for now.
   @container (width >= 400px) {
     grid-template-columns: 1fr 1fr;
   }
+}
+
+.mobileSearch {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: calc(100% - 1rem);
+  padding: 0.75rem;
+  margin: 0.5rem;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--jahia-border);
+  border-radius: 0.25rem;
+}
+
+.mobileSearch:hover,
+.mobileSearch:focus-visible {
+  background: var(--jahia-neutral-600);
 }
 
 .submenu {

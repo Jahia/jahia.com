@@ -6,6 +6,7 @@ jahiaComponent(
     componentType: "template",
     nodeType: "jmix:mainResource",
     priority: -1, // allow to overwrite this template by defining a component with a higher priority. When not specified, the default priority is 0
+    properties: { "cache.requestParameters": "search" },
   },
   (props, { currentNode }) => (
     <Layout props={props}>
@@ -20,6 +21,7 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jmix:mainResource",
     name: "cm",
+    properties: { "cache.requestParameters": "search" },
   },
   (props, { currentNode }) => (
     <Layout props={props}>

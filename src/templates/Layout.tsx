@@ -8,7 +8,9 @@ import type { JCRNodeWrapper } from "org.jahia.services.content";
 import prettyBytes from "pretty-bytes";
 import type { ReactNode } from "react";
 import EditorHints from "../components/EditorHints.jsx";
+import Breadcrumb from "./Breadcrumb.jsx";
 import NavBar from "./NavBar.jsx";
+import classes from "./Layout.module.css";
 
 import "@fontsource-variable/plus-jakarta-sans/wght";
 import "modern-normalize/modern-normalize.css";
@@ -139,11 +141,15 @@ export const Layout = ({
             "JSON-LD": jsonLd?.length,
           })}
         />
-        <NavBar
-          site={renderContext.getSite()}
-          root={renderContext.getSite().getHome()}
-          current={mainNode}
-        />
+        <div className={classes.stickyHeader} data-theme="night">
+          <NavBar
+            site={renderContext.getSite()}
+            root={renderContext.getSite().getHome()}
+            current={mainNode}
+            language={lang}
+          />
+          <Breadcrumb pageType={pageType ?? props.pageType} title={title} />
+        </div>
         {children}
         <AbsoluteArea
           parent={renderContext.getSite()}

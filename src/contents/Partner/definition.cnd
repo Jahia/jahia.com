@@ -8,6 +8,8 @@
  - partnerType (string, choicelist[resourceBundle]) = 'integrator' < integrator, technology
  // Optional display label for partners whose relationship is not a Silver/Gold/Diamond certification.
  - partnerLevel (string) i18n
+ // Shared across languages. The legacy localized label above remains available as a display fallback.
+ - integrationPartner (boolean) = false
  - shortDescription (string) i18n
  - website (string) i18n
  - partnerSince (date)

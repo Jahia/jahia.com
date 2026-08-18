@@ -1,0 +1,56 @@
+.breadcrumb {
+  position: relative;
+  width: 100%;
+  padding: 0.75rem max(1rem, calc((100% - var(--jahia-width)) / 2));
+  font-size: 0.8125rem;
+  color: var(--jahia-neutral-200);
+  background: transparent;
+  border-bottom: 1px solid var(--jahia-neutral-600);
+
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+    padding: 0;
+    margin: 0 auto;
+    list-style: none;
+  }
+
+  li {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    min-width: 0;
+  }
+
+  li:not(:last-child)::after {
+    color: var(--jahia-neutral-500);
+    content: "/";
+  }
+
+  li:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    color: var(--jahia-neutral-50);
+    white-space: nowrap;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:hover,
+  a:focus-visible {
+    color: var(--jahia-primary-color);
+    text-decoration: underline;
+  }
+}
+
+@media (width < 600px) {
+  .breadcrumb li:first-child:has(~ li:nth-child(3)) {
+    display: none;
+  }
+}

@@ -2,16 +2,23 @@
 
 /* MARK: Default */
 .item {
-  composes: item from "../../../theme/theme.module.css";
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: transform var(--jahia-timing);
+  background: var(--jahia-background);
+  border: 1px solid var(--jahia-border);
+  border-radius: 0.875rem;
+  box-shadow: 0 0.25rem 1rem rgb(0 25 50 / 6%);
+  transition:
+    border-color var(--jahia-timing),
+    box-shadow var(--jahia-timing),
+    transform var(--jahia-timing);
 
-  &:active,
+  &:hover,
   &:focus-within {
-    transform: scale(0.98);
+    border-color: color-mix(in srgb, var(--jahia-primary-color) 40%, var(--jahia-border));
+    box-shadow: 0 1rem 2.5rem rgb(0 25 50 / 14%);
   }
 
   a {
@@ -41,10 +48,14 @@
 
   @media (prefers-reduced-motion: no-preference) {
     &:hover a::after,
-    &:focus-visible a::after {
+    &:focus-within a::after {
       animation: shine 0.6s forwards ease-out;
     }
   }
+}
+
+.item:active {
+  transform: scale(0.98);
 }
 
 @keyframes shine {
@@ -55,15 +66,17 @@
 
 .meta {
   display: flex;
-  justify-content: space-between;
-  font-size: 0.875rem;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
   color: color-mix(in srgb, var(--jahia-color) 75%, transparent);
 }
 
 .cover {
   position: relative;
-  flex: 1;
-  min-height: 12.5rem;
+  min-height: 11.875rem;
+  overflow: hidden;
   background: var(--jahia-gradient);
 
   img {
@@ -72,6 +85,177 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 450ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+}
+
+.imageFallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  font-weight: 800;
+  color: rgb(255 255 255 / 90%);
+  letter-spacing: 0.04em;
+  background:
+    radial-gradient(circle at 20% 20%, rgb(255 255 255 / 22%), transparent 30%),
+    linear-gradient(135deg, var(--jahia-primary-color), var(--jahia-color));
+}
+
+.item:hover .cover img,
+.item:focus-within .cover img {
+  transform: scale(1.035);
+}
+
+.cardBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.125rem 1.125rem 1.25rem;
+
+  h3 {
+    margin: 0 0 0.65rem;
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    line-height: 1.25;
+  }
+}
+
+.summary {
+  display: -webkit-box;
+  margin: 0 0 1rem;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  color: color-mix(in srgb, var(--jahia-color) 72%, transparent);
+}
+
+.readMore {
+  display: inline-flex;
+  align-items: center;
+  margin-top: auto;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--jahia-primary-color);
+}
+
+.featured {
+  display: grid;
+  height: 100%;
+
+  .cover {
+    min-height: 15rem;
+  }
+
+  .cardBody {
+    justify-content: center;
+    padding: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .cardBody h3 {
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    text-wrap: balance;
+  }
+
+  .summary {
+    -webkit-line-clamp: 4;
+    font-size: 1rem;
+  }
+
+  @container (width >= 760px) {
+    grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
+    height: 25rem;
+
+    .cover {
+      min-height: 0;
+    }
+
+    .cardBody {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .cardBody h3 {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .summary {
+      -webkit-line-clamp: 3;
+    }
+  }
+}
+
+.featuredLabel {
+  padding: 0.3rem 0.6rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: var(--jahia-primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid color-mix(in srgb, var(--jahia-primary-color) 35%, var(--jahia-border));
+  border-radius: 999px;
+}
+
+@media (width <= 380px) {
+  .featured {
+    .cover {
+      min-height: 12rem;
+    }
+
+    .cardBody {
+      padding: 1.25rem;
+    }
+
+    .cardBody h3 {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 3;
+      font-size: 1.5rem;
+      -webkit-box-orient: vertical;
+    }
+
+    .summary {
+      -webkit-line-clamp: 3;
+      font-size: 0.9375rem;
+    }
+  }
+}
+
+@media (orientation: landscape) and (height <= 500px) {
+  .featured {
+    grid-template-columns: minmax(0, 1.1fr) minmax(15rem, 0.9fr);
+    height: 20rem;
+
+    .cover {
+      min-height: 0;
+    }
+
+    .cardBody {
+      min-height: 0;
+      padding: 1.25rem;
+      overflow: hidden;
+    }
+
+    .cardBody h3 {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      font-size: clamp(1.35rem, 3vw, 1.75rem);
+      -webkit-box-orient: vertical;
+    }
+
+    .summary {
+      -webkit-line-clamp: 2;
+      font-size: 0.875rem;
+    }
   }
 }
 
@@ -150,23 +334,6 @@
           transform: scale(0.98);
         }
       }
-    }
-  }
-
-  .content {
-    @apply _stack-4;
-
-    display: flex;
-    flex-direction: row;
-    gap: 3rem;
-    max-width: var(--jahia-width);
-    padding: 1rem;
-    margin: auto;
-    color: var(--jahia-neutral-600);
-
-    @media (width <= 800px) {
-      flex-direction: column;
-      gap: 1rem;
     }
   }
 }

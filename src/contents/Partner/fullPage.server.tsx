@@ -70,6 +70,7 @@ jahiaComponent(
   {
     componentType: "template",
     nodeType: "jahiacom:partner",
+    properties: { "cache.requestParameters": "search" },
   },
   (props, { currentNode }) => (
     <Layout props={props} pageType="partner_page">
@@ -196,7 +197,14 @@ jahiaComponent(
               </div>
               <div>
                 <span>{t("partner.level")}</span>
-                <strong>{levels(props.certification, locale, props.partnerLevel)}</strong>
+                <strong>
+                  {levels(
+                    props.certification,
+                    locale,
+                    props.partnerLevel,
+                    props.integrationPartner,
+                  )}
+                </strong>
               </div>
               {partnerSince !== undefined && (
                 <div>
@@ -271,7 +279,14 @@ jahiaComponent(
               <div className={classes.partnershipFacts}>
                 <div>
                   <span>{t("partner.level")}</span>
-                  <strong>{levels(props.certification, locale, props.partnerLevel)}</strong>
+                  <strong>
+                    {levels(
+                      props.certification,
+                      locale,
+                      props.partnerLevel,
+                      props.integrationPartner,
+                    )}
+                  </strong>
                 </div>
                 {props.certifiedConsultants !== undefined && (
                   <div>
