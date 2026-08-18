@@ -39,6 +39,9 @@ const stringProperties = (node: JCRNodeWrapper, name: string) =>
     ? Array.from(node.getProperty(name).getValues(), (value) => value.getString())
     : undefined;
 
+const booleanProperty = (node: JCRNodeWrapper, name: string) =>
+  node.hasProperty(name) ? node.getProperty(name).getBoolean() : undefined;
+
 const partnerProps = (node: JCRNodeWrapper): PartnerProps => ({
   "jcr:title": stringProperty(node, "jcr:title") || node.getName(),
   "certification": (stringProperty(node, "certification") ||
@@ -47,6 +50,7 @@ const partnerProps = (node: JCRNodeWrapper): PartnerProps => ({
   "logo": node.hasProperty("logo") ? node.getProperty("logo").getValue().getNode() : undefined,
   "partnerType": stringProperty(node, "partnerType") as PartnerProps["partnerType"],
   "partnerLevel": stringProperty(node, "partnerLevel"),
+  "integrationPartner": booleanProperty(node, "integrationPartner"),
   "shortDescription": stringProperty(node, "shortDescription"),
   "countries": stringProperties(node, "countries"),
   "regions": stringProperties(node, "regions") as Region[] | undefined,

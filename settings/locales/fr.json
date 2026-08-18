@@ -36,6 +36,31 @@
     "projectCtaIntro": "Contactez ce partenaire pour discuter de votre besoin, ou revenez à l’annuaire pour comparer.",
     "returnDirectory": "Retour à l’annuaire"
   },
+  "blogListing": {
+    "featured": "À la une",
+    "readArticle": "Lire l’article",
+    "updatedOn": "Mis à jour le",
+    "featuredCarousel": "Articles à la une",
+    "previousFeatured": "Article à la une précédent",
+    "nextFeatured": "Article à la une suivant",
+    "goToFeatured": "Afficher l’article à la une {{number}}",
+    "cluster": "Cluster",
+    "allClusters": "Tous les clusters",
+    "theme": "Thématique",
+    "allThemes": "Toutes les thématiques",
+    "applyFilters": "Appliquer",
+    "resetFilters": "Réinitialiser",
+    "noResults": "Aucun article ne correspond à ces filtres.",
+    "pagination": "Pagination du blog",
+    "previousPage": "Précédente",
+    "nextPage": "Suivante",
+    "pageCount": "Page {{page}} sur {{count}}"
+  },
+  "breadcrumb": {
+    "label": "Fil d’Ariane",
+    "home": "Accueil",
+    "blog": "Blog"
+  },
   "resourceCarousel": {
     "eyebrow": "À découvrir",
     "defaultTitle": "Ressources associées",

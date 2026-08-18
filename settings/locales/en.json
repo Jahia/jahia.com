@@ -36,6 +36,31 @@
     "projectCtaIntro": "Contact this partner to discuss your needs, or return to the directory to compare.",
     "returnDirectory": "Back to the directory"
   },
+  "blogListing": {
+    "featured": "Featured",
+    "readArticle": "Read article",
+    "updatedOn": "Updated on",
+    "featuredCarousel": "Featured articles",
+    "previousFeatured": "Previous featured article",
+    "nextFeatured": "Next featured article",
+    "goToFeatured": "Show featured article {{number}}",
+    "cluster": "Cluster",
+    "allClusters": "All clusters",
+    "theme": "Topic",
+    "allThemes": "All topics",
+    "applyFilters": "Apply",
+    "resetFilters": "Reset",
+    "noResults": "No article matches these filters.",
+    "pagination": "Blog pagination",
+    "previousPage": "Previous",
+    "nextPage": "Next",
+    "pageCount": "Page {{page}} of {{count}}"
+  },
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "home": "Home",
+    "blog": "Blog"
+  },
   "resourceCarousel": {
     "eyebrow": "Discover",
     "defaultTitle": "Related resources",

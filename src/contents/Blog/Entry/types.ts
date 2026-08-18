@@ -5,6 +5,8 @@ export interface Props {
   "author": JCRNodeWrapper;
   "summary"?: string;
   "date"?: string;
+  "useLastModifiedDate"?: boolean;
+  "jcr:lastModified"?: string;
   "blogType"?: Array<JCRNodeWrapper | null>;
   "image"?: JCRNodeWrapper;
   "text"?: string;

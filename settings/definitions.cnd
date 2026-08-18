@@ -45,6 +45,15 @@
 [jahiacommix:dataLayer] mixin extends=jnt:page extends=jnt:page itemtype=metadata
  - pageType (string, choicelist) < home_page, product_page, feature_page, solution_page, industry_page, pricing_page, comparison_page, company_page, careers_page, trust_center, demo_page, contact_page, landing_page, thank_you_page, resource_library, blog_listing, blog_post, case_study, whitepaper_page, webinar_page, event_page, documentation, training_page, marketplace, module_page, partner_directory, partner_page, login_page, search_results, error_404, legal_page
 
+// Blog-specific options shown when editing a content-folder reference.
+[jahiacommix:blogListingOptions] mixin extends=jnt:contentFolderReference itemtype=content
+ - blogPageSize (string, choicelist[resourceBundle]) = '12' mandatory autocreated < '6', '12', '18', '24'
+ - featuredArticle (weakreference, picker) < jahiacom:blogEntry
+ - featuredArticles (weakreference, picker) multiple < jahiacom:blogEntry
+ - featuredIncludeUpdatedArticles (boolean) = false
+ - blogFilterClusters (weakreference, picker) multiple
+ - blogFilterThemes (weakreference, category[autoSelectParent=false]) multiple
+
 // Miscellaneous gadgets
 [jahiacommix:gadget] > jmix:droppableContent mixin
 

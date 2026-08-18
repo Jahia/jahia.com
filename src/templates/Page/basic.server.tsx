@@ -7,6 +7,7 @@ jahiaComponent(
     nodeType: "jnt:page",
     name: "basic",
     displayName: "Basic page",
+    properties: { "cache.requestParameters": "search" },
   },
   (props: { pageType: string }) => (
     <Layout props={props as never} pageType={props.pageType}>

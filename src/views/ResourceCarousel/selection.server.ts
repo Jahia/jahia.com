@@ -137,7 +137,7 @@ const toCard = (
 
   const categories = referencedNodes(node, [RESOURCE_MODEL.properties.categories]);
   const resourceType = resolveResourceType(node, categories, allowGenericResource);
-  if (!resourceType) return null;
+  if (!resourceType || resourceType.kind === "customerCase") return null;
 
   const date = firstString(node, RESOURCE_MODEL.properties.dates);
   const timestamp = date ? Date.parse(date) : 0;

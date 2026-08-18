@@ -55,7 +55,7 @@ export const PartnerCard = ({
       <div className={classes.cardHeading}>
         <h3>{props["jcr:title"]}</h3>
         <span className={clsx("_pack-1", classes.small)}>
-          {levels(props.certification, locale, props.partnerLevel)}
+          {levels(props.certification, locale, props.partnerLevel, props.integrationPartner)}
         </span>
       </div>
       <div className={classes.cardMeta}>
@@ -117,9 +117,9 @@ const SimilarPartnerCard = ({
       <h3>{props["jcr:title"]}</h3>
       <p>
         {countries || regionCodes[region]} ·{" "}
-        {levels(props.certification, locale, props.partnerLevel)}
+        {levels(props.certification, locale, props.partnerLevel, props.integrationPartner)}
       </p>
-      <a href={`${buildNodeUrl(currentNode)}?region=${region}`}>{t("partner.viewProfile")} →</a>
+      <a href={`${buildNodeUrl(currentNode)}?region=${region}`}>{t("partner.viewProfile")}</a>
     </article>
   );
 };

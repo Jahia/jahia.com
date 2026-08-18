@@ -21,6 +21,7 @@ export interface Props {
   "logo"?: JCRNodeWrapper;
   "partnerType"?: "integrator" | "technology";
   "partnerLevel"?: string;
+  "integrationPartner"?: boolean;
   "shortDescription"?: string;
   "website"?: string;
   "partnerSince"?: string;
@@ -173,8 +174,13 @@ export const levels = (
   level: Props["certification"],
   locale: Locale,
   partnerLevel?: Props["partnerLevel"],
+  integrationPartner?: Props["integrationPartner"],
 ) =>
-  partnerLevel?.trim() ? (
+  integrationPartner ? (
+    <span className={classes.level}>
+      {getMessage("jahiacom_partner.integrationPartner", locale, "Integration partner")}
+    </span>
+  ) : partnerLevel?.trim() ? (
     <span className={classes.level}>{partnerLevel.trim()}</span>
   ) : (
     {

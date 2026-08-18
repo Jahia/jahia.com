@@ -1,0 +1,14 @@
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1000001;
+  background: color-mix(in srgb, var(--jahia-navy-blue) 75%, transparent);
+  backdrop-filter: blur(0.5rem);
+  transition: background-color var(--jahia-timing);
+}
+
+.stickyHeader:hover,
+.stickyHeader:focus-within,
+.stickyHeader:has(> nav[data-open="true"]) {
+  background-color: var(--jahia-container-background);
+}
