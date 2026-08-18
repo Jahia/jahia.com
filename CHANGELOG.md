@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.2.0
+
+* Add the redesigned Blog listing and featured carousel, editable cluster and topic filters, optional updated dates, synchronized navigation and breadcrumbs, secure site search, responsive behavior, shared Partner integration status, and Resource carousel refinements.
+
 ## 1.1.10
 
 * Use the combined Partner location field consistently, remove obsolete location child nodes, and include the latest Partner directory, filtering, level, and carousel fixes.
