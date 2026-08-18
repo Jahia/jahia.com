@@ -4,7 +4,6 @@
   "fields": [
     {
       "name": "certification",
-      "hide": true,
       "defaultValues": [
         {
           "type": "String",
