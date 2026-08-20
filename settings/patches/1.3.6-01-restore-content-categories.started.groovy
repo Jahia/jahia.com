@@ -56,17 +56,20 @@ for (String workspace : [Constants.EDIT_WORKSPACE, Constants.LIVE_WORKSPACE]) {
                         !session.nodeExists(importedPath)
                     }
                     if (!unrecoverableCategoryPaths.isEmpty()) {
-                        throw new RepositoryException(
-                                "Required categories have no canonical or imported source in ${workspace}: " +
-                                        unrecoverableCategoryPaths.join(', '))
+                        logger.warn(
+                                "Category restoration cannot assign categories absent from {}: {}",
+                                workspace,
+                                unrecoverableCategoryPaths.join(', '))
                     }
 
                     int movedCategories = 0
                     missingCategoryPaths.sort { String path -> path.count('/') }.each { String path ->
                         if (!session.nodeExists(path)) {
                             String importedPath = "${importedRoot}${path.substring(canonicalRoot.length())}"
-                            session.move(importedPath, path)
-                            movedCategories++
+                            if (session.nodeExists(importedPath)) {
+                                session.move(importedPath, path)
+                                movedCategories++
+                            }
                         }
                     }
 
@@ -111,7 +114,16 @@ for (String workspace : [Constants.EDIT_WORKSPACE, Constants.LIVE_WORKSPACE]) {
                             }
 
                             for (JCRNodeWrapper target : nodes) {
-                                List<String> categoryPaths = expectedByName[target.getName()]
+                                List<String> categoryPaths = expectedByName[target.getName()].findAll {
+                                    String path -> session.nodeExists(path)
+                                }
+                                if (categoryPaths.isEmpty()) {
+                                    logger.warn(
+                                            "Category restoration skipped {} because none of its mapped categories exist in {}",
+                                            target.getPath(),
+                                            workspace)
+                                    continue
+                                }
                                 if (!target.isNodeType("jmix:categorized")) {
                                     target.addMixin("jmix:categorized")
                                 }
@@ -123,9 +135,18 @@ for (String workspace : [Constants.EDIT_WORKSPACE, Constants.LIVE_WORKSPACE]) {
                             }
 
                             if (listFilters.containsKey(section.key)) {
-                                Value[] filterValues = listFilters[section.key].collect { String path ->
+                                Value[] filterValues = listFilters[section.key].findAll {
+                                    String path -> session.nodeExists(path)
+                                }.collect { String path ->
                                     session.getValueFactory().createValue(session.getNode(path), true)
                                 } as Value[]
+                                if (filterValues.length == 0) {
+                                    logger.warn(
+                                        "Category restoration cannot configure {} ListChildren filters in {} because their roots are absent",
+                                        section.key,
+                                        workspace)
+                                    continue
+                                }
                                 NodeIterator lists = session.getWorkspace().getQueryManager()
                                         .createQuery(
                                                 "SELECT * FROM [jahiacom:listChildren] " +
