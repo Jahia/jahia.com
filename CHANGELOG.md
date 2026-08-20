@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.3.0
+
+* Add reusable category-driven filtering for Jahia content lists, improve Blog discovery and pagination, and align resource cards with the updated interaction design.
+
 ## 1.2.1
 
 * Restore the Silver, Gold, and Diamond Partner level selector alongside the shared Integration partner option in Content Editor.
