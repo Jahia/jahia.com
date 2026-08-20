@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.3.6
+
+* Restore every available mapped category in LIVE even when unpublished taxonomy branches are absent from that workspace.
+
 ## 1.3.5
 
 * Complete the LIVE content category migration without allowing unrelated legacy nodes to roll back all mapped category assignments.
