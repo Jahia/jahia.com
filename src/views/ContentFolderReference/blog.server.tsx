@@ -37,12 +37,11 @@ const referencedNodes = (entry: JCRNodeWrapper, propertyName: string) => {
     .filter((node): node is JCRNodeWrapper => node !== null);
 };
 
-const hasCategoryBranch = (entry: JCRNodeWrapper, category: JCRNodeWrapper) =>
-  referencedNodes(entry, "j:defaultCategory").some(
-    (assigned) =>
-      assigned.getPath() === category.getPath() ||
-      assigned.getPath().startsWith(`${category.getPath()}/`),
-  );
+const categoryPaths = (entry: JCRNodeWrapper) =>
+  referencedNodes(entry, "j:defaultCategory").map((category) => category.getPath());
+
+const pathIsInBranch = (path: string, branchPath: string) =>
+  path === branchPath || path.startsWith(`${branchPath}/`);
 
 const configuredNodes = (nodes?: Array<JCRNodeWrapper | null>) =>
   (nodes || []).filter((node): node is JCRNodeWrapper => node !== null);
@@ -173,6 +172,9 @@ jahiaComponent(
           ).slice(0, 3);
     const featuredIds = new Set(featuredEntries.map((entry) => entry.getIdentifier()));
     const regularEntries = entries.filter((entry) => !featuredIds.has(entry.getIdentifier()));
+    const categoryPathsByEntry = new Map(
+      regularEntries.map((entry) => [entry.getIdentifier(), categoryPaths(entry)]),
+    );
     const request = renderContext.getRequest();
     const advancedRoots = blogAdvancedFilter
       ? nodeReferences(blogAdvancedFilter, "filter1Categories")
@@ -207,6 +209,7 @@ jahiaComponent(
                   id: node.getIdentifier(),
                   label: node.getDisplayableName(),
                   node,
+                  path: node.getPath(),
                   parentId:
                     index === 0 || !node.getParent().isNodeType("jnt:category")
                       ? ""
@@ -222,6 +225,7 @@ jahiaComponent(
                   id: node.getIdentifier(),
                   label: node.getDisplayableName(),
                   node,
+                  path: node.getPath(),
                   parentId: "",
                 }))
                 .sort((a, b) => a.label.localeCompare(b.label));
@@ -321,9 +325,12 @@ jahiaComponent(
             }}
           >
             {filteredEntries.map((entry) => {
+              const assignedPaths = categoryPathsByEntry.get(entry.getIdentifier()) || [];
               const values = advancedFilters.flatMap(({ name, options }) =>
                 options
-                  .filter(({ node }) => hasCategoryBranch(entry, node))
+                  .filter(({ path }) =>
+                    assignedPaths.some((assignedPath) => pathIsInBranch(assignedPath, path)),
+                  )
                   .map(({ id }) => `${name}=${id}`),
               );
               const matches = advancedFilters.every(({ name }) => {
