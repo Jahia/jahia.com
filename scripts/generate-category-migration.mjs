@@ -50,13 +50,13 @@ const outputUrl = new URL("../settings/category-migration-1.3.3.json", import.me
 const dockerMapping = JSON.parse(await readFile(outputUrl, "utf8"));
 const patchSource = await readFile(
   new URL(
-    "../settings/patches/1.3.3-04-restore-content-categories.started.groovy",
+    "../settings/patches/1.3.4-02-restore-content-categories.started.groovy",
     import.meta.url,
   ),
   "utf8",
 );
 const encodedBlock = patchSource.match(
-  /final String encodedMapping =([\s\S]*?)(?=\nfinal Map<String, List<Map<String, Object>>> mapping =)/,
+  /final String encodedMapping =([\s\S]*?)(?=\r?\nfinal Map<String, List<Map<String, Object>>> mapping =)/,
 )?.[1];
 const embeddedMapping = encodedBlock
   ? JSON.parse(
