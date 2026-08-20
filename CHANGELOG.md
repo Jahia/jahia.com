@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.3.5
+
+* Complete the LIVE content category migration without allowing unrelated legacy nodes to roll back all mapped category assignments.
+
 ## 1.3.4
 
 * Complete the content category migration for preproduction-specific Blog aliases and rerun the transactional restoration with a fresh patch identifier.
