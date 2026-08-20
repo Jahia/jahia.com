@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Image } from "../../../components/Image.jsx";
 import { publicBlogImage } from "./publicImages.js";
 import type { Props } from "./types.js";
+import { contentCategories } from "../../../utils/contentCategories.js";
 import classes from "./styles.module.css";
 
 export const BlogCard = ({
@@ -38,6 +39,9 @@ export const BlogCard = ({
   ].filter(Boolean);
   const url = `${buildNodeUrl(currentNode)}${query.length > 0 ? `?${query.join("&")}` : ""}`;
   const fallbackImage = image ? undefined : publicBlogImage(title, featured);
+  const displayedCategories = categories?.some(Boolean)
+    ? categories.filter((category): category is JCRNodeWrapper => category !== null)
+    : contentCategories(currentNode);
 
   return (
     <article className={clsx(classes.item, featured && classes.featured)}>
@@ -89,13 +93,11 @@ export const BlogCard = ({
         </div>
 
         {(summary || description) && <p className={classes.summary}>{summary || description}</p>}
-        {categories && categories.some(Boolean) && (
+        {displayedCategories.length > 0 && (
           <div className={classes.categories} aria-label={t("blogListing.categories")}>
-            {categories
-              .filter((category): category is JCRNodeWrapper => category !== null)
-              .map((category) => (
-                <span key={category.getIdentifier()}>{category.getDisplayableName()}</span>
-              ))}
+            {displayedCategories.map((category) => (
+              <span key={category.getIdentifier()}>{category.getDisplayableName()}</span>
+            ))}
           </div>
         )}
       </div>
