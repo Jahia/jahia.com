@@ -6,7 +6,8 @@
 
 .filterForm button,
 .filterForm a,
-.pagination a {
+.pagination a,
+.pagination button {
   --reflection: color-mix(in srgb, white 60%, transparent);
 
   position: relative;
@@ -180,7 +181,7 @@
 .filterForm a {
   min-height: 2.65rem;
   font: inherit;
-  border-radius: 0.4rem;
+  border-radius: 0.25rem;
 }
 
 .filterForm select {
@@ -200,22 +201,39 @@
 .filterActions a {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 0.8rem;
-  font-weight: 700;
+  justify-content: center;
+  min-width: 7.5rem;
+  padding: 0.75rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
   text-decoration: none;
 }
 
 .filterActions button {
-  color: white;
+  color: var(--jahia-a11y-blue);
   cursor: pointer;
-  background: var(--jahia-primary-color);
-  border: 1px solid var(--jahia-primary-color);
+  background: transparent;
+  border: 1px solid currentcolor;
 }
 
 .filterActions a {
-  color: var(--jahia-primary-color);
+  color: var(--jahia-a11y-blue);
   background: transparent;
   border: 1px solid currentcolor;
+}
+
+.filterActions button:hover,
+.filterActions button:focus-visible {
+  background: color-mix(in srgb, var(--jahia-a11y-blue) 10%, transparent);
+}
+
+.filterActions a:hover,
+.filterActions a:focus-visible {
+  text-decoration: none;
+  background: color-mix(in srgb, var(--jahia-a11y-blue) 10%, transparent);
 }
 
 .grid {
@@ -260,22 +278,50 @@
   justify-content: center;
   width: 100%;
   padding-top: 2.5rem;
-  font-size: 0.875rem;
 }
 
-.pagination a {
+.pagination a,
+.pagination button {
   padding: 0.65rem 1rem;
-  font-weight: 700;
-  color: var(--jahia-primary-color);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--jahia-a11y-blue);
+  text-transform: uppercase;
   text-decoration: none;
+  cursor: pointer;
+  background: transparent;
   border: 1px solid currentcolor;
-  border-radius: 999px;
+  border-radius: 0.25rem;
 }
 
 .pagination a:hover,
-.pagination a:focus-visible {
+.pagination a:focus-visible,
+.pagination button:hover:not(:disabled),
+.pagination button:focus-visible:not(:disabled) {
   color: white;
-  background: var(--jahia-primary-color);
+  background: var(--jahia-a11y-blue);
+}
+
+.pagination button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.pagination span {
+  font-size: 0.875rem;
+}
+
+.pagination select {
+  min-width: 6rem;
+  padding: 0.65rem 2.25rem 0.65rem 0.75rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.875rem;
+  color: var(--jahia-color);
+  background: var(--jahia-background);
+  border: 1px solid var(--jahia-border);
+  border-radius: 0.25rem;
 }
 
 @media (width <= 700px) {

@@ -667,6 +667,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/ibm-plex-mono@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource/ibm-plex-mono@npm:5.3.0"
+  checksum: 10c0/4aaf5a3c9efc7c32de4fa46ff3187ac63720904beab825f331ac01800038899761da23270f09d3fb5cff22f7cdc366904834854e2107229ad60833bba71c223d
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -3383,6 +3390,7 @@ __metadata:
     "@eslint/js": "npm:^9.39.1"
     "@floating-ui/react-dom": "npm:^2.1.6"
     "@fontsource-variable/plus-jakarta-sans": "npm:^5.2.8"
+    "@fontsource/ibm-plex-mono": "npm:^5.3.0"
     "@iconify-json/ri": "npm:^1.2.6"
     "@iconify-json/simple-icons": "npm:^1.2.60"
     "@jahia/javascript-modules-library": "npm:^1.2.0"

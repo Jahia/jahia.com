@@ -37,6 +37,7 @@
     "returnDirectory": "Retour à l’annuaire"
   },
   "blogListing": {
+    "categories": "Catégories",
     "featured": "À la une",
     "readArticle": "Lire l’article",
     "updatedOn": "Mis à jour le",
@@ -52,6 +53,7 @@
     "resetFilters": "Réinitialiser",
     "noResults": "Aucun article ne correspond à ces filtres.",
     "pagination": "Pagination du blog",
+    "selectPage": "Choisir une page",
     "previousPage": "Précédente",
     "nextPage": "Suivante",
     "pageCount": "Page {{page}} sur {{count}}"
@@ -64,7 +66,6 @@
   "resourceCarousel": {
     "eyebrow": "À découvrir",
     "defaultTitle": "Ressources associées",
-    "discover": "Découvrir",
     "previous": "Page précédente",
     "next": "Page suivante",
     "pagination": "Pagination du carrousel de ressources",
@@ -81,5 +82,12 @@
     },
     "hiddenInEdit": "Le carrousel de ressources est masqué en dehors du mode édition.",
     "emptyInEdit": "Le carrousel ne contient pas assez de contenus publiés correspondant aux critères."
+  },
+  "advancedListChildren": {
+    "all": "Tous",
+    "allNamed": "{{title}}",
+    "selectOption": "Sélectionner une option",
+    "apply": "Appliquer",
+    "reset": "Réinitialiser"
   }
 }

@@ -15,6 +15,7 @@ export const BlogCard = ({
     author,
     date,
     image,
+    "j:defaultCategory": categories,
     summary,
     useLastModifiedDate,
   },
@@ -88,7 +89,15 @@ export const BlogCard = ({
         </div>
 
         {(summary || description) && <p className={classes.summary}>{summary || description}</p>}
-        <span className={classes.readMore}>{t("blogListing.readArticle")}</span>
+        {categories && categories.some(Boolean) && (
+          <div className={classes.categories} aria-label={t("blogListing.categories")}>
+            {categories
+              .filter((category): category is JCRNodeWrapper => category !== null)
+              .map((category) => (
+                <span key={category.getIdentifier()}>{category.getDisplayableName()}</span>
+              ))}
+          </div>
+        )}
       </div>
     </article>
   );

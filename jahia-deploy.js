@@ -2,25 +2,17 @@
 // Fork of https://github.com/Jahia/javascript-modules/blob/f83383c9968a5c1a188c046ee14167c7e37e6d06/vite-plugin/bin/jahia-deploy.js
 // to support arbitrary authentication
 import * as fs from "node:fs";
-import { inspect, styleText } from "node:util";
+import { styleText } from "node:util";
 
-// Prepare the payload for the provisioning API
-// https://academy.jahia.com/documentation/jahia-cms/jahia-8.2/dev-ops/provisioning/provisioning-commands
 const body = new FormData();
-body.append(
-  "script",
-  JSON.stringify([
-    {
-      installOrUpgradeBundle: "package.tgz",
-      ignoreChecks: true,
-    },
-  ]),
-);
-body.append("file", new File([fs.readFileSync("./dist/package.tgz")], "package.tgz"));
+body.append("bundle", new File([fs.readFileSync("./dist/package.tgz")], "package.tgz"));
+body.append("ignoreChecks", "true");
+body.append("start", "true");
 
-// Send the payload to the Jahia provisioning API
-console.log("Deploying the package to Jahia...");
-const response = await fetch(new URL("/modules/api/provisioning", process.env.JAHIA_HOST), {
+const host = process.env.JAHIA_HOST || "http://localhost:8080";
+const deploymentUrl = new URL("modules/api/bundles", host.endsWith("/") ? host : `${host}/`);
+console.log(`Deploying the package to Jahia (${deploymentUrl})...`);
+const response = await fetch(deploymentUrl, {
   method: "POST",
   headers: {
     Authorization: process.env.JAHIA_AUTHORIZATION,
@@ -34,5 +26,6 @@ if (!response.ok) {
   process.exit(1);
 }
 
-const data = await response.json();
-console.log(inspect(data, { depth: Infinity, colors: true }));
+const result = await response.text();
+console.log(`Response type: ${response.headers.get("content-type") || "unknown"}`);
+console.log(result || styleText("green", "The module manager returned an empty success response."));

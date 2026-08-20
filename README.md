@@ -21,6 +21,46 @@ docker compose up --wait
 yarn dev
 ```
 
+### Local Docker environment
+
+The Compose stack starts Jahia 8.2 and PostgreSQL 16, then installs the modules listed in
+[`docker/provisioning.yml`](./docker/provisioning.yml). The first startup can take several minutes while Jahia initializes its repository and downloads the provisioned modules.
+
+Requirements:
+
+- Docker Desktop (or Docker Engine with Compose v2) must be installed and running;
+- ports `8080`, `9229`, and `5432` must be available by default;
+- allocate at least 4 GB of memory to Docker for a comfortable local startup.
+
+Validate and start the environment:
+
+```bash
+docker compose config --quiet
+docker compose up --wait
+docker compose ps
+```
+
+Jahia is then available at <http://localhost:8080> with the local development credentials `root` / `root1234`. Follow startup or provisioning failures with:
+
+```bash
+docker compose logs -f jahia
+```
+
+Jahia and PostgreSQL data are stored in named Docker volumes, so `docker compose down` preserves the local repository. To deliberately recreate a clean environment, remove those volumes before starting again:
+
+```bash
+docker compose down --volumes
+docker compose up --wait
+```
+
+Ports, passwords, or the Jahia image can be overridden for a single command without editing tracked files. For example:
+
+```bash
+JAHIA_PORT=8180 POSTGRES_PORT=5433 docker compose up --wait
+```
+
+Supported variables are `JAHIA_IMAGE`, `JAHIA_PORT`, `JAHIA_DEBUG_PORT`, `POSTGRES_PORT`, `JAHIA_DB_PASSWORD`, and `JAHIA_SUPER_USER_PASSWORD`. Do not store licenses, deployment authorization, or other production/preproduction secrets in the tracked `.env` file.
+
 Contributions to this repository are not explicitely forbidden, but are very unlikely to be accepted.
 
 ## Content Types

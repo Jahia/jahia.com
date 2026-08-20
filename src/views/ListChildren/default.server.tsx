@@ -1,5 +1,6 @@
 import { Island, jahiaComponent, Render, useJCRQuery } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { useTranslation } from "react-i18next";
 import Filter from "./Filter.client.jsx";
 import classes from "./styles.module.css";
 
@@ -11,147 +12,196 @@ interface Props {
   clearButtonLabel?: string;
 }
 
+interface FilterConfig {
+  name: string;
+  title: string;
+  options: Array<{ node: JCRNodeWrapper; parentId: string }>;
+}
+
 const pageAncestor = (node: JCRNodeWrapper): JCRNodeWrapper | undefined => {
   let current: JCRNodeWrapper | undefined = node;
-
   while (!current.isNodeType("jnt:page")) {
     if (current.getPath() === "/") return undefined;
     current = current.getParent() as JCRNodeWrapper;
   }
-
   return current;
 };
+
+const referencedCategories = (node: JCRNodeWrapper) => {
+  if (!node.hasProperty("j:defaultCategory")) return [];
+  return node
+    .getProperty("j:defaultCategory")
+    .getValues()
+    .map((value) => value.getNode() as JCRNodeWrapper | null)
+    .filter((category): category is JCRNodeWrapper => category !== null);
+};
+
+const isInBranch = (category: JCRNodeWrapper, branch: JCRNodeWrapper) =>
+  category.getPath() === branch.getPath() || category.getPath().startsWith(`${branch.getPath()}/`);
 
 jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:listChildren",
-    properties: {
-      "cache.requestParameters": "*", // Without it, server-side filtering would not work
-    },
+    properties: { "cache.requestParameters": "*" },
   },
   (
     { parent, nodeType = "jnt:page", categoryFilters, emptyState, clearButtonLabel }: Props,
     { currentNode, renderContext },
   ) => {
+    const { t } = useTranslation();
     const source = parent ?? pageAncestor(currentNode);
     if (!source) return null;
 
-    // Fall back to the containing page when an imported weak reference is missing.
     const children = useJCRQuery({
-      query: `
-        SELECT * FROM [${nodeType}]
-        WHERE ISDESCENDANTNODE(${JSON.stringify(source.getPath())})
-        ORDER BY [jcr:created] DESC
-      `,
+      query: `SELECT * FROM [${nodeType}]
+              WHERE ISDESCENDANTNODE(${JSON.stringify(source.getPath())})
+              ORDER BY [jcr:created] DESC`,
+    });
+    const childrenAndCategories = children.map((child) => {
+      server.render.addCacheDependency({ path: child.getPath() }, renderContext);
+      return { child, categories: referencedCategories(child) };
     });
 
-    // Retrieve all categories of all children
-    const allUsedCategories = new Set<string>();
-    const childrenAndCategories: Array<{ child: JCRNodeWrapper; categories: Set<string> }> = [];
-    for (const child of children) {
-      server.render.addCacheDependency({ path: child.getPath() }, renderContext);
-      if (!child.hasProperty("j:defaultCategory")) {
-        childrenAndCategories.push({ child, categories: new Set() });
-        continue;
-      }
-      const categories = new Set<string>();
-      for (const category of child.getProperty("j:defaultCategory").getValues()) {
-        const name = category.getNode()?.getName();
-        if (!name) continue; // j:defaultCategory can contain null values for deleted categories
-        allUsedCategories.add(name);
-        categories.add(name);
-      }
-      childrenAndCategories.push({ child, categories });
-    }
-
-    // Intersect categories from `categoryFilters` and the ones actually used by the children
-    const filters = new Map<JCRNodeWrapper, JCRNodeWrapper[]>();
-    const reverseCategoryMap = new Map<string, string>();
-    for (const categoryFilter of categoryFilters ?? []) {
-      if (!categoryFilter) continue;
-      server.render.addCacheDependency({ path: categoryFilter.getPath() }, renderContext);
-      const categoryList = [];
-      // Keep only the categories that are used by at least one child
-      for (const category of useJCRQuery({
-        query: `
-          SELECT * FROM [jnt:category]
-          WHERE ISDESCENDANTNODE(${JSON.stringify(categoryFilter.getPath())})
-        `,
-      })) {
-        server.render.addCacheDependency({ path: category.getPath() }, renderContext);
-        const name = category.getName();
-        if (allUsedCategories.has(name)) {
-          reverseCategoryMap.set(name, categoryFilter.getName());
-          categoryList.push(category);
-        }
-      }
-      if (categoryList.length > 0) {
-        filters.set(categoryFilter, categoryList);
-      }
-    }
-
-    // If the query parameters contain filters, extract them and apply them on the server
-    const requestParams = renderContext.getRequest().getParameterMap();
-    const params = new Map(
-      [...filters]
-        .map<
-          [string, string | null]
-        >(([filter]) => [filter.getName(), requestParams.containsKey(filter.getName()) ? requestParams.get(filter.getName())[0] : null])
-        .filter((param): param is [string, string] => param[1] !== null && param[1] !== ""),
+    const roots = (categoryFilters || [])
+      .filter((root): root is JCRNodeWrapper => root !== null)
+      .slice(0, 2);
+    const descendants = roots.flatMap((root) =>
+      useJCRQuery({
+        query: `SELECT * FROM [jnt:category]
+                WHERE ISDESCENDANTNODE(${JSON.stringify(root.getPath())})`,
+      }),
     );
+    const uniqueDescendants = [
+      ...new Map(descendants.map((node) => [node.getIdentifier(), node])).values(),
+    ];
+    const optionIsUsed = (option: JCRNodeWrapper) =>
+      childrenAndCategories.some(({ categories }) =>
+        categories.some((category) => isInBranch(category, option)),
+      );
+    const hierarchy = roots.length === 1;
+    const filters = (
+      hierarchy
+        ? Array.from({ length: 2 }, (_, index) => {
+            const root = roots[0];
+            if (!root) return null;
+            const nodes =
+              index === 0
+                ? uniqueDescendants.filter(
+                    (node) =>
+                      node.getParent().isNodeType("jnt:category") &&
+                      node.getParent().getIdentifier() === root.getIdentifier(),
+                  )
+                : uniqueDescendants;
+            const options = nodes
+              .filter(optionIsUsed)
+              .map((node) => ({
+                node,
+                parentId:
+                  index === 0 || !node.getParent().isNodeType("jnt:category")
+                    ? ""
+                    : node.getParent().getIdentifier(),
+              }))
+              .sort((a, b) =>
+                a.node.getDisplayableName().localeCompare(b.node.getDisplayableName()),
+              );
+            return options.length > 0
+              ? { name: `filter${index + 1}`, title: root.getDisplayableName(), options }
+              : null;
+          })
+        : roots.map((root, index) => {
+            const options = uniqueDescendants
+              .filter((node) => isInBranch(node, root) && optionIsUsed(node))
+              .map((node) => ({ node, parentId: "" }))
+              .sort((a, b) =>
+                a.node.getDisplayableName().localeCompare(b.node.getDisplayableName()),
+              );
+            return options.length > 0
+              ? { name: `filter${index + 1}`, title: root.getDisplayableName(), options }
+              : null;
+          })
+    ).filter((filter): filter is FilterConfig => filter !== null);
+
+    for (const node of [...roots, ...uniqueDescendants])
+      server.render.addCacheDependency({ path: node.getPath() }, renderContext);
+
+    const request = renderContext.getRequest();
+    const selected = new Map<string, string>();
+    filters.forEach(({ name, options }, index) => {
+      const requested = request.getParameter(name);
+      const parent = hierarchy && index > 0 ? selected.get(`filter${index}`) || "" : "";
+      selected.set(
+        name,
+        requested &&
+          options.some(
+            ({ node, parentId }) =>
+              node.getIdentifier() === requested && (!hierarchy || parentId === parent),
+          )
+          ? requested
+          : "",
+      );
+    });
 
     return (
       <Island component={Filter}>
-        {filters.size > 0 && (
-          <div className="_center-4" style={{ flexWrap: "wrap" }}>
-            {[...filters].map(([categoryPicker, categoryList]) => {
-              const name = categoryPicker.getName();
-              return (
-                <select key={categoryPicker.getIdentifier()} name={name} value={params.get(name)}>
-                  <option value="">{categoryPicker.getDisplayableName()}</option>
-                  {categoryList.map((category) => (
-                    <option key={category.getIdentifier()} value={category.getName()}>
-                      {category.getDisplayableName()}
+        {filters.length > 0 && (
+          <div className={classes.filterPanel}>
+            <div className={classes.filterFields} data-count={filters.length}>
+              {filters.map(({ name, title, options }, index) => (
+                <label
+                  key={name}
+                  data-hierarchy-level={hierarchy ? index : undefined}
+                  hidden={hierarchy && index > 0}
+                >
+                  <span data-category-title={hierarchy && index > 0 ? "" : undefined}>{title}</span>
+                  <select name={name} defaultValue={selected.get(name)}>
+                    <option value="">
+                      {!hierarchy || index === 0 ? t("advancedListChildren.selectOption") : title}
                     </option>
-                  ))}
-                </select>
-              );
-            })}
-            <noscript>
-              <input type="submit" style={{ marginTop: 0 }} />
-            </noscript>
+                    {options.map(({ node, parentId }) => (
+                      <option
+                        key={node.getIdentifier()}
+                        value={node.getIdentifier()}
+                        data-parent-id={parentId}
+                      >
+                        {node.getDisplayableName()}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+            <button type="reset">{clearButtonLabel || t("advancedListChildren.reset")}</button>
           </div>
         )}
 
         <div className={classes.grid}>
-          {childrenAndCategories.map(({ child, categories }) => (
-            <div
-              key={child.getIdentifier()}
-              data-categories={[...categories]
-                .filter((category) => reverseCategoryMap.has(category))
-                .map((category) => `${reverseCategoryMap.get(category)}=${category}`)
-                .join("&")}
-              hidden={
-                ![...filters].every(
-                  ([category]) =>
-                    !params.has(category.getName()) ||
-                    categories.has(params.get(category.getName())!),
-                )
-              }
-            >
-              <Render node={child} />
-            </div>
-          ))}
+          {childrenAndCategories.map(({ child, categories }) => {
+            const values = filters.flatMap(({ name, options }) =>
+              options
+                .filter(({ node }) => categories.some((category) => isInBranch(category, node)))
+                .map(({ node }) => `${name}=${node.getIdentifier()}`),
+            );
+            const hidden = filters.some(
+              ({ name }) =>
+                Boolean(selected.get(name)) && !values.includes(`${name}=${selected.get(name)}`),
+            );
+            return (
+              <div
+                key={child.getIdentifier()}
+                data-filter-values={values.join("|")}
+                hidden={hidden}
+              >
+                <Render node={child} />
+              </div>
+            );
+          })}
         </div>
 
         <div className={classes.emptyState}>
           {emptyState && (
             <div className="_richtext" dangerouslySetInnerHTML={{ __html: emptyState }} />
           )}
-          <p>
-            <button type="reset">{clearButtonLabel}</button>
-          </p>
         </div>
       </Island>
     );

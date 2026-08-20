@@ -1,16 +1,21 @@
 import { type FormEvent, type ReactNode, useEffect, useRef } from "react";
 import { updateCascadingSelects } from "../../components/CascadingSelects.client.jsx";
 
-const applyFilters = (form: HTMLFormElement) => {
-  const filters = [...form.querySelectorAll<HTMLSelectElement>("select")]
+const selectedFilters = (form: HTMLFormElement) =>
+  [...form.querySelectorAll<HTMLSelectElement>("select[data-filter]")]
     .filter((select) => select.value)
     .map((select) => `${select.name}=${select.value}`);
+
+const applyFilters = (form: HTMLFormElement) => {
+  const filters = selectedFilters(form);
+
   for (const child of form.querySelectorAll<HTMLElement>("[data-filter-values]")) {
     const values = new Set((child.dataset.filterValues || "").split("|").filter(Boolean));
     child.toggleAttribute("hidden", !filters.every((filter) => values.has(filter)));
   }
+
   const url = new URL(window.location.href);
-  for (const select of form.querySelectorAll<HTMLSelectElement>("select")) {
+  for (const select of form.querySelectorAll<HTMLSelectElement>("select[data-filter]")) {
     if (select.value) url.searchParams.set(select.name, select.value);
     else url.searchParams.delete(select.name);
   }
@@ -25,8 +30,11 @@ export default function Filter({ children }: { children: ReactNode }) {
   return (
     <form
       ref={ref}
-      className="_stack-8"
-      onChange={(event: FormEvent<HTMLFormElement>) => {
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        applyFilters(event.currentTarget);
+      }}
+      onChange={(event) => {
         updateCascadingSelects(event.currentTarget);
         applyFilters(event.currentTarget);
       }}
