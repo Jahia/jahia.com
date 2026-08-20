@@ -50,7 +50,7 @@ const outputUrl = new URL("../settings/category-migration-1.3.3.json", import.me
 const dockerMapping = JSON.parse(await readFile(outputUrl, "utf8"));
 const patchSource = await readFile(
   new URL(
-    "../settings/patches/1.3.5-01-restore-content-categories.started.groovy",
+    "../settings/patches/1.3.6-01-restore-content-categories.started.groovy",
     import.meta.url,
   ),
   "utf8",
