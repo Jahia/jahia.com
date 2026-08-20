@@ -2,7 +2,7 @@ import { readFile, writeFile } from "node:fs/promises";
 
 const jsonUrl = new URL("../settings/category-migration-1.3.3.json", import.meta.url);
 const patchUrl = new URL(
-  "../settings/patches/1.3.4-02-restore-content-categories.started.groovy",
+  "../settings/patches/1.3.5-01-restore-content-categories.started.groovy",
   import.meta.url,
 );
 const json = await readFile(jsonUrl, "utf8");
