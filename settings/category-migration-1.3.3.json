@@ -1,0 +1,2560 @@
+{
+  "blog": [
+    {
+      "name": "10-benefits-of-digital-asset-management-dam-in-2026",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/integrations/dam",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/integrations"
+      ]
+    },
+    {
+      "name": "10-effective-ways-to-enhance-web-accessibility",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "10-strategic-criteria-for-choosing-the-best-enterprise-cms",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "3-ways-2021-will-be-digitally-different",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "4-steps-to-personalize-your-customers-web-journey",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/customer_journey",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "5-actions-pour-optimiser-votre-referencement-seo",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "5-steps-to-set-up-a-site-factory",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "5-ways-dams-can-improve-digital-experience-creation",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/integrations/dam",
+        "/sites/systemsite/categories/topics/integrations"
+      ]
+    },
+    {
+      "name": "5-website-personalization-best-practices-plus-free-tool",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/personalization",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "8-best-alternatives-to-adobe-aem-in-2026-cms-dxp-compared",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/competitors"
+      ]
+    },
+    {
+      "name": "9-questions-to-ask-yourself-when-choosing-a-multisite-cms",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "a-streamlined-martech-stack-is-critical-to-digital-success",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/topics/technology/stack",
+        "/sites/systemsite/categories/topics/integrations"
+      ]
+    },
+    {
+      "name": "accessibility-testing-tools-web-applications",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "agentic-ai-what-your-cms-needs-in-2026",
+      "categoryPaths": [
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/content_management",
+        "/sites/systemsite/categories/topics/content_management/content_optimization",
+        "/sites/systemsite/categories/topics/content_management/content_strategy",
+        "/sites/systemsite/categories/topics/content_management/content_syndication",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "ai-to-know-before-poc",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "analyzing-system-performance-wit",
+      "categoryPaths": [
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/java",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "be-careful-who-you-trust-with-yo",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/security/compliance",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/security"
+      ]
+    },
+    {
+      "name": "best-acquia-alternatives-in-2026-enterprise-dxps-compared",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/competitors"
+      ]
+    },
+    {
+      "name": "best-drupal-alternatives-in-2026",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/competitors",
+        "/sites/systemsite/categories/topics/competitors/alternatives"
+      ]
+    },
+    {
+      "name": "blog-costs-of-dxp-suites",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "boost-seo-performances-semji-jahia",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/seo",
+        "/sites/systemsite/categories/topics/integrations"
+      ]
+    },
+    {
+      "name": "cdp-vs-dmp-key-differences-you-need-to-know",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/personalization/cdp"
+      ]
+    },
+    {
+      "name": "choosing-best-multilingual-cms",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/multilingual",
+        "/sites/systemsite/categories/topics/multilingual/localization",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "choosing-the-best-customer-data-platform-top-vendors-compared",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/personalization/cdp"
+      ]
+    },
+    {
+      "name": "cms-cloud-3-points-attention-migration",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/competitors/migration",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/cloud"
+      ]
+    },
+    {
+      "name": "cms-cloud-monitoring",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/cloud"
+      ]
+    },
+    {
+      "name": "cms-headless-vs-cms-traditional-which-is-best-for-your-brand",
+      "categoryPaths": ["/sites/systemsite/categories/topics/technology/headless_cms"]
+    },
+    {
+      "name": "cms-replatforming-project-overview",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/competitors",
+        "/sites/systemsite/categories/topics/competitors/migration"
+      ]
+    },
+    {
+      "name": "cms-security",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/security",
+        "/sites/systemsite/categories/topics/security/compliance"
+      ]
+    },
+    {
+      "name": "cms-vs-dxp-what-is-the-difference",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "comment-bien-evaluer-la-securite-de-votre-prochain-systeme-de-ge",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/security",
+        "/sites/systemsite/categories/topics/security/compliance",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/cloud"
+      ]
+    },
+    {
+      "name": "comment-choisir-une-plateforme-d-experience-digitale-dxp",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "conception-site-web-accessibilite",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility",
+        "/sites/systemsite/categories/topics/security/compliance"
+      ]
+    },
+    {
+      "name": "configuring-a-web-server-to-secu",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/security",
+        "/sites/systemsite/categories/topics/security/compliance"
+      ]
+    },
+    {
+      "name": "content-as-a-service",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/content_strategy",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/technology/headless_cms/api_headless"
+      ]
+    },
+    {
+      "name": "creating-a-progressive-web-app-in-2-weeks---part-1",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/technology/javascript",
+        "/sites/systemsite/categories/topics/technology"
+      ]
+    },
+    {
+      "name": "creating-a-progressive-web-app-in-2-weeks---part-2",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/technology/javascript",
+        "/sites/systemsite/categories/topics/technology"
+      ]
+    },
+    {
+      "name": "creer-une-experience-digitale-grace-a-votre-cms",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "customer-highlight---bnp-paribas",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "customizing-pickers-in-content-editor-4-1",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/topics/technology/java"
+      ]
+    },
+    {
+      "name": "dam-integrated-cms-content-management",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/integrations/dam"
+      ]
+    },
+    {
+      "name": "dam-vs-ged",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/topics/integrations/dam"
+      ]
+    },
+    {
+      "name": "data-from-the-ground-up",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/personalization/cdp"
+      ]
+    },
+    {
+      "name": "design-digital-customer-experience-strategy",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "did-you-know-open-source-free-gdpr-tools-can-help",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/security/compliance",
+        "/sites/systemsite/categories/topics/technology/open_source",
+        "/sites/systemsite/categories/topics/security"
+      ]
+    },
+    {
+      "name": "difficulties-of-content-re-purpo",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/content_management",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "digital-accessibility-the-first-step-towards-personalization",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/customer_journey",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "digital-enterprise-to-virtual-reality",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "digitalization-the-challenge-ahe",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "dont-put-less-content-on-your-mo",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "dxp-vs-cms-which-is-right-for-you",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "dxps-and-the-b2b-funnel",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "enterprise-cms-definition-features-and-key-benefits",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "enterprise-cms-vs-simple-cms-what-s-the-difference",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "extending-jahias-rest-api-with-s",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/headless_cms/api_headless",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/technology/java"
+      ]
+    },
+    {
+      "name": "extranet-solution-how-to-choose-the-right-platform-for-your-clie",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/portal",
+        "/sites/systemsite/categories/topics/portal/portal-extranet"
+      ]
+    },
+    {
+      "name": "fighting-spam-with-our-jahia-aki",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/security/compliance",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/topics/security"
+      ]
+    },
+    {
+      "name": "five-tricks-to-analyze-java-thread-dumps",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/technology/java",
+        "/sites/systemsite/categories/topics/technology"
+      ]
+    },
+    {
+      "name": "free-ai-powered-cms-migration-migrate-your-website-fast",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "gdpr-sovereignty-why-your-choice-of-cms-matters",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/security"
+      ]
+    },
+    {
+      "name": "gestion-contenu-cloud",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/cloud"
+      ]
+    },
+    {
+      "name": "global-accessibility",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "governance-csr-web-portal",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "headless-cms-paas-on-prem",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/technology/headless_cms/api_headless",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/cloud"
+      ]
+    },
+    {
+      "name": "headless-cms-personalization-adaptive-experiences",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/personalization/cdp",
+        "/sites/systemsite/categories/topics/technology/headless_cms"
+      ]
+    },
+    {
+      "name": "headless-cms-which-features-for-marketers",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/technology/headless_cms"
+      ]
+    },
+    {
+      "name": "headless-java-cms-in-depth-guide-for-developers",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/headless_cms",
+        "/sites/systemsite/categories/topics/technology/java"
+      ]
+    },
+    {
+      "name": "hippa-compliant-blog",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/security/compliance",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/security"
+      ]
+    },
+    {
+      "name": "how-can-the-jahia-dxp-platform-help-you-(ingrators-tips-pt-2)",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "how-integrators-can-design-the-ultimate-content-author-experienc",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/content_management"
+      ]
+    },
+    {
+      "name": "how-to-approach-a-migration-from-jahia-7-to-jahia-8",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/competitors/migration",
+        "/sites/systemsite/categories/topics/content_management",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "how-to-build-a-website-personalization-strategy",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/personalization"
+      ]
+    },
+    {
+      "name": "how-to-choose-the-optimal-platform-to-build-your-online-portal-a",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/portal",
+        "/sites/systemsite/categories/topics/portal/portal-extranet"
+      ]
+    },
+    {
+      "name": "how-to-create-an-extranet",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "how-to-elevate-your-cx-with-personas,-customer-journey-maps,-and",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "how-to-ensure-content-integrity",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/content_management/content_strategy",
+        "/sites/systemsite/categories/topics/security/compliance",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/security"
+      ]
+    },
+    {
+      "name": "how-to-justify-and-measure-investment-in-a-dxp",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "how-to-migrate-to-jahia-cloud-in-5-steps",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/flagship_website/corporate",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/cloud"
+      ]
+    },
+    {
+      "name": "hybrid-cms-benefits-for-content-management-merging-the-best-of-b",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/headless_cms"
+      ]
+    },
+    {
+      "name": "ia-conseils-frederic-cavazza",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "ia-seo-content-marketing-karine-abbou",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "iaas-paas-saas-understanding-the-differences-to-better-choose-yo",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/cloud",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/iaas",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/paas",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/saas"
+      ]
+    },
+    {
+      "name": "image-scaling-with-jahia-part-1",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/integrations/dam",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "in-2013-should-you-double-your-r",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "innovation-through-iteration",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/topics/technology/java"
+      ]
+    },
+    {
+      "name": "innovative-open-source-software",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/topics/technology/open_source"
+      ]
+    },
+    {
+      "name": "internal-search-engine-4-best-practices-to-improve-your-visitors",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/ux_cx",
+        "/sites/systemsite/categories/topics/technology/augmented_search"
+      ]
+    },
+    {
+      "name": "interview-three-waves-of-digital",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "intranet-vs-extranet-what-are-the-differences-and-how-do-you-cho",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/portal",
+        "/sites/systemsite/categories/topics/portal/portal-extranet"
+      ]
+    },
+    {
+      "name": "introducing-jahia-osgi-modules",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "introduction-a-graphql",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/headless_cms/api_headless",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "iphone-5-for-developers-and-cont",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "its-time-to-stack-up-not-suite-out",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/topics/technology/stack"
+      ]
+    },
+    {
+      "name": "jahia-amazon-web-service-aws-cloud",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/topics/security",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/saas"
+      ]
+    },
+    {
+      "name": "jahia-at-crm-day-efficy-2026-in-paris",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/integrations/crm"
+      ]
+    },
+    {
+      "name": "jahia-au-salon-souverainete-numerique-2026",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/solutions/security-and-compliance",
+        "/sites/systemsite/categories/topics/security/sovereignty"
+      ]
+    },
+    {
+      "name": "jahia-dx-and-amp-smoothly-match",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "jahia-dx-healthcheck-probe",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/ux_cx",
+        "/sites/systemsite/categories/topics/technology/java",
+        "/sites/systemsite/categories/topics/technology"
+      ]
+    },
+    {
+      "name": "jahia-from-the-field-1-product-updates-what-s-next",
+      "categoryPaths": [
+        "/sites/systemsite/categories/blogTypes/product-updates",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog"
+      ]
+    },
+    {
+      "name": "jahia-front-end-stack-javascript-developers",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/topics/technology/javascript"
+      ]
+    },
+    {
+      "name": "jahia-is-going-cloud-first",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/cloud"
+      ]
+    },
+    {
+      "name": "jahia-joins-la-french-tech",
+      "categoryPaths": [
+        "/sites/systemsite/categories/blogTypes/news",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/security/sovereignty"
+      ]
+    },
+    {
+      "name": "jahia-module-in-javascript-in-record",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "jahia-s-new-extendable-user-interface-in-action",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/ux_cx",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "jahia-s-open-source-dxp-portal-development",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/portal",
+        "/sites/systemsite/categories/topics/technology/java"
+      ]
+    },
+    {
+      "name": "java-based-cms-built-on-apache-tomcat",
+      "categoryPaths": [
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/java"
+      ]
+    },
+    {
+      "name": "let-customers-decide-in-a-push-m",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "leveraging-the-island-architecture-in-jahia-cms",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/topics/technology/javascript"
+      ]
+    },
+    {
+      "name": "mobile-digitization",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "more-insights-about-ux",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "nasa-is-publishing-from-space-their-cms-is-jahia",
+      "categoryPaths": [
+        "/sites/systemsite/categories/blogTypes/news",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "new-disruption-in-digital-market",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "nps-and-jahia",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/personalization/cdp",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "on-driving-digital-leadership",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "online-reputation-second-chance",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "open-source-cms-what-is-it-and-do-i-need-it",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/content_management",
+        "/sites/systemsite/categories/topics/technology/open_source"
+      ]
+    },
+    {
+      "name": "open-source-digital-experience-platforms-the-key-to-great-custom",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/technology/open_source"
+      ]
+    },
+    {
+      "name": "oshyn---5-things-about-jahia-65",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/technology/java",
+        "/sites/systemsite/categories/topics/technology"
+      ]
+    },
+    {
+      "name": "outils-strategie-omnicanale",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/personalization",
+        "/sites/systemsite/categories/topics/personalization/omnichannel_personalization"
+      ]
+    },
+    {
+      "name": "paroles-de-client-apec",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/ux_cx",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "paroles-de-clients-lyon-metropole-habitat-",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "performance-analyser-module",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "performance-sizing-the-jackrabbi",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/flagship_website/corporate",
+        "/sites/systemsite/categories/topics/technology/java",
+        "/sites/systemsite/categories/topics/technology"
+      ]
+    },
+    {
+      "name": "personalization-7-key-issues",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "personalization-strategy-achieving-personalization-at-scale",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/customer_journey",
+        "/sites/systemsite/categories/topics/personalization"
+      ]
+    },
+    {
+      "name": "playbook-ai-cms",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "portail-client-b2b",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/portal",
+        "/sites/systemsite/categories/topics/portal/portal-extranet"
+      ]
+    },
+    {
+      "name": "portail-fournisseur",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/portal",
+        "/sites/systemsite/categories/topics/portal/portal-extranet"
+      ]
+    },
+    {
+      "name": "portail-libre-service",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/portal",
+        "/sites/systemsite/categories/topics/portal/portal-extranet"
+      ]
+    },
+    {
+      "name": "portal-management-guide",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/portal",
+        "/sites/systemsite/categories/topics/portal/portal-extranet"
+      ]
+    },
+    {
+      "name": "prioritize-operational-data-with-jahia's-embedded-cdp",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/personalization/cdp"
+      ]
+    },
+    {
+      "name": "prioritize-operational-data-with-jahia&#x27;s-embedded-cdp",
+      "categoryPaths": [
+        "/sites/systemsite/categories/topics/personalization/cdp",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "projet-web-quelles-competences-recruter",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "putting-the-social-in-cio",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "quel-est-votre-ecosysteme-dexperience-client",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "quick-mac-tip--install-java-15-o",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "reevaluate-your-digital-strategy",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "rule-engine-fun-in-jahia-2",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/customer_journey",
+        "/sites/systemsite/categories/topics/flagship_website/corporate",
+        "/sites/systemsite/categories/topics/personalization"
+      ]
+    },
+    {
+      "name": "seo-2026-cms-google-ai-overviews-generative-search",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/seo",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "seo-en-2026-votre-cms-est-il-pret-pour-google-ai-overviews-et-la",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/seo",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "site-statique-vs-dynamique-quelle-difference",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/topics/technology/java"
+      ]
+    },
+    {
+      "name": "social-login-into-jahia-dx",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/security",
+        "/sites/systemsite/categories/topics/security/compliance"
+      ]
+    },
+    {
+      "name": "strengthening-your-consumer-brand-relationship-starts-with-first",
+      "categoryPaths": [
+        "/sites/systemsite/categories/topics/personalization/cdp",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "the-emerging-cmo-focus",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "the-journey-of-a-design-system",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "the-marketing-factory---salesfor",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/topics/integrations/crm"
+      ]
+    },
+    {
+      "name": "the-power-of-multisite-cms-benefits-key-features-and-tips",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "the-top-customer-data-platform-use-cases",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/personalization/cdp"
+      ]
+    },
+    {
+      "name": "three-types-of-cdp-data-demographic-transactional-and-behavioral",
+      "categoryPaths": [
+        "/sites/systemsite/categories/topics/personalization/cdp",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "tips-and-tricks-for-analyzing-java-virtual-machine",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/technology/java",
+        "/sites/systemsite/categories/topics/technology"
+      ]
+    },
+    {
+      "name": "top-7-alternatives-to-sitecore-in-2025",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/competitors"
+      ]
+    },
+    {
+      "name": "top-8-des-alternatives-a-liferay-en-2025",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/competitors"
+      ]
+    },
+    {
+      "name": "transform-your-customer-portal-into-a-true-personalization-platf",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/customer_journey",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "under-the-hood-hydrating-react-components-in-java",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/topics/technology/java"
+      ]
+    },
+    {
+      "name": "understanding-headless-cms-a-comprehensive-overview-including-pr",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/headless_cms/api_headless"
+      ]
+    },
+    {
+      "name": "user-friendly-cms-javascript-java",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/flagship_website/corporate",
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/topics/technology/javascript"
+      ]
+    },
+    {
+      "name": "using-digital-asset-management-integrations",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/topics/integrations/dam"
+      ]
+    },
+    {
+      "name": "using-digital-experience-manager",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/headless_cms/api_headless",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "using-polymer-elements-as-native",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/flagship_website/corporate",
+        "/sites/systemsite/categories/topics/technology/javascript",
+        "/sites/systemsite/categories/topics/technology"
+      ]
+    },
+    {
+      "name": "vérité-headless-hybrid-CMS",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/headless_cms",
+        "/sites/systemsite/categories/topics/technology/headless_cms/api_headless"
+      ]
+    },
+    {
+      "name": "webperf-media",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/topics/integrations/dam"
+      ]
+    },
+    {
+      "name": "website-personalization-strategy-examples-and-best-practices-to",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/personalization"
+      ]
+    },
+    {
+      "name": "website-securing-your-website-and-seo",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "welcome-to-jahia-blog-v15",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/security/legal"
+      ]
+    },
+    {
+      "name": "what-do-we-mean-by-making-digital-simpler",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "what-is-a-cdp",
+      "categoryPaths": [
+        "/sites/systemsite/categories/topics/personalization/cdp",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "what-is-a-composable-dxp",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "what-is-a-content-management-system",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/content_management"
+      ]
+    },
+    {
+      "name": "what-is-a-digital-experience-platform-(dxp)",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "what-is-a-dynamic-website",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "what-is-a-true-dxp",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/pageTypes/blog_post"
+      ]
+    },
+    {
+      "name": "what-is-a-web-portal-update-2024",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/portal",
+        "/sites/systemsite/categories/topics/portal/portal-extranet"
+      ]
+    },
+    {
+      "name": "what-is-an-accessible-cms",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "what-is-an-ai-cms",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "what-is-cloud-cms",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/cloud"
+      ]
+    },
+    {
+      "name": "what-is-content-architecture-and-why-does-it-matter",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management",
+        "/sites/systemsite/categories/topics/content_management/marketing"
+      ]
+    },
+    {
+      "name": "what-is-digital-asset-management-dam",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/topics/integrations/dam"
+      ]
+    },
+    {
+      "name": "what-is-enterprise-web-development",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "what-is-software-security",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/security",
+        "/sites/systemsite/categories/topics/security/compliance"
+      ]
+    },
+    {
+      "name": "what-is-the-content-lifecycle",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/content_management",
+        "/sites/systemsite/categories/topics/content_management/marketing"
+      ]
+    },
+    {
+      "name": "why-is-no-java-cms-based-on-spring-or-spring-boot",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology",
+        "/sites/systemsite/categories/topics/technology/java"
+      ]
+    },
+    {
+      "name": "why-jahia-is-the-best-platform-for-insurance",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "why-jahia-is-the-enterprise-headless-cms-choice-for-businesses",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/multisite",
+        "/sites/systemsite/categories/topics/technology/headless_cms/api_headless"
+      ]
+    },
+    {
+      "name": "why-you-should-assess-your-digital-experience-stack-dxs",
+      "categoryPaths": [
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/content_management/ux_cx",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/technology/stack"
+      ]
+    },
+    {
+      "name": "working-with-properties-in-dx",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/technology/java",
+        "/sites/systemsite/categories/topics/technology"
+      ]
+    },
+    {
+      "name": "workplace-wisdom---top-10-tips-t",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "xp-platform",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "your-dxp-is-a-valuable-data-source",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/personalization/cdp"
+      ]
+    }
+  ],
+  "customerStories": [
+    {
+      "name": "ag2r-la-mondiale",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/insurance",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/enterprise_web_portal",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "arkema",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/industry",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/global_presence",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "arkema-integrating-an-enterprise-pim",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/industry",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/security-and-compliance",
+        "/sites/systemsite/categories/topics/integrations/pim"
+      ]
+    },
+    {
+      "name": "arkema-multisite-and-multilingual-content-management",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/industry",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/global_presence",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "ascensus",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/finance",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/content_management"
+      ]
+    },
+    {
+      "name": "belambra-clubs",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/hospitality",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/global_presence",
+        "/sites/systemsite/categories/topics/multilingual"
+      ]
+    },
+    {
+      "name": "ben-jerry-s",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/retail",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/global_presence",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "chirec",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/healthcare",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/content_management"
+      ]
+    },
+    {
+      "name": "covea",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/insurance",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/multibrand"
+      ]
+    },
+    {
+      "name": "credit-agricole-consumer-finance",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/finance",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/security",
+        "/sites/systemsite/categories/topics/technology/java"
+      ]
+    },
+    {
+      "name": "cross-case-service-portal",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/enterprise_web_portal",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "european-broadcasting-union-ebu",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/media",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/cloud_and_security",
+        "/sites/systemsite/categories/topics/technology/cloud_based_cms/cloud"
+      ]
+    },
+    {
+      "name": "european-synchrotron-radiation-facility-esrf",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/government",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "france-travail",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/government",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "french-national-old-age-insurance-fund-assurance-retraite",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/portal",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/industry/insurance",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations"
+      ]
+    },
+    {
+      "name": "la-mutuelle-nationale-des-hospitaliers-mnh",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/healthcare",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/integrations"
+      ]
+    },
+    {
+      "name": "maaf",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/insurance",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "macom",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/manufacturing",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "netsmart",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/healthcare",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/enterprise_web_portal",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "rte-service-portal",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/energy",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/enterprise_web_portal",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "socomec",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/industry",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/portal/intranet"
+      ]
+    },
+    {
+      "name": "sompo",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/insurance",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/global_presence",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "the-european-parliament",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/government",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "ucanss",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/insurance",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "ucanss-making-accessibility-sustainable",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/insurance",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "ucanss-web-accessibility",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/insurance",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "Unil",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/education",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story"
+      ]
+    },
+    {
+      "name": "user-experience-and-customer-portal",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/industry",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/enterprise_web_portal",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "virbac",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/healthcare",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/flagship_website"
+      ]
+    },
+    {
+      "name": "wallonia",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/government",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/topics/multilingual"
+      ]
+    },
+    {
+      "name": "xerox-fittle",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/manufacturing",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/enterprise_web_portal",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "smith-drugs",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/healthcare",
+        "/sites/systemsite/categories/pageTypes/case_study",
+        "/sites/systemsite/categories/resourcestypes/customer-story",
+        "/sites/systemsite/categories/solutions/enterprise_web_portal",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "name": "10-astuces-pour-reussir-avec-un-cms-headless",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/technology/headless_cms"
+      ]
+    },
+    {
+      "name": "10-warning-signs-you-need-to-re-evaluate-your-digital-strategy",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/infographics_page",
+        "/sites/systemsite/categories/resourcestypes/infography",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/marketing"
+      ]
+    },
+    {
+      "name": "4-conseils-pour-monter-une-usine-a-sites",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "5-actions-faciles-pour-personnaliser-l-experience-visiteur",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "a-comprehensive-guide-to-customer-data-platforms-1",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/whitepaper_page",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/personalization/cdp"
+      ]
+    },
+    {
+      "name": "accessibilite-web-une-obligation-des-juin-2025",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "actionable-insights-in-a-digitally-dominant-world",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "ameliorer-la-gestion-des-demandes-locataires-grace-a-un-portail",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/enterprise_web_portal",
+        "/sites/systemsite/categories/topics/integrations/crm"
+      ]
+    },
+    {
+      "name": "ameliorez-vos-relations-clients-grace-customer-data-platform",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/security-and-compliance",
+        "/sites/systemsite/categories/topics/personalization/cdp"
+      ]
+    },
+    {
+      "name": "ars-logica-analysis-and-discussion",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/topics/competitors",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "attract-engage-convert-the-winning-trio-for-digital-growth",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/personalization"
+      ]
+    },
+    {
+      "name": "augmented-search-fr-webinar",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/integrations",
+        "/sites/systemsite/categories/topics/technology/augmented_search"
+      ]
+    },
+    {
+      "name": "augmented-search-jahia-8",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/video_page",
+        "/sites/systemsite/categories/resourcestypes/video",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/technology/augmented_search"
+      ]
+    },
+    {
+      "name": "cms-et-dam-webinar",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/topics/content_management/ux_cx",
+        "/sites/systemsite/categories/topics/integrations/dam"
+      ]
+    },
+    {
+      "name": "cms-ou-dxp-identifier-la-plateforme",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "comment-booster-vos-conversions-sans-competences-techniques",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/whitepaper_page",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/personalization"
+      ]
+    },
+    {
+      "name": "comment-exploiter-les-donnees-de-votre-crm-dans-une-dxp",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/integrations"
+      ]
+    },
+    {
+      "name": "contenu-personnalise-avec-jahia-et-graphql",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/personalization"
+      ]
+    },
+    {
+      "name": "create-optimal-digital-experiences",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "customer-data-s-critical-impact-on-the-dxp-landscape",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "data-privacy-in-a-post-gdpr-world",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/industry",
+        "/sites/systemsite/categories/pageTypes/whitepaper_page",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/solutions/security-and-compliance",
+        "/sites/systemsite/categories/topics/security/compliance/gdpr"
+      ]
+    },
+    {
+      "name": "developpez-ia-agentique-jahia",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/video_page",
+        "/sites/systemsite/categories/resourcestypes/video",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "dxp-deconstructed-what-a-digital-experience-platform",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/infographics_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/infography",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "e-commerce-comment-construire-un-parcours-utilisateur-optimal",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "empowering-your-digital-journey",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "experiences-personnalisees-ramper-marcher-courir",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "guide-accessibilite-web",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/whitepaper_page",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "guide-complet-sur-les-donnees-clients-arme-secrete-du-marketing",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/personalization/data_privacy"
+      ]
+    },
+    {
+      "name": "headless-webinar",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/topics/technology/headless_cms"
+      ]
+    },
+    {
+      "name": "how-b2b-marketers-use-jahia",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/video_page",
+        "/sites/systemsite/categories/resourcestypes/video",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/marketing"
+      ]
+    },
+    {
+      "name": "how-b2b-marketers-use-jahia-1",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/video",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/video_page"
+      ]
+    },
+    {
+      "name": "how-does-your-cms-fit-in-your-digital-experience-stack",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "inclusion-numerique-et-si-votre-site-s-adaptait-a-votre-audience",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "integrate-your-design-system-into-jahia",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/video_page",
+        "/sites/systemsite/categories/resourcestypes/video",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "integrer-ia-cms-2025",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/whitepaper_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/topics/content_management",
+        "/sites/systemsite/categories/topics/technology/ai"
+      ]
+    },
+    {
+      "name": "it-security-checklist",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/whitepaper_page",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/solutions/cloud_and_security",
+        "/sites/systemsite/categories/topics/security"
+      ]
+    },
+    {
+      "name": "jahia-en-5-minutes-le-cms-souverain-pour-creer-vos-sites-web",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/video_page",
+        "/sites/systemsite/categories/resourcestypes/video",
+        "/sites/systemsite/categories/topics/cms"
+      ]
+    },
+    {
+      "name": "javascript-modules-front-end-possibilities-jsx-react",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/technology"
+      ]
+    },
+    {
+      "name": "jcontent-overview",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/video_page",
+        "/sites/systemsite/categories/resourcestypes/video",
+        "/sites/systemsite/categories/solutions/omnichannel_experiences",
+        "/sites/systemsite/categories/topics/content_management"
+      ]
+    },
+    {
+      "name": "jexperience-overview",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/video_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/video",
+        "/sites/systemsite/categories/topics/flagship_website/corporate"
+      ]
+    },
+    {
+      "name": "les-directeurs-marketing-et-les-directeurs-informatiques",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/marketing"
+      ]
+    },
+    {
+      "name": "performances-cookieless-rgpd",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/whitepaper_page",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/solutions/security-and-compliance",
+        "/sites/systemsite/categories/topics/security/compliance/gdpr"
+      ]
+    },
+    {
+      "name": "personnalisez-vos-parcours-clients",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/security-and-compliance",
+        "/sites/systemsite/categories/topics/multisite",
+        "/sites/systemsite/categories/topics/personalization"
+      ]
+    },
+    {
+      "name": "portail-connecte-au-crm-un-suivi-locataire-simplifie-une-relatio",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/enterprise_web_portal",
+        "/sites/systemsite/categories/topics/integrations/crm",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "quand-le-digital-devient-le-socle-une-approche-customer-centric",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/ux_cx",
+        "/sites/systemsite/categories/topics/dxp",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "react-pwa-demo",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/video_page",
+        "/sites/systemsite/categories/resourcestypes/video",
+        "/sites/systemsite/categories/solutions/security-and-compliance",
+        "/sites/systemsite/categories/topics/technology/pwa",
+        "/sites/systemsite/categories/topics/technology/react"
+      ]
+    },
+    {
+      "name": "refonte-site-web-pensez-multisite-multilingue-coherence-marque",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/multilingual",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "retour-d-experience-unil-comment-reussir-sa-refonte-multisite",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/ux_cx",
+        "/sites/systemsite/categories/topics/multisite"
+      ]
+    },
+    {
+      "name": "seizing-the-digital-experience-opportunity-why-the-marketing",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/industry",
+        "/sites/systemsite/categories/pageTypes/whitepaper_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "seo-conversion-strategie-acquisition",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "the-dxp-market-how-to-accelerate-and-simplify",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/industry",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "top-5-ways-to-improve-your-customer-s-digital-experience",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/infographics_page",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/ux_cx"
+      ]
+    },
+    {
+      "name": "tout-savoir-sur-la-personnalisation",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/infographics_page",
+        "/sites/systemsite/categories/resourcestypes/infography",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/personalization"
+      ]
+    },
+    {
+      "name": "turn-your-cms-into-a-dxp",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/topics/cms",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    },
+    {
+      "name": "waf-securiser-sites-web",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/whitepaper_page",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/solutions/security-and-compliance",
+        "/sites/systemsite/categories/topics/security"
+      ]
+    },
+    {
+      "name": "web-accessibility-checklist",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/infographics_page",
+        "/sites/systemsite/categories/resourcestypes/infography",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "web-accessibility-usa",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/whitepaper_page",
+        "/sites/systemsite/categories/resourcestypes/whitepaper",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/web_accessibility"
+      ]
+    },
+    {
+      "name": "web-portal-project-choose-the-right-approach-with-decision",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/infographics_page",
+        "/sites/systemsite/categories/resourcestypes/infography",
+        "/sites/systemsite/categories/solutions/enterprise_web_portal",
+        "/sites/systemsite/categories/topics/portal"
+      ]
+    },
+    {
+      "name": "webperfs-seo-ux",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/webinar_page",
+        "/sites/systemsite/categories/resourcestypes/webinar",
+        "/sites/systemsite/categories/solutions/personalized_websites",
+        "/sites/systemsite/categories/topics/content_management/marketing",
+        "/sites/systemsite/categories/topics/content_management/seo"
+      ]
+    },
+    {
+      "name": "what-is-a-dxp",
+      "categoryPaths": [
+        "/sites/systemsite/categories/industry/tech",
+        "/sites/systemsite/categories/pageTypes/video_page",
+        "/sites/systemsite/categories/products/enterprise_cms_and_dxp_for_organizations",
+        "/sites/systemsite/categories/resourcestypes/video",
+        "/sites/systemsite/categories/topics/dxp"
+      ]
+    }
+  ]
+}
