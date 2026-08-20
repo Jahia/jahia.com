@@ -28,12 +28,12 @@ export const BlogCard = ({
   currentNode: JCRNodeWrapper;
   locale: string;
   featured?: boolean;
-  listingState?: { cluster?: string; theme?: string; page?: string };
+  listingState?: { filter1?: string; filter2?: string; page?: string };
 }) => {
   const { t } = useTranslation();
   const query = [
-    listingState?.cluster && `cluster=${encodeURIComponent(listingState.cluster)}`,
-    listingState?.theme && `theme=${encodeURIComponent(listingState.theme)}`,
+    listingState?.filter1 && `filter1=${encodeURIComponent(listingState.filter1)}`,
+    listingState?.filter2 && `filter2=${encodeURIComponent(listingState.filter2)}`,
     listingState?.page && `blogPage=${encodeURIComponent(listingState.page)}`,
   ].filter(Boolean);
   const url = `${buildNodeUrl(currentNode)}${query.length > 0 ? `?${query.join("&")}` : ""}`;
@@ -107,7 +107,7 @@ jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:blogEntry",
-    properties: { "cache.requestParameters": "cluster,theme,blogPage" },
+    properties: { "cache.requestParameters": "filter1,filter2,blogPage" },
   },
   (props: Props, { currentNode, currentResource, renderContext }) => {
     const request = renderContext.getRequest();
@@ -118,8 +118,8 @@ jahiaComponent(
         currentNode={currentNode}
         locale={currentResource.getLocale().getLanguage()}
         listingState={{
-          cluster: request.getParameter("cluster") || undefined,
-          theme: request.getParameter("theme") || undefined,
+          filter1: request.getParameter("filter1") || undefined,
+          filter2: request.getParameter("filter2") || undefined,
           page: request.getParameter("blogPage") || undefined,
         }}
       />

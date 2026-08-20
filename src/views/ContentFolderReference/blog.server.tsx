@@ -105,7 +105,7 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jnt:contentFolderReference",
     name: "blog",
-    properties: { "cache.requestParameters": "*" },
+    properties: { "cache.requestParameters": "filter1,filter2,blogPage" },
   },
   (
     {

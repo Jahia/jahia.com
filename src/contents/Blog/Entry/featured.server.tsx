@@ -17,8 +17,8 @@ jahiaComponent(
         currentNode={currentNode}
         locale={currentResource.getLocale().getLanguage()}
         listingState={{
-          cluster: request.getParameter("cluster") || undefined,
-          theme: request.getParameter("theme") || undefined,
+          filter1: request.getParameter("filter1") || undefined,
+          filter2: request.getParameter("filter2") || undefined,
           page: request.getParameter("blogPage") || undefined,
         }}
         featured

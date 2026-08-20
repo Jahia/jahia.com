@@ -1,4 +1,10 @@
-import { Island, jahiaComponent, Render, useJCRQuery } from "@jahia/javascript-modules-library";
+import {
+  Island,
+  jahiaComponent,
+  Render,
+  server,
+  useJCRQuery,
+} from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
 import Filter from "./Filter.client.jsx";
@@ -43,7 +49,7 @@ jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:listChildren",
-    properties: { "cache.requestParameters": "*" },
+    properties: { "cache.requestParameters": "filter1,filter2" },
   },
   (
     { parent, nodeType = "jnt:page", categoryFilters, emptyState, clearButtonLabel }: Props,
