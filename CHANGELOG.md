@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.3.2
+
+* Optimize Blog category filtering by resolving each article's category references once instead of repeating JCR reads for every filter option.
+
 ## 1.3.1
 
 * Fix the 1.3.0 server rendering failure in Advanced filtered list and ListChildren, preserve Blog filter state, and restore stable card layout and cache behavior.
