@@ -9,6 +9,7 @@ import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
 import Filter from "./Filter.client.jsx";
 import classes from "./styles.module.css";
+import { availableCategories, contentCategories } from "../../utils/contentCategories.js";
 
 interface Props {
   parent?: JCRNodeWrapper;
@@ -31,15 +32,6 @@ const pageAncestor = (node: JCRNodeWrapper): JCRNodeWrapper | undefined => {
     current = current.getParent() as JCRNodeWrapper;
   }
   return current;
-};
-
-const referencedCategories = (node: JCRNodeWrapper) => {
-  if (!node.hasProperty("j:defaultCategory")) return [];
-  return node
-    .getProperty("j:defaultCategory")
-    .getValues()
-    .map((value) => value.getNode() as JCRNodeWrapper | null)
-    .filter((category): category is JCRNodeWrapper => category !== null);
 };
 
 const isInBranch = (category: JCRNodeWrapper, branch: JCRNodeWrapper) =>
@@ -66,12 +58,19 @@ jahiaComponent(
     });
     const childrenAndCategories = children.map((child) => {
       server.render.addCacheDependency({ path: child.getPath() }, renderContext);
-      return { child, categories: referencedCategories(child) };
+      return { child, categories: contentCategories(child) };
     });
 
-    const roots = (categoryFilters || [])
+    const configuredRoots = (categoryFilters || [])
       .filter((root): root is JCRNodeWrapper => root !== null)
       .slice(0, 2);
+    const fallbackPaths = source.getPath().includes("/home/customer-stories")
+      ? ["/sites/systemsite/categories/industry", "/sites/systemsite/categories/topics"]
+      : source.getPath().includes("/home/resources/livres-blancs-videos-autres")
+        ? ["/sites/systemsite/categories/resourcestypes", "/sites/systemsite/categories/topics"]
+        : [];
+    const roots =
+      configuredRoots.length > 0 ? configuredRoots : availableCategories(source, fallbackPaths);
     const descendants = roots.flatMap((root) =>
       useJCRQuery({
         query: `SELECT * FROM [jnt:category]

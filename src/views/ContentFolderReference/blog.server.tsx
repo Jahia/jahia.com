@@ -11,6 +11,7 @@ import CascadingSelects from "../../components/CascadingSelects.client.jsx";
 import BlogGrid from "./BlogGrid.client.jsx";
 import FeaturedBlogCarousel from "./FeaturedBlogCarousel.client.jsx";
 import classes from "./styles.module.css";
+import { contentCategories } from "../../utils/contentCategories.js";
 
 interface Props {
   "j:node"?: JCRNodeWrapper;
@@ -38,7 +39,7 @@ const referencedNodes = (entry: JCRNodeWrapper, propertyName: string) => {
 };
 
 const categoryPaths = (entry: JCRNodeWrapper) =>
-  referencedNodes(entry, "j:defaultCategory").map((category) => category.getPath());
+  contentCategories(entry).map((category) => category.getPath());
 
 const pathIsInBranch = (path: string, branchPath: string) =>
   path === branchPath || path.startsWith(`${branchPath}/`);

@@ -9,6 +9,7 @@ import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
 import Filter from "./Filter.client.jsx";
 import classes from "./styles.module.css";
+import { contentCategories } from "../../utils/contentCategories.js";
 
 interface Props {
   parent?: JCRNodeWrapper;
@@ -41,15 +42,6 @@ interface FilterConfig {
 
 const isInCategoryBranch = (category: JCRNodeWrapper, root: JCRNodeWrapper) =>
   category.getPath() === root.getPath() || category.getPath().startsWith(`${root.getPath()}/`);
-
-const referencedNodes = (node: JCRNodeWrapper, propertyName: string) => {
-  if (!node.hasProperty(propertyName)) return [];
-  const property = node.getProperty(propertyName);
-  const values = property.isMultiple() ? property.getValues() : [property.getValue()];
-  return values
-    .map((value) => value.getNode() as JCRNodeWrapper | null)
-    .filter((value): value is JCRNodeWrapper => value !== null);
-};
 
 const pageAncestor = (node: JCRNodeWrapper): JCRNodeWrapper | undefined => {
   let current: JCRNodeWrapper | undefined = node;
@@ -208,7 +200,7 @@ jahiaComponent(
 
         <div className={classes.grid}>
           {childrenAndCategories.map(({ child }) => {
-            const assignedCategories = referencedNodes(child, "j:defaultCategory");
+            const assignedCategories = contentCategories(child);
             const values = categoryFilters.flatMap(({ name, options }) =>
               options
                 .filter(({ node }) =>
