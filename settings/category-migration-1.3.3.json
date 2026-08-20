@@ -10,6 +10,15 @@
       ]
     },
     {
+      "name": "10-benefits-of-digital-asset-management-dam-in-2025",
+      "categoryPaths": [
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/integrations/dam",
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/topics/integrations"
+      ]
+    },
+    {
       "name": "10-effective-ways-to-enhance-web-accessibility",
       "categoryPaths": [
         "/sites/systemsite/categories/pageTypes/blog_post",
@@ -1631,6 +1640,14 @@
         "/sites/systemsite/categories/resourcestypes/blog",
         "/sites/systemsite/categories/topics/dxp",
         "/sites/systemsite/categories/topics/personalization/cdp"
+      ]
+    },
+    {
+      "name": "understanding-jahia-in-3mns-as-an-aem-developer-or-architect",
+      "categoryPaths": [
+        "/sites/systemsite/categories/pageTypes/blog_post",
+        "/sites/systemsite/categories/resourcestypes/blog",
+        "/sites/systemsite/categories/topics/competitors"
       ]
     }
   ],
