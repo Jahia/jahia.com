@@ -28,12 +28,10 @@ const nodeIds = (value?: Array<JCRNodeWrapper | null>) =>
 const Card = ({
   item,
   typeLabel,
-  discoverLabel,
   locale,
 }: {
   item: ResourceCardData;
   typeLabel: string;
-  discoverLabel: string;
   locale: string;
 }) => (
   <article className={classes.card} data-carousel-item="">
@@ -63,9 +61,6 @@ const Card = ({
         </div>
         <h3>{item.title}</h3>
         {item.description && <p>{item.description}</p>}
-        <span className={classes.readMore}>
-          {discoverLabel} <span aria-hidden="true">→</span>
-        </span>
       </div>
     </a>
   </article>
@@ -157,7 +152,6 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
 
   const id = `resource-carousel-${currentNode.getIdentifier()}`;
   const locale = currentResource.getLocale().getLanguage();
-  const discoverLabel = t("resourceCarousel.discover");
 
   return (
     <section
@@ -178,7 +172,6 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
               key={item.id}
               item={item}
               typeLabel={item.typeLabel || t(`resourceCarousel.types.${item.kind}`)}
-              discoverLabel={discoverLabel}
               locale={locale}
             />
           ))}

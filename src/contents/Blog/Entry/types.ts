@@ -8,6 +8,7 @@ export interface Props {
   "useLastModifiedDate"?: boolean;
   "jcr:lastModified"?: string;
   "blogType"?: Array<JCRNodeWrapper | null>;
+  "j:defaultCategory"?: Array<JCRNodeWrapper | null>;
   "image"?: JCRNodeWrapper;
   "text"?: string;
   "seoKeywords"?: string[];

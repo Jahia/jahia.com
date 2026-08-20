@@ -61,6 +61,34 @@ const firstString = (node: JCRNodeWrapper, names: readonly string[]) => {
   return "";
 };
 
+const isPublished = (node: JCRNodeWrapper) => {
+  try {
+    return node.hasProperty("j:published") && node.getProperty("j:published").getBoolean();
+  } catch {
+    return false;
+  }
+};
+
+const firstDate = (node: JCRNodeWrapper, names: readonly string[]) => {
+  for (const name of names) {
+    try {
+      if (!node.hasProperty(name)) continue;
+      const property = node.getProperty(name);
+      const value = node.getPropertyAsString(name);
+      const dateValue = property.getValue() as unknown as {
+        getDate: () => { getTimeInMillis: () => number };
+      };
+      const timestamp = Number(dateValue.getDate().getTimeInMillis());
+      if (Number.isFinite(timestamp)) return { value, timestamp };
+    } catch {
+      const value = firstString(node, [name]);
+      const timestamp = Date.parse(value);
+      if (value && Number.isFinite(timestamp)) return { value, timestamp };
+    }
+  }
+  return { value: "", timestamp: 0 };
+};
+
 const referencedNodes = (node: JCRNodeWrapper, propertyNames: readonly string[]) => {
   for (const propertyName of propertyNames) {
     try {
@@ -135,13 +163,14 @@ const toCard = (
     return null;
   }
 
+  if (!isPublished(node)) return null;
+
   const categories = referencedNodes(node, [RESOURCE_MODEL.properties.categories]);
   const resourceType = resolveResourceType(node, categories, allowGenericResource);
   if (!resourceType || resourceType.kind === "customerCase") return null;
 
-  const date = firstString(node, RESOURCE_MODEL.properties.dates);
-  const timestamp = date ? Date.parse(date) : 0;
-  if (timestamp && timestamp > Date.now()) return null;
+  const { value: date, timestamp } = firstDate(node, RESOURCE_MODEL.properties.dates);
+  if (timestamp > Date.now()) return null;
 
   const title = firstString(node, [RESOURCE_MODEL.properties.title]) || node.getDisplayableName();
   if (!title) return null;

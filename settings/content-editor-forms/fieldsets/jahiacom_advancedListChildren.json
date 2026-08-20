@@ -1,0 +1,28 @@
+{
+  "name": "jahiacom:advancedListChildren",
+  "priority": 2.0,
+  "fields": [
+    {
+      "name": "parent",
+      "hide": true
+    },
+    {
+      "name": "nodeType",
+      "hide": true
+    },
+    { "name": "filter1Category", "hide": true },
+    { "name": "filter2Category", "hide": true },
+    { "name": "filter3Category", "hide": true },
+    { "name": "filter4Category", "hide": true },
+    { "name": "filter5Category", "hide": true },
+    { "name": "filter2Categories", "hide": true },
+    { "name": "filter3Categories", "hide": true },
+    { "name": "filter4Categories", "hide": true },
+    { "name": "filter5Categories", "hide": true },
+    { "name": "filterCount", "hide": true },
+    { "name": "filter2Title", "hide": true },
+    { "name": "filter3Title", "hide": true },
+    { "name": "filter4Title", "hide": true },
+    { "name": "filter5Title", "hide": true }
+  ]
+}

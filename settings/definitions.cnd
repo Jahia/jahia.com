@@ -53,6 +53,7 @@
  - featuredIncludeUpdatedArticles (boolean) = false
  - blogFilterClusters (weakreference, picker) multiple
  - blogFilterThemes (weakreference, category[autoSelectParent=false]) multiple
+ - blogAdvancedFilter (weakreference, picker) < jahiacom:advancedListChildren
 
 // Miscellaneous gadgets
 [jahiacommix:gadget] > jmix:droppableContent mixin

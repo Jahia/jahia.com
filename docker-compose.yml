@@ -1,38 +1,54 @@
 services:
   jahia:
-    image: jahia/jahia-ee:8.2
+    image: ${JAHIA_IMAGE:-jahia/jahia-ee:8.2}
+    init: true
     depends_on:
       postgres:
         condition: service_healthy
     ports:
-      - 8080:8080
-      - 9229:9229
+      - "${JAHIA_PORT:-8080}:8080"
+      - "${JAHIA_DEBUG_PORT:-9229}:9229"
     environment:
       DB_VENDOR: postgresql
       DB_URL: jdbc:postgresql://postgres:5432/jahia
       DB_USER: jahia
-      DB_PASS: dbpassword
+      DB_PASS: ${JAHIA_DB_PASSWORD:-dbpassword}
+      SUPER_USER_PASSWORD: ${JAHIA_SUPER_USER_PASSWORD:-root1234}
       JPDA: true
       EXECUTE_PROVISIONING_SCRIPT: "file:/mnt/jahia/provisioning.yml"
     volumes:
       - type: bind
         source: ./docker
         target: /mnt/jahia
+        read_only: true
+      - type: volume
+        source: jahia-data
+        target: /var/jahia
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:8080/start"]
-      interval: 5s
-      timeout: 1s
-      retries: 24
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/start"]
+      start_period: 2m
+      interval: 10s
+      timeout: 5s
+      retries: 60
 
   postgres:
     image: postgres:16
     ports:
-      - 5432:5432
+      - "${POSTGRES_PORT:-5432}:5432"
     environment:
+      POSTGRES_DB: jahia
       POSTGRES_USER: jahia
-      POSTGRES_PASSWORD: dbpassword
+      POSTGRES_PASSWORD: ${JAHIA_DB_PASSWORD:-dbpassword}
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "jahia"]
+      test: ["CMD-SHELL", "pg_isready -U jahia -d jahia"]
       interval: 5s
-      timeout: 1s
+      timeout: 5s
       retries: 30
+
+volumes:
+  jahia-data:
+  postgres-data:

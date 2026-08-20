@@ -167,13 +167,6 @@
   line-height: 1.58;
 }
 
-.readMore {
-  margin-top: auto;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--jahia-primary-color);
-}
-
 .arrow {
   position: absolute;
   top: 50%;

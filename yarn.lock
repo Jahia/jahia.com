@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 10
+  version: 8
   cacheKey: 10c0
 
 "@adobe/css-tools@npm:~4.3.1":
@@ -664,6 +664,13 @@ __metadata:
   version: 5.2.8
   resolution: "@fontsource-variable/plus-jakarta-sans@npm:5.2.8"
   checksum: 10c0/33fcffdf8ca3f2822f9b495c7f172bfd0b6fe69832082e033924ad88cddcefb54b22d9114c641a6603782094e578a83e7d10b25086c5c2f586be51b407dbc246
+  languageName: node
+  linkType: hard
+
+"@fontsource/ibm-plex-mono@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource/ibm-plex-mono@npm:5.3.0"
+  checksum: 10c0/4aaf5a3c9efc7c32de4fa46ff3187ac63720904beab825f331ac01800038899761da23270f09d3fb5cff22f7cdc366904834854e2107229ad60833bba71c223d
   languageName: node
   linkType: hard
 
@@ -3383,6 +3390,7 @@ __metadata:
     "@eslint/js": "npm:^9.39.1"
     "@floating-ui/react-dom": "npm:^2.1.6"
     "@fontsource-variable/plus-jakarta-sans": "npm:^5.2.8"
+    "@fontsource/ibm-plex-mono": "npm:^5.3.0"
     "@iconify-json/ri": "npm:^1.2.6"
     "@iconify-json/simple-icons": "npm:^1.2.60"
     "@jahia/javascript-modules-library": "npm:^1.2.0"

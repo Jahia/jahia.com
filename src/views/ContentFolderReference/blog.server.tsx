@@ -7,6 +7,8 @@ import {
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
+import CascadingSelects from "../../components/CascadingSelects.client.jsx";
+import BlogGrid from "./BlogGrid.client.jsx";
 import FeaturedBlogCarousel from "./FeaturedBlogCarousel.client.jsx";
 import classes from "./styles.module.css";
 
@@ -16,26 +18,10 @@ interface Props {
   "featuredArticle"?: JCRNodeWrapper;
   "featuredArticles"?: Array<JCRNodeWrapper | null>;
   "featuredIncludeUpdatedArticles"?: boolean;
-  "blogFilterClusters"?: Array<JCRNodeWrapper | null>;
-  "blogFilterThemes"?: Array<JCRNodeWrapper | null>;
+  "blogAdvancedFilter"?: JCRNodeWrapper;
 }
 
-type FilterOption = { id: string; label: string; node: JCRNodeWrapper };
 const pageSizes = new Set([6, 12, 18, 24]);
-const contentTypeNames = [
-  "whitepaper",
-  "white-paper",
-  "livre-blanc",
-  "webinar",
-  "webinaire",
-  "video",
-  "vidéo",
-  "infographic",
-  "infographie",
-  "customer-case",
-  "case-study",
-  "cas-client",
-];
 
 const sanitizePageSize = (value?: string) => {
   const parsed = Number.parseInt(value || "12", 10);
@@ -51,35 +37,59 @@ const referencedNodes = (entry: JCRNodeWrapper, propertyName: string) => {
     .filter((node): node is JCRNodeWrapper => node !== null);
 };
 
-const optionsFromEntries = (entries: JCRNodeWrapper[], propertyName: string, thematic = false) => {
-  const options = new Map<string, FilterOption>();
-  for (const entry of entries) {
-    for (const node of referencedNodes(entry, propertyName)) {
-      const label = node.getDisplayableName();
-      const normalized = `${node.getName()} ${label}`.toLocaleLowerCase().replaceAll("_", "-");
-      if (thematic && contentTypeNames.some((name) => normalized.includes(name))) continue;
-      options.set(node.getIdentifier(), { id: node.getIdentifier(), label, node });
-    }
-  }
-  return [...options.values()].sort((a, b) => a.label.localeCompare(b.label));
-};
-
-const hasReference = (entry: JCRNodeWrapper, propertyName: string, id: string) =>
-  referencedNodes(entry, propertyName).some((node) => node.getIdentifier() === id);
+const hasCategoryBranch = (entry: JCRNodeWrapper, category: JCRNodeWrapper) =>
+  referencedNodes(entry, "j:defaultCategory").some(
+    (assigned) =>
+      assigned.getPath() === category.getPath() ||
+      assigned.getPath().startsWith(`${category.getPath()}/`),
+  );
 
 const configuredNodes = (nodes?: Array<JCRNodeWrapper | null>) =>
   (nodes || []).filter((node): node is JCRNodeWrapper => node !== null);
 
-const restrictOptions = (options: FilterOption[], configured: JCRNodeWrapper[]) => {
-  if (configured.length === 0) return options;
-  const allowedIds = new Set(configured.map((node) => node.getIdentifier()));
-  return options.filter(({ id }) => allowedIds.has(id));
+const nodeString = (node: JCRNodeWrapper, name: string) => {
+  if (node.hasProperty(name) && node.getPropertyAsString(name))
+    return node.getPropertyAsString(name);
+  for (const language of ["fr", "en"]) {
+    const translationName = `j:translation_${language}`;
+    if (!node.hasNode(translationName)) continue;
+    const translation = node.getNode(translationName) as JCRNodeWrapper;
+    if (translation.hasProperty(name) && translation.getPropertyAsString(name))
+      return translation.getPropertyAsString(name);
+  }
+  return "";
 };
+
+const nodeReferences = (node: JCRNodeWrapper, name: string) =>
+  node.hasProperty(name) ? referencedNodes(node, name) : [];
 
 const timestamp = (entry: JCRNodeWrapper, propertyName: string) => {
   if (!entry.hasProperty(propertyName)) return 0;
-  const value = Date.parse(entry.getPropertyAsString(propertyName));
-  return Number.isFinite(value) ? value : 0;
+  try {
+    const dateValue = entry.getProperty(propertyName).getValue() as unknown as {
+      getDate: () => { getTimeInMillis: () => number };
+    };
+    const value = Number(dateValue.getDate().getTimeInMillis());
+    if (Number.isFinite(value)) return value;
+  } catch {
+    // Fall through to support legacy string properties.
+  }
+
+  const fallback = Date.parse(entry.getPropertyAsString(propertyName));
+  return Number.isFinite(fallback) ? fallback : 0;
+};
+
+const isPublished = (entry: JCRNodeWrapper) =>
+  entry.hasProperty("j:published") && entry.getProperty("j:published").getBoolean();
+
+const isCurrentlyVisible = (entry: JCRNodeWrapper) => {
+  const publicationDate = timestamp(entry, "date");
+  return (
+    isPublished(entry) &&
+    (!publicationDate || publicationDate <= Date.now()) &&
+    entry.hasProperty("jcr:title") &&
+    Boolean(entry.getPropertyAsString("jcr:title").trim())
+  );
 };
 
 const usesLastModifiedDate = (entry: JCRNodeWrapper) =>
@@ -95,7 +105,7 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jnt:contentFolderReference",
     name: "blog",
-    properties: { "cache.requestParameters": "cluster,theme,blogPage" },
+    properties: { "cache.requestParameters": "*" },
   },
   (
     {
@@ -104,8 +114,7 @@ jahiaComponent(
       featuredArticle,
       featuredArticles,
       featuredIncludeUpdatedArticles,
-      blogFilterClusters,
-      blogFilterThemes,
+      blogAdvancedFilter,
     }: Props,
     { renderContext },
   ) => {
@@ -117,9 +126,15 @@ jahiaComponent(
       );
     if (!folder) return null;
 
-    const entries = useJCRQuery({
-      query: `SELECT * FROM [jahiacom:blogEntry] WHERE ISDESCENDANTNODE(${JSON.stringify(folder.getPath())}) ORDER BY [date] DESC`,
+    const cutoff = new Date().toISOString();
+    const queriedEntries = useJCRQuery({
+      query: `SELECT * FROM [jahiacom:blogEntry]
+              WHERE ISDESCENDANTNODE(${JSON.stringify(folder.getPath())})
+                AND [j:published] = true
+                AND [date] <= CAST(${JSON.stringify(cutoff)} AS DATE)
+              ORDER BY [date] DESC`,
     });
+    const entries = queriedEntries.filter(isCurrentlyVisible);
     if (renderContext.isEditMode())
       return (
         <div>
@@ -158,49 +173,90 @@ jahiaComponent(
           ).slice(0, 3);
     const featuredIds = new Set(featuredEntries.map((entry) => entry.getIdentifier()));
     const regularEntries = entries.filter((entry) => !featuredIds.has(entry.getIdentifier()));
-    const configuredClusters = configuredNodes(blogFilterClusters);
-    const configuredThemes = configuredNodes(blogFilterThemes);
-    const clusterOptions = restrictOptions(
-      optionsFromEntries(entries, "blogType"),
-      configuredClusters,
-    );
-    const themeOptions = restrictOptions(
-      optionsFromEntries(entries, "j:defaultCategory", true),
-      configuredThemes,
-    );
     const request = renderContext.getRequest();
-    const requestedCluster = request.getParameter("cluster");
-    const requestedTheme = request.getParameter("theme");
-    const selectedCluster = clusterOptions.some(({ id }) => id === requestedCluster)
-      ? requestedCluster
-      : "all";
-    const selectedTheme = themeOptions.some(({ id }) => id === requestedTheme)
-      ? requestedTheme
-      : "all";
-    const filteredEntries = regularEntries.filter(
-      (entry) =>
-        (selectedCluster === "all" || hasReference(entry, "blogType", selectedCluster)) &&
-        (selectedTheme === "all" || hasReference(entry, "j:defaultCategory", selectedTheme)),
+    const advancedRoots = blogAdvancedFilter
+      ? nodeReferences(blogAdvancedFilter, "filter1Categories")
+      : [];
+    const advancedDescendants = advancedRoots.flatMap((root) =>
+      useJCRQuery({
+        query: `SELECT * FROM [jnt:category]
+                WHERE ISDESCENDANTNODE(${JSON.stringify(root.getPath())})`,
+      }),
     );
+    const uniqueAdvancedDescendants = [
+      ...new Map(advancedDescendants.map((node) => [node.getIdentifier(), node])).values(),
+    ];
+    const advancedHierarchy =
+      !blogAdvancedFilter || nodeString(blogAdvancedFilter, "filterMode") !== "independent";
+    const advancedFilters = blogAdvancedFilter
+      ? (advancedHierarchy
+          ? Array.from({ length: 2 }, (_, index) => {
+              const rootIds = new Set(advancedRoots.map((root) => root.getIdentifier()));
+              const categories =
+                index === 0
+                  ? uniqueAdvancedDescendants.filter(
+                      (node) =>
+                        node.getParent().isNodeType("jnt:category") &&
+                        rootIds.has(node.getParent().getIdentifier()),
+                    )
+                  : uniqueAdvancedDescendants;
+              const title = nodeString(blogAdvancedFilter, "filter1Title");
+              if (categories.length === 0 || !title) return null;
+              const options = categories
+                .map((node) => ({
+                  id: node.getIdentifier(),
+                  label: node.getDisplayableName(),
+                  node,
+                  parentId:
+                    index === 0 || !node.getParent().isNodeType("jnt:category")
+                      ? ""
+                      : node.getParent().getIdentifier(),
+                }))
+                .sort((a, b) => a.label.localeCompare(b.label));
+              return { name: `filter${index + 1}`, title, options };
+            })
+          : advancedRoots.slice(0, 2).map((root, index) => {
+              const options = uniqueAdvancedDescendants
+                .filter((node) => node.getPath().startsWith(`${root.getPath()}/`))
+                .map((node) => ({
+                  id: node.getIdentifier(),
+                  label: node.getDisplayableName(),
+                  node,
+                  parentId: "",
+                }))
+                .sort((a, b) => a.label.localeCompare(b.label));
+              return options.length > 0
+                ? {
+                    name: `filter${index + 1}`,
+                    title: root.getDisplayableName(),
+                    options,
+                  }
+                : null;
+            })
+        ).filter((filter): filter is NonNullable<typeof filter> => filter !== null)
+      : [];
+    const selectedAdvanced = new Map<string, string>();
+    advancedFilters.forEach(({ name, options }, index) => {
+      const requested = request.getParameter(name);
+      const parent =
+        advancedHierarchy && index > 0 ? selectedAdvanced.get(`filter${index}`) || "" : "";
+      selectedAdvanced.set(
+        name,
+        requested &&
+          options.some(
+            ({ id, parentId }) => id === requested && (!advancedHierarchy || parentId === parent),
+          )
+          ? requested
+          : "",
+      );
+    });
+    const filteredEntries = regularEntries;
     const pageSize = sanitizePageSize(blogPageSize);
-    const pageCount = Math.max(1, Math.ceil(filteredEntries.length / pageSize));
     const requestedPage = Number.parseInt(request.getParameter("blogPage") || "1", 10);
-    const page = Math.min(
-      Math.max(Number.isFinite(requestedPage) ? requestedPage : 1, 1),
-      pageCount,
-    );
-    const visibleEntries = filteredEntries.slice((page - 1) * pageSize, page * pageSize);
-    const filterQuery = [
-      selectedCluster !== "all" && `cluster=${encodeURIComponent(selectedCluster)}`,
-      selectedTheme !== "all" && `theme=${encodeURIComponent(selectedTheme)}`,
-    ].filter(Boolean);
-    const pageUrl = (target: number) => `?${[...filterQuery, `blogPage=${target}`].join("&")}`;
     const filterDependencies = new Map(
       [
-        ...clusterOptions.map(({ node }) => node),
-        ...themeOptions.map(({ node }) => node),
-        ...configuredClusters,
-        ...configuredThemes,
+        ...(blogAdvancedFilter ? [blogAdvancedFilter] : []),
+        ...advancedFilters.flatMap(({ options }) => options.map(({ node }) => node)),
       ].map((node) => [node.getIdentifier(), node]),
     );
     for (const node of filterDependencies.values())
@@ -218,51 +274,77 @@ jahiaComponent(
             </div>
           ))}
         </Island>
-        <form className={classes.filterForm} method="get">
-          <label>
-            <span>{t("blogListing.cluster")}</span>
-            <select name="cluster" defaultValue={selectedCluster}>
-              <option value="all">{t("blogListing.allClusters")}</option>
-              {clusterOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
-                </option>
+        {advancedFilters.length > 0 && (
+          <Island component={CascadingSelects} props={{ applyFiltersOnChange: true }}>
+            <form className={classes.filterForm} method="get">
+              {advancedFilters.map(({ name, title, options }, index) => (
+                <label
+                  key={name}
+                  data-hierarchy-level={advancedHierarchy ? index : undefined}
+                  hidden={advancedHierarchy && index > 0}
+                >
+                  <span data-category-title={advancedHierarchy && index > 0 ? "" : undefined}>
+                    {title}
+                  </span>
+                  <select name={name} defaultValue={selectedAdvanced.get(name)}>
+                    <option value="">
+                      {!advancedHierarchy || index === 0
+                        ? t("advancedListChildren.selectOption")
+                        : title}
+                    </option>
+                    {options.map((option) => (
+                      <option key={option.id} value={option.id} data-parent-id={option.parentId}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
               ))}
-            </select>
-          </label>
-          <label>
-            <span>{t("blogListing.theme")}</span>
-            <select name="theme" defaultValue={selectedTheme}>
-              <option value="all">{t("blogListing.allThemes")}</option>
-              {themeOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <div className={classes.filterActions}>
-            <button type="submit">{t("blogListing.applyFilters")}</button>
-            <a href="?">{t("blogListing.resetFilters")}</a>
-          </div>
-        </form>
-        {visibleEntries.length > 0 ? (
-          <div className={classes.grid}>
-            {visibleEntries.map((entry) => (
-              <div key={entry.getIdentifier()} className={classes.cardSlot}>
-                <Render node={entry} />
+              <div className={classes.filterActions}>
+                <button type="reset">{t("blogListing.resetFilters")}</button>
               </div>
-            ))}
-          </div>
+            </form>
+          </Island>
+        )}
+        {filteredEntries.length > 0 ? (
+          <Island
+            component={BlogGrid}
+            props={{
+              pageSize,
+              initialPage: Number.isFinite(requestedPage) ? requestedPage : 1,
+              gridClassName: classes.grid,
+              paginationClassName: classes.pagination,
+              paginationLabel: t("blogListing.pagination"),
+              selectLabel: t("blogListing.selectPage"),
+              previousLabel: t("blogListing.previousPage"),
+              nextLabel: t("blogListing.nextPage"),
+            }}
+          >
+            {filteredEntries.map((entry) => {
+              const values = advancedFilters.flatMap(({ name, options }) =>
+                options
+                  .filter(({ node }) => hasCategoryBranch(entry, node))
+                  .map(({ id }) => `${name}=${id}`),
+              );
+              const matches = advancedFilters.every(({ name }) => {
+                const value = selectedAdvanced.get(name);
+                return !value || values.includes(`${name}=${value}`);
+              });
+              return (
+                <div
+                  key={entry.getIdentifier()}
+                  className={classes.cardSlot}
+                  data-blog-card-slot=""
+                  data-filter-values={values.join("|")}
+                  data-filter-match={matches}
+                >
+                  <Render node={entry} />
+                </div>
+              );
+            })}
+          </Island>
         ) : (
           <p className={classes.empty}>{t("blogListing.noResults")}</p>
-        )}
-        {pageCount > 1 && (
-          <nav className={classes.pagination} aria-label={t("blogListing.pagination")}>
-            {page > 1 && <a href={pageUrl(page - 1)}>{t("blogListing.previousPage")}</a>}
-            <span>{t("blogListing.pageCount", { page, count: pageCount })}</span>
-            {page < pageCount && <a href={pageUrl(page + 1)}>{t("blogListing.nextPage")}</a>}
-          </nav>
         )}
       </section>
     );

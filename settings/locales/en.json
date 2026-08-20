@@ -37,6 +37,7 @@
     "returnDirectory": "Back to the directory"
   },
   "blogListing": {
+    "categories": "Categories",
     "featured": "Featured",
     "readArticle": "Read article",
     "updatedOn": "Updated on",
@@ -52,6 +53,7 @@
     "resetFilters": "Reset",
     "noResults": "No article matches these filters.",
     "pagination": "Blog pagination",
+    "selectPage": "Select a page",
     "previousPage": "Previous",
     "nextPage": "Next",
     "pageCount": "Page {{page}} of {{count}}"
@@ -64,7 +66,6 @@
   "resourceCarousel": {
     "eyebrow": "Discover",
     "defaultTitle": "Related resources",
-    "discover": "Discover",
     "previous": "Previous page",
     "next": "Next page",
     "pagination": "Resource carousel pagination",
@@ -81,5 +82,12 @@
     },
     "hiddenInEdit": "The resource carousel is hidden outside edit mode.",
     "emptyInEdit": "The resource carousel does not have enough matching published content."
+  },
+  "advancedListChildren": {
+    "all": "All",
+    "allNamed": "{{title}}",
+    "selectOption": "Select an option",
+    "apply": "Apply",
+    "reset": "Reset"
   }
 }

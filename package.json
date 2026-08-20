@@ -25,6 +25,7 @@
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.6",
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "@lottiefiles/dotlottie-wc": "^0.9.4",
     "clsx": "^2.1.1",
     "modern-normalize": "^3.0.1",

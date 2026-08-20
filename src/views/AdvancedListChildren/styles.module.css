@@ -1,9 +1,8 @@
 .filterPanel {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 1rem;
-  align-items: end;
   padding: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: 2rem;
   background: color-mix(in srgb, var(--jahia-primary-color) 5%, var(--jahia-background));
   border: 1px solid var(--jahia-border);
   border-radius: 0.75rem;
@@ -11,14 +10,19 @@
 
 .filterFields {
   display: grid;
-  flex: 1;
   grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
   gap: 0.8rem;
+  align-items: end;
+}
+
+.filterFields[data-count="1"] {
+  grid-template-columns: minmax(14rem, 24rem);
 }
 
 .filterFields label {
   display: grid;
   gap: 0.4rem;
+  min-width: 0;
 }
 
 .filterFields label span {
@@ -38,46 +42,71 @@
   border-radius: 0.4rem;
 }
 
-.filterPanel > button {
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.actions button {
   min-height: 2.75rem;
   padding: 0.55rem 1rem;
   font-family: monospace;
   font-weight: 700;
-  color: var(--jahia-primary-color);
   text-transform: uppercase;
   cursor: pointer;
-  background: transparent;
   border: 1px solid var(--jahia-primary-color);
   border-radius: 0.4rem;
+}
+
+.actions button[type="reset"] {
+  color: var(--jahia-primary-color);
+  background: transparent;
+}
+
+.actions button:hover,
+.actions button:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--jahia-container-background),
+    0 0 0 4px var(--jahia-primary-color);
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
   gap: 1rem;
+}
 
-  > * {
-    display: flex;
+.grid > * {
+  display: flex;
+}
 
-    > * {
-      flex: 1;
-    }
-  }
+.grid > * > * {
+  flex: 1;
 }
 
 .emptyState {
-  @apply _stack-4;
-
   display: block;
-  justify-content: center;
+  padding: 2rem;
   text-align: center;
+}
 
-  button {
-    margin-top: 1rem;
+.grid:has(> *:not([hidden])) + .emptyState {
+  display: none;
+}
+
+@media (width <= 900px) {
+  .filterFields[data-count] {
+    grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
   }
 }
 
-/* Hide the empty state when at least one child is visible */
-.grid:has(> *:not([hidden])) + .emptyState {
-  display: none;
+@media (width <= 520px) {
+  .filterFields[data-count] {
+    grid-template-columns: 1fr;
+  }
+
+  .actions > * {
+    flex: 1;
+  }
 }

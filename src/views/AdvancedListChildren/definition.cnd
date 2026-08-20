@@ -1,0 +1,77 @@
+[jahiacom:advancedListChildren] > jnt:content, jahiacommix:gadget
+ - parent (weakreference) < jnt:page, jnt:navMenuText, jnt:contentFolder
+ - nodeType (string, choicelist[nodetypes=jmix:mainResource])
+ - filterMode (string, choicelist[resourceBundle]) = 'hierarchy' mandatory autocreated < 'hierarchy', 'independent'
+ - filterCount (string, choicelist) = '1' mandatory autocreated < '1', '2', '3', '4', '5'
+ - filter1Title (string) mandatory i18n
+ - filter1Category (weakreference, category[autoSelectParent=false])
+ - filter1Categories (weakreference, category[autoSelectParent=false]) multiple
+ - emptyState (string, richtext) mandatory i18n
+
+[jahiacommix:advancedListChildrenFilter2] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter2Title (string) mandatory i18n
+ - filter2Category (weakreference, category[autoSelectParent=false])
+ - filter2Categories (weakreference, category[autoSelectParent=false]) multiple
+
+[jahiacommix:advancedListChildrenFilter3] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter3Title (string) mandatory i18n
+ - filter3Category (weakreference, category[autoSelectParent=false])
+ - filter3Categories (weakreference, category[autoSelectParent=false]) multiple
+
+[jahiacommix:advancedListChildrenFilter4] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter4Title (string) mandatory i18n
+ - filter4Category (weakreference, category[autoSelectParent=false])
+ - filter4Categories (weakreference, category[autoSelectParent=false]) multiple
+
+[jahiacommix:advancedListChildrenFilter5] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter5Title (string) mandatory i18n
+ - filter5Category (weakreference, category[autoSelectParent=false])
+ - filter5Categories (weakreference, category[autoSelectParent=false]) multiple
+
+// One mixin per selected count: Content Editor only applies one addMixin instruction
+// from a choicelist value. Keep the original mixins above for local content compatibility.
+[jahiacommix:advancedListChildrenFilters2] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter2Title (string) mandatory i18n
+ - filter2Category (weakreference, category[autoSelectParent=false])
+ - filter2Categories (weakreference, category[autoSelectParent=false]) multiple
+
+[jahiacommix:advancedListChildrenFilters3] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter2Title (string) mandatory i18n
+ - filter2Category (weakreference, category[autoSelectParent=false])
+ - filter2Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter3Title (string) mandatory i18n
+ - filter3Category (weakreference, category[autoSelectParent=false])
+ - filter3Categories (weakreference, category[autoSelectParent=false]) multiple
+
+[jahiacommix:advancedListChildrenFilters4] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter2Title (string) mandatory i18n
+ - filter2Category (weakreference, category[autoSelectParent=false])
+ - filter2Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter3Title (string) mandatory i18n
+ - filter3Category (weakreference, category[autoSelectParent=false])
+ - filter3Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter4Title (string) mandatory i18n
+ - filter4Category (weakreference, category[autoSelectParent=false])
+ - filter4Categories (weakreference, category[autoSelectParent=false]) multiple
+
+[jahiacommix:advancedListChildrenFilters5] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter2Title (string) mandatory i18n
+ - filter2Category (weakreference, category[autoSelectParent=false])
+ - filter2Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter3Title (string) mandatory i18n
+ - filter3Category (weakreference, category[autoSelectParent=false])
+ - filter3Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter4Title (string) mandatory i18n
+ - filter4Category (weakreference, category[autoSelectParent=false])
+ - filter4Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter5Title (string) mandatory i18n
+ - filter5Category (weakreference, category[autoSelectParent=false])
+ - filter5Categories (weakreference, category[autoSelectParent=false]) multiple

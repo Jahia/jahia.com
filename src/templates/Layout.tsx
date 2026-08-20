@@ -13,6 +13,8 @@ import NavBar from "./NavBar.jsx";
 import classes from "./Layout.module.css";
 
 import "@fontsource-variable/plus-jakarta-sans/wght";
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/ibm-plex-mono/600.css";
 import "modern-normalize/modern-normalize.css";
 import "virtual:uno.css";
 import "./global.css";
