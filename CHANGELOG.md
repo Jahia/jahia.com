@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.3.4
+
+* Complete the content category migration for preproduction-specific Blog aliases and rerun the transactional restoration with a fresh patch identifier.
+
 ## 1.3.3
 
 * Restore reproducible category assignments for Blog, Customer stories, and Resources content, and configure their ListChildren filters from the validated Docker taxonomy.
