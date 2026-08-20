@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.3.1
+
+* Fix the 1.3.0 server rendering failure in Advanced filtered list and ListChildren, preserve Blog filter state, and restore stable card layout and cache behavior.
+
 ## 1.3.0
 
 * Add reusable category-driven filtering for Jahia content lists, improve Blog discovery and pagination, and align resource cards with the updated interaction design.
