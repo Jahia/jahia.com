@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.3.7
+
+* Render and filter mapped Blog, Customer story, and Resource categories even when LIVE editorial assignments have not been migrated yet.
+
 ## 1.3.6
 
 * Restore every available mapped category in LIVE even when unpublished taxonomy branches are absent from that workspace.
