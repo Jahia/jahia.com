@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.3.3
+
+* Restore reproducible category assignments for Blog, Customer stories, and Resources content, and configure their ListChildren filters from the validated Docker taxonomy.
+
 ## 1.3.2
 
 * Optimize Blog category filtering by resolving each article's category references once instead of repeating JCR reads for every filter option.
