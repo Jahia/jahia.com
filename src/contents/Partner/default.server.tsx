@@ -1,5 +1,6 @@
 import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
 import clsx from "clsx";
+import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
 import { Image } from "../../components/Image.jsx";
 import { CTA } from "../../mixins/CTA/index.jsx";
@@ -21,11 +22,15 @@ export const PartnerCard = ({
   currentNode,
   locale,
   regionUrls,
+  directoryMode = "all",
+  profileUrl,
 }: {
   props: Props;
   currentNode: Parameters<typeof buildNodeUrl>[0];
   locale: InstanceType<typeof import("./types.js").Locale>;
   regionUrls?: Partial<Record<Region, string>>;
+  directoryMode?: "all" | "solution" | "technology";
+  profileUrl?: string;
 }) => {
   const { t } = useTranslation();
   const fallbackRegion = legacyRegion(currentNode);
@@ -37,6 +42,10 @@ export const PartnerCard = ({
     regions.map((region) => [region, `${regionUrls?.[region] || url}?region=${region}`]),
   ) as Record<Region, string>;
   const defaultRegionLink = regionLinks[regions[0]];
+  const detailUrl = profileUrl || defaultRegionLink;
+  const technologyTags = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
+  const partnership = props.integrationPartner ? "integration" : "strategic";
+  const technologyMode = directoryMode === "technology" || type === "technology";
 
   return (
     <article
@@ -44,7 +53,10 @@ export const PartnerCard = ({
       data-partner-card=""
       data-partner-type={type}
       data-partner-regions={regions.join(",")}
+      data-partner-technologies={technologyTags.map((tag) => tag.getName()).join(",")}
+      data-partner-partnership={partnership}
     >
+      <a className={classes.cardLink} href={detailUrl} tabIndex={-1} aria-hidden="true" />
       <div className={classes.cardLogo}>
         {props.logo ? (
           <Image image={props.logo} sizes={[360, 720]} />
@@ -55,35 +67,47 @@ export const PartnerCard = ({
       <div className={classes.cardHeading}>
         <h3>{props["jcr:title"]}</h3>
         <span className={clsx("_pack-1", classes.small)}>
-          {levels(props.certification, locale, props.partnerLevel, props.integrationPartner)}
+          {technologyMode
+            ? t(`partner.partnershipTypes.${partnership}`)
+            : levels(props.certification, locale, props.partnerLevel, props.integrationPartner)}
         </span>
       </div>
       <div className={classes.cardMeta}>
-        <span className={classes.cardType}>
-          {type === "technology" ? t("partner.technology") : t("partner.integrators")}
-        </span>
-        <div className={classes.locations}>
-          {regions.map((region) => {
-            const countries = countryNames(regionCountries(props, region), locale);
-            if (!countries && regions.length === 1) return null;
-            return (
-              <span key={region}>
-                <span className="i-ri:map-pin-2-line" />
-                {regions.length > 1 && <strong>{regionCodes[region]}</strong>}
-                {countries && `${regions.length > 1 ? " · " : ""}${countries}`}
-              </span>
-            );
-          })}
-        </div>
+        {technologyMode ? (
+          <div className={classes.technologyTags}>
+            {technologyTags.map((tag) => (
+              <span key={tag.getIdentifier()}>{tag.getDisplayableName()}</span>
+            ))}
+          </div>
+        ) : (
+          <>
+            <span className={classes.cardType}>{t("partner.integrators")}</span>
+            <div className={classes.locations}>
+              {regions.map((region) => {
+                const countries = countryNames(regionCountries(props, region), locale);
+                if (!countries && regions.length === 1) return null;
+                return (
+                  <span key={region}>
+                    <span className="i-ri:map-pin-2-line" />
+                    {regions.length > 1 && <strong>{regionCodes[region]}</strong>}
+                    {countries && `${regions.length > 1 ? " · " : ""}${countries}`}
+                  </span>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
       <p className={classes.summary}>{summary}</p>
       <div className={classes.cardActions}>
         <CTA
-          href={defaultRegionLink}
+          href={detailUrl}
           data-default-region-link={defaultRegionLink}
           data-region-links={JSON.stringify(regionLinks)}
           location="partners_directory"
           name={currentNode.getName()}
+          secondary
+          icon="i-ri:arrow-right-s-line"
         >
           {t("partner.viewProfile")}
         </CTA>

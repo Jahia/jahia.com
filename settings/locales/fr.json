@@ -3,6 +3,14 @@
     "allTypes": "Tous",
     "integrators": "Intégrateurs et agences",
     "technology": "Technologiques",
+    "technologyFilter": "Technologie",
+    "allTechnologies": "Toutes les technologies",
+    "partnershipType": "Type de partenaire",
+    "allPartnershipTypes": "Tous les types de partenaires",
+    "partnershipTypes": {
+      "strategic": "Partenaire stratégique",
+      "integration": "Intégration"
+    },
     "region": "Région",
     "allRegions": "Toutes les régions",
     "regions": {
@@ -10,6 +18,16 @@
       "americas": "Amériques",
       "apac": "Asie-Pacifique"
     },
+    "solutionIntroduction": "Un <strong>Solution Partner</strong> est une entreprise formée et certifiée par Jahia — intégrateur, ESN ou agence — qui prend en charge votre projet de bout en bout et mobilise des consultants experts de la plateforme.",
+    "regionEyebrow": "Une couverture internationale",
+    "regionTitle": "Des partenaires proches de vous",
+    "regionIntroduction": "Choisissez une région pour afficher directement les partenaires correspondants dans l’annuaire.",
+    "regionCount_one": "{{count}} partenaire",
+    "regionCount_other": "{{count}} partenaires",
+    "showRegion": "Voir les partenaires",
+    "catalogEyebrow": "Annuaire partenaires",
+    "catalogTitle": "Trouvez le partenaire adapté à votre projet",
+    "catalogIntroduction": "Affinez l’annuaire par région, puis ouvrez une carte pour consulter la fiche complète du partenaire.",
     "count_one": "{{count}} partenaire affiché",
     "count_other": "{{count}} partenaires affichés",
     "empty": "Aucun partenaire ne correspond à ces filtres.",

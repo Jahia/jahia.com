@@ -3,6 +3,14 @@
     "allTypes": "All",
     "integrators": "Integrators & agencies",
     "technology": "Technology",
+    "technologyFilter": "Technology",
+    "allTechnologies": "All technologies",
+    "partnershipType": "Partner type",
+    "allPartnershipTypes": "All partner types",
+    "partnershipTypes": {
+      "strategic": "Strategic partner",
+      "integration": "Integration"
+    },
     "region": "Region",
     "allRegions": "All regions",
     "regions": {
@@ -10,6 +18,16 @@
       "americas": "Americas",
       "apac": "Asia Pacific"
     },
+    "solutionIntroduction": "A <strong>Solution Partner</strong> is a Jahia-trained and certified company — integrator, digital services firm or agency — that manages your project end to end and brings in consultants with deep platform expertise.",
+    "regionEyebrow": "International coverage",
+    "regionTitle": "Partners close to you",
+    "regionIntroduction": "Choose a region to display the matching partners in the directory.",
+    "regionCount_one": "{{count}} partner",
+    "regionCount_other": "{{count}} partners",
+    "showRegion": "View partners",
+    "catalogEyebrow": "Partner directory",
+    "catalogTitle": "Find the right partner for your project",
+    "catalogIntroduction": "Refine the directory by region, then open a card to view the full partner profile.",
     "count_one": "{{count}} partner shown",
     "count_other": "{{count}} partners shown",
     "empty": "No partner matches these filters.",

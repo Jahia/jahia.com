@@ -152,7 +152,7 @@ jahiaComponent(
     const directoryComponent = useJCRQuery({
       query: `SELECT * FROM [jahiacom:partnerList] WHERE ISDESCENDANTNODE(${JSON.stringify(
         siteRoot,
-      )})`,
+      )}) AND [directoryMode] = '${type === "technology" ? "technology" : "solution"}'`,
     })[0];
     const directoryPage = pageAncestor(directoryComponent);
     const directoryUrl = directoryPage ? buildNodeUrl(directoryPage) : "#";
@@ -196,14 +196,22 @@ jahiaComponent(
                 </strong>
               </div>
               <div>
-                <span>{t("partner.level")}</span>
+                <span>
+                  {type === "technology" ? t("partner.partnershipType") : t("partner.level")}
+                </span>
                 <strong>
-                  {levels(
-                    props.certification,
-                    locale,
-                    props.partnerLevel,
-                    props.integrationPartner,
-                  )}
+                  {type === "technology"
+                    ? t(
+                        `partner.partnershipTypes.${
+                          props.integrationPartner ? "integration" : "strategic"
+                        }`,
+                      )
+                    : levels(
+                        props.certification,
+                        locale,
+                        props.partnerLevel,
+                        props.integrationPartner,
+                      )}
                 </strong>
               </div>
               {partnerSince !== undefined && (
@@ -212,16 +220,18 @@ jahiaComponent(
                   <strong>{partnerSince}</strong>
                 </div>
               )}
-              <div>
-                <span>{t("partner.region")}</span>
-                <strong>
-                  {t(`partner.regions.${activeRegion}`)}
-                  {regionCountries(props, activeRegion).length > 0 &&
-                    ` · ${countryNames(regionCountries(props, activeRegion), locale)}`}
-                </strong>
-              </div>
+              {type !== "technology" && (
+                <div>
+                  <span>{t("partner.region")}</span>
+                  <strong>
+                    {t(`partner.regions.${activeRegion}`)}
+                    {regionCountries(props, activeRegion).length > 0 &&
+                      ` · ${countryNames(regionCountries(props, activeRegion), locale)}`}
+                  </strong>
+                </div>
+              )}
             </div>
-            {regions.length > 1 && (
+            {type !== "technology" && regions.length > 1 && (
               <nav className={classes.regionNav} aria-label={t("partner.locations")}>
                 {regions.map((region) => (
                   <a

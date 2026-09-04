@@ -17,7 +17,10 @@ import Directory from "./Directory.client.jsx";
 
 interface Props {
   sourceRoot?: JCRNodeWrapper;
+  directoryMode?: "all" | "solution" | "technology";
 }
+
+type DirectoryMode = NonNullable<Props["directoryMode"]>;
 
 const regionPriority: Record<Region, number> = {
   europe: 0,
@@ -42,6 +45,25 @@ const stringProperties = (node: JCRNodeWrapper, name: string) =>
 const booleanProperty = (node: JCRNodeWrapper, name: string) =>
   node.hasProperty(name) ? node.getProperty(name).getBoolean() : undefined;
 
+const nodeProperties = (node: JCRNodeWrapper, name: string) =>
+  node.hasProperty(name)
+    ? Array.from(node.getProperty(name).getValues(), (value) => value.getNode())
+    : [];
+
+const partnerDescendants = (root: JCRNodeWrapper) => {
+  const partners: JCRNodeWrapper[] = [];
+  const visit = (node: JCRNodeWrapper) => {
+    const children = node.getNodes();
+    while (children.hasNext()) {
+      const child = children.nextNode() as JCRNodeWrapper;
+      if (child.isNodeType("jahiacom:partner")) partners.push(child);
+      visit(child);
+    }
+  };
+  visit(root);
+  return partners;
+};
+
 const partnerProps = (node: JCRNodeWrapper): PartnerProps => ({
   "jcr:title": stringProperty(node, "jcr:title") || node.getName(),
   "certification": (stringProperty(node, "certification") ||
@@ -52,10 +74,12 @@ const partnerProps = (node: JCRNodeWrapper): PartnerProps => ({
   "partnerLevel": stringProperty(node, "partnerLevel"),
   "integrationPartner": booleanProperty(node, "integrationPartner"),
   "shortDescription": stringProperty(node, "shortDescription"),
+  "partnership": stringProperty(node, "partnership"),
   "countries": stringProperties(node, "countries"),
   "regions": stringProperties(node, "regions") as Region[] | undefined,
   "locationCountries": stringProperties(node, "locationCountries"),
   "partnerLocationsData": stringProperty(node, "partnerLocationsData"),
+  "tags": nodeProperties(node, "tags"),
 });
 
 jahiaComponent(
@@ -63,17 +87,51 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jahiacom:partnerList",
   },
-  ({ sourceRoot }: Props, { currentNode, currentResource, renderContext }) => {
+  (
+    { sourceRoot, directoryMode = "all" }: Props,
+    { currentNode, currentResource, renderContext },
+  ) => {
+    const mode: DirectoryMode = directoryMode;
     const siteRoot = currentNode.getPath().match(/^\/sites\/[^/]+/)?.[0] || "/sites";
-    const rootPath = sourceRoot?.getPath() || siteRoot;
-    const partners = useJCRQuery({
+    const directoryRootPath =
+      mode === "technology"
+        ? `${siteRoot}/contents/technology-partners`
+        : mode === "solution"
+          ? `${siteRoot}/contents/solution-partners`
+          : undefined;
+    const configuredRoot =
+      directoryRootPath && currentNode.getSession().nodeExists(directoryRootPath)
+        ? (currentNode.getSession().getNode(directoryRootPath) as JCRNodeWrapper)
+        : currentNode.hasProperty("sourceRoot")
+          ? (currentNode.getProperty("sourceRoot").getNode() as JCRNodeWrapper)
+          : sourceRoot;
+    const rootPath = configuredRoot?.getPath() || siteRoot;
+    const queriedPartners = useJCRQuery({
       query: `
         SELECT * FROM [jahiacom:partner]
         WHERE ISDESCENDANTNODE(${JSON.stringify(rootPath)})
         ORDER BY [jcr:title]
       `,
     });
-    for (const dependency of partners) {
+    const allPartners = configuredRoot ? partnerDescendants(configuredRoot) : queriedPartners;
+    const partners = allPartners.filter((partner) => {
+      const type = stringProperty(partner, "partnerType") || "integrator";
+      if (mode === "solution") return type !== "technology";
+      if (mode === "technology") return type === "technology";
+      return true;
+    });
+    for (const dependency of allPartners) {
+      server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
+    }
+
+    const technologyPageRoot = `${siteRoot}/home/product/features/integrations`;
+    const technologyPages = useJCRQuery({
+      query: `SELECT * FROM [jnt:page] WHERE ISCHILDNODE(${JSON.stringify(technologyPageRoot)})`,
+    });
+    const technologyPageUrls = new Map(
+      technologyPages.map((page) => [page.getName(), buildNodeUrl(page)]),
+    );
+    for (const dependency of technologyPages) {
       server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
     }
 
@@ -142,11 +200,40 @@ jahiaComponent(
       americas: cards.filter(({ props }) => props.regions?.includes("americas")).length,
       apac: cards.filter(({ props }) => props.regions?.includes("apac")).length,
     };
+    const technologyOptions = new Map<
+      string,
+      { value: string; label: string; partnerships: Set<"strategic" | "integration"> }
+    >();
+    for (const { props } of cards) {
+      const partnership = props.integrationPartner ? "integration" : "strategic";
+      for (const tag of (props.tags || []).filter(
+        (value): value is JCRNodeWrapper => value !== null,
+      )) {
+        const value = tag.getName();
+        const existing = technologyOptions.get(value) || {
+          value,
+          label: tag.getDisplayableName(),
+          partnerships: new Set<"strategic" | "integration">(),
+        };
+        existing.partnerships.add(partnership);
+        technologyOptions.set(value, existing);
+      }
+    }
+    const technologies = [...technologyOptions.values()]
+      .map(({ value, label, partnerships }) => ({ value, label, partnerships: [...partnerships] }))
+      .sort((left, right) => left.label.localeCompare(right.label));
 
     return (
       <Island
         component={Directory}
-        props={{ total: cards.length, integratorCount, technologyCount, regionCounts }}
+        props={{
+          mode,
+          total: cards.length,
+          integratorCount,
+          technologyCount,
+          regionCounts,
+          technologies,
+        }}
       >
         {cards.map(({ currentNode: partner, props, regionUrls }) => (
           <PartnerCard
@@ -155,6 +242,8 @@ jahiaComponent(
             props={props}
             locale={currentResource.getLocale()}
             regionUrls={regionUrls}
+            directoryMode={mode}
+            profileUrl={props.partnership ? undefined : technologyPageUrls.get(partner.getName())}
           />
         ))}
       </Island>
