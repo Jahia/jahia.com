@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.4.0
+
+* Add complete Solution and Technology Partner directories, responsive filtering, detailed Partner profiles, logos, and the reviewed French and English Partner content migration.
+
 ## 1.3.7
 
 * Render and filter mapped Blog, Customer story, and Resource categories even when LIVE editorial assignments have not been migrated yet.
