@@ -12,6 +12,10 @@
           "selectableTypesTable": ["jnt:contentFolder"]
         }
       }
+    },
+    {
+      "name": "directoryMode",
+      "mandatory": true
     }
   ]
 }

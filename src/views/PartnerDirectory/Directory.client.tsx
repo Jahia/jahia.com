@@ -2,69 +2,115 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import classes from "./component.module.css";
 
+type DirectoryMode = "all" | "solution" | "technology";
 type PartnerType = "all" | "integrator" | "technology";
 type Region = "all" | "europe" | "americas" | "apac";
+type Partnership = "all" | "strategic" | "integration";
+
+interface TechnologyOption {
+  value: string;
+  label: string;
+  partnerships: Array<Exclude<Partnership, "all">>;
+}
 
 const typeParameter = "partnerType";
 const regionParameter = "partnerRegion";
+const technologyParameter = "technology";
+const partnershipParameter = "partnership";
 
-const isPartnerType = (value: string | null): value is PartnerType =>
-  value === "all" || value === "integrator" || value === "technology";
-
-const isRegion = (value: string | null): value is Region =>
-  value === "all" || value === "europe" || value === "americas" || value === "apac";
-
-const filtersFromUrl = (): { type: PartnerType; region: Region } => {
-  if (typeof window === "undefined") return { type: "all", region: "all" };
-
-  const parameters = new URLSearchParams(window.location.search);
-  const type = parameters.get(typeParameter);
-  const region = parameters.get(regionParameter);
-  return {
-    type: isPartnerType(type) ? type : "all",
-    region: isRegion(region) ? region : "all",
-  };
+const valueFromUrl = <Value extends string>(
+  name: string,
+  allowed: readonly Value[],
+  fallback: Value,
+): Value => {
+  if (typeof window === "undefined") return fallback;
+  const value = new URLSearchParams(window.location.search).get(name) as Value | null;
+  return value && allowed.includes(value) ? value : fallback;
 };
 
-const replaceFiltersInUrl = (type: PartnerType, region: Region) => {
+const replaceFiltersInUrl = (values: Record<string, string>) => {
   const url = new URL(window.location.href);
-
-  if (type === "all") url.searchParams.delete(typeParameter);
-  else url.searchParams.set(typeParameter, type);
-
-  if (region === "all") url.searchParams.delete(regionParameter);
-  else url.searchParams.set(regionParameter, region);
-
+  for (const [name, value] of Object.entries(values)) {
+    if (value === "all") url.searchParams.delete(name);
+    else url.searchParams.set(name, value);
+  }
   window.history.replaceState(window.history.state, "", url);
 };
 
 export default function Directory({
   children,
+  mode,
   total,
   integratorCount,
   technologyCount,
   regionCounts,
+  technologies,
 }: {
   children?: ReactNode;
+  mode: DirectoryMode;
   total: number;
   integratorCount: number;
   technologyCount: number;
   regionCounts: Record<Exclude<Region, "all">, number>;
+  technologies: TechnologyOption[];
 }) {
   const { t } = useTranslation();
   const root = useRef<HTMLDivElement>(null);
-  const [type, setType] = useState<PartnerType>(() => filtersFromUrl().type);
-  const [region, setRegion] = useState<Region>(() => filtersFromUrl().region);
+  const [type, setType] = useState<PartnerType>(() =>
+    valueFromUrl(typeParameter, ["all", "integrator", "technology"], "all"),
+  );
+  const [region, setRegion] = useState<Region>(() =>
+    valueFromUrl(regionParameter, ["all", "europe", "americas", "apac"], "all"),
+  );
+  const [technology, setTechnology] = useState(() => {
+    if (typeof window === "undefined") return "all";
+    return new URLSearchParams(window.location.search).get(technologyParameter) || "all";
+  });
+  const [partnership, setPartnership] = useState<Partnership>(() =>
+    valueFromUrl(partnershipParameter, ["all", "strategic", "integration"], "all"),
+  );
   const [visible, setVisible] = useState(total);
+
   const availableTypes = (["all", "integrator", "technology"] as const).filter(
     (value) =>
       value === "all" || (value === "integrator" ? integratorCount > 0 : technologyCount > 0),
   );
   const activeType = availableTypes.includes(type) ? type : "all";
+  const availableRegions = (["europe", "americas", "apac"] as const).filter(
+    (value) => regionCounts[value] > 0,
+  );
+  const activeRegion = availableRegions.includes(region as Exclude<Region, "all">) ? region : "all";
+  const availableTechnologies = technologies.filter(
+    (option) => partnership === "all" || option.partnerships.includes(partnership),
+  );
+  const activeTechnology = availableTechnologies.some((option) => option.value === technology)
+    ? technology
+    : "all";
+  const availablePartnerships = (["strategic", "integration"] as const).filter(
+    (value) =>
+      activeTechnology === "all" ||
+      technologies.some(
+        (option) => option.value === activeTechnology && option.partnerships.includes(value),
+      ),
+  );
+  const activePartnership = availablePartnerships.includes(
+    partnership as Exclude<Partnership, "all">,
+  )
+    ? partnership
+    : "all";
 
   useEffect(() => {
-    replaceFiltersInUrl(activeType, region);
-  }, [activeType, region]);
+    if (mode === "solution") {
+      replaceFiltersInUrl({ [regionParameter]: activeRegion });
+    } else if (mode === "technology") {
+      replaceFiltersInUrl({
+        [technologyParameter]: activeTechnology,
+        [partnershipParameter]: activePartnership,
+      });
+    } else {
+      replaceFiltersInUrl({ [typeParameter]: activeType, [regionParameter]: activeRegion });
+    }
+  }, [activePartnership, activeRegion, activeTechnology, activeType, mode]);
 
   useEffect(() => {
     const container = root.current;
@@ -73,54 +119,35 @@ export default function Directory({
 
     for (const card of container.querySelectorAll<HTMLElement>("[data-partner-card]")) {
       const regions = (card.dataset.partnerRegions || "").split(",");
+      const cardTechnologies = (card.dataset.partnerTechnologies || "").split(",");
       const matches =
-        (activeType === "all" || card.dataset.partnerType === activeType) &&
-        (region === "all" || regions.includes(region));
+        mode === "solution"
+          ? activeRegion === "all" || regions.includes(activeRegion)
+          : mode === "technology"
+            ? (activeTechnology === "all" || cardTechnologies.includes(activeTechnology)) &&
+              (activePartnership === "all" || card.dataset.partnerPartnership === activePartnership)
+            : (activeType === "all" || card.dataset.partnerType === activeType) &&
+              (activeRegion === "all" || regions.includes(activeRegion));
       card.hidden = !matches;
       if (matches) count += 1;
 
-      for (const link of card.querySelectorAll<HTMLAnchorElement>("[data-region-links]")) {
-        const regionLinks = JSON.parse(link.dataset.regionLinks || "{}") as Partial<
-          Record<Exclude<Region, "all">, string>
-        >;
-        const targetUrl =
-          (region !== "all" ? regionLinks[region] : undefined) ||
-          link.dataset.defaultRegionLink ||
-          link.href;
-        link.href = targetUrl;
-        link.dataset.elementUrl = targetUrl;
+      if (mode !== "technology") {
+        for (const link of card.querySelectorAll<HTMLAnchorElement>("[data-region-links]")) {
+          const regionLinks = JSON.parse(link.dataset.regionLinks || "{}") as Partial<
+            Record<Exclude<Region, "all">, string>
+          >;
+          const targetUrl =
+            (activeRegion !== "all" ? regionLinks[activeRegion] : undefined) ||
+            link.dataset.defaultRegionLink ||
+            link.href;
+          link.href = targetUrl;
+          link.dataset.elementUrl = targetUrl;
+        }
       }
     }
     const updateCount = requestAnimationFrame(() => setVisible(count));
     return () => cancelAnimationFrame(updateCount);
-  }, [activeType, region]);
-
-  useEffect(() => {
-    const navigateToDirectory = (event: MouseEvent) => {
-      const target = (event.target as HTMLElement).closest<HTMLElement>(
-        "[data-partner-type-target], [data-partner-region-target]",
-      );
-      if (!target) return;
-      const nextType = target.dataset.partnerTypeTarget as PartnerType | undefined;
-      const nextRegion = target.dataset.partnerRegionTarget as Region | undefined;
-      if (
-        nextType &&
-        ((nextType === "integrator" && integratorCount === 0) ||
-          (nextType === "technology" && technologyCount === 0))
-      ) {
-        return;
-      }
-      event.preventDefault();
-      if (nextType) setType(nextType);
-      if (nextRegion) {
-        setType("all");
-        setRegion(nextRegion);
-      }
-      document.getElementById("partner-directory")?.scrollIntoView({ behavior: "smooth" });
-    };
-    document.addEventListener("click", navigateToDirectory);
-    return () => document.removeEventListener("click", navigateToDirectory);
-  }, [integratorCount, technologyCount]);
+  }, [activePartnership, activeRegion, activeTechnology, activeType, mode]);
 
   useEffect(() => {
     for (const value of ["europe", "americas", "apac"] as const) {
@@ -135,66 +162,163 @@ export default function Directory({
   const reset = () => {
     setType("all");
     setRegion("all");
+    setTechnology("all");
+    setPartnership("all");
   };
 
-  const selectType = (value: PartnerType) => {
-    setType(value);
-    setRegion("all");
+  const selectTechnology = (value: string) => {
+    setTechnology(value);
+    if (
+      value !== "all" &&
+      partnership !== "all" &&
+      !technologies.some(
+        (option) => option.value === value && option.partnerships.includes(partnership),
+      )
+    ) {
+      setPartnership("all");
+    }
   };
 
-  const selectRegion = (value: Region) => {
-    setType("all");
+  const selectPartnership = (value: Partnership) => {
+    setPartnership(value);
+    if (
+      value !== "all" &&
+      technology !== "all" &&
+      !technologies.some(
+        (option) => option.value === technology && option.partnerships.includes(value),
+      )
+    ) {
+      setTechnology("all");
+    }
+  };
+
+  const selectRegionShortcut = (value: Exclude<Region, "all">) => {
     setRegion(value);
+    requestAnimationFrame(() => {
+      root.current
+        ?.querySelector<HTMLElement>("[data-partner-filter-bar]")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   };
 
   return (
     <div ref={root} id="partner-directory-results">
-      <div className={classes.filters}>
-        <div className={classes.typeFilters} aria-label={t("partner.allTypes")}>
-          {availableTypes.map((value) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={activeType === value}
-              onClick={() => selectType(value)}
+      {mode === "solution" && (
+        <>
+          <section className={classes.solutionIntroduction}>
+            <p dangerouslySetInnerHTML={{ __html: t("partner.solutionIntroduction") }} />
+          </section>
+
+          <section className={classes.regionShortcuts} id="partner-nearby">
+            <header className={classes.regionHeader}>
+              <span className={classes.eyebrow}>{t("partner.regionEyebrow")}</span>
+              <h2 className={classes.sectionTitle}>{t("partner.regionTitle")}</h2>
+              <p className={classes.sectionLead}>{t("partner.regionIntroduction")}</p>
+            </header>
+            <div className={classes.regionGrid}>
+              {availableRegions.map((value) => (
+                <button
+                  key={value}
+                  className={classes.regionButton}
+                  type="button"
+                  aria-pressed={activeRegion === value}
+                  onClick={() => selectRegionShortcut(value)}
+                >
+                  <strong className={classes.regionName}>{t(`partner.regions.${value}`)}</strong>
+                  <span>{t("partner.regionCount", { count: regionCounts[value] })}</span>
+                  <span className={classes.regionAction}>
+                    {t("partner.showRegion")}
+                    <span className="i-ri:arrow-down-s-line" aria-hidden="true" />
+                  </span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <header className={classes.catalogHeader}>
+            <span className={classes.eyebrow}>{t("partner.catalogEyebrow")}</span>
+            <h2 className={classes.sectionTitle}>{t("partner.catalogTitle")}</h2>
+            <p className={classes.sectionLead}>{t("partner.catalogIntroduction")}</p>
+          </header>
+        </>
+      )}
+
+      <div className={classes.filters} data-mode={mode} data-partner-filter-bar="">
+        {mode === "all" && (
+          <div className={classes.typeFilters} aria-label={t("partner.allTypes")}>
+            {availableTypes.map((value) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={activeType === value}
+                onClick={() => setType(value)}
+              >
+                {t(
+                  value === "all"
+                    ? "partner.allTypes"
+                    : value === "integrator"
+                      ? "partner.integrators"
+                      : "partner.technology",
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {(mode === "solution" || mode === "all") && (
+          <label>
+            <span>{t("partner.region")}</span>
+            <select
+              value={activeRegion}
+              onChange={(event) => setRegion(event.target.value as Region)}
             >
-              {t(
-                value === "all"
-                  ? "partner.allTypes"
-                  : value === "integrator"
-                    ? "partner.integrators"
-                    : "partner.technology",
-              )}{" "}
-              <span>
-                (
-                {value === "all"
-                  ? total
-                  : value === "integrator"
-                    ? integratorCount
-                    : technologyCount}
-                )
-              </span>
-            </button>
-          ))}
-        </div>
-        <label>
-          <span>{t("partner.region")}</span>
-          <select value={region} onChange={(event) => selectRegion(event.target.value as Region)}>
-            <option value="all">{t("partner.allRegions")}</option>
-            <option value="europe">
-              {t("partner.regions.europe")}
-              {` (${regionCounts.europe})`}
-            </option>
-            <option value="americas">
-              {t("partner.regions.americas")}
-              {` (${regionCounts.americas})`}
-            </option>
-            <option value="apac">
-              {t("partner.regions.apac")}
-              {` (${regionCounts.apac})`}
-            </option>
-          </select>
-        </label>
+              <option value="all">{t("partner.allRegions")}</option>
+              {availableRegions.map((value) => (
+                <option key={value} value={value}>
+                  {t(`partner.regions.${value}`)} ({regionCounts[value]})
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+
+        {mode === "technology" && (
+          <>
+            <label>
+              <span>{t("partner.technologyFilter")}</span>
+              <select
+                value={activeTechnology}
+                onChange={(event) => selectTechnology(event.target.value)}
+              >
+                <option value="all">{t("partner.allTechnologies")}</option>
+                {availableTechnologies.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              <span>{t("partner.partnershipType")}</span>
+              <select
+                value={activePartnership}
+                onChange={(event) => selectPartnership(event.target.value as Partnership)}
+              >
+                <option value="all">{t("partner.allPartnershipTypes")}</option>
+                {availablePartnerships.map((value) => (
+                  <option key={value} value={value}>
+                    {t(`partner.partnershipTypes.${value}`)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </>
+        )}
+
+        <button className={classes.clear} type="button" onClick={reset}>
+          {t("partner.clear")}
+          <span className="i-ri:close-line" aria-hidden="true" />
+        </button>
         <strong className={classes.count}>{t("partner.count", { count: visible })}</strong>
       </div>
       <div className={classes.grid}>{children}</div>
