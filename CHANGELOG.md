@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.4.5
+
+* Shorten the Technology Partner integration field label in English and French.
+
 ## 1.4.4
 
 * Add dedicated Hero subtitle and single-value expertise fields to Partner editing.
