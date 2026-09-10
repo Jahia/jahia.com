@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.4.6
+
+* Migrate Technology Partner classification and SEO metadata and route every directory card to its Partner profile.
+
 ## 1.4.5
 
 * Shorten the Technology Partner integration field label in English and French.
