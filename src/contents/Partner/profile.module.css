@@ -63,7 +63,7 @@
 }
 
 .heroCopy h1 {
-  font-size: clamp(2.75rem, 5vw, 4.75rem);
+  font-size: clamp(2.25rem, 4.25vw, 4rem);
   line-height: 1;
   letter-spacing: -0.055em;
 }
@@ -88,7 +88,7 @@
 
 .facts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   gap: 1px;
   overflow: hidden;
   background: #d7e0e8;
@@ -100,7 +100,7 @@
 .partnershipFacts > div {
   display: grid;
   gap: 0.35rem;
-  padding: 1rem;
+  padding: 1.25rem;
   background: #fff;
 }
 
@@ -152,7 +152,7 @@
 .partnership h2,
 .contactSection h2 {
   margin-bottom: 1.25rem;
-  font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+  font-size: clamp(1.625rem, 2.8vw, 2.5rem);
   line-height: 1.06;
   letter-spacing: -0.045em;
 }
@@ -169,27 +169,18 @@
 }
 
 .expertise {
-  padding: 0;
+  padding-left: 1.5rem;
   margin: 1rem 0 0;
-  list-style: none;
 }
 
 .expertise li {
-  position: relative;
-  padding-left: 1.5rem;
   margin-top: 0.7rem;
   color: #334552;
 }
 
-.expertise li::before {
-  position: absolute;
-  top: 0.05rem;
-  left: 0;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.4;
-  color: var(--jahia-a11y-blue);
-  content: "✓";
+.expertise li::marker {
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' width='1em' viewBox='0 0 20 14'%3E%3Cpath stroke='%2300a1e3' stroke-width='2' stroke-linecap='square' d='M1.5 7.5L6 12H8L18.5 1.5'/%3E%3C/svg%3E")
+    "  ";
 }
 
 .tags {

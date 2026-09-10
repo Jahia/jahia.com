@@ -67,7 +67,13 @@ export const PartnerCard = ({
       </div>
       <div className={classes.cardHeading}>
         <h3>{props["jcr:title"]}</h3>
-        <span className={clsx("_pack-1", classes.small)}>
+        <span
+          className={clsx(
+            "_pack-1",
+            classes.small,
+            technologyMode && props.strategicPartner && classes.strategic,
+          )}
+        >
           {technologyMode
             ? t(`partner.partnershipTypes.${partnership}`)
             : levels(
