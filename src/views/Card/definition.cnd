@@ -1,3 +1,6 @@
 [jahiacom:card] > jnt:content, mix:title, jahiacommix:cta, jahiacommix:component, jmix:editorialContent
  - icon (weakreference, picker) i18n < jmix:image
  - body (string, richtext) i18n
+ - technologyCategories (string, choicelist[resourceBundle]) multiple < 'aiGenai', 'crm', 'marketingAutomation', 'damMedia', 'pim', 'translationLocalization', 'analyticsData', 'seoContent', 'accessibilityQuality', 'supportService', 'collaboration'
+ - technologyPartnerType (string, choicelist[resourceBundle]) = 'integration' < 'strategic', 'integration'
+ - partnerRegionTarget (string, choicelist[resourceBundle]) < 'europe', 'americas', 'apac'

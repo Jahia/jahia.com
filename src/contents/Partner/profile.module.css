@@ -75,36 +75,8 @@
   color: var(--jahia-neutral-300);
 }
 
-.primaryAction,
-.secondaryAction {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.875rem;
-  padding: 0.75rem 1rem;
-  font-weight: 700;
-  border: 1px solid var(--jahia-primary-color);
-  border-radius: 0.375rem;
-}
-
-.primaryAction {
-  color: #001932;
-  background: #00a1e3;
-  border-color: #00a1e3;
-}
-
-.secondaryAction {
-  color: #fff;
-  border-color: rgb(255 255 255 / 40%);
-}
-
-.primaryAction:hover,
-.secondaryAction:hover {
-  text-decoration: none;
-  opacity: 0.86;
-}
-
 .overview {
-  padding-block: 1.5rem;
+  padding-block: 2.25rem;
   background: #f1f5f8;
   border-bottom: 1px solid #d7e0e8;
 }
@@ -116,7 +88,7 @@
 
 .facts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   gap: 1px;
   overflow: hidden;
   background: #d7e0e8;
@@ -180,7 +152,7 @@
 .partnership h2,
 .contactSection h2 {
   margin-bottom: 1.25rem;
-  font-size: clamp(2rem, 3.8vw, 3.25rem);
+  font-size: clamp(1.75rem, 3.2vw, 2.75rem);
   line-height: 1.06;
   letter-spacing: -0.045em;
 }
@@ -211,13 +183,13 @@
 
 .expertise li::before {
   position: absolute;
-  top: 0.5rem;
+  top: 0.05rem;
   left: 0;
-  width: 0.625rem;
-  height: 0.625rem;
-  content: "";
-  background: var(--jahia-primary-color);
-  border-radius: 0.1875rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--jahia-a11y-blue);
+  content: "✓";
 }
 
 .tags {
@@ -240,6 +212,13 @@
   max-width: 70ch;
 }
 
+.partnershipGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: stretch;
+}
+
 .partnershipFacts {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -247,6 +226,23 @@
   margin-top: 2rem;
   background: #fff;
   border: 1px solid #d7e0e8;
+}
+
+.partnershipVisual {
+  display: grid;
+  place-items: center;
+  min-height: 22rem;
+  padding: clamp(2rem, 5vw, 4rem);
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #dae0e7;
+  border-radius: 1rem;
+}
+
+.partnershipVisual img {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: contain;
 }
 
 .project {
@@ -357,6 +353,7 @@
 
   .heroInner,
   .twoColumns,
+  .partnershipGrid,
   .facts,
   .partnershipFacts {
     grid-template-columns: 1fr;

@@ -41,9 +41,11 @@
       "name": "integrationPartner"
     },
     {
+      "name": "strategicPartner"
+    },
+    {
       "name": "partnerLocationsData",
-      "selectorType": "PartnerLocationsPicker",
-      "mandatory": true
+      "selectorType": "PartnerLocationsPicker"
     },
     {
       "name": "partnerSince"
@@ -56,6 +58,12 @@
     },
     {
       "name": "expertise"
+    },
+    {
+      "name": "partnership"
+    },
+    {
+      "name": "partnershipImage"
     },
     {
       "name": "tags"

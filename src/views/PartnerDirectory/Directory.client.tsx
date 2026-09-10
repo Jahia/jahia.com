@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import classes from "./component.module.css";
 
 type DirectoryMode = "all" | "solution" | "technology";
 type PartnerType = "all" | "integrator" | "technology";
+type PartnerLevel = "all" | "diamond" | "gold" | "silver";
 type Region = "all" | "europe" | "americas" | "apac";
 type Partnership = "all" | "strategic" | "integration";
 
@@ -14,9 +15,11 @@ interface TechnologyOption {
 }
 
 const typeParameter = "partnerType";
+const levelParameter = "partnerLevel";
 const regionParameter = "partnerRegion";
 const technologyParameter = "technology";
 const partnershipParameter = "partnership";
+const levels = ["diamond", "gold", "silver"] as const;
 
 const valueFromUrl = <Value extends string>(
   name: string,
@@ -45,6 +48,8 @@ export default function Directory({
   technologyCount,
   regionCounts,
   technologies,
+  levelCounts,
+  filterItems,
 }: {
   children?: ReactNode;
   mode: DirectoryMode;
@@ -53,6 +58,8 @@ export default function Directory({
   technologyCount: number;
   regionCounts: Record<Exclude<Region, "all">, number>;
   technologies: TechnologyOption[];
+  levelCounts: Record<Exclude<PartnerLevel, "all">, number>;
+  filterItems: Array<{ level: Exclude<PartnerLevel, "all">; regions: Region[] }>;
 }) {
   const { t } = useTranslation();
   const root = useRef<HTMLDivElement>(null);
@@ -61,6 +68,9 @@ export default function Directory({
   );
   const [region, setRegion] = useState<Region>(() =>
     valueFromUrl(regionParameter, ["all", "europe", "americas", "apac"], "all"),
+  );
+  const [level, setLevel] = useState<PartnerLevel>(() =>
+    valueFromUrl(levelParameter, ["all", "diamond", "gold", "silver"], "all"),
   );
   const [technology, setTechnology] = useState(() => {
     if (typeof window === "undefined") return "all";
@@ -80,6 +90,19 @@ export default function Directory({
     (value) => regionCounts[value] > 0,
   );
   const activeRegion = availableRegions.includes(region as Exclude<Region, "all">) ? region : "all";
+  const availableLevels = useMemo<PartnerLevel[]>(
+    () => [
+      "all",
+      ...levels.filter((value) =>
+        filterItems.some(
+          (item) =>
+            item.level === value && (activeRegion === "all" || item.regions.includes(activeRegion)),
+        ),
+      ),
+    ],
+    [activeRegion, filterItems],
+  );
+  const activeLevel = availableLevels.includes(level) ? level : "all";
   const availableTechnologies = technologies.filter(
     (option) => partnership === "all" || option.partnerships.includes(partnership),
   );
@@ -101,7 +124,10 @@ export default function Directory({
 
   useEffect(() => {
     if (mode === "solution") {
-      replaceFiltersInUrl({ [regionParameter]: activeRegion });
+      replaceFiltersInUrl({
+        [levelParameter]: activeLevel,
+        [regionParameter]: activeRegion,
+      });
     } else if (mode === "technology") {
       replaceFiltersInUrl({
         [technologyParameter]: activeTechnology,
@@ -110,7 +136,7 @@ export default function Directory({
     } else {
       replaceFiltersInUrl({ [typeParameter]: activeType, [regionParameter]: activeRegion });
     }
-  }, [activePartnership, activeRegion, activeTechnology, activeType, mode]);
+  }, [activeLevel, activePartnership, activeRegion, activeTechnology, activeType, mode]);
 
   useEffect(() => {
     const container = root.current;
@@ -122,7 +148,8 @@ export default function Directory({
       const cardTechnologies = (card.dataset.partnerTechnologies || "").split(",");
       const matches =
         mode === "solution"
-          ? activeRegion === "all" || regions.includes(activeRegion)
+          ? (activeRegion === "all" || regions.includes(activeRegion)) &&
+            (activeLevel === "all" || card.dataset.partnerLevel === activeLevel)
           : mode === "technology"
             ? (activeTechnology === "all" || cardTechnologies.includes(activeTechnology)) &&
               (activePartnership === "all" || card.dataset.partnerPartnership === activePartnership)
@@ -147,7 +174,7 @@ export default function Directory({
     }
     const updateCount = requestAnimationFrame(() => setVisible(count));
     return () => cancelAnimationFrame(updateCount);
-  }, [activePartnership, activeRegion, activeTechnology, activeType, mode]);
+  }, [activeLevel, activePartnership, activeRegion, activeTechnology, activeType, mode]);
 
   useEffect(() => {
     for (const value of ["europe", "americas", "apac"] as const) {
@@ -156,12 +183,45 @@ export default function Directory({
       )) {
         count.textContent = String(regionCounts[value]);
       }
+      for (const target of document.querySelectorAll<HTMLElement>(
+        `[data-partner-region-target="${value}"]`,
+      )) {
+        target
+          .closest<HTMLElement>("article")
+          ?.toggleAttribute("hidden", regionCounts[value] === 0);
+      }
     }
   }, [regionCounts.apac, regionCounts.americas, regionCounts.europe]);
+
+  useEffect(() => {
+    if (mode !== "solution") return;
+
+    const navigateToRegion = (event: MouseEvent) => {
+      const target = (event.target as HTMLElement).closest<HTMLElement>(
+        "[data-partner-region-target]",
+      );
+      const nextRegion = target?.dataset.partnerRegionTarget as Region | undefined;
+      if (!nextRegion || nextRegion === "all" || regionCounts[nextRegion] === 0) return;
+
+      event.preventDefault();
+      if (
+        level !== "all" &&
+        !filterItems.some((item) => item.level === level && item.regions.includes(nextRegion))
+      ) {
+        setLevel("all");
+      }
+      setRegion(nextRegion);
+      document.getElementById("partner-directory")?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    document.addEventListener("click", navigateToRegion);
+    return () => document.removeEventListener("click", navigateToRegion);
+  }, [filterItems, level, mode, regionCounts]);
 
   const reset = () => {
     setType("all");
     setRegion("all");
+    setLevel("all");
     setTechnology("all");
     setPartnership("all");
   };
@@ -192,58 +252,31 @@ export default function Directory({
     }
   };
 
-  const selectRegionShortcut = (value: Exclude<Region, "all">) => {
-    setRegion(value);
-    requestAnimationFrame(() => {
-      root.current
-        ?.querySelector<HTMLElement>("[data-partner-filter-bar]")
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  };
-
   return (
     <div ref={root} id="partner-directory-results">
-      {mode === "solution" && (
-        <>
-          <section className={classes.solutionIntroduction}>
-            <p dangerouslySetInnerHTML={{ __html: t("partner.solutionIntroduction") }} />
-          </section>
-
-          <section className={classes.regionShortcuts} id="partner-nearby">
-            <header className={classes.regionHeader}>
-              <span className={classes.eyebrow}>{t("partner.regionEyebrow")}</span>
-              <h2 className={classes.sectionTitle}>{t("partner.regionTitle")}</h2>
-              <p className={classes.sectionLead}>{t("partner.regionIntroduction")}</p>
-            </header>
-            <div className={classes.regionGrid}>
-              {availableRegions.map((value) => (
+      <div className={classes.filters} data-mode={mode} data-partner-filter-bar="">
+        {mode === "solution" && (
+          <fieldset className={classes.levelFilter}>
+            <legend>{t("partner.level")}</legend>
+            <div className={classes.levelButtons}>
+              {availableLevels.map((value) => (
                 <button
                   key={value}
-                  className={classes.regionButton}
                   type="button"
-                  aria-pressed={activeRegion === value}
-                  onClick={() => selectRegionShortcut(value)}
+                  name={levelParameter}
+                  value={value}
+                  aria-pressed={activeLevel === value}
+                  onClick={() => setLevel(value)}
                 >
-                  <strong className={classes.regionName}>{t(`partner.regions.${value}`)}</strong>
-                  <span>{t("partner.regionCount", { count: regionCounts[value] })}</span>
-                  <span className={classes.regionAction}>
-                    {t("partner.showRegion")}
-                    <span className="i-ri:arrow-down-s-line" aria-hidden="true" />
-                  </span>
+                  {value === "all"
+                    ? t("partner.allLevels")
+                    : `${t(`partner.levels.${value}`)} (${levelCounts[value]})`}
                 </button>
               ))}
             </div>
-          </section>
+          </fieldset>
+        )}
 
-          <header className={classes.catalogHeader}>
-            <span className={classes.eyebrow}>{t("partner.catalogEyebrow")}</span>
-            <h2 className={classes.sectionTitle}>{t("partner.catalogTitle")}</h2>
-            <p className={classes.sectionLead}>{t("partner.catalogIntroduction")}</p>
-          </header>
-        </>
-      )}
-
-      <div className={classes.filters} data-mode={mode} data-partner-filter-bar="">
         {mode === "all" && (
           <div className={classes.typeFilters} aria-label={t("partner.allTypes")}>
             {availableTypes.map((value) => (
@@ -265,7 +298,7 @@ export default function Directory({
           </div>
         )}
 
-        {(mode === "solution" || mode === "all") && (
+        {mode === "all" && (
           <label>
             <span>{t("partner.region")}</span>
             <select
@@ -280,6 +313,21 @@ export default function Directory({
               ))}
             </select>
           </label>
+        )}
+
+        {mode === "solution" && activeRegion !== "all" && (
+          <button
+            className={classes.regionChip}
+            type="button"
+            onClick={() => setRegion("all")}
+            aria-label={t("partner.clearRegion", {
+              region: t(`partner.regions.${activeRegion}`),
+            })}
+          >
+            <span className="i-ri:map-pin-2-line" aria-hidden="true" />
+            {t(`partner.regions.${activeRegion}`)}
+            <span className="i-ri:close-line" aria-hidden="true" />
+          </button>
         )}
 
         {mode === "technology" && (
@@ -315,10 +363,12 @@ export default function Directory({
           </>
         )}
 
-        <button className={classes.clear} type="button" onClick={reset}>
-          {t("partner.clear")}
-          <span className="i-ri:close-line" aria-hidden="true" />
-        </button>
+        {(mode !== "solution" || activeLevel !== "all" || activeRegion !== "all") && (
+          <button className={classes.clear} type="button" onClick={reset}>
+            {t("partner.clear")}
+            <span className="i-ri:close-line" aria-hidden="true" />
+          </button>
+        )}
         <strong className={classes.count}>{t("partner.count", { count: visible })}</strong>
       </div>
       <div className={classes.grid}>{children}</div>

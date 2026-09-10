@@ -121,6 +121,63 @@
   gap: 0.5rem;
 }
 
+.levelFilter {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.levelFilter legend {
+  padding: 0;
+  margin-bottom: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.levelButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.levelButtons button {
+  min-height: 2.75rem;
+  padding: 0.65rem 0.9rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--jahia-a11y-blue);
+  text-transform: uppercase;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid var(--jahia-a11y-blue);
+  border-radius: 0.25rem;
+}
+
+.regionChip {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  color: #001932;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: #e3f7ff;
+  border: 1px solid #b5e0fa;
+  border-radius: 999px;
+}
+
+.regionChip:hover,
+.regionChip:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--jahia-a11y-blue) 25%, transparent);
+  outline-offset: 2px;
+  background: #fff;
+}
+
 .typeFilters button,
 .emptyState button,
 .clear {
@@ -159,6 +216,17 @@
   color: var(--jahia-neutral-50);
   background: var(--jahia-a11y-blue);
   border-color: var(--jahia-a11y-blue);
+}
+
+.levelButtons button:hover,
+.levelButtons button:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--jahia-a11y-blue) 25%, transparent);
+  outline-offset: 2px;
+}
+
+.levelButtons button[aria-pressed="true"] {
+  color: #fff;
+  background: var(--jahia-a11y-blue);
 }
 
 .filters label {
@@ -239,6 +307,13 @@
 /* Neutralize the decorative cut corners inherited from the generic Jahia Card. */
 :global(#partner-nearby article)::before,
 :global(#partner-nearby article)::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Block 2 uses regular rounded cards, without the generic folded-corner ornaments. */
+:global(#partner-types article)::before,
+:global(#partner-types article)::after {
   display: none !important;
   content: none !important;
 }

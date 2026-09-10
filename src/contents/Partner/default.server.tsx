@@ -44,7 +44,7 @@ export const PartnerCard = ({
   const defaultRegionLink = regionLinks[regions[0]];
   const detailUrl = profileUrl || defaultRegionLink;
   const technologyTags = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
-  const partnership = props.integrationPartner ? "integration" : "strategic";
+  const partnership = props.strategicPartner ? "strategic" : "integration";
   const technologyMode = directoryMode === "technology" || type === "technology";
 
   return (
@@ -52,6 +52,7 @@ export const PartnerCard = ({
       className={classes.card}
       data-partner-card=""
       data-partner-type={type}
+      data-partner-level={props.certification}
       data-partner-regions={regions.join(",")}
       data-partner-technologies={technologyTags.map((tag) => tag.getName()).join(",")}
       data-partner-partnership={partnership}
@@ -69,7 +70,13 @@ export const PartnerCard = ({
         <span className={clsx("_pack-1", classes.small)}>
           {technologyMode
             ? t(`partner.partnershipTypes.${partnership}`)
-            : levels(props.certification, locale, props.partnerLevel, props.integrationPartner)}
+            : levels(
+                props.certification,
+                locale,
+                props.partnerLevel,
+                props.integrationPartner,
+                props.strategicPartner,
+              )}
         </span>
       </div>
       <div className={classes.cardMeta}>
@@ -141,7 +148,13 @@ const SimilarPartnerCard = ({
       <h3>{props["jcr:title"]}</h3>
       <p>
         {countries || regionCodes[region]} ·{" "}
-        {levels(props.certification, locale, props.partnerLevel, props.integrationPartner)}
+        {levels(
+          props.certification,
+          locale,
+          props.partnerLevel,
+          props.integrationPartner,
+          props.strategicPartner,
+        )}
       </p>
       <a href={`${buildNodeUrl(currentNode)}?region=${region}`}>{t("partner.viewProfile")}</a>
     </article>

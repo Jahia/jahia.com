@@ -11,6 +11,12 @@
       "strategic": "Partenaire stratégique",
       "integration": "Intégration"
     },
+    "allLevels": "Tous les niveaux",
+    "levels": {
+      "diamond": "Diamond",
+      "gold": "Gold",
+      "silver": "Silver"
+    },
     "region": "Région",
     "allRegions": "Toutes les régions",
     "regions": {
@@ -32,7 +38,9 @@
     "count_other": "{{count}} partenaires affichés",
     "empty": "Aucun partenaire ne correspond à ces filtres.",
     "clear": "Effacer les filtres",
+    "clearRegion": "Retirer le filtre de région {{region}}",
     "viewProfile": "Voir la fiche",
+    "viewPartners": "Voir les partenaires",
     "who": "Qui sont-ils",
     "whatTheyDo": "Ce qu’ils font",
     "expertiseTitle": "Leurs domaines d’expertise",

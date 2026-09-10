@@ -1,5 +1,7 @@
 import { buildNodeUrl, jahiaComponent } from "@jahia/javascript-modules-library";
+import { useTranslation } from "react-i18next";
 import classes from "./component.module.css";
+import { CTA } from "../../mixins/CTA/index.jsx";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
 import type { Props } from "./types.js";
 
@@ -8,31 +10,47 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jahiacom:card",
   },
-  ({ "jcr:title": title, body, icon, ...cta }: Props, { currentNode }) => (
-    <article className={classes.card}>
-      {icon && (
-        <img
-          loading="lazy"
-          src={`${buildNodeUrl(icon)}?w=96&h=96`}
-          alt={icon.getPropertyAsString("jcr:title")}
-          width="48"
-          height="48"
-          style={{ marginTop: "-0.5rem" }}
-        />
-      )}
-      {title && <h3>{title}</h3>}
-      {body && (
-        <div
-          className="_richtext"
-          style={{ flex: 1, marginBottom: "1rem" }}
-          dangerouslySetInnerHTML={{ __html: body }}
-        />
-      )}
-      {cta.ctaType !== "none" && (
-        <p style={{ marginTop: "1rem" }}>
-          <MixinCTA cta={cta} location="card" name={currentNode.getName()} />
-        </p>
-      )}
-    </article>
-  ),
+  ({ "jcr:title": title, body, icon, partnerRegionTarget, ...cta }: Props, { currentNode }) => {
+    const { t } = useTranslation();
+    return (
+      <article className={classes.card}>
+        {icon && (
+          <img
+            loading="lazy"
+            src={`${buildNodeUrl(icon)}?w=96&h=96`}
+            alt={icon.getPropertyAsString("jcr:title")}
+            width="48"
+            height="48"
+            style={{ marginTop: "-0.5rem" }}
+          />
+        )}
+        {title && <h3>{title}</h3>}
+        {body && (
+          <div
+            className="_richtext"
+            style={{ flex: 1, marginBottom: "1rem" }}
+            dangerouslySetInnerHTML={{ __html: body }}
+          />
+        )}
+        {partnerRegionTarget ? (
+          <p style={{ marginTop: "1rem" }}>
+            <CTA
+              href="#partner-directory"
+              data-partner-region-target={partnerRegionTarget}
+              icon="i-ri:arrow-right-s-line"
+              secondary
+              location="partner_regions"
+              name={currentNode.getName()}
+            >
+              {t("partner.viewPartners")}
+            </CTA>
+          </p>
+        ) : cta.ctaType !== "none" ? (
+          <p style={{ marginTop: "1rem" }}>
+            <MixinCTA cta={cta} location="card" name={currentNode.getName()} />
+          </p>
+        ) : null}
+      </article>
+    );
+  },
 );
