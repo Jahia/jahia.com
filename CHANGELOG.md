@@ -1,5 +1,11 @@
 # Jahia.com Template Set Changelog
 
+## 1.4.7
+
+* Align Partner cards and profiles with the Jahia design system, reorganize the Partner editing form, and safely migrate legacy expertise and summary content in the `jahiacom` edit workspace without overwriting existing editorial copy.
+
+* Restore detailed bilingual content from legacy integration pages into canonical Technology Partner profiles without overwriting existing editorial fields, and keep the strategic status limited to directory cards and filters rather than individual profile metadata.
+
 ## 1.4.6
 
 * Migrate Technology Partner classification and SEO metadata and route every directory card to its Partner profile.
