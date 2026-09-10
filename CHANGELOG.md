@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.4.3
+
+* Align Partner cards and profiles with the Jahia design system.
+
 ## 1.4.2
 
 * Preserve existing Partner profile content when installing the directory refinements.
