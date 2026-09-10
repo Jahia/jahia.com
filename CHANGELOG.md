@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.4.1
+
+* Refine the Solution and Technology Partner pages with strategic-partner handling, dead-end-free filters, editable bilingual landing blocks, compact branded CTAs, and complete Partner card/profile behavior.
+
 ## 1.4.0
 
 * Add complete Solution and Technology Partner directories, responsive filtering, detailed Partner profiles, logos, and the reviewed French and English Partner content migration.
