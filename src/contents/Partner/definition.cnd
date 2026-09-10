@@ -28,6 +28,8 @@
  // Single-value editor introduced without changing the deployed multiple expertise property.
  - expertiseText (string) i18n
  - expertise (string) multiple i18n
+ // Preserves detailed editorial copy migrated from legacy Technology Partner pages.
+ - technologyDetails (string, richtext) i18n
  - partnership (string, richtext) i18n
  - partnershipImage (weakreference, picker) i18n < jmix:image
  - certifiedConsultants (long)

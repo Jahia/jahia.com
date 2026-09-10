@@ -210,26 +210,24 @@ jahiaComponent(
                   {type === "technology" ? t("partner.technology") : t("partner.integrators")}
                 </strong>
               </div>
-              <div>
-                <span>
-                  {type === "technology" ? t("partner.partnershipType") : t("partner.level")}
-                </span>
-                <strong>
-                  {type === "technology"
-                    ? t(
-                        `partner.partnershipTypes.${
-                          props.strategicPartner ? "strategic" : "integration"
-                        }`,
-                      )
-                    : levels(
-                        props.certification,
-                        locale,
-                        props.partnerLevel,
-                        props.integrationPartner,
-                        props.strategicPartner,
-                      )}
-                </strong>
-              </div>
+              {!(type === "technology" && props.strategicPartner) && (
+                <div>
+                  <span>
+                    {type === "technology" ? t("partner.partnershipType") : t("partner.level")}
+                  </span>
+                  <strong>
+                    {type === "technology"
+                      ? t("partner.partnershipTypes.integration")
+                      : levels(
+                          props.certification,
+                          locale,
+                          props.partnerLevel,
+                          props.integrationPartner,
+                          props.strategicPartner,
+                        )}
+                  </strong>
+                </div>
+              )}
               {partnerSince !== undefined && (
                 <div>
                   <span>{t("partner.partnerSince")}</span>
@@ -281,6 +279,11 @@ jahiaComponent(
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
+              ) : props.technologyDetails ? (
+                <div
+                  className="_richtext"
+                  dangerouslySetInnerHTML={{ __html: props.technologyDetails }}
+                />
               ) : null}
               {tagNodes.length > 0 && (
                 <div className={classes.tags}>
