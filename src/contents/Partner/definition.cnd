@@ -12,6 +12,8 @@
  - integrationPartner (boolean) = false
  // Shared across languages. When enabled, this status takes precedence over integration and certification labels.
  - strategicPartner (boolean) = false
+ // Dedicated Hero copy. Existing content keeps rendering through the shortDescription fallback.
+ - heroSubtitle (string) i18n
  - shortDescription (string) i18n
  - website (string) i18n
  - partnerSince (date)
@@ -23,6 +25,8 @@
  - tags (weakreference, category[autoSelectParent=false]) multiple
  - aboutTitle (string) i18n
  - expertiseTitle (string) i18n
+ // Single-value editor introduced without changing the deployed multiple expertise property.
+ - expertiseText (string) i18n
  - expertise (string) multiple i18n
  - partnership (string, richtext) i18n
  - partnershipImage (weakreference, picker) i18n < jmix:image

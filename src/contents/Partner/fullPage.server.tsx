@@ -99,7 +99,8 @@ jahiaComponent(
     const locale = currentResource.getLocale();
     const url = buildNodeUrl(currentNode);
     const website = /^https?:\/\//i.test(props.website || "") ? props.website : undefined;
-    const summary = props.shortDescription || htmlToText(props.description).slice(0, 240);
+    const summary =
+      props.heroSubtitle || props.shortDescription || htmlToText(props.description).slice(0, 240);
     const partnerSinceDate = props.partnerSince ? new Date(props.partnerSince) : undefined;
     const partnerSince =
       partnerSinceDate && !Number.isNaN(partnerSinceDate.getTime())
@@ -265,13 +266,15 @@ jahiaComponent(
             <article>
               <p className={classes.eyebrow}>{t("partner.whatTheyDo")}</p>
               <h2>{props.expertiseTitle || t("partner.expertiseTitle")}</h2>
-              {expertise.length > 0 && (
+              {props.expertiseText ? (
+                <p className={classes.expertiseText}>{props.expertiseText}</p>
+              ) : expertise.length > 0 ? (
                 <ul className={classes.expertise}>
                   {expertise.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-              )}
+              ) : null}
               {tagNodes.length > 0 && (
                 <div className={classes.tags}>
                   {tagNodes.map((tag) => (

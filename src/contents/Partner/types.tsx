@@ -23,6 +23,7 @@ export interface Props {
   "partnerLevel"?: string;
   "integrationPartner"?: boolean;
   "strategicPartner"?: boolean;
+  "heroSubtitle"?: string;
   "shortDescription"?: string;
   "website"?: string;
   "partnerSince"?: string;
@@ -33,6 +34,7 @@ export interface Props {
   "tags"?: Array<JCRNodeWrapper | null>;
   "aboutTitle"?: string;
   "expertiseTitle"?: string;
+  "expertiseText"?: string;
   "expertise"?: string[];
   "partnership"?: string;
   "partnershipImage"?: JCRNodeWrapper;
