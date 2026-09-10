@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.4.4
+
+* Add dedicated Hero subtitle and single-value expertise fields to Partner editing.
+
 ## 1.4.3
 
 * Align Partner cards and profiles with the Jahia design system.
