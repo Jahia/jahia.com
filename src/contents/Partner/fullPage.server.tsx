@@ -8,6 +8,7 @@ import {
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
+import { CTA } from "../../mixins/CTA/index.jsx";
 import { Layout } from "../../templates/Layout.jsx";
 import Carousel from "../../views/ResourceCarousel/Carousel.client.jsx";
 import classes from "./profile.module.css";
@@ -179,9 +180,15 @@ jahiaComponent(
               {summary && <p>{summary}</p>}
             </div>
             {website && (
-              <a className={classes.primaryAction} href={website} rel="noopener noreferrer">
+              <CTA
+                href={website}
+                rel="noopener noreferrer"
+                icon="i-ri:arrow-right-s-line"
+                location="partner_profile_hero"
+                name={currentNode.getName()}
+              >
                 {t("partner.contact", { name: props["jcr:title"] })}
-              </a>
+              </CTA>
             )}
           </div>
         </section>
@@ -278,7 +285,7 @@ jahiaComponent(
 
         {props.partnership && (
           <section className={classes.partnership} data-theme="cloudy">
-            <div>
+            <div className={classes.partnershipGrid}>
               <div className={classes.partnershipCopy}>
                 <p className={classes.eyebrow}>{t("partner.partnershipEyebrow")}</p>
                 <h2>{t("partner.partnershipTitle")}</h2>
@@ -286,31 +293,42 @@ jahiaComponent(
                   className="_richtext"
                   dangerouslySetInnerHTML={{ __html: props.partnership }}
                 />
-              </div>
-              <div className={classes.partnershipFacts}>
-                <div>
-                  <span>{t("partner.level")}</span>
-                  <strong>
-                    {levels(
-                      props.certification,
-                      locale,
-                      props.partnerLevel,
-                      props.integrationPartner,
-                      props.strategicPartner,
-                    )}
-                  </strong>
+                <div className={classes.partnershipFacts}>
+                  <div>
+                    <span>{t("partner.level")}</span>
+                    <strong>
+                      {levels(
+                        props.certification,
+                        locale,
+                        props.partnerLevel,
+                        props.integrationPartner,
+                        props.strategicPartner,
+                      )}
+                    </strong>
+                  </div>
+                  {props.certifiedConsultants !== undefined && (
+                    <div>
+                      <span>{t("partner.certifiedConsultants")}</span>
+                      <strong>{props.certifiedConsultants}</strong>
+                    </div>
+                  )}
+                  {props.scope && (
+                    <div>
+                      <span>{t("partner.scope")}</span>
+                      <strong>{props.scope}</strong>
+                    </div>
+                  )}
                 </div>
-                {props.certifiedConsultants !== undefined && (
-                  <div>
-                    <span>{t("partner.certifiedConsultants")}</span>
-                    <strong>{props.certifiedConsultants}</strong>
-                  </div>
-                )}
-                {props.scope && (
-                  <div>
-                    <span>{t("partner.scope")}</span>
-                    <strong>{props.scope}</strong>
-                  </div>
+              </div>
+              <div className={classes.partnershipVisual}>
+                {props.partnershipImage || props.logo ? (
+                  <img
+                    loading="lazy"
+                    src={buildNodeUrl(props.partnershipImage || props.logo!)}
+                    alt={props["jcr:title"]}
+                  />
+                ) : (
+                  <strong>{props["jcr:title"]}</strong>
                 )}
               </div>
             </div>
@@ -373,13 +391,25 @@ jahiaComponent(
             </div>
             <div className={classes.contactActions}>
               {website && (
-                <a className={classes.primaryAction} href={website} rel="noopener noreferrer">
-                  {t("partner.contact", { name: props["jcr:title"] })} →
-                </a>
+                <CTA
+                  href={website}
+                  rel="noopener noreferrer"
+                  icon="i-ri:arrow-right-s-line"
+                  location="partner_profile_footer"
+                  name={currentNode.getName()}
+                >
+                  {t("partner.contact", { name: props["jcr:title"] })}
+                </CTA>
               )}
-              <a className={classes.secondaryAction} href={directoryUrl}>
+              <CTA
+                href={directoryUrl}
+                secondary
+                icon="i-ri:arrow-right-s-line"
+                location="partner_profile_footer"
+                name={currentNode.getName()}
+              >
                 {t("partner.returnDirectory")}
-              </a>
+              </CTA>
             </div>
           </div>
         </section>

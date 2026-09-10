@@ -34,7 +34,8 @@
   margin-bottom: 0.875rem;
   overflow: hidden;
   color: #001932;
-  background: #f1f5f8;
+  background: #fff;
+  border: 1px solid #dae0e7;
   border-radius: 0.6875rem;
 }
 
@@ -110,6 +111,11 @@
 .small:has(.diamond) {
   color: #00857e;
   background: rgb(0 208 198 / 14%);
+}
+
+.strategic {
+  color: #3f31b8;
+  background: #e0ddf8;
 }
 
 .cardMeta {
@@ -218,7 +224,8 @@
   padding: 0.4rem;
   margin-bottom: 1rem;
   overflow: hidden;
-  background: #f1f5f8;
+  background: #fff;
+  border: 1px solid #dae0e7;
   border-radius: 0.625rem;
 }
 

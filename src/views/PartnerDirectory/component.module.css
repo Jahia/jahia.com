@@ -346,27 +346,7 @@
 }
 
 :global(#partner-nearby [data-partner-region-target]) {
-  display: inline-flex;
-  align-items: center;
-  padding: 0;
   margin-top: 0.75rem;
-  font-family: monospace;
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--jahia-a11y-blue);
-  text-transform: uppercase;
-  text-decoration: none;
-  background: transparent;
-  border: 0;
-  transition: color var(--jahia-timing);
-}
-
-:global(#partner-nearby [data-partner-region-target]:hover),
-:global(#partner-nearby [data-partner-region-target]:focus-visible) {
-  color: #001932;
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
 }
 
 /* Presentation of the existing Jahia Cards in the Partner type Section. */
