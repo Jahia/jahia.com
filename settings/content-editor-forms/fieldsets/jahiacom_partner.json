@@ -44,6 +44,12 @@
       "name": "strategicPartner"
     },
     {
+      "name": "heroSubtitle"
+    },
+    {
+      "name": "shortDescription"
+    },
+    {
       "name": "partnerLocationsData",
       "selectorType": "PartnerLocationsPicker"
     },
@@ -57,7 +63,11 @@
       "name": "expertiseTitle"
     },
     {
-      "name": "expertise"
+      "name": "expertiseText"
+    },
+    {
+      "name": "expertise",
+      "hide": true
     },
     {
       "name": "partnership"

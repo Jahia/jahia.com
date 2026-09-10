@@ -173,6 +173,11 @@
   margin: 1rem 0 0;
 }
 
+.expertiseText {
+  margin-top: 1rem;
+  color: #334552;
+}
+
 .expertise li {
   margin-top: 0.7rem;
   color: #334552;
