@@ -371,14 +371,20 @@
 
 :global(#partner-types) article > img {
   align-self: flex-start;
-  width: 4.625rem;
-  height: 4.625rem;
-  padding: 1.125rem;
+  width: 3rem;
+  height: 3rem;
   margin-block-end: 15px;
   object-fit: contain;
-  background: rgb(3 124 194 / 12%);
-  border: 1px solid rgb(3 124 194 / 18%);
-  border-radius: 1.125rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+@media (width <= 32rem) {
+  :global(#partner-types) article > img {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 
 :global(#partner-types article ._richtext) {

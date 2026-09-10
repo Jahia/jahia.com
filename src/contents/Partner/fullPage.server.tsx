@@ -141,9 +141,25 @@ jahiaComponent(
       if (title === currentTitle) return false;
       const candidateType = stringProperty(node, "partnerType") || "integrator";
       const candidateRegions = nodeRegions(node);
-      return candidateType === type && candidateRegions.includes(activeRegion);
+      return (
+        candidateType === type &&
+        candidateRegions.includes(activeRegion) &&
+        !(type === "technology" && title === "efficy")
+      );
     });
-    const sameCountry = eligibleSimilar.filter((node) => {
+    const uniqueSimilar = [
+      ...new Map(
+        eligibleSimilar.map((node) => {
+          const title = (stringProperty(node, "jcr:title") || node.getName())
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim()
+            .toLocaleLowerCase();
+          return [title, node] as const;
+        }),
+      ).values(),
+    ];
+    const sameCountry = uniqueSimilar.filter((node) => {
       const candidateCountries = regionCountries(
         {
           regions: nodeRegions(node),
@@ -157,7 +173,7 @@ jahiaComponent(
         currentCountries.has(normalizedCountry(country, locale)),
       );
     });
-    const similar = (sameCountry.length > 0 ? sameCountry : eligibleSimilar).slice(0, 8);
+    const similar = (sameCountry.length > 0 ? sameCountry : uniqueSimilar).slice(0, 8);
     const directoryComponent = useJCRQuery({
       query: `SELECT * FROM [jahiacom:partnerList] WHERE ISDESCENDANTNODE(${JSON.stringify(
         siteRoot,
@@ -166,6 +182,12 @@ jahiaComponent(
     const directoryPage = pageAncestor(directoryComponent);
     const directoryUrl = directoryPage ? buildNodeUrl(directoryPage) : "#";
     const tagNodes = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
+    const expertiseText = props.expertiseText?.trim();
+    const expertiseTextItems =
+      expertiseText
+        ?.split(/\r?\n/)
+        .map((item) => item.trim())
+        .filter(Boolean) || [];
     const expertise = props.expertise || [];
 
     for (const dependency of [...projects, ...similar]) {
@@ -187,17 +209,6 @@ jahiaComponent(
               <h1>{props["jcr:title"]}</h1>
               {summary && <p>{summary}</p>}
             </div>
-            {website && (
-              <CTA
-                href={website}
-                rel="noopener noreferrer"
-                icon="i-ri:arrow-right-s-line"
-                location="partner_profile_hero"
-                name={currentNode.getName()}
-              >
-                {t("partner.contact", { name: props["jcr:title"] })}
-              </CTA>
-            )}
           </div>
         </section>
 
@@ -271,8 +282,14 @@ jahiaComponent(
             <article>
               <p className={classes.eyebrow}>{t("partner.whatTheyDo")}</p>
               <h2>{props.expertiseTitle || t("partner.expertiseTitle")}</h2>
-              {props.expertiseText ? (
-                <p className={classes.expertiseText}>{props.expertiseText}</p>
+              {expertiseTextItems.length > 1 ? (
+                <ul className={classes.expertise}>
+                  {expertiseTextItems.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              ) : expertiseTextItems.length === 1 ? (
+                <p className={classes.expertiseText}>{expertiseTextItems[0]}</p>
               ) : expertise.length > 0 ? (
                 <ul className={classes.expertise}>
                   {expertise.map((item) => (

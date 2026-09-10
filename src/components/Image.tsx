@@ -28,6 +28,13 @@ export const Image = ({
   if (mime.startsWith("image/svg") || mime.startsWith("image/vnd"))
     return <img loading="lazy" src={baseSrc} alt={alt} {...props} />;
 
+  // Some imported formats (notably AVIF and WebP) may not be enriched with
+  // Jahia's width/height metadata. Keep the original asset usable instead of
+  // failing the complete component render.
+  if (!image.hasProperty("j:width") || !image.hasProperty("j:height")) {
+    return <img loading="lazy" src={baseSrc} alt={alt} {...props} />;
+  }
+
   const width = image.getProperty("j:width").getLong();
   const height = image.getProperty("j:height").getLong();
 

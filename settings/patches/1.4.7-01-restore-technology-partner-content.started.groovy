@@ -30,7 +30,9 @@ void collectLegacyBodies(Node node, String language, List<String> bodies) throws
     while (children.hasNext()) collectLegacyBodies(children.nextNode(), language, bodies)
 }
 
-for (String workspace : [Constants.EDIT_WORKSPACE, Constants.LIVE_WORKSPACE]) {
+// Preproduction-safe migration: update editorial content only. Publication remains
+// an explicit Jahia workflow action after the migrated profiles have been reviewed.
+for (String workspace : [Constants.EDIT_WORKSPACE]) {
     JCRTemplate.getInstance().doExecuteWithSystemSession(null, workspace, new JCRCallback<Object>() {
         @Override
         Object doInJCR(JCRSessionWrapper session) throws RepositoryException {
@@ -38,7 +40,7 @@ for (String workspace : [Constants.EDIT_WORKSPACE, Constants.LIVE_WORKSPACE]) {
             int preserved = 0
             int withoutSource = 0
 
-            for (String siteName : ["jahiacom", "mySite"]) {
+            for (String siteName : ["jahiacom"]) {
                 String partnerRootPath = "/sites/${siteName}/contents/technology-partners"
                 if (!session.nodeExists(partnerRootPath)) continue
 

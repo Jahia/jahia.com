@@ -3,6 +3,24 @@
   "priority": 2.0,
   "fields": [
     {
+      "name": "jcr:title"
+    },
+    {
+      "name": "logo"
+    },
+    {
+      "name": "heroSubtitle",
+      "selectorType": "TextArea"
+    },
+    {
+      "name": "shortDescription",
+      "selectorType": "TextArea"
+    },
+    {
+      "name": "partnerType",
+      "mandatory": true
+    },
+    {
       "name": "certification",
       "defaultValues": [
         {
@@ -30,10 +48,6 @@
       "hide": true
     },
     {
-      "name": "partnerType",
-      "mandatory": true
-    },
-    {
       "name": "partnerLevel",
       "hide": true
     },
@@ -44,12 +58,6 @@
       "name": "strategicPartner"
     },
     {
-      "name": "heroSubtitle"
-    },
-    {
-      "name": "shortDescription"
-    },
-    {
       "name": "partnerLocationsData",
       "selectorType": "PartnerLocationsPicker"
     },
@@ -57,20 +65,27 @@
       "name": "partnerSince"
     },
     {
+      "name": "tags"
+    },
+    {
       "name": "aboutTitle"
+    },
+    {
+      "name": "description"
     },
     {
       "name": "expertiseTitle"
     },
     {
-      "name": "expertiseText"
+      "name": "expertiseText",
+      "selectorType": "TextArea"
+    },
+    {
+      "name": "technologyDetails"
     },
     {
       "name": "expertise",
       "hide": true
-    },
-    {
-      "name": "technologyDetails"
     },
     {
       "name": "partnership"
@@ -79,7 +94,11 @@
       "name": "partnershipImage"
     },
     {
-      "name": "tags"
+      "name": "certifiedConsultants"
+    },
+    {
+      "name": "scope",
+      "selectorType": "TextArea"
     },
     {
       "name": "quote"
@@ -89,6 +108,9 @@
     },
     {
       "name": "quoteAuthorTitle"
+    },
+    {
+      "name": "website"
     }
   ]
 }

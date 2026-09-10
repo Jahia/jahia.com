@@ -1,0 +1,159 @@
+{
+  "nodeType": "jahiacom:partner",
+  "priority": 3.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "partner-hero-and-card",
+          "labelKey": "jahiacom:jahiacom_partner.form.heroAndCard",
+          "rank": 1.0,
+          "fields": [
+            {
+              "name": "jcr:title",
+              "declaringNodeType": "mix:title",
+              "rank": 1.0
+            },
+            {
+              "name": "ce:systemName",
+              "rank": 2.0
+            },
+            {
+              "name": "logo",
+              "rank": 3.0
+            },
+            {
+              "name": "shortDescription",
+              "selectorType": "TextArea",
+              "rank": 4.0
+            },
+            {
+              "name": "heroSubtitle",
+              "selectorType": "TextArea",
+              "rank": 5.0
+            }
+          ]
+        },
+        {
+          "name": "partner-classification",
+          "labelKey": "jahiacom:jahiacom_partner.form.classification",
+          "rank": 2.0,
+          "fields": [
+            {
+              "name": "partnerType",
+              "rank": 1.0
+            },
+            {
+              "name": "certification",
+              "rank": 2.0
+            },
+            {
+              "name": "integrationPartner",
+              "rank": 3.0
+            },
+            {
+              "name": "strategicPartner",
+              "rank": 4.0
+            },
+            {
+              "name": "partnerSince",
+              "rank": 5.0
+            },
+            {
+              "name": "partnerLocationsData",
+              "selectorType": "PartnerLocationsPicker",
+              "rank": 6.0
+            },
+            {
+              "name": "tags",
+              "rank": 7.0
+            }
+          ]
+        },
+        {
+          "name": "partner-profile-content",
+          "labelKey": "jahiacom:jahiacom_partner.form.profileContent",
+          "rank": 3.0,
+          "fields": [
+            {
+              "name": "aboutTitle",
+              "rank": 1.0
+            },
+            {
+              "name": "description",
+              "rank": 2.0
+            },
+            {
+              "name": "expertiseTitle",
+              "rank": 3.0
+            },
+            {
+              "name": "expertiseText",
+              "selectorType": "TextArea",
+              "rank": 4.0
+            },
+            {
+              "name": "technologyDetails",
+              "rank": 5.0
+            }
+          ]
+        },
+        {
+          "name": "partner-jahia-partnership",
+          "labelKey": "jahiacom:jahiacom_partner.form.partnership",
+          "rank": 4.0,
+          "fields": [
+            {
+              "name": "partnership",
+              "rank": 1.0
+            },
+            {
+              "name": "partnershipImage",
+              "rank": 2.0
+            },
+            {
+              "name": "certifiedConsultants",
+              "rank": 3.0
+            },
+            {
+              "name": "scope",
+              "selectorType": "TextArea",
+              "rank": 4.0
+            }
+          ]
+        },
+        {
+          "name": "partner-quote",
+          "labelKey": "jahiacom:jahiacom_partner.form.quote",
+          "rank": 5.0,
+          "fields": [
+            {
+              "name": "quote",
+              "rank": 1.0
+            },
+            {
+              "name": "quoteAuthor",
+              "rank": 2.0
+            },
+            {
+              "name": "quoteAuthorTitle",
+              "rank": 3.0
+            }
+          ]
+        },
+        {
+          "name": "partner-website",
+          "labelKey": "jahiacom:jahiacom_partner.form.website",
+          "rank": 6.0,
+          "fields": [
+            {
+              "name": "website",
+              "rank": 1.0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
