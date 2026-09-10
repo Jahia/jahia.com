@@ -3,14 +3,8 @@ import org.jahia.services.content.JCRCallback
 import org.jahia.services.content.JCRNodeWrapper
 import org.jahia.services.content.JCRSessionWrapper
 import org.jahia.services.content.JCRTemplate
-import groovy.transform.Field
-
 import javax.jcr.NodeIterator
 import javax.jcr.RepositoryException
-
-@Field final Set<String> strategicTechnologyPartners = [
-        "claude", "chatgpt", "salesforce", "akeneo", "contentsquare"
-] as Set<String>
 
 JCRNodeWrapper translation(JCRNodeWrapper node, String language) {
     String name = "j:translation_" + language
@@ -75,24 +69,12 @@ JCRNodeWrapper topLevelBlock(JCRNodeWrapper main, JCRNodeWrapper node) {
     return block
 }
 
-List<JCRNodeWrapper> descendantsOfType(JCRNodeWrapper root, String nodeType) {
-    List<JCRNodeWrapper> result = []
-    NodeIterator children = root.getNodes()
-    while (children.hasNext()) {
-        JCRNodeWrapper child = (JCRNodeWrapper) children.nextNode()
-        if (child.isNodeType(nodeType)) result.add(child)
-        result.addAll(descendantsOfType(child, nodeType))
-    }
-    return result
-}
-
 JCRTemplate.getInstance().doExecuteWithSystemSession(null, Constants.EDIT_WORKSPACE,
         new JCRCallback<Object>() {
             @Override
             Object doInJCR(JCRSessionWrapper session) throws RepositoryException {
                 for (String activeSiteRoot : ["/sites/jahiacom", "/sites/mySite"]) {
                 String solutionPagePath = "${activeSiteRoot}/home/resources/find-a-partner"
-                String technologyRootPath = "${activeSiteRoot}/contents/technology-partners"
 
                 if (session.nodeExists(solutionPagePath + "/main")) {
                     JCRNodeWrapper main = (JCRNodeWrapper) session.getNode(solutionPagePath + "/main")
@@ -137,21 +119,10 @@ JCRTemplate.getInstance().doExecuteWithSystemSession(null, Constants.EDIT_WORKSP
                     main.orderBefore("solution-partner-intro", "partner-types")
                 }
 
-                if (session.nodeExists(technologyRootPath)) {
-                    JCRNodeWrapper technologyRoot = (JCRNodeWrapper) session.getNode(technologyRootPath)
-                    for (JCRNodeWrapper partner : descendantsOfType(technologyRoot, "jahiacom:partner")) {
-                        String name = partner.getName().toLowerCase()
-                        boolean strategic = strategicTechnologyPartners.contains(name)
-                        partner.setProperty("strategicPartner", strategic)
-                        if (strategic) partner.setProperty("integrationPartner", false)
-                        if (name == "efficy") partner.setProperty("partnerType", "integrator")
-                    }
-                }
-
                 }
 
                 session.save()
-                log.info("Partner page refinements prepared in the edit workspace")
+                log.info("Solution Partner page refinements prepared in the edit workspace")
                 return null
             }
         })
