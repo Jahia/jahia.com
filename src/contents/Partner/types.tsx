@@ -36,6 +36,7 @@ export interface Props {
   "expertiseTitle"?: string;
   "expertiseText"?: string;
   "expertise"?: string[];
+  "technologyDetails"?: string;
   "partnership"?: string;
   "partnershipImage"?: JCRNodeWrapper;
   "certifiedConsultants"?: number;
