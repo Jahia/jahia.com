@@ -73,8 +73,15 @@ jahiaComponent(
     nodeType: "jahiacom:partner",
     properties: { "cache.requestParameters": "search" },
   },
-  (props, { currentNode }) => (
-    <Layout props={props} pageType="partner_page">
+  (props: Props, { currentNode }) => (
+    <Layout
+      props={{
+        ...props,
+        "jcr:description":
+          props.seoDescription || props.shortDescription || htmlToText(props.description),
+      }}
+      pageType="partner_page"
+    >
       <Render node={currentNode} view="fullPage" />
     </Layout>
   ),

@@ -38,6 +38,14 @@
  + * (jahiacom:partnerProject)
  + * (jahiacom:partnerLocation)
 
+// SEO fields for Partner resources. Kept separate from the page-only seoOptions mixin.
+[jahiacommix:partnerSeo] mixin extends=jahiacom:partner itemtype=seo
+ - htmlTitle (string) i18n
+ - seoDescription (string, textarea) i18n
+ - seoKeywords (string) i18n multiple
+ - openGraphImage (weakreference, picker) < jmix:image
+ - jsonLd (string, textarea) i18n multiple
+
 [jahiacom:partnerLocation] > jnt:content, jmix:visibleInContentTree
  - region (string, choicelist[resourceBundle]) mandatory < europe, americas, apac
  - country (string)

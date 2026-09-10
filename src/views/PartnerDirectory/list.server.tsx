@@ -126,17 +126,6 @@ jahiaComponent(
       server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
     }
 
-    const technologyPageRoot = `${siteRoot}/home/product/features/integrations`;
-    const technologyPages = useJCRQuery({
-      query: `SELECT * FROM [jnt:page] WHERE ISCHILDNODE(${JSON.stringify(technologyPageRoot)})`,
-    });
-    const technologyPageUrls = new Map(
-      technologyPages.map((page) => [page.getName(), buildNodeUrl(page)]),
-    );
-    for (const dependency of technologyPages) {
-      server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
-    }
-
     const groups = new Map<string, JCRNodeWrapper[]>();
     for (const partner of partners) {
       const key = (stringProperty(partner, "jcr:title") || partner.getName())
@@ -256,7 +245,6 @@ jahiaComponent(
             locale={currentResource.getLocale()}
             regionUrls={regionUrls}
             directoryMode={mode}
-            profileUrl={props.partnership ? undefined : technologyPageUrls.get(partner.getName())}
           />
         ))}
       </Island>

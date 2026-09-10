@@ -43,6 +43,11 @@ export interface Props {
   "quote"?: string;
   "quoteAuthor"?: string;
   "quoteAuthorTitle"?: string;
+  "htmlTitle"?: string;
+  "seoDescription"?: string;
+  "seoKeywords"?: string[];
+  "openGraphImage"?: JCRNodeWrapper;
+  "jsonLd"?: string[];
 }
 
 export type Region = "europe" | "americas" | "apac";
