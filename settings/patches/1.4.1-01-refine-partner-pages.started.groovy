@@ -80,9 +80,9 @@ JCRTemplate.getInstance().doExecuteWithSystemSession(null, Constants.EDIT_WORKSP
                     JCRNodeWrapper main = (JCRNodeWrapper) session.getNode(solutionPagePath + "/main")
                     JCRNodeWrapper directory = findDescendantOfType(main, "jahiacom:partnerList")
 
-                    JCRNodeWrapper intro = main.hasNode("solution-partner-intro")
-                            ? (JCRNodeWrapper) main.getNode("solution-partner-intro")
-                            : (JCRNodeWrapper) main.addNode("solution-partner-intro", "jahiacom:section")
+                    JCRNodeWrapper intro = main.hasNode("solution-partner-overview")
+                            ? (JCRNodeWrapper) main.getNode("solution-partner-overview")
+                            : (JCRNodeWrapper) main.addNode("solution-partner-overview", "jahiacom:section")
                     configureSection(intro, "100", "75")
                     setSection(intro, "en", null, "Certified experts for your projects", "<p>A <strong>Solution Partner</strong> is a company trained and certified by Jahia—an integrator, digital services company or agency—that manages your project end to end with consultants who know the platform.</p>")
                     setSection(intro, "fr", null, "Des experts certifiés pour vos projets", "<p>Un <strong>Solution Partner</strong> est une entreprise formée et certifiée par Jahia — intégrateur, ESN ou agence — qui prend en charge votre projet de bout en bout et mobilise des consultants experts de la plateforme.</p>")
@@ -116,7 +116,7 @@ JCRTemplate.getInstance().doExecuteWithSystemSession(null, Constants.EDIT_WORKSP
                         main.orderBefore("partner-nearby", directoryBlock.getName())
                     }
                     main.orderBefore("partner-types", "partner-nearby")
-                    main.orderBefore("solution-partner-intro", "partner-types")
+                    main.orderBefore("solution-partner-overview", "partner-types")
                 }
 
                 }
