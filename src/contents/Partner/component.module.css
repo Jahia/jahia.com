@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 1.375rem;
+  padding: 2.5rem;
   background: #fff;
   border: 1px solid #d7e0e8;
   border-radius: 0.75rem;
@@ -30,13 +30,10 @@
   place-items: center;
   width: 150px;
   height: 150px;
-  padding: 0.4375rem;
   margin-bottom: 0.875rem;
   overflow: hidden;
   color: #001932;
-  background: #fff;
-  border: 1px solid #dae0e7;
-  border-radius: 0.6875rem;
+  background: transparent;
 }
 
 .cardLogo img {
@@ -202,6 +199,10 @@
 }
 
 @media (width <= 32rem) {
+  .card {
+    padding: 1.5rem;
+  }
+
   .cardHeading {
     align-items: flex-start;
   }
@@ -221,12 +222,9 @@
   place-items: center;
   width: 3.25rem;
   height: 3.25rem;
-  padding: 0.4rem;
   margin-bottom: 1rem;
   overflow: hidden;
-  background: #fff;
-  border: 1px solid #dae0e7;
-  border-radius: 0.625rem;
+  background: transparent;
 }
 
 .similarLogo img {

@@ -12,7 +12,7 @@
  - integrationPartner (boolean) = false
  // Shared across languages. When enabled, this status takes precedence over integration and certification labels.
  - strategicPartner (boolean) = false
- // Dedicated Hero copy. Existing content keeps rendering through the shortDescription fallback.
+ // Dedicated Hero summary. shortDescription remains dedicated to the directory card.
  - heroSubtitle (string) i18n
  - shortDescription (string) i18n
  - website (string) i18n
