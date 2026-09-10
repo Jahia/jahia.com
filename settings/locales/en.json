@@ -11,6 +11,12 @@
       "strategic": "Strategic partner",
       "integration": "Integration"
     },
+    "allLevels": "All levels",
+    "levels": {
+      "diamond": "Diamond",
+      "gold": "Gold",
+      "silver": "Silver"
+    },
     "region": "Region",
     "allRegions": "All regions",
     "regions": {
@@ -32,7 +38,9 @@
     "count_other": "{{count}} partners shown",
     "empty": "No partner matches these filters.",
     "clear": "Clear filters",
+    "clearRegion": "Remove the {{region}} region filter",
     "viewProfile": "View profile",
+    "viewPartners": "View partners",
     "who": "Who they are",
     "whatTheyDo": "What they do",
     "expertiseTitle": "Their areas of expertise",

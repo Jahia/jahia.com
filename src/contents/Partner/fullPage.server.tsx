@@ -203,7 +203,7 @@ jahiaComponent(
                   {type === "technology"
                     ? t(
                         `partner.partnershipTypes.${
-                          props.integrationPartner ? "integration" : "strategic"
+                          props.strategicPartner ? "strategic" : "integration"
                         }`,
                       )
                     : levels(
@@ -211,6 +211,7 @@ jahiaComponent(
                         locale,
                         props.partnerLevel,
                         props.integrationPartner,
+                        props.strategicPartner,
                       )}
                 </strong>
               </div>
@@ -295,6 +296,7 @@ jahiaComponent(
                       locale,
                       props.partnerLevel,
                       props.integrationPartner,
+                      props.strategicPartner,
                     )}
                   </strong>
                 </div>

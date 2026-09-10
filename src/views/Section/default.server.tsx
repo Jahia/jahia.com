@@ -26,6 +26,7 @@ jahiaComponent(
   (
     {
       "jcr:title": title,
+      eyebrow,
       subtitle,
       columns,
       width,
@@ -35,6 +36,7 @@ jahiaComponent(
       ...cta
     }: {
       "jcr:title"?: string;
+      "eyebrow"?: string;
       "subtitle"?: string;
       "columns": Columns;
       "width": Width;
@@ -51,6 +53,7 @@ jahiaComponent(
     >
       {(title || subtitle) && (
         <header className={classes.header}>
+          {eyebrow && <p className={classes.eyebrow}>{eyebrow}</p>}
           {title && <h2>{title}</h2>}
           {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
         </header>

@@ -6,6 +6,16 @@
   composes: header from "../../theme/theme.module.css";
 }
 
+.eyebrow {
+  margin: 0 0 0.625rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--jahia-a11y-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .wrapper {
   max-width: var(--jahia-width);
   margin-inline: auto;

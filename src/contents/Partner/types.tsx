@@ -22,6 +22,7 @@ export interface Props {
   "partnerType"?: "integrator" | "technology";
   "partnerLevel"?: string;
   "integrationPartner"?: boolean;
+  "strategicPartner"?: boolean;
   "shortDescription"?: string;
   "website"?: string;
   "partnerSince"?: string;
@@ -34,6 +35,7 @@ export interface Props {
   "expertiseTitle"?: string;
   "expertise"?: string[];
   "partnership"?: string;
+  "partnershipImage"?: JCRNodeWrapper;
   "certifiedConsultants"?: number;
   "scope"?: string;
   "quote"?: string;
@@ -175,8 +177,13 @@ export const levels = (
   locale: Locale,
   partnerLevel?: Props["partnerLevel"],
   integrationPartner?: Props["integrationPartner"],
+  strategicPartner?: Props["strategicPartner"],
 ) =>
-  integrationPartner ? (
+  strategicPartner ? (
+    <span className={classes.level}>
+      {getMessage("jahiacom_partner.strategicPartner", locale, "Strategic partner")}
+    </span>
+  ) : integrationPartner ? (
     <span className={classes.level}>
       {getMessage("jahiacom_partner.integrationPartner", locale, "Integration partner")}
     </span>

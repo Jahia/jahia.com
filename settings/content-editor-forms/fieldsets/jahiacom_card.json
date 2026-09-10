@@ -1,0 +1,21 @@
+{
+  "name": "jahiacom:card",
+  "priority": 2.0,
+  "fields": [
+    {
+      "name": "technologyCategories"
+    },
+    {
+      "name": "technologyPartnerType",
+      "defaultValues": [
+        {
+          "type": "String",
+          "value": "integration"
+        }
+      ]
+    },
+    {
+      "name": "partnerRegionTarget"
+    }
+  ]
+}

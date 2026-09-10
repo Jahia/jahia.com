@@ -10,6 +10,8 @@
  - partnerLevel (string) i18n
  // Shared across languages. The legacy localized label above remains available as a display fallback.
  - integrationPartner (boolean) = false
+ // Shared across languages. When enabled, this status takes precedence over integration and certification labels.
+ - strategicPartner (boolean) = false
  - shortDescription (string) i18n
  - website (string) i18n
  - partnerSince (date)
@@ -23,6 +25,7 @@
  - expertiseTitle (string) i18n
  - expertise (string) multiple i18n
  - partnership (string, richtext) i18n
+ - partnershipImage (weakreference, picker) i18n < jmix:image
  - certifiedConsultants (long)
  - scope (string) i18n
  - quote (string, richtext) i18n

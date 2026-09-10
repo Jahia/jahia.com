@@ -73,6 +73,7 @@ const partnerProps = (node: JCRNodeWrapper): PartnerProps => ({
   "partnerType": stringProperty(node, "partnerType") as PartnerProps["partnerType"],
   "partnerLevel": stringProperty(node, "partnerLevel"),
   "integrationPartner": booleanProperty(node, "integrationPartner"),
+  "strategicPartner": booleanProperty(node, "strategicPartner"),
   "shortDescription": stringProperty(node, "shortDescription"),
   "partnership": stringProperty(node, "partnership"),
   "countries": stringProperties(node, "countries"),
@@ -117,7 +118,8 @@ jahiaComponent(
     const partners = allPartners.filter((partner) => {
       const type = stringProperty(partner, "partnerType") || "integrator";
       if (mode === "solution") return type !== "technology";
-      if (mode === "technology") return type === "technology";
+      if (mode === "technology")
+        return type === "technology" && partner.getName().toLowerCase() !== "efficy";
       return true;
     });
     for (const dependency of allPartners) {
@@ -205,7 +207,7 @@ jahiaComponent(
       { value: string; label: string; partnerships: Set<"strategic" | "integration"> }
     >();
     for (const { props } of cards) {
-      const partnership = props.integrationPartner ? "integration" : "strategic";
+      const partnership = props.strategicPartner ? "strategic" : "integration";
       for (const tag of (props.tags || []).filter(
         (value): value is JCRNodeWrapper => value !== null,
       )) {
@@ -222,6 +224,15 @@ jahiaComponent(
     const technologies = [...technologyOptions.values()]
       .map(({ value, label, partnerships }) => ({ value, label, partnerships: [...partnerships] }))
       .sort((left, right) => left.label.localeCompare(right.label));
+    const levelCounts = {
+      diamond: cards.filter(({ props }) => props.certification === "diamond").length,
+      gold: cards.filter(({ props }) => props.certification === "gold").length,
+      silver: cards.filter(({ props }) => props.certification === "silver").length,
+    };
+    const filterItems = cards.map(({ props }) => ({
+      level: props.certification,
+      regions: props.regions || [],
+    }));
 
     return (
       <Island
@@ -233,6 +244,8 @@ jahiaComponent(
           technologyCount,
           regionCounts,
           technologies,
+          levelCounts,
+          filterItems,
         }}
       >
         {cards.map(({ currentNode: partner, props, regionUrls }) => (
