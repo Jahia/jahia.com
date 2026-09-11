@@ -89,13 +89,9 @@
               "rank": 3.0
             },
             {
-              "name": "expertiseText",
-              "selectorType": "TextArea",
+              "name": "expertiseBody",
+              "declaringNodeType": "jahiacom:partner",
               "rank": 4.0
-            },
-            {
-              "name": "technologyDetails",
-              "rank": 5.0
             }
           ]
         },
