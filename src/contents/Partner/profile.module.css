@@ -93,7 +93,7 @@
   overflow: hidden;
   background: #d7e0e8;
   border: 1px solid #d7e0e8;
-  border-radius: 0.75rem;
+  border-radius: 0;
 }
 
 .facts > div,
@@ -247,7 +247,7 @@
   scroll-snap-align: start;
   background: #fff;
   border: 1px solid #d7e0e8;
-  border-radius: 0.75rem;
+  border-radius: 0;
 }
 
 .projectImage {
@@ -305,7 +305,7 @@
   background: #fff;
   border: 1px solid #d7e0e8;
   border-left: 0.25rem solid #00a1e3;
-  border-radius: 0.75rem;
+  border-radius: 0;
 }
 
 .quoteSection footer {

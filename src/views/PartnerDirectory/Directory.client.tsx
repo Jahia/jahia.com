@@ -181,7 +181,7 @@ export default function Directory({
       for (const count of document.querySelectorAll<HTMLElement>(
         `[data-partner-region-count="${value}"]`,
       )) {
-        count.textContent = String(regionCounts[value]);
+        count.textContent = t("partner.regionCount", { count: regionCounts[value] });
       }
       for (const target of document.querySelectorAll<HTMLElement>(
         `[data-partner-region-target="${value}"]`,
@@ -191,7 +191,7 @@ export default function Directory({
           ?.toggleAttribute("hidden", regionCounts[value] === 0);
       }
     }
-  }, [regionCounts.apac, regionCounts.americas, regionCounts.europe]);
+  }, [regionCounts.apac, regionCounts.americas, regionCounts.europe, t]);
 
   useEffect(() => {
     if (mode !== "solution") return;

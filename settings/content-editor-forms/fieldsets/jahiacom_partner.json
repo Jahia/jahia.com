@@ -62,7 +62,8 @@
       "selectorType": "PartnerLocationsPicker"
     },
     {
-      "name": "partnerSince"
+      "name": "partnerSince",
+      "hide": true
     },
     {
       "name": "tags"
@@ -77,11 +78,15 @@
       "name": "expertiseTitle"
     },
     {
-      "name": "expertiseText",
-      "selectorType": "TextArea"
+      "name": "expertiseBody"
     },
     {
-      "name": "technologyDetails"
+      "name": "expertiseText",
+      "hide": true
+    },
+    {
+      "name": "technologyDetails",
+      "hide": true
     },
     {
       "name": "expertise",

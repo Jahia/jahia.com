@@ -4,6 +4,7 @@ import classes from "./component.module.css";
 import { CTA } from "../../mixins/CTA/index.jsx";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
 import type { Props } from "./types.js";
+import { htmlToText } from "../../contents/Partner/types.js";
 
 jahiaComponent(
   {
@@ -12,6 +13,9 @@ jahiaComponent(
   },
   ({ "jcr:title": title, body, icon, partnerRegionTarget, ...cta }: Props, { currentNode }) => {
     const { t } = useTranslation();
+    // Old region cards stored a generated count in rich text. Keep other editorial copy.
+    const legacyRegionCount =
+      partnerRegionTarget && /^\d+\s+part(?:ner|enaire)s?$/i.test(htmlToText(body || "").trim());
     return (
       <article className={classes.card}>
         {icon && (
@@ -25,13 +29,14 @@ jahiaComponent(
           />
         )}
         {title && <h3>{title}</h3>}
-        {body && (
+        {body && !legacyRegionCount && (
           <div
             className="_richtext"
             style={{ flex: 1, marginBottom: "1rem" }}
             dangerouslySetInnerHTML={{ __html: body }}
           />
         )}
+        {partnerRegionTarget && <p data-partner-region-count={partnerRegionTarget} />}
         {partnerRegionTarget ? (
           <p style={{ marginTop: "1rem" }}>
             <CTA
