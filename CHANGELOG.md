@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.4.8
+
+* Correct Partner card styling, preserve complete logos, apply amber strategic badges to Solution and Technology partners, and restore translated regional counts. Unify legacy expertise and partner details in the editable What they do field while preserving source content and published data.
+
 ## 1.4.7
 
 * Align Partner cards and profiles with the Jahia design system, reorganize the Partner editing form, and safely migrate legacy expertise and summary content in the `jahiacom` edit workspace without overwriting existing editorial copy.
