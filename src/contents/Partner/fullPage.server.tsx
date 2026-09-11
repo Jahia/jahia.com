@@ -12,6 +12,7 @@ import { CTA } from "../../mixins/CTA/index.jsx";
 import { Layout } from "../../templates/Layout.jsx";
 import Carousel from "../../views/ResourceCarousel/Carousel.client.jsx";
 import classes from "./profile.module.css";
+import { legacyExpertiseBody } from "./expertise.js";
 import {
   configuredRegions,
   compositePartnerLocations,
@@ -108,11 +109,6 @@ jahiaComponent(
     const website = /^https?:\/\//i.test(props.website || "") ? props.website : undefined;
     const summary =
       props.heroSubtitle || props.shortDescription || htmlToText(props.description).slice(0, 240);
-    const partnerSinceDate = props.partnerSince ? new Date(props.partnerSince) : undefined;
-    const partnerSince =
-      partnerSinceDate && !Number.isNaN(partnerSinceDate.getTime())
-        ? partnerSinceDate.getFullYear()
-        : undefined;
     const type = props.partnerType || "integrator";
     const projects = useJCRQuery({
       query: `
@@ -182,13 +178,7 @@ jahiaComponent(
     const directoryPage = pageAncestor(directoryComponent);
     const directoryUrl = directoryPage ? buildNodeUrl(directoryPage) : "#";
     const tagNodes = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
-    const expertiseText = props.expertiseText?.trim();
-    const expertiseTextItems =
-      expertiseText
-        ?.split(/\r?\n/)
-        .map((item) => item.trim())
-        .filter(Boolean) || [];
-    const expertise = props.expertise || [];
+    const expertiseBody = props.expertiseBody ?? legacyExpertiseBody(props);
 
     for (const dependency of [...projects, ...similar]) {
       server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
@@ -239,12 +229,6 @@ jahiaComponent(
                   </strong>
                 </div>
               )}
-              {partnerSince !== undefined && (
-                <div>
-                  <span>{t("partner.partnerSince")}</span>
-                  <strong>{partnerSince}</strong>
-                </div>
-              )}
               {type !== "technology" && (
                 <div>
                   <span>{t("partner.region")}</span>
@@ -282,26 +266,9 @@ jahiaComponent(
             <article>
               <p className={classes.eyebrow}>{t("partner.whatTheyDo")}</p>
               <h2>{props.expertiseTitle || t("partner.expertiseTitle")}</h2>
-              {expertiseTextItems.length > 1 ? (
-                <ul className={classes.expertise}>
-                  {expertiseTextItems.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              ) : expertiseTextItems.length === 1 ? (
-                <p className={classes.expertiseText}>{expertiseTextItems[0]}</p>
-              ) : expertise.length > 0 ? (
-                <ul className={classes.expertise}>
-                  {expertise.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              ) : props.technologyDetails ? (
-                <div
-                  className="_richtext"
-                  dangerouslySetInnerHTML={{ __html: props.technologyDetails }}
-                />
-              ) : null}
+              {expertiseBody && (
+                <div className="_richtext" dangerouslySetInnerHTML={{ __html: expertiseBody }} />
+              )}
               {tagNodes.length > 0 && (
                 <div className={classes.tags}>
                   {tagNodes.map((tag) => (

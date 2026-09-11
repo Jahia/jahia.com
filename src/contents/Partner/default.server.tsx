@@ -68,11 +68,7 @@ export const PartnerCard = ({
       <div className={classes.cardHeading}>
         <h3>{props["jcr:title"]}</h3>
         <span
-          className={clsx(
-            "_pack-1",
-            classes.small,
-            technologyMode && props.strategicPartner && classes.strategic,
-          )}
+          className={clsx("_pack-1", classes.small, props.strategicPartner && classes.strategic)}
         >
           {technologyMode
             ? t(`partner.partnershipTypes.${partnership}`)
@@ -162,7 +158,15 @@ const SimilarPartnerCard = ({
           props.strategicPartner,
         )}
       </p>
-      <a href={`${buildNodeUrl(currentNode)}?region=${region}`}>{t("partner.viewProfile")}</a>
+      <CTA
+        href={`${buildNodeUrl(currentNode)}?region=${region}`}
+        secondary
+        icon="i-ri:arrow-right-s-line"
+        location="similar_partners"
+        name={currentNode.getName()}
+      >
+        {t("partner.viewProfile")}
+      </CTA>
     </article>
   );
 };

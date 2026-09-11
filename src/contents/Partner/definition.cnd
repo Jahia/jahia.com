@@ -25,6 +25,8 @@
  - tags (weakreference, category[autoSelectParent=false]) multiple
  - aboutTitle (string) i18n
  - expertiseTitle (string) i18n
+ // Unified rich content; legacy properties remain unchanged for upgrade compatibility.
+ - expertiseBody (string, richtext) i18n
  // Single-value editor introduced without changing the deployed multiple expertise property.
  - expertiseText (string) i18n
  - expertise (string) multiple i18n

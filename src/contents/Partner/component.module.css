@@ -5,11 +5,8 @@
   min-width: 0;
   padding: 2.5rem;
   background: #fff;
-  border: 1px solid #d7e0e8;
-  border-radius: 0.75rem;
-  transition:
-    box-shadow var(--jahia-motion-timing),
-    transform var(--jahia-motion-timing);
+  border: 1px solid #dae0e7;
+  border-radius: 0;
 }
 
 .cardLink {
@@ -19,14 +16,9 @@
   border-radius: inherit;
 }
 
-.card:hover,
-.card:focus-within {
-  box-shadow: 0 0.625rem 1.75rem rgb(0 25 50 / 8%);
-  transform: translateY(-0.125rem);
-}
-
 .cardLogo {
   display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   place-items: center;
   width: 150px;
   height: 150px;
@@ -52,14 +44,17 @@
 
 .cardHeading {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   align-items: center;
   justify-content: space-between;
 }
 
 .cardHeading h3 {
-  font-size: 1.125rem;
-  color: #001932;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #001020;
 }
 
 .small {
@@ -111,8 +106,8 @@
 }
 
 .strategic {
-  color: #3f31b8;
-  background: #e0ddf8;
+  color: #001932;
+  background: #ffab00;
 }
 
 .cardMeta {
@@ -190,12 +185,8 @@
 }
 
 .similarCard a {
-  display: inline-block;
+  align-self: flex-start;
   margin-top: 1rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #037cc2;
-  text-transform: uppercase;
 }
 
 @media (width <= 32rem) {
@@ -210,15 +201,16 @@
 
 .similarCard {
   flex: 0 0 min(17rem, 82vw);
-  padding: 1.25rem;
+  padding: 2.5rem;
   scroll-snap-align: start;
   background: #fff;
-  border: 1px solid #d7e0e8;
-  border-radius: 0.75rem;
+  border: 1px solid #dae0e7;
+  border-radius: 0;
 }
 
 .similarLogo {
   display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   place-items: center;
   width: 3.25rem;
   height: 3.25rem;
@@ -242,8 +234,10 @@
 }
 
 .similarCard h3 {
-  font-size: 1.125rem;
-  color: #001932;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #001020;
 }
 
 .similarCard p {

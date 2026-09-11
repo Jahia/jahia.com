@@ -34,6 +34,7 @@ export interface Props {
   "tags"?: Array<JCRNodeWrapper | null>;
   "aboutTitle"?: string;
   "expertiseTitle"?: string;
+  "expertiseBody"?: string;
   "expertiseText"?: string;
   "expertise"?: string[];
   "technologyDetails"?: string;
