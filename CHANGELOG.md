@@ -1,5 +1,11 @@
 # Jahia.com Template Set Changelog
 
+## 1.5.2
+
+* Display partner logos and compact rank badges side by side in equal-width columns in the Solution and Technology partner directories.
+
+* Restore saving Partner forms by migrating legacy Partner SEO assignments to the existing native SEO fieldsets, preserving stored SEO values and backing up affected content before migration.
+
 ## 1.5.1
 
 * Restore the Partner testimonial and location editors after a module upgrade by loading their registration script from a new asset URL. This prevents an older cached script from leaving the testimonial field displayed as raw JSON. The editor fields and stored content remain unchanged.
