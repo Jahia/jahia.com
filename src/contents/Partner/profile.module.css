@@ -19,6 +19,14 @@
   overflow: hidden;
 }
 
+.section.connectedTestimonials {
+  padding-bottom: 1.5rem;
+}
+
+.connectedTestimonials + .section {
+  padding-top: 1.5rem;
+}
+
 .heroInner,
 .overviewInner,
 .section > *,
@@ -108,8 +116,8 @@
   text-align: center;
 }
 
-.facts span,
-.partnershipFacts span {
+.facts > div > :where(span),
+.partnershipFacts > div > :where(span) {
   font-size: 0.6875rem;
   color: #5a6b7a;
   text-transform: uppercase;
@@ -168,6 +176,24 @@
   gap: 4rem;
 }
 
+.similarGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (width <= 68.75rem) {
+  .similarGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width <= 45rem) {
+  .similarGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .expertise {
   padding-left: 1.5rem;
   margin: 1rem 0 0;
@@ -217,7 +243,7 @@
 
 .partnershipFacts {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
   gap: 1rem;
   margin-top: 2rem;
   background: #fff;

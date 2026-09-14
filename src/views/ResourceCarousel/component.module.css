@@ -201,22 +201,51 @@
 
 .pagination {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.875rem;
 }
 
 .pagination button {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
   width: 1.75rem;
-  height: 0.3125rem;
+  height: 2.75rem;
   padding: 0;
   cursor: pointer;
-  background: var(--jahia-neutral-400);
+  background: transparent;
   border: 0;
+}
+
+.pagination button::before {
+  width: 100%;
+  height: 0.3125rem;
+  content: "";
+  background: var(--jahia-color);
   border-radius: 999px;
 }
 
-.pagination button[aria-current] {
+.pagination button[aria-current]::before {
   background: var(--jahia-primary-color);
+}
+
+.pagination button:focus-visible,
+.arrow:focus-visible,
+.viewport:focus-visible {
+  outline: 2px solid var(--jahia-primary-color);
+  outline-offset: 2px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
 }
 
 .ctaRow {
@@ -287,5 +316,24 @@
   .card:hover,
   .card:focus-within {
     transform: none;
+  }
+}
+
+/* Partner quotations fill the available row, up to three cards. */
+.viewport[data-fit-items="1"] {
+  --items-per-page: 1;
+}
+
+.viewport[data-fit-items="2"] {
+  --items-per-page: 2;
+}
+
+.viewport[data-fit-items] .track {
+  grid-auto-columns: calc((100% - (var(--items-per-page) - 1) * 1.5rem) / var(--items-per-page));
+}
+
+@media (width <= 45rem) {
+  .viewport[data-fit-items] {
+    --items-per-page: 1;
   }
 }

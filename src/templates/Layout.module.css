@@ -7,6 +7,24 @@
   transition: background-color var(--jahia-timing);
 }
 
+.skipLink {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1000002;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  color: var(--jahia-navy-blue);
+  background: var(--jahia-neutral-50);
+  transform: translateY(-200%);
+}
+
+.skipLink:focus {
+  outline: 2px solid var(--jahia-a11y-blue);
+  outline-offset: 2px;
+  transform: translateY(0);
+}
+
 .stickyHeader:hover,
 .stickyHeader:focus-within,
 .stickyHeader:has(> nav[data-open="true"]) {

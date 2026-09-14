@@ -166,7 +166,7 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
           <h2 id={id}>{title}</h2>
           {props.subtitle && <p className={classes.subtitle}>{props.subtitle}</p>}
         </header>
-        <Island component={Carousel} props={{ itemCount: items.length }}>
+        <Island component={Carousel} props={{ itemCount: items.length, labelledBy: id }}>
           {items.map((item) => (
             <Card
               key={item.id}

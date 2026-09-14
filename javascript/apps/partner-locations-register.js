@@ -20,7 +20,9 @@
     var french = (document.documentElement.lang || "").toLowerCase().indexOf("fr") === 0;
     return french
       ? {
-          add: "+ Ajouter une région et un pays",
+          add: "Ajouter",
+          region: "Région",
+          location: "Localisation",
           country: "Pays",
           countryPlaceholder: "Ex. France",
           emptyRegion: "Choisir une région",
@@ -29,7 +31,9 @@
           regions: { europe: "Europe", americas: "Amériques", apac: "Asie-Pacifique" },
         }
       : {
-          add: "+ Add a region and country",
+          add: "Add",
+          region: "Region",
+          location: "Location",
           country: "Country",
           countryPlaceholder: "E.g. France",
           emptyRegion: "Choose a region",
@@ -46,7 +50,7 @@
       if (!Array.isArray(parsed)) return [];
       return parsed
         .filter(function (row) {
-          return row && REGIONS.indexOf(row.region) !== -1;
+          return row && (row.region === "" || REGIONS.indexOf(row.region) !== -1);
         })
         .map(function (row) {
           return {
@@ -60,147 +64,321 @@
   }
 
   function PartnerLocationsPicker(props) {
-    var value = props.value || "";
-    var onChange = props.onChange;
-
-    return h("div", { className: "plp-root" }, "plp-root", function (container) {
-      if (!container) return;
-      if (container._plpInit) {
-        if (container._plpSetValue) container._plpSetValue(value);
-        return;
-      }
-      container._plpInit = true;
-
-      if (!document.getElementById("plp-styles")) {
-        var style = document.createElement("style");
-        style.id = "plp-styles";
-        style.textContent = [
-          ".plp-root{display:flex;flex-direction:column;gap:12px;width:100%;box-sizing:border-box}",
-          ".plp-rows{display:flex;flex-direction:column;gap:10px}",
-          ".plp-row{display:grid;grid-template-columns:minmax(160px,1fr) minmax(190px,1.4fr) auto;gap:10px;align-items:start;padding:12px;border:1px solid #d7d9dc;border-radius:4px;background:#fff}",
-          ".plp-field{display:flex;flex-direction:column;gap:4px}",
-          ".plp-field label{font-size:12px;font-weight:600;color:#4b4f56}",
-          ".plp-select,.plp-input{width:100%;height:40px;padding:0 12px;border:1px solid #8f949c;border-radius:2px;background:#fff;color:#202124;font:inherit;box-sizing:border-box}",
-          ".plp-select:focus,.plp-input:focus{outline:2px solid #005cfa;outline-offset:1px;border-color:#005cfa}",
-          ".plp-remove{height:40px;margin-top:20px;padding:0 12px;border:1px solid #c8cbd0;border-radius:2px;background:#fff;color:#5d626b;cursor:pointer}",
-          ".plp-remove:hover{border-color:#b42318;color:#b42318}",
-          ".plp-add{align-self:flex-start;height:40px;padding:0 16px;border:1px solid #005cfa;border-radius:2px;background:#fff;color:#005cfa;font-weight:600;cursor:pointer}",
-          ".plp-add:hover{background:#eef4ff}",
-          ".plp-error{margin:0;color:#b42318;font-size:12px}",
-          "@media(max-width:720px){.plp-row{grid-template-columns:1fr}.plp-remove{margin-top:0;justify-self:start}}",
-        ].join("");
-        document.head.appendChild(style);
-      }
-
-      var text = labels();
-      var rows = parse(value);
-      var rowsElement = document.createElement("div");
-      rowsElement.className = "plp-rows";
-      container.appendChild(rowsElement);
-
-      var addButton = document.createElement("button");
-      addButton.type = "button";
-      addButton.className = "plp-add";
-      addButton.textContent = text.add;
-      container.appendChild(addButton);
-
-      function serializedRows() {
-        var configuredRows = rows.filter(function (row) {
-          return REGIONS.indexOf(row.region) !== -1 && row.country.trim();
-        });
-        return configuredRows.length ? JSON.stringify(configuredRows) : "";
-      }
-
-      function notify() {
-        if (onChange) onChange(serializedRows());
-      }
-
-      function field(labelText, control) {
-        var wrapper = document.createElement("div");
-        wrapper.className = "plp-field";
-        var label = document.createElement("label");
-        label.textContent = labelText;
-        wrapper.appendChild(label);
-        wrapper.appendChild(control);
-        return wrapper;
-      }
-
-      function render() {
-        rowsElement.innerHTML = "";
-        rows.forEach(function (row, index) {
-          var rowElement = document.createElement("div");
-          rowElement.className = "plp-row";
-
-          var select = document.createElement("select");
-          select.className = "plp-select";
-          var emptyOption = document.createElement("option");
-          emptyOption.value = "";
-          emptyOption.textContent = text.emptyRegion;
-          select.appendChild(emptyOption);
-          REGIONS.forEach(function (region) {
-            var option = document.createElement("option");
-            option.value = region;
-            option.textContent = text.regions[region];
-            select.appendChild(option);
-          });
-          select.value = row.region || "";
-          select.onchange = function () {
-            rows[index].region = select.value;
-            notify();
-            render();
-          };
-
-          var input = document.createElement("input");
-          input.type = "text";
-          input.className = "plp-input";
-          input.placeholder = text.countryPlaceholder;
-          input.value = row.country || "";
-          input.oninput = function () {
-            rows[index].country = input.value;
-            notify();
-          };
-          input.onblur = render;
-
-          var removeButton = document.createElement("button");
-          removeButton.type = "button";
-          removeButton.className = "plp-remove";
-          removeButton.textContent = text.remove;
-          removeButton.onclick = function () {
-            rows.splice(index, 1);
-            notify();
-            render();
-          };
-
-          rowElement.appendChild(
-            field(text.emptyRegion.replace("Choisir une ", "").replace("Choose a ", ""), select),
+    var moonstone = window.jahia.moonstone;
+    var text = labels();
+    var rows = parse(props.value);
+    var disabled = Boolean(props.readOnly || props.disabled);
+    function change(nextRows) {
+      if (props.onChange) props.onChange(JSON.stringify(nextRows));
+    }
+    function update(index, key, value) {
+      var next = rows.slice();
+      next[index] = Object.assign({}, rows[index], { [key]: value });
+      change(next);
+    }
+    return h("div", {
+      style: { display: "flex", flexDirection: "column", gap: 24 },
+      children: rows
+        .map(function (row, index) {
+          return h(
+            "div",
+            {
+              "role": "group",
+              "aria-label": text.location + " " + (index + 1),
+              "style": { display: "flex", flexDirection: "column", gap: 16 },
+              "children": [
+                h(
+                  moonstone.Typography,
+                  { variant: "subheading", children: text.location + " " + (index + 1) },
+                  "title",
+                ),
+                h(
+                  "div",
+                  {
+                    style: {
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 220px), 1fr))",
+                      gap: 24,
+                    },
+                    children: [
+                      h(
+                        moonstone.Field,
+                        {
+                          label: text.region,
+                          style: { padding: 0, minWidth: 0 },
+                          children: h(moonstone.Dropdown, {
+                            data: REGIONS.map(function (region) {
+                              return { label: text.regions[region], value: region };
+                            }),
+                            value: row.region,
+                            placeholder: text.emptyRegion,
+                            variant: "outlined",
+                            size: "medium",
+                            isDisabled: disabled,
+                            onChange: function (_, item) {
+                              update(index, "region", item.value);
+                            },
+                          }),
+                        },
+                        "region",
+                      ),
+                      h(
+                        moonstone.Field,
+                        {
+                          label: text.country,
+                          style: { padding: 0, minWidth: 0 },
+                          children: h(moonstone.Input, {
+                            "aria-label": text.country,
+                            "size": "big",
+                            "value": row.country,
+                            "placeholder": text.countryPlaceholder,
+                            "isDisabled": disabled,
+                            "onChange": function (event) {
+                              update(index, "country", event.target.value);
+                            },
+                          }),
+                        },
+                        "country",
+                      ),
+                    ],
+                  },
+                  "fields",
+                ),
+                h(
+                  moonstone.Button,
+                  {
+                    label: text.remove,
+                    variant: "ghost",
+                    isDisabled: disabled,
+                    style: { alignSelf: "flex-end" },
+                    onClick: function () {
+                      change(
+                        rows.filter(function (_, position) {
+                          return position !== index;
+                        }),
+                      );
+                    },
+                  },
+                  "remove",
+                ),
+              ],
+            },
+            index,
           );
-          rowElement.appendChild(field(text.country, input));
-          rowElement.appendChild(removeButton);
-          if ((!row.region && row.country.trim()) || (row.region && !row.country.trim())) {
-            var error = document.createElement("p");
-            error.className = "plp-error";
-            error.textContent = text.incomplete;
-            error.style.gridColumn = "1 / -1";
-            rowElement.appendChild(error);
-          }
-          rowsElement.appendChild(rowElement);
-        });
-      }
-
-      addButton.onclick = function () {
-        rows.push({ region: "", country: "" });
-        render();
-      };
-
-      container._plpSetValue = function (nextValue) {
-        if (nextValue === serializedRows()) return;
-        rows = parse(nextValue);
-        render();
-      };
-
-      render();
+        })
+        .concat(
+          h(
+            moonstone.Button,
+            {
+              label: text.add,
+              variant: "outlined",
+              color: "accent",
+              isDisabled: disabled,
+              style: { alignSelf: "flex-start" },
+              onClick: function () {
+                change(rows.concat({ region: "", country: "" }));
+              },
+            },
+            "add",
+          ),
+        ),
     });
   }
+
+  // Reuse Content Editor's real image Picker, including its ReferenceCard and media metadata.
+  function PartnerLogoPicker(props) {
+    var field = Object.assign({}, props.parent.field, {
+      name: props.parent.field.name + "-logo-" + props.index,
+      multiple: false,
+      readOnly: props.disabled,
+      selectorOptions: [{ name: "type", value: "image" }],
+      valueConstraints: [{ displayValue: "jmix:image", value: { string: "jmix:image" } }],
+    });
+    var selector = window.jahia.uiExtender.registry
+      .get("selectorType", "Picker")
+      .resolver(field.selectorOptions, field);
+    var picker = h(selector.cmp, {
+      field: field,
+      value: props.row.logoId || undefined,
+      editorContext: props.parent.editorContext,
+      inputContext: Object.assign({}, props.parent.inputContext, {
+        selectorType: selector,
+        displayActions: false,
+      }),
+      onChange: props.onChange,
+      onBlur: function () {
+        if (props.parent.onBlur) props.parent.onBlur();
+      },
+    });
+    return h("div", {
+      style: { display: "flex", alignItems: "center", gap: 8 },
+      children: [
+        h("div", { style: { flex: 1, minWidth: 0 }, children: picker }, "picker"),
+        props.row.logoId &&
+          h(
+            window.jahia.moonstone.Button,
+            {
+              label: (document.documentElement.lang || "").startsWith("fr")
+                ? "Retirer le logo"
+                : "Remove logo",
+              variant: "ghost",
+              isDisabled: props.disabled,
+              onClick: function () {
+                props.onChange(undefined);
+              },
+            },
+            "clear",
+          ),
+      ],
+    });
+  }
+
+  function PartnerTestimonialsPicker(props) {
+    var moonstone = window.jahia.moonstone;
+    var french = (document.documentElement.lang || "").startsWith("fr");
+    var text = french
+      ? {
+          logo: "Logo de l’entreprise",
+          selectLogo: "Choisir un logo",
+          changeLogo: "Changer le logo",
+          removeLogo: "Retirer le logo",
+          comment: "Commentaire",
+          attribution: "Auteur / Entreprise",
+          add: "Ajouter",
+          quote: "Citation",
+          remove: "Supprimer",
+        }
+      : {
+          logo: "Company logo",
+          selectLogo: "Choose a logo",
+          changeLogo: "Change logo",
+          removeLogo: "Remove logo",
+          comment: "Comment",
+          attribution: "Author / Company",
+          add: "Add",
+          quote: "Quote",
+          remove: "Remove",
+        };
+    var rows;
+    try {
+      var parsed = JSON.parse(props.value || "[]");
+      rows = Array.isArray(parsed) ? parsed : [];
+    } catch {
+      rows = [];
+    }
+    if (!rows.length) rows = [{ comment: "", attribution: "" }];
+    var disabled = Boolean(props.readOnly || props.disabled);
+    function change(nextRows) {
+      if (props.onChange) props.onChange(JSON.stringify(nextRows));
+    }
+    return h("div", {
+      style: { display: "flex", flexDirection: "column", gap: 24 },
+      children: rows
+        .map(function (row, index) {
+          return h(
+            "div",
+            {
+              "role": "group",
+              "aria-label": text.quote + " " + (index + 1),
+              "style": { display: "flex", flexDirection: "column", gap: 16 },
+              "children": [
+                h(
+                  moonstone.Typography,
+                  { variant: "subheading", children: text.quote + " " + (index + 1) },
+                  "title",
+                ),
+                h(
+                  moonstone.Field,
+                  {
+                    label: text.logo,
+                    children: h(PartnerLogoPicker, {
+                      parent: props,
+                      row: row,
+                      index: index,
+                      disabled: disabled,
+                      onChange: function (value) {
+                        var next = rows.slice();
+                        next[index] = Object.assign({}, row);
+                        if (value) next[index].logoId = value;
+                        else delete next[index].logoId;
+                        delete next[index].logoName;
+                        change(next);
+                      },
+                    }),
+                  },
+                  "logo",
+                ),
+                ...["comment", "attribution"].map(function (key) {
+                  return h(
+                    moonstone.Field,
+                    {
+                      label: text[key],
+                      children: h(key === "comment" ? moonstone.Textarea : moonstone.Input, {
+                        "aria-label": text[key],
+                        "value":
+                          (key === "attribution"
+                            ? (row.attribution ??
+                              [row.author, row.company ?? row.authorTitle]
+                                .filter(Boolean)
+                                .join(" — "))
+                            : row[key]) || "",
+                        "rows": key === "comment" ? 4 : undefined,
+                        "isDisabled": disabled,
+                        "onChange": function (event) {
+                          var next = rows.slice();
+                          next[index] = Object.assign({}, row, { [key]: event.target.value });
+                          if (key === "comment") delete next[index].html;
+                          change(next);
+                        },
+                      }),
+                    },
+                    key,
+                  );
+                }),
+                h(
+                  moonstone.Button,
+                  {
+                    label: text.remove,
+                    variant: "ghost",
+                    isDisabled: disabled,
+                    style: { alignSelf: "flex-end" },
+                    onClick: function () {
+                      change(
+                        rows.filter(function (_, position) {
+                          return position !== index;
+                        }),
+                      );
+                    },
+                  },
+                  "remove",
+                ),
+              ],
+            },
+            index,
+          );
+        })
+        .concat(
+          h(
+            moonstone.Button,
+            {
+              label: text.add,
+              variant: "outlined",
+              color: "accent",
+              isDisabled: disabled,
+              style: { alignSelf: "flex-start" },
+              onClick: function () {
+                change(rows.concat({ comment: "", attribution: "" }));
+              },
+            },
+            "add",
+          ),
+        ),
+    });
+  }
+  window.jahia.uiExtender.registry.add("selectorType", "PartnerTestimonialsPicker", {
+    cmp: PartnerTestimonialsPicker,
+    supportMultiple: false,
+  });
 
   window.jahia.uiExtender.registry.add("selectorType", "PartnerLocationsPicker", {
     cmp: PartnerLocationsPicker,

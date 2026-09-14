@@ -42,6 +42,7 @@ export interface Props {
   "partnershipImage"?: JCRNodeWrapper;
   "certifiedConsultants"?: number;
   "scope"?: string;
+  "testimonialsData"?: string;
   "quote"?: string;
   "quoteAuthor"?: string;
   "quoteAuthorTitle"?: string;
@@ -216,7 +217,19 @@ export const levels = (
       ),
       diamond: (
         <span className={classes.level}>
-          <span className={clsx("i-ri:vip-diamond-fill", classes.diamond)} aria-hidden="true" />
+          <svg className={classes.diamond} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+              fill="currentColor"
+              d="M4.878 3.003h14.254a1 1 0 0 1 .809.412l3.822 5.256a.5.5 0 0 1-.037.633l-11.354 12.3a.5.5 0 0 1-.735 0L.283 9.305a.5.5 0 0 1-.037-.633l3.823-5.256a1 1 0 0 1 .809-.412"
+            />
+            <path
+              className={classes.diamondFacets}
+              d="M1.5 9h21M8 3.8 6.5 9 12 20.5 17.5 9 16 3.8M8 3.8 12 9l4-5.2"
+              fill="none"
+              strokeWidth="1.25"
+              strokeLinejoin="round"
+            />
+          </svg>
           <span>
             {getMessage("jahiacom_partner.certification.diamond", locale, "Diamond Partner")}
           </span>
@@ -224,3 +237,26 @@ export const levels = (
       ),
     }[level]
   );
+
+export const PartnerBadge = ({
+  props,
+  locale,
+  technologyMode = props.partnerType === "technology",
+}: {
+  props: Props;
+  locale: Locale;
+  technologyMode?: boolean;
+}) => (
+  <span
+    className={clsx(classes.small, props.strategicPartner && classes.strategic)}
+    data-partner-badge=""
+  >
+    {levels(
+      props.certification,
+      locale,
+      technologyMode ? undefined : props.partnerLevel,
+      technologyMode || props.integrationPartner,
+      props.strategicPartner,
+    )}
+  </span>
+);

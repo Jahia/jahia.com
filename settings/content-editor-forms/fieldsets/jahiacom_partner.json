@@ -1,6 +1,6 @@
 {
   "name": "jahiacom:partner",
-  "priority": 2.0,
+  "priority": 2,
   "fields": [
     {
       "name": "jcr:title"
@@ -106,16 +106,23 @@
       "selectorType": "TextArea"
     },
     {
-      "name": "quote"
+      "name": "quote",
+      "hide": true
     },
     {
-      "name": "quoteAuthor"
+      "name": "quoteAuthor",
+      "hide": true
     },
     {
-      "name": "quoteAuthorTitle"
+      "name": "quoteAuthorTitle",
+      "hide": true
     },
     {
       "name": "website"
+    },
+    {
+      "name": "testimonialsData",
+      "selectorType": "PartnerTestimonialsPicker"
     }
   ]
 }

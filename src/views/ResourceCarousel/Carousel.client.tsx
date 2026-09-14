@@ -29,9 +29,17 @@ const paginationMetrics = (element: HTMLDivElement, itemCount: number) => {
 export default function Carousel({
   children,
   itemCount,
+  fitItems = false,
+  showArrows = true,
+  showPagination = true,
+  labelledBy,
 }: {
   children?: ReactNode;
   itemCount: number;
+  fitItems?: boolean;
+  showArrows?: boolean;
+  showPagination?: boolean;
+  labelledBy?: string;
 }) {
   const { t } = useTranslation();
   const viewport = useRef<HTMLDivElement>(null);
@@ -69,7 +77,11 @@ export default function Carousel({
     const element = viewport.current;
     if (!element) return;
 
-    const observer = new ResizeObserver(measure);
+    const observer = new ResizeObserver(() => {
+      // A pending destination belongs to the old layout after a breakpoint change.
+      targetPage.current = null;
+      measure();
+    });
     observer.observe(element);
     if (element.firstElementChild) observer.observe(element.firstElementChild);
     const onScroll = () => requestAnimationFrame(measure);
@@ -91,7 +103,12 @@ export default function Carousel({
     targetPage.current = safeTarget;
     activePage.current = safeTarget;
     setPage(safeTarget);
-    element.scrollTo({ left: offsets[safeTarget], behavior: "smooth" });
+    element.scrollTo({
+      left: offsets[safeTarget],
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
   };
 
   const releaseTarget = () => {
@@ -100,18 +117,27 @@ export default function Carousel({
   };
 
   return (
-    <div className={classes.carousel}>
-      <button
-        className={`${classes.arrow} ${classes.previous}`}
-        type="button"
-        aria-label={t("resourceCarousel.previous")}
-        disabled={page === 0}
-        onClick={() => goTo(activePage.current - 1)}
-      >
-        <span aria-hidden="true">←</span>
-      </button>
+    <div
+      className={classes.carousel}
+      role="region"
+      aria-labelledby={labelledBy}
+      aria-label={labelledBy ? undefined : t("resourceCarousel.defaultTitle")}
+    >
+      {showArrows && (
+        <button
+          className={`${classes.arrow} ${classes.previous}`}
+          type="button"
+          aria-label={t("resourceCarousel.previous")}
+          disabled={page === 0}
+          onClick={() => goTo(activePage.current - 1)}
+        >
+          <span aria-hidden="true">←</span>
+        </button>
+      )}
       <div
         ref={viewport}
+        data-fit-items={fitItems ? Math.max(1, Math.min(itemCount, 3)) : undefined}
+        tabIndex={showArrows ? undefined : 0}
         className={classes.viewport}
         onPointerDown={releaseTarget}
         onTouchStart={releaseTarget}
@@ -119,17 +145,23 @@ export default function Carousel({
       >
         <div className={classes.track}>{children}</div>
       </div>
-      <button
-        className={`${classes.arrow} ${classes.next}`}
-        type="button"
-        aria-label={t("resourceCarousel.next")}
-        disabled={page >= pageCount - 1}
-        onClick={() => goTo(activePage.current + 1)}
-      >
-        <span aria-hidden="true">→</span>
-      </button>
-      {pageCount > 1 && (
-        <div className={classes.pagination} aria-label={t("resourceCarousel.pagination")}>
+      {showArrows && (
+        <button
+          className={`${classes.arrow} ${classes.next}`}
+          type="button"
+          aria-label={t("resourceCarousel.next")}
+          disabled={page >= pageCount - 1}
+          onClick={() => goTo(activePage.current + 1)}
+        >
+          <span aria-hidden="true">→</span>
+        </button>
+      )}
+      {showPagination && pageCount > 1 && (
+        <div
+          className={classes.pagination}
+          role="group"
+          aria-label={t("resourceCarousel.pagination")}
+        >
           {Array.from({ length: pageCount }, (_, index) => (
             <button
               key={index}
@@ -141,6 +173,11 @@ export default function Carousel({
           ))}
         </div>
       )}
+      <p className={classes.srOnly} role="status" aria-atomic="true">
+        {pageCount > 1
+          ? t("resourceCarousel.pageStatus", { page: page + 1, total: pageCount })
+          : ""}
+      </p>
     </div>
   );
 }

@@ -13,18 +13,63 @@ import { Layout } from "../../templates/Layout.jsx";
 import Carousel from "../../views/ResourceCarousel/Carousel.client.jsx";
 import classes from "./profile.module.css";
 import { legacyExpertiseBody } from "./expertise.js";
+import { rankSimilarPartners } from "./similarity.js";
+import { TestimonialCard } from "./Testimonial.server.jsx";
+import testimonialClasses from "./testimonials.module.css";
 import {
   configuredRegions,
   compositePartnerLocations,
   countryNames,
   htmlToText,
   legacyRegion,
-  levels,
+  PartnerBadge,
   regionCodes,
   regionCountries,
   type Props,
   type Region,
 } from "./types.js";
+
+interface InlineTestimonial {
+  comment: string;
+  logoId?: string;
+  author?: string;
+  authorTitle?: string;
+  company?: string;
+  attribution?: string;
+  html?: string;
+}
+
+const parseTestimonials = (value?: string): InlineTestimonial[] | undefined => {
+  if (value === undefined) return undefined;
+  try {
+    const rows: unknown = JSON.parse(value);
+    if (!Array.isArray(rows)) return undefined;
+    return rows.filter(
+      (row): row is InlineTestimonial =>
+        row &&
+        typeof row.comment === "string" &&
+        row.comment.trim() &&
+        (row.author === undefined || typeof row.author === "string") &&
+        (row.authorTitle === undefined || typeof row.authorTitle === "string") &&
+        (row.company === undefined || typeof row.company === "string") &&
+        (row.attribution === undefined || typeof row.attribution === "string") &&
+        (row.html === undefined || typeof row.html === "string"),
+    );
+  } catch {
+    return undefined;
+  }
+};
+
+const testimonialLogo = (node: JCRNodeWrapper, id?: string): JCRNodeWrapper | undefined => {
+  if (!id || !/^[0-9a-f-]{36}$/i.test(id)) return undefined;
+  try {
+    const image = node.getSession().getNodeByIdentifier(id);
+    return image.isNodeType("jmix:image") ? image : undefined;
+  } catch {
+    // Missing or unpublished media must not prevent the quote from rendering.
+    return undefined;
+  }
+};
 
 const isRegion = (value: string | null): value is Region =>
   value === "europe" || value === "americas" || value === "apac";
@@ -79,7 +124,10 @@ jahiaComponent(
       props={{
         ...props,
         "jcr:description":
-          props.seoDescription || props.shortDescription || htmlToText(props.description),
+          currentNode.getPropertyAsString("jcr:description") ||
+          props.seoDescription ||
+          props.shortDescription ||
+          htmlToText(props.description),
       }}
       pageType="partner_page"
     >
@@ -118,6 +166,16 @@ jahiaComponent(
       `,
     });
     const siteRoot = currentNode.getPath().match(/^\/sites\/[^/]+/)?.[0] || "/sites";
+    const testimonials = useJCRQuery({
+      query: `SELECT * FROM [jahiacom:partnerTestimonial]
+        WHERE ISCHILDNODE(${JSON.stringify(currentNode.getPath())})
+        ORDER BY [position], [jcr:created]`,
+    });
+    const inlineTestimonials = parseTestimonials(props.testimonialsData);
+    const quoteCount =
+      inlineTestimonials === undefined
+        ? testimonials.length + (props.quote ? 1 : 0)
+        : inlineTestimonials.length;
     const partnerCandidates = useJCRQuery({
       query: `
         SELECT * FROM [jahiacom:partner]
@@ -126,8 +184,8 @@ jahiaComponent(
       `,
     });
     const currentTitle = props["jcr:title"].trim().toLocaleLowerCase();
-    const currentCountries = new Set(
-      regionCountries(props, activeRegion).map((country) => normalizedCountry(country, locale)),
+    const currentCountries = regionCountries(props, activeRegion).map((country) =>
+      normalizedCountry(country, locale),
     );
     const eligibleSimilar = partnerCandidates.filter((node) => {
       if (node.getIdentifier() === currentNode.getIdentifier()) return false;
@@ -155,7 +213,7 @@ jahiaComponent(
         }),
       ).values(),
     ];
-    const sameCountry = uniqueSimilar.filter((node) => {
+    const similarityProfiles = uniqueSimilar.map((node) => {
       const candidateCountries = regionCountries(
         {
           regions: nodeRegions(node),
@@ -165,11 +223,31 @@ jahiaComponent(
         },
         activeRegion,
       );
-      return candidateCountries.some((country) =>
-        currentCountries.has(normalizedCountry(country, locale)),
-      );
+      return {
+        node,
+        tags: stringProperties(node, "tags"),
+        countries: candidateCountries.map((country) => normalizedCountry(country, locale)),
+        level:
+          stringProperty(node, "strategicPartner") === "true"
+            ? "strategic"
+            : stringProperty(node, "integrationPartner") === "true"
+              ? "integration"
+              : stringProperty(node, "certification"),
+      };
     });
-    const similar = (sameCountry.length > 0 ? sameCountry : uniqueSimilar).slice(0, 8);
+    const similar = rankSimilarPartners(
+      {
+        tags: (props.tags || []).flatMap((tag) => (tag ? [tag.getIdentifier()] : [])),
+        countries: currentCountries,
+        level: props.strategicPartner
+          ? "strategic"
+          : props.integrationPartner
+            ? "integration"
+            : props.certification,
+      },
+      similarityProfiles,
+      quoteCount > 3 ? 3 : 8,
+    ).map(({ node }) => node);
     const directoryComponent = useJCRQuery({
       query: `SELECT * FROM [jahiacom:partnerList] WHERE ISDESCENDANTNODE(${JSON.stringify(
         siteRoot,
@@ -180,7 +258,7 @@ jahiaComponent(
     const tagNodes = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
     const expertiseBody = props.expertiseBody ?? legacyExpertiseBody(props);
 
-    for (const dependency of [...projects, ...similar]) {
+    for (const dependency of [...projects, ...partnerCandidates, ...testimonials]) {
       server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
     }
 
@@ -216,17 +294,9 @@ jahiaComponent(
                   <span>
                     {type === "technology" ? t("partner.partnershipType") : t("partner.level")}
                   </span>
-                  <strong>
-                    {type === "technology"
-                      ? t("partner.partnershipTypes.integration")
-                      : levels(
-                          props.certification,
-                          locale,
-                          props.partnerLevel,
-                          props.integrationPartner,
-                          props.strategicPartner,
-                        )}
-                  </strong>
+                  <div>
+                    <PartnerBadge props={props} locale={locale} />
+                  </div>
                 </div>
               )}
               {type !== "technology" && (
@@ -293,15 +363,9 @@ jahiaComponent(
                 <div className={classes.partnershipFacts}>
                   <div>
                     <span>{t("partner.level")}</span>
-                    <strong>
-                      {levels(
-                        props.certification,
-                        locale,
-                        props.partnerLevel,
-                        props.integrationPartner,
-                        props.strategicPartner,
-                      )}
-                    </strong>
+                    <div>
+                      <PartnerBadge props={props} locale={locale} />
+                    </div>
                   </div>
                   {props.certifiedConsultants !== undefined && (
                     <div>
@@ -336,8 +400,11 @@ jahiaComponent(
           <section className={classes.section}>
             <div>
               <p className={classes.eyebrow}>{t("partner.projectsEyebrow")}</p>
-              <h2>{t("partner.projectsTitle")}</h2>
-              <Island component={Carousel} props={{ itemCount: projects.length }}>
+              <h2 id="partner-projects-title">{t("partner.projectsTitle")}</h2>
+              <Island
+                component={Carousel}
+                props={{ itemCount: projects.length, labelledBy: "partner-projects-title" }}
+              >
                 {projects.map((project) => (
                   <Render key={project.getIdentifier()} node={project} />
                 ))}
@@ -346,17 +413,69 @@ jahiaComponent(
           </section>
         )}
 
-        {props.quote && (
-          <section className={classes.quoteSection} data-theme="cloudy">
-            <blockquote>
-              <div className="_richtext" dangerouslySetInnerHTML={{ __html: props.quote }} />
-              {props.quoteAuthor && (
-                <footer>
-                  — {props.quoteAuthor}
-                  {props.quoteAuthorTitle && `, ${props.quoteAuthorTitle}`}
-                </footer>
+        {(quoteCount > 0 || renderContext.isEditMode()) && (
+          <section
+            className={`${classes.section} ${similar.length > 0 ? classes.connectedTestimonials : ""}`}
+          >
+            <div>
+              <h2 id="partner-testimonials-title">{t("partner.testimonialsTitle")}</h2>
+              {renderContext.isEditMode() && (
+                <p className={testimonialClasses.editorHint}>
+                  {t("partner.testimonialsEditorHint")}
+                </p>
               )}
-            </blockquote>
+              {quoteCount > 0 && (
+                <Island
+                  component={Carousel}
+                  props={{
+                    itemCount: quoteCount,
+                    labelledBy: "partner-testimonials-title",
+                    showArrows: false,
+                    fitItems: true,
+                    showPagination: quoteCount > 3,
+                  }}
+                >
+                  {inlineTestimonials === undefined && props.quote && (
+                    <TestimonialCard
+                      author={props.quoteAuthor}
+                      authorTitle={props.quoteAuthorTitle}
+                    >
+                      <div
+                        className="_richtext"
+                        dangerouslySetInnerHTML={{ __html: props.quote }}
+                      />
+                    </TestimonialCard>
+                  )}
+                  {inlineTestimonials?.map((testimonial, index) => (
+                    <TestimonialCard
+                      // Stateless SSR cards: each request renders the complete editorial order.
+                      // eslint-disable-next-line @eslint-react/no-array-index-key
+                      key={`${index}:${testimonial.comment}`}
+                      logo={testimonialLogo(currentNode, testimonial.logoId)}
+                      author={
+                        testimonial.attribution ??
+                        [testimonial.author, testimonial.company ?? testimonial.authorTitle]
+                          .filter(Boolean)
+                          .join(" — ")
+                      }
+                    >
+                      {testimonial.html ? (
+                        <div
+                          className="_richtext"
+                          dangerouslySetInnerHTML={{ __html: testimonial.html }}
+                        />
+                      ) : (
+                        testimonial.comment
+                      )}
+                    </TestimonialCard>
+                  ))}
+                  {inlineTestimonials === undefined &&
+                    testimonials.map((testimonial) => (
+                      <Render key={testimonial.getIdentifier()} node={testimonial} />
+                    ))}
+                </Island>
+              )}
+            </div>
           </section>
         )}
 
@@ -364,12 +483,23 @@ jahiaComponent(
           <section className={classes.section}>
             <div>
               <p className={classes.eyebrow}>{t("partner.similarEyebrow")}</p>
-              <h2>{t("partner.similarTitle")}</h2>
-              <Island component={Carousel} props={{ itemCount: similar.length }}>
-                {similar.map((partner) => (
-                  <Render key={partner.getIdentifier()} node={partner} view="similarCard" />
-                ))}
-              </Island>
+              <h2 id="partner-similar-title">{t("partner.similarTitle")}</h2>
+              {quoteCount > 3 ? (
+                <div className={classes.similarGrid}>
+                  {similar.map((partner) => (
+                    <Render key={partner.getIdentifier()} node={partner} view="similarCard" />
+                  ))}
+                </div>
+              ) : (
+                <Island
+                  component={Carousel}
+                  props={{ itemCount: similar.length, labelledBy: "partner-similar-title" }}
+                >
+                  {similar.map((partner) => (
+                    <Render key={partner.getIdentifier()} node={partner} view="similarCard" />
+                  ))}
+                </Island>
+              )}
             </div>
           </section>
         )}

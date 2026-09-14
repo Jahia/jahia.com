@@ -1,4 +1,7 @@
 {
+  "accessibility": {
+    "skipToContent": "Aller au contenu"
+  },
   "partner": {
     "allTypes": "Tous",
     "integrators": "Intégrateurs et agences",
@@ -60,7 +63,9 @@
     "projectCtaEyebrow": "Un projet en tête ?",
     "projectCtaTitle": "Travaillez avec {{name}} sur votre projet Jahia",
     "projectCtaIntro": "Contactez ce partenaire pour discuter de votre besoin, ou revenez à l’annuaire pour comparer.",
-    "returnDirectory": "Retour à l’annuaire"
+    "returnDirectory": "Retour à l’annuaire",
+    "testimonialsTitle": "Témoignages",
+    "testimonialsEditorHint": "Modifiez la fiche partenaire pour personnaliser ses citations."
   },
   "blogListing": {
     "categories": "Catégories",
@@ -94,7 +99,8 @@
     "defaultTitle": "Ressources associées",
     "previous": "Page précédente",
     "next": "Page suivante",
-    "pagination": "Pagination du carrousel de ressources",
+    "pagination": "Pagination",
+    "pageStatus": "Page {{page}} sur {{total}}",
     "goToPage": "Aller à la page {{page}}",
     "blog": "Blog",
     "types": {
