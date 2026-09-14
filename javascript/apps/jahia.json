@@ -1,7 +1,7 @@
 {
   "jahia": {
     "apps": {
-      "jahia": "javascript/apps/partner-locations-register.js"
+      "jahia": "javascript/apps/partner-editors-1.5.js"
     }
   }
 }
