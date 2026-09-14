@@ -7,6 +7,7 @@ import {
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import prettyBytes from "pretty-bytes";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import EditorHints from "../components/EditorHints.jsx";
 import Breadcrumb from "./Breadcrumb.jsx";
 import NavBar from "./NavBar.jsx";
@@ -47,6 +48,7 @@ export const Layout = ({
   pageType?: string;
 }) => {
   const { currentResource, renderContext, mainNode } = useServerContext();
+  const { t } = useTranslation();
   const lang = currentResource.getLocale().getLanguage();
 
   const {
@@ -112,6 +114,9 @@ export const Layout = ({
         ))}
       </head>
       <body>
+        <a href="#main-content" className={classes.skipLink}>
+          {t("accessibility.skipToContent")}
+        </a>
         <script>{
           /* Because WEM does not support registering callbacks before the lib is loaded, we place this here */
           `window.digitalDataOverrides?.push(${JSON.stringify({
@@ -152,7 +157,9 @@ export const Layout = ({
           />
           <Breadcrumb pageType={pageType ?? props.pageType} title={title} />
         </div>
-        {children}
+        <main id="main-content" tabIndex={-1}>
+          {children}
+        </main>
         <AbsoluteArea
           parent={renderContext.getSite()}
           name="footer"

@@ -10,7 +10,7 @@ import {
   countryNames,
   htmlToText,
   legacyRegion,
-  levels,
+  PartnerBadge,
   regionCodes,
   regionCountries,
   type Props,
@@ -67,19 +67,7 @@ export const PartnerCard = ({
       </div>
       <div className={classes.cardHeading}>
         <h3>{props["jcr:title"]}</h3>
-        <span
-          className={clsx("_pack-1", classes.small, props.strategicPartner && classes.strategic)}
-        >
-          {technologyMode
-            ? t(`partner.partnershipTypes.${partnership}`)
-            : levels(
-                props.certification,
-                locale,
-                props.partnerLevel,
-                props.integrationPartner,
-                props.strategicPartner,
-              )}
-        </span>
+        <PartnerBadge props={props} locale={locale} technologyMode={technologyMode} />
       </div>
       <div className={classes.cardMeta}>
         {technologyMode ? (
@@ -149,14 +137,7 @@ const SimilarPartnerCard = ({
       </div>
       <h3>{props["jcr:title"]}</h3>
       <p>
-        {countries || regionCodes[region]} ·{" "}
-        {levels(
-          props.certification,
-          locale,
-          props.partnerLevel,
-          props.integrationPartner,
-          props.strategicPartner,
-        )}
+        {countries || regionCodes[region]} · <PartnerBadge props={props} locale={locale} />
       </p>
       <CTA
         href={`${buildNodeUrl(currentNode)}?region=${region}`}

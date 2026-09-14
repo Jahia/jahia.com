@@ -1,0 +1,31 @@
+{
+  "name": "jahiacom:partnerTestimonial",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "jcr:title",
+      "rank": 1
+    },
+    {
+      "name": "comment",
+      "selectorType": "TextArea",
+      "rank": 2
+    },
+    {
+      "name": "author",
+      "rank": 3
+    },
+    {
+      "name": "authorTitle",
+      "rank": 4
+    },
+    {
+      "name": "position",
+      "rank": 5
+    },
+    {
+      "name": "rating",
+      "hide": true
+    }
+  ]
+}
