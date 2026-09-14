@@ -46,6 +46,7 @@ export const PartnerCard = ({
   const technologyTags = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
   const partnership = props.strategicPartner ? "strategic" : "integration";
   const technologyMode = directoryMode === "technology" || type === "technology";
+  const sideBySideIdentity = directoryMode === "solution" || directoryMode === "technology";
 
   return (
     <article
@@ -58,16 +59,25 @@ export const PartnerCard = ({
       data-partner-partnership={partnership}
     >
       <a className={classes.cardLink} href={detailUrl} tabIndex={-1} aria-hidden="true" />
-      <div className={classes.cardLogo}>
-        {props.logo ? (
-          <Image image={props.logo} sizes={[360, 720]} />
-        ) : (
-          <strong className={classes.logoName}>{props["jcr:title"]}</strong>
+      <div className={clsx(sideBySideIdentity && classes.cardIdentity)}>
+        <div className={classes.cardLogo}>
+          {props.logo ? (
+            <Image image={props.logo} sizes={[360, 720]} />
+          ) : (
+            <strong className={classes.logoName}>{props["jcr:title"]}</strong>
+          )}
+        </div>
+        {sideBySideIdentity && (
+          <div className={classes.cardRank}>
+            <PartnerBadge props={props} locale={locale} technologyMode={technologyMode} />
+          </div>
         )}
       </div>
       <div className={classes.cardHeading}>
         <h3>{props["jcr:title"]}</h3>
-        <PartnerBadge props={props} locale={locale} technologyMode={technologyMode} />
+        {!sideBySideIdentity && (
+          <PartnerBadge props={props} locale={locale} technologyMode={technologyMode} />
+        )}
       </div>
       <div className={classes.cardMeta}>
         {technologyMode ? (
