@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.6.0
+
+* Add an editable bilingual glossary with alphabetic navigation, client-side filtering, dedicated term pages, related resources and automatic glossary statistics.
+
 ## 1.5.2
 
 * Display partner logos and compact rank badges side by side in equal-width columns in the Solution and Technology partner directories.
