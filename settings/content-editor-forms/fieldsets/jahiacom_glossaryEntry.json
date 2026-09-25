@@ -1,0 +1,10 @@
+{
+  "name": "jahiacom:glossaryEntry",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "indexPage",
+      "hide": true
+    }
+  ]
+}

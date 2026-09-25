@@ -4,3 +4,5 @@
  - technologyCategories (string, choicelist[resourceBundle]) multiple < 'aiGenai', 'crm', 'marketingAutomation', 'damMedia', 'pim', 'translationLocalization', 'analyticsData', 'seoContent', 'accessibilityQuality', 'supportService', 'collaboration'
  - technologyPartnerType (string, choicelist[resourceBundle]) = 'integration' < 'strategic', 'integration'
  - partnerRegionTarget (string, choicelist[resourceBundle]) < 'europe', 'americas', 'apac'
+ - glossaryMetric (string, choicelist[resourceBundle]) = 'none' < 'none', 'entries', 'letters', 'updated'
+ - glossaryFolder (weakreference, picker) < jnt:contentFolder

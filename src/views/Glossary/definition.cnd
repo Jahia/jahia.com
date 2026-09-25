@@ -1,0 +1,9 @@
+[jahiacom:glossary] > jnt:content, jahiacommix:rootComponent, mix:title orderable
+ - introduction (string, textarea) i18n
+ - explanation (string, richtext) i18n
+ - updatedLabel (string) i18n
+ - entriesFolder (weakreference, picker) < jnt:contentFolder
+ - searchLabel (string) i18n
+ - searchPlaceholder (string) i18n
+ - searchHelp (string) i18n
+ + * (jahiacom:glossaryEntry)

@@ -1,0 +1,2 @@
+[jahiacommix:glossaryFolder] mixin
+ - glossaryIndexPage (weakreference, picker) < jnt:page

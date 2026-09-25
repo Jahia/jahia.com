@@ -1,0 +1,801 @@
+{
+  "id": "glossary-preview",
+  "title": "The words behind digital experience, without the jargon",
+  "introduction": "Content management, portals and experience platforms: the vocabulary digital teams use every day, explained so it lands the first time.",
+  "explanation": "<p>Each entry defines a term, then explains <strong>how it differs from a related concept</strong>. Follow the linked Jahia resources to explore examples, use cases and practical guidance.</p>",
+  "updatedLabel": "Oct. 2026",
+  "entries": [
+    {
+      "id": "b2b-customer-portal",
+      "title": "B2B customer portal",
+      "summary": "An authenticated space where a business customer finds its contracts, orders and support history in one place.",
+      "aliases": [],
+      "url": "/glossary/b2b-customer-portal/",
+      "body": "<p>An authenticated space where a business customer finds its contracts, orders and support history in one place.</p>",
+      "comparisonTitle": "B2B customer portal vs e-commerce website",
+      "comparison": "<p>An e-commerce website centers on buying. A B2B customer portal also supports the ongoing account relationship: contracts, service requests and documents governed by customer permissions.</p>",
+      "resources": [
+        {
+          "id": "portal-guide",
+          "title": "What is a web portal?",
+          "url": "https://www.jahia.com/blog/web-portal",
+          "kind": "article"
+        },
+        {
+          "id": "portal-solution",
+          "title": "Enterprise web portals",
+          "url": "https://www.jahia.com/solutions/web-portals",
+          "kind": "solution"
+        },
+        {
+          "id": "rte",
+          "title": "RTE Service Portal",
+          "url": "https://www.jahia.com/resources/customer-stories/rte-service-portal",
+          "kind": "customerStory"
+        }
+      ],
+      "relatedIds": ["web-portal", "intranet"]
+    },
+    {
+      "id": "cloud-content-management",
+      "title": "Cloud content management",
+      "summary": "Content management whose infrastructure is run by a provider rather than hosted and patched in house.",
+      "aliases": [],
+      "url": "/glossary/cloud-content-management/",
+      "body": "<p>Content management whose infrastructure is run by a provider rather than hosted and patched in house.</p>",
+      "comparisonTitle": "Cloud content management vs headless CMS",
+      "comparison": "<p>Cloud describes where the system runs and who operates it. Headless describes how content reaches an interface. A cloud CMS can be traditional, headless or hybrid.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "cms-migration",
+      "title": "CMS migration",
+      "summary": "Moving from one content management system to another: content, templates, redirects and rankings.",
+      "aliases": ["Replatforming"],
+      "url": "/glossary/cms-migration/",
+      "body": "<p>Moving from one content management system to another: content, templates, redirects and rankings.</p>",
+      "comparisonTitle": "CMS migration vs website redesign",
+      "comparison": "<p>A redesign changes presentation and journeys. A CMS migration changes the system that stores and delivers content. The two can happen together, but migration also requires content mapping, URL redirects and editorial checks.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "composable-dxp-vs-monolithic",
+      "title": "Composable DXP vs monolithic",
+      "summary": "Assembling chosen components against buying one integrated suite, and the criterion that actually decides it.",
+      "aliases": [],
+      "url": "/glossary/composable-dxp-vs-monolithic/",
+      "body": "<p>Assembling chosen components against buying one integrated suite, and the criterion that actually decides it.</p>",
+      "comparisonTitle": "Composable vs headless",
+      "comparison": "<p>Composable describes how capabilities are assembled across products. Headless describes separation between content delivery and presentation. A headless CMS can be one part of a composable architecture; it does not make every integration composable.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "content-as-a-service",
+      "title": "Content as a service",
+      "summary": "Content exposed through an API and consumed by any interface, with no page defined in advance.",
+      "aliases": ["CaaS"],
+      "url": "/glossary/content-as-a-service/",
+      "body": "<p>Content exposed through an API and consumed by any interface, with no page defined in advance.</p>",
+      "comparisonTitle": "Content as a service vs software as a service",
+      "comparison": "<p>Content as a service describes delivering content through APIs. Software as a service describes how software is operated and purchased. The first concerns content delivery; the second concerns the operating model.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "content-lifecycle",
+      "title": "Content lifecycle",
+      "summary": "The stages a piece of content goes through from creation to archiving, and who answers for each one.",
+      "aliases": [],
+      "url": "/glossary/content-lifecycle/",
+      "body": "<p>The stages a piece of content goes through from creation to archiving, and who answers for each one.</p>",
+      "comparisonTitle": "Content lifecycle vs content workflow",
+      "comparison": "<p>The lifecycle covers the whole life of content, including review, retirement and archiving. A workflow specifies the tasks, roles and approvals used during particular stages.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "content-management-system",
+      "title": "Content management system",
+      "summary": "The system that stores, organises and publishes a site's content without going through code.",
+      "aliases": ["CMS"],
+      "url": "/glossary/content-management-system/",
+      "body": "<p>The system that stores, organises and publishes a site&#x27;s content without going through code.</p>",
+      "comparisonTitle": "CMS vs DXP",
+      "comparison": "<p>A CMS manages and publishes content. A DXP coordinates a broader set of experience capabilities, which can include personalization, integrations and analytics alongside content management. The scope matters more than the product label.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["headless-cms", "digital-experience-platform"]
+    },
+    {
+      "id": "content-workflow",
+      "title": "Content workflow",
+      "summary": "The path a piece of content travels between drafting and publication, and who approves what along it.",
+      "aliases": [],
+      "url": "/glossary/content-workflow/",
+      "body": "<p>The path a piece of content travels between drafting and publication, and who approves what along it.</p>",
+      "comparisonTitle": "Content workflow vs approval",
+      "comparison": "<p>Approval is a decision within a workflow. The workflow also defines assignment, review, translation, scheduled publication and what happens when a change is rejected.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "dam-vs-cms",
+      "title": "DAM vs CMS",
+      "summary": "Managing media files against managing pages, and why one does not replace the other.",
+      "aliases": [],
+      "url": "/glossary/dam-vs-cms/",
+      "body": "<p>Managing media files against managing pages, and why one does not replace the other.</p>",
+      "comparisonTitle": "DAM vs CMS: assets and experiences",
+      "comparison": "<p>A DAM organizes reusable media, metadata and usage rights. A CMS organizes editorial content and its publication. They can work together: an approved asset in the DAM can appear in several CMS pages.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "digital-asset-management",
+      "title": "Digital asset management",
+      "summary": "The system that centralises images, video and documents with their metadata and usage rights.",
+      "aliases": ["DAM"],
+      "url": "/glossary/digital-asset-management/",
+      "body": "<p>The system that centralises images, video and documents with their metadata and usage rights.</p>",
+      "comparisonTitle": "Digital asset management vs file storage",
+      "comparison": "<p>File storage holds files. DAM adds asset-specific organization and governance, such as metadata, renditions and usage rights. The useful distinction is how assets are found, approved and reused.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "digital-experience-platform",
+      "title": "Digital experience platform",
+      "summary": "A platform that brings content management, customer data and personalisation onto one foundation.",
+      "aliases": ["DXP"],
+      "url": "/glossary/digital-experience-platform/",
+      "body": "<p>A platform that brings content management, customer data and personalisation onto one foundation.</p>",
+      "comparisonTitle": "DXP vs a collection of tools",
+      "comparison": "<p>A set of tools becomes a coordinated experience platform through shared integrations, governance and delivery processes. Buying several products alone does not connect customer journeys or content.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "dxp-vs-cms",
+      "title": "DXP vs CMS",
+      "summary": "Where a content management system stops and an experience platform begins.",
+      "aliases": [],
+      "url": "/glossary/dxp-vs-cms/",
+      "body": "<p>Where a content management system stops and an experience platform begins.</p>",
+      "comparisonTitle": "DXP vs CMS: broader scope, not a replacement rule",
+      "comparison": "<p>A CMS can be the content foundation of a DXP. The distinction is the scope of the experience being managed, rather than a rule that every organization must replace its CMS with a larger suite.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "enterprise-cms",
+      "title": "Enterprise CMS",
+      "summary": "A content management system built for multisite, multilingual and the governance large teams need.",
+      "aliases": [],
+      "url": "/glossary/enterprise-cms/",
+      "body": "<p>A content management system built for multisite, multilingual and the governance large teams need.</p>",
+      "comparisonTitle": "Enterprise CMS vs a large website",
+      "comparison": "<p>Enterprise describes requirements such as permissions, governance, integrations and operations across teams. Page count alone does not determine whether a CMS meets those requirements.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "extranet",
+      "title": "Extranet",
+      "summary": "An authenticated space opened to third parties: partners, suppliers, resellers or customers.",
+      "aliases": [],
+      "url": "/glossary/extranet/",
+      "body": "<p>An authenticated space opened to third parties: partners, suppliers, resellers or customers.</p>",
+      "comparisonTitle": "Extranet vs intranet",
+      "comparison": "<p>An intranet serves employees. An extranet gives approved external users access to selected services or information. Both may require authentication; the audience and access boundaries distinguish them.</p>",
+      "resources": [
+        {
+          "id": "portal-guide",
+          "title": "What is a web portal?",
+          "url": "https://www.jahia.com/blog/web-portal",
+          "kind": "article"
+        },
+        {
+          "id": "portal-solution",
+          "title": "Enterprise web portals",
+          "url": "https://www.jahia.com/solutions/web-portals",
+          "kind": "solution"
+        },
+        {
+          "id": "rte",
+          "title": "RTE Service Portal",
+          "url": "https://www.jahia.com/resources/customer-stories/rte-service-portal",
+          "kind": "customerStory"
+        }
+      ],
+      "relatedIds": ["web-portal", "intranet"]
+    },
+    {
+      "id": "headless-cms",
+      "title": "Headless CMS",
+      "summary": "A content management system with no presentation layer, delivering content to any front end through an API.",
+      "aliases": [],
+      "url": "/glossary/headless-cms/",
+      "body": "<p>A content management system with no presentation layer, delivering content to any front end through an API.</p>",
+      "comparisonTitle": "Headless CMS vs traditional CMS",
+      "comparison": "<p>A headless CMS delivers content through APIs and leaves interface rendering to another application. A traditional CMS also supplies the presentation layer. Headless therefore changes who owns delivery, previews and front-end development.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "tech",
+          "title": "Jahia technical overview",
+          "url": "https://www.jahia.com/technical-overview",
+          "kind": "resource"
+        }
+      ],
+      "relatedIds": ["content-management-system", "digital-experience-platform"]
+    },
+    {
+      "id": "headless-cms-vs-dam",
+      "title": "Headless CMS vs DAM",
+      "summary": "Structured content on one side, media files on the other: two jobs rarely given to the same tool.",
+      "aliases": [],
+      "url": "/glossary/headless-cms-vs-dam/",
+      "body": "<p>Structured content on one side, media files on the other: two jobs rarely given to the same tool.</p>",
+      "comparisonTitle": "Headless CMS vs DAM: structured content and media",
+      "comparison": "<p>A headless CMS manages structured editorial content for applications. A DAM manages reusable digital assets and their metadata. An API does not make the two systems interchangeable.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "tech",
+          "title": "Jahia technical overview",
+          "url": "https://www.jahia.com/technical-overview",
+          "kind": "resource"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "headless-vs-decoupled-vs-hybrid",
+      "title": "Headless vs decoupled vs hybrid",
+      "summary": "Three architectures the market confuses constantly, and the one criterion that separates them.",
+      "aliases": [],
+      "url": "/glossary/headless-vs-decoupled-vs-hybrid/",
+      "body": "<p>Three architectures the market confuses constantly, and the one criterion that separates them.</p>",
+      "comparisonTitle": "Headless, decoupled and hybrid: check capabilities",
+      "comparison": "<p>Headless removes the built-in presentation layer. Decoupled separates authoring from delivery while a delivery layer may still be supplied. Hybrid combines page-oriented and API delivery. Vendor terminology varies, so verify preview and authoring capabilities.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "tech",
+          "title": "Jahia technical overview",
+          "url": "https://www.jahia.com/technical-overview",
+          "kind": "resource"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "headless-vs-traditional-cms",
+      "title": "Headless vs traditional CMS",
+      "summary": "Delivering through an API against publishing with built-in templates, and what each one costs.",
+      "aliases": [],
+      "url": "/glossary/headless-vs-traditional-cms/",
+      "body": "<p>Delivering through an API against publishing with built-in templates, and what each one costs.</p>",
+      "comparisonTitle": "Headless vs traditional: delivery ownership",
+      "comparison": "<p>Traditional systems include a website rendering approach. Headless systems expose content for a separately built interface. Compare editorial preview, development ownership and channel needs before choosing either model.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "tech",
+          "title": "Jahia technical overview",
+          "url": "https://www.jahia.com/technical-overview",
+          "kind": "resource"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "hybrid-cms",
+      "title": "Hybrid CMS",
+      "summary": "A system that serves both templated pages and an API, so the choice does not have to be made once and for all.",
+      "aliases": [],
+      "url": "/glossary/hybrid-cms/",
+      "body": "<p>A system that serves both templated pages and an API, so the choice does not have to be made once and for all.</p>",
+      "comparisonTitle": "Hybrid CMS vs headless CMS",
+      "comparison": "<p>A hybrid CMS supports both page-based authoring and API delivery. A purely headless CMS delegates presentation to external applications. Hybrid does not mean every channel automatically shares the same layout.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "tech",
+          "title": "Jahia technical overview",
+          "url": "https://www.jahia.com/technical-overview",
+          "kind": "resource"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "intranet",
+      "title": "Intranet",
+      "summary": "An authenticated space built for the people who work at an organisation.",
+      "aliases": [],
+      "url": "/glossary/intranet/",
+      "body": "<p>An authenticated space built for the people who work at an organisation.</p>",
+      "comparisonTitle": "Intranet vs employee portal",
+      "comparison": "<p>An intranet is the internal digital environment for employees. An employee portal is an entry point to services and information within that environment. The terms overlap, but a portal need not encompass the whole intranet.</p>",
+      "resources": [
+        {
+          "id": "portal-guide",
+          "title": "What is a web portal?",
+          "url": "https://www.jahia.com/blog/web-portal",
+          "kind": "article"
+        },
+        {
+          "id": "portal-solution",
+          "title": "Enterprise web portals",
+          "url": "https://www.jahia.com/solutions/web-portals",
+          "kind": "solution"
+        },
+        {
+          "id": "rte",
+          "title": "RTE Service Portal",
+          "url": "https://www.jahia.com/resources/customer-stories/rte-service-portal",
+          "kind": "customerStory"
+        }
+      ],
+      "relatedIds": ["web-portal", "extranet"]
+    },
+    {
+      "id": "intranet-vs-extranet",
+      "title": "Intranet vs extranet",
+      "summary": "The same mechanism, two opposite audiences, and the confusion that costs the most at scoping.",
+      "aliases": [],
+      "url": "/glossary/intranet-vs-extranet/",
+      "body": "<p>The same mechanism, two opposite audiences, and the confusion that costs the most at scoping.</p>",
+      "comparisonTitle": "Intranet vs extranet: audience, not technology",
+      "comparison": "<p>An intranet serves internal users; an extranet serves authorized external users. They may use the same platform, but require distinct access policies, content ownership and user journeys.</p>",
+      "resources": [
+        {
+          "id": "portal-guide",
+          "title": "What is a web portal?",
+          "url": "https://www.jahia.com/blog/web-portal",
+          "kind": "article"
+        },
+        {
+          "id": "portal-solution",
+          "title": "Enterprise web portals",
+          "url": "https://www.jahia.com/solutions/web-portals",
+          "kind": "solution"
+        },
+        {
+          "id": "rte",
+          "title": "RTE Service Portal",
+          "url": "https://www.jahia.com/resources/customer-stories/rte-service-portal",
+          "kind": "customerStory"
+        }
+      ],
+      "relatedIds": ["web-portal", "intranet"]
+    },
+    {
+      "id": "multilingual-cms",
+      "title": "Multilingual CMS",
+      "summary": "A system that runs several languages inside one site without duplicating content or structure.",
+      "aliases": [],
+      "url": "/glossary/multilingual-cms/",
+      "body": "<p>A system that runs several languages inside one site without duplicating content or structure.</p>",
+      "comparisonTitle": "Multilingual CMS vs automatic translation",
+      "comparison": "<p>A multilingual CMS manages language versions and their publication. Automatic translation produces a draft translation. Editorial review, regional adaptation and language-specific URLs remain separate responsibilities.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "multisite-cms",
+      "title": "Multisite CMS",
+      "summary": "A system that runs several sites from one instance, with shared content and shared design.",
+      "aliases": [],
+      "url": "/glossary/multisite-cms/",
+      "body": "<p>A system that runs several sites from one instance, with shared content and shared design.</p>",
+      "comparisonTitle": "Multisite CMS vs multilingual CMS",
+      "comparison": "<p>Multisite manages several sites with shared or delegated governance. Multilingual manages several language versions. A single site can be multilingual, and a multisite estate can use just one language.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "on-premise-vs-cloud-hosting",
+      "title": "On-premise vs cloud hosting",
+      "summary": "Hosting it yourself or having it hosted, and what each choice changes for control, cost and compliance.",
+      "aliases": [],
+      "url": "/glossary/on-premise-vs-cloud-hosting/",
+      "body": "<p>Hosting it yourself or having it hosted, and what each choice changes for control, cost and compliance.</p>",
+      "comparisonTitle": "Hosting model vs software architecture",
+      "comparison": "<p>On-premise and cloud describe deployment and operational responsibility. They do not decide whether a CMS is headless or traditional. Compare data location, maintenance ownership and service commitments separately.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "open-source-vs-proprietary-cms",
+      "title": "Open source vs proprietary CMS",
+      "summary": "Open code against a closed licence: what each implies for governance, cost and the exit route.",
+      "aliases": [],
+      "url": "/glossary/open-source-vs-proprietary-cms/",
+      "body": "<p>Open code against a closed licence: what each implies for governance, cost and the exit route.</p>",
+      "comparisonTitle": "Open source vs free software pricing",
+      "comparison": "<p>Open source concerns license rights to inspect, use and modify source code. It does not remove hosting, support or maintenance costs. Proprietary and open-source products both need an operating and support budget.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "self-service-portal",
+      "title": "Self-service portal",
+      "summary": "A portal whose job is to let someone finish a task without reaching a person.",
+      "aliases": [],
+      "url": "/glossary/self-service-portal/",
+      "body": "<p>A portal whose job is to let someone finish a task without reaching a person.</p>",
+      "comparisonTitle": "Self-service portal vs knowledge base",
+      "comparison": "<p>A knowledge base helps users find answers. A self-service portal also lets them complete tasks, such as updating details or tracking a request. A knowledge base can be one service inside the portal.</p>",
+      "resources": [
+        {
+          "id": "portal-guide",
+          "title": "What is a web portal?",
+          "url": "https://www.jahia.com/blog/web-portal",
+          "kind": "article"
+        },
+        {
+          "id": "portal-solution",
+          "title": "Enterprise web portals",
+          "url": "https://www.jahia.com/solutions/web-portals",
+          "kind": "solution"
+        },
+        {
+          "id": "rte",
+          "title": "RTE Service Portal",
+          "url": "https://www.jahia.com/resources/customer-stories/rte-service-portal",
+          "kind": "customerStory"
+        }
+      ],
+      "relatedIds": ["web-portal", "intranet"]
+    },
+    {
+      "id": "site-search",
+      "title": "Site search",
+      "summary": "The engine that indexes and queries a site's or a portal's content, including what sits behind a login.",
+      "aliases": ["Internal search"],
+      "url": "/glossary/site-search/",
+      "body": "<p>The engine that indexes and queries a site&#x27;s or a portal&#x27;s content, including what sits behind a login.</p>",
+      "comparisonTitle": "Site search vs web search",
+      "comparison": "<p>Site search retrieves content from a defined site or connected content sources. Web search retrieves pages across the public web. Site search must also account for the permissions and vocabulary of its own audience.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "static-vs-dynamic-website",
+      "title": "Static vs dynamic website",
+      "summary": "Pages built in advance against pages built on request: speed, freshness and what it costs to run.",
+      "aliases": [],
+      "url": "/glossary/static-vs-dynamic-website/",
+      "body": "<p>Pages built in advance against pages built on request: speed, freshness and what it costs to run.</p>",
+      "comparisonTitle": "Dynamic content vs interactive interface",
+      "comparison": "<p>Static and dynamic describe how a response is generated. Interactivity describes behavior in the browser. A statically generated page can be interactive, while a dynamically generated page may contain no interactive controls.</p>",
+      "resources": [
+        {
+          "id": "cms",
+          "title": "Enterprise content management",
+          "url": "https://www.jahia.com/product/enterprise-cms",
+          "kind": "product"
+        },
+        {
+          "id": "dxp",
+          "title": "Digital experience platform",
+          "url": "https://www.jahia.com/product/dxp-platform",
+          "kind": "product"
+        }
+      ],
+      "relatedIds": ["content-management-system", "headless-cms"]
+    },
+    {
+      "id": "types-of-web-portals",
+      "title": "Types of web portals",
+      "summary": "The full typology of portals, by audience and by function, and what actually tells them apart.",
+      "aliases": [],
+      "url": "/glossary/types-of-web-portals/",
+      "body": "<p>The full typology of portals, by audience and by function, and what actually tells them apart.</p>",
+      "comparisonTitle": "Portal type vs platform type",
+      "comparison": "<p>Customer, partner and employee portals describe audiences and tasks. CMS, DXP and custom applications describe implementation approaches. Choose the portal audience first, then assess the capabilities needed to serve it.</p>",
+      "resources": [
+        {
+          "id": "portal-guide",
+          "title": "What is a web portal?",
+          "url": "https://www.jahia.com/blog/web-portal",
+          "kind": "article"
+        },
+        {
+          "id": "portal-solution",
+          "title": "Enterprise web portals",
+          "url": "https://www.jahia.com/solutions/web-portals",
+          "kind": "solution"
+        },
+        {
+          "id": "rte",
+          "title": "RTE Service Portal",
+          "url": "https://www.jahia.com/resources/customer-stories/rte-service-portal",
+          "kind": "customerStory"
+        }
+      ],
+      "relatedIds": ["web-portal", "intranet"]
+    },
+    {
+      "id": "web-portal",
+      "title": "Web portal",
+      "summary": "A single entry point that assembles content, services and personalised data behind one authentication.",
+      "aliases": ["Portal website"],
+      "url": "/glossary/web-portal/",
+      "body": "<p>A single entry point that assembles content, services and personalised data behind one authentication.</p>",
+      "comparisonTitle": "Web portal vs website",
+      "comparison": "<p>A portal is a type of website that brings services and information together for a defined audience. Its distinguishing purpose is helping users access relevant services, often using roles and permissions. A public website primarily presenting information does not necessarily provide those workflows.</p>",
+      "resources": [
+        {
+          "id": "portal-guide",
+          "title": "What is a web portal?",
+          "url": "https://www.jahia.com/blog/web-portal",
+          "kind": "article"
+        },
+        {
+          "id": "portal-solution",
+          "title": "Enterprise web portals",
+          "url": "https://www.jahia.com/solutions/web-portals",
+          "kind": "solution"
+        },
+        {
+          "id": "rte",
+          "title": "RTE Service Portal",
+          "url": "https://www.jahia.com/resources/customer-stories/rte-service-portal",
+          "kind": "customerStory"
+        }
+      ],
+      "relatedIds": ["intranet", "extranet"]
+    }
+  ]
+}
