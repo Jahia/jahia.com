@@ -1,0 +1,109 @@
+{
+  "nodeType": "jahiacom:glossaryEntry",
+  "priority": 3,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "glossary-term",
+          "labelKey": "jahiacom:jahiacom_glossaryEntry.form.term",
+          "rank": 1,
+          "fields": [
+            {
+              "name": "jcr:title",
+              "rank": 1,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.jcr_titleHelp",
+              "declaringNodeType": "mix:title"
+            },
+            {
+              "name": "ce:systemName",
+              "rank": 2,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.ce_systemNameHelp"
+            },
+            {
+              "name": "summary",
+              "rank": 3,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.summaryHelp"
+            },
+            {
+              "name": "aliases",
+              "rank": 4,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.aliasesHelp"
+            }
+          ],
+          "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.termHelp"
+        },
+        {
+          "name": "glossary-explanation",
+          "labelKey": "jahiacom:jahiacom_glossaryEntry.form.explanation",
+          "rank": 2,
+          "fields": [
+            {
+              "name": "definitionTitle",
+              "rank": 1,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.definitionTitleHelp"
+            },
+            {
+              "name": "body",
+              "rank": 2,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.bodyHelp"
+            },
+            {
+              "name": "comparisonTitle",
+              "rank": 3,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.comparisonTitleHelp"
+            },
+            {
+              "name": "comparison",
+              "rank": 4,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.comparisonHelp"
+            },
+            {
+              "name": "exampleTitle",
+              "rank": 5,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.exampleTitleHelp"
+            },
+            {
+              "name": "example",
+              "rank": 6,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.exampleHelp"
+            },
+            {
+              "name": "faq",
+              "rank": 7,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.faqHelp"
+            }
+          ],
+          "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.explanationHelp"
+        },
+        {
+          "name": "glossary-further",
+          "labelKey": "jahiacom:jahiacom_glossaryEntry.form.further",
+          "rank": 3,
+          "fields": [
+            {
+              "name": "resources",
+              "rank": 1,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.resourcesHelp"
+            },
+            {
+              "name": "relatedTerms",
+              "rank": 2,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.relatedTermsHelp"
+            }
+          ],
+          "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.furtherHelp"
+        },
+        {
+          "name": "jmix:internalLink",
+          "hide": true
+        },
+        {
+          "name": "jmix:externalLink",
+          "hide": true
+        }
+      ]
+    }
+  ]
+}

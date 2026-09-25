@@ -1,0 +1,353 @@
+.entry {
+  padding-block: 2rem 4rem;
+  font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--jahia-neutral-600);
+  background: var(--jahia-neutral-50);
+}
+
+.inner {
+  width: min(100% - 3rem, var(--jahia-width));
+  margin-inline: auto;
+}
+
+.entry a {
+  color: var(--jahia-a11y-blue);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.reading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18.75rem;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+.body {
+  display: grid;
+  gap: 2.75rem;
+  min-width: 0;
+}
+
+.heading h1 {
+  margin-block: 0.75rem 1.5rem;
+  font-size: clamp(2.25rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--jahia-navy-blue);
+  text-wrap: initial;
+  overflow-wrap: anywhere;
+}
+
+.eyebrow,
+.resourceKind {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.heading .eyebrow {
+  color: var(--jahia-a11y-blue);
+}
+
+.aliases {
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.summary {
+  padding-left: 1.25rem;
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: var(--jahia-navy-blue);
+  border-left: 3px solid var(--jahia-a11y-blue);
+}
+
+.entry h2 {
+  margin-bottom: 1rem;
+  font-size: clamp(1.4rem, 2.3vw, 1.875rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--jahia-navy-blue);
+  text-wrap: initial;
+  scroll-margin-top: 8rem;
+}
+
+.entry h3 {
+  margin-block: 1.5rem 0.75rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--jahia-navy-blue);
+  text-wrap: initial;
+}
+
+.comparison {
+  min-width: 0;
+}
+
+.comparison table {
+  width: 100%;
+  margin-block: 1.5rem;
+  border-collapse: collapse;
+}
+
+.comparison thead th {
+  padding: 0.875rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--jahia-neutral-50);
+  text-align: left;
+  text-transform: uppercase;
+  background: var(--jahia-navy-blue);
+}
+
+.comparison td,
+.comparison tbody th {
+  padding: 1rem 0.875rem;
+  vertical-align: top;
+  border-bottom: 1px solid var(--jahia-neutral-300);
+}
+
+.comparison tbody th {
+  width: 30%;
+  font-weight: 700;
+  color: var(--jahia-navy-blue);
+  text-align: left;
+}
+
+.example,
+.panel {
+  padding: 1.5rem;
+  background: var(--jahia-neutral-100);
+  border: 1px solid var(--jahia-neutral-300);
+  border-radius: 0.875rem;
+}
+
+.resources {
+  padding-top: 2rem;
+  border-top: 1px solid var(--jahia-neutral-300);
+}
+
+.sectionHeading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+}
+
+.sectionHeading h2 {
+  margin-bottom: 0.75rem;
+}
+
+.count {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.resourceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 0;
+  margin-block: 1.5rem 0;
+  list-style: none;
+}
+
+.resourceCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+  padding: 1.25rem;
+  border: 1px solid var(--jahia-neutral-300);
+  border-radius: 0.875rem;
+}
+
+.entry .resourceCard {
+  text-decoration: none;
+}
+
+.resourceCard h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.resourceCard:hover {
+  border-color: var(--jahia-a11y-blue);
+}
+
+.resourceCard:hover h3 {
+  text-decoration: underline;
+}
+
+.resourceKind {
+  color: var(--jahia-a11y-blue);
+}
+
+.sidebarContents {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.panel h2.eyebrow {
+  margin-bottom: 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.relatedList {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.relatedList a,
+.panel > a {
+  font-weight: 650;
+}
+
+.relatedList p {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.meta {
+  margin: 0 0 1.25rem;
+}
+
+.meta dt,
+.metaLabel {
+  margin: 0 0 0.5rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.meta dd {
+  margin: 0;
+  color: var(--jahia-navy-blue);
+}
+
+.allTerms {
+  display: block;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.cta {
+  padding: 2rem;
+  color: var(--jahia-neutral-100);
+  background: var(--jahia-navy-blue);
+  border-radius: 1rem;
+}
+
+.cta h2 {
+  color: var(--jahia-neutral-50);
+}
+
+.cta a {
+  display: inline-block;
+  padding: 0.875rem 1.25rem;
+  margin-top: 0.5rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.875rem;
+  color: var(--jahia-neutral-50);
+  text-transform: uppercase;
+  text-decoration: none;
+  background: var(--jahia-a11y-blue);
+  border-radius: 0.5rem;
+}
+
+.entry :focus-visible {
+  outline: 3px solid var(--jahia-a11y-blue);
+  outline-offset: 4px;
+}
+
+.cta :focus-visible {
+  outline-color: var(--jahia-neutral-50);
+}
+
+.editorNote {
+  padding: 1rem;
+  color: var(--jahia-navy-blue);
+  background: var(--jahia-light-blue);
+}
+
+@media (width < 1000px) {
+  .reading {
+    grid-template-columns: minmax(0, 1fr) 16rem;
+    gap: 2rem;
+  }
+}
+
+@media (width < 800px) {
+  .reading {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebarContents {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width < 540px) {
+  .resourceGrid,
+  .sidebarContents {
+    grid-template-columns: 1fr;
+  }
+
+  .summary {
+    font-size: 1.125rem;
+  }
+
+  .entry {
+    padding-block: 1.5rem 2.5rem;
+  }
+
+  .cta {
+    padding: 1.5rem;
+  }
+}
+
+.example p:last-child,
+.faq p:last-child {
+  margin-bottom: 0;
+}
+
+.comparison caption {
+  margin-bottom: 0.75rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.moreResources {
+  margin-top: 1.5rem;
+}
+
+.moreResources > summary {
+  display: block;
+  width: fit-content;
+  margin-bottom: 1.5rem;
+  color: var(--jahia-a11y-blue);
+  text-decoration: underline;
+  cursor: pointer;
+  list-style: none;
+}
+
+.moreResources > summary::-webkit-details-marker {
+  display: none;
+}

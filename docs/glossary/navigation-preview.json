@@ -1,0 +1,176 @@
+{
+  "primaryCTA": {
+    "href": "https://www.jahia.com/demo",
+    "label": "Request Demo"
+  },
+  "secondaryCTA": {
+    "href": "https://www.jahia.com/contact",
+    "label": "Contact"
+  },
+  "entries": [
+    {
+      "title": "Why Jahia?",
+      "children": [
+        {
+          "title": "Why choose Jahia?",
+          "href": "https://www.jahia.com/why-jahia",
+          "current": false
+        },
+        {
+          "title": "Why devs choose Jahia?",
+          "href": "https://www.jahia.com/why-jahia/developers",
+          "current": false
+        },
+        {
+          "title": "Trust Center & Compliance",
+          "href": "https://www.jahia.com/why-jahia/trust-center",
+          "current": false
+        },
+        {
+          "title": "Customers",
+          "href": "https://www.jahia.com/why-jahia/our-customers",
+          "current": false
+        }
+      ]
+    },
+    {
+      "title": "Product",
+      "children": [
+        {
+          "title": "Platform",
+          "children": [
+            {
+              "title": "Jahia CMS",
+              "href": "https://www.jahia.com/product/enterprise-cms",
+              "current": false
+            },
+            {
+              "title": "Jahia DXP",
+              "href": "https://www.jahia.com/product/dxp-platform",
+              "current": false
+            }
+          ]
+        },
+        {
+          "title": "Features",
+          "children": [
+            {
+              "title": "Multisite ",
+              "href": "https://www.jahia.com/multisite",
+              "current": false
+            },
+            {
+              "title": "SEO, GEO & Webperformance ",
+              "href": "https://www.jahia.com/seo-geo-webperformance",
+              "current": false
+            },
+            {
+              "title": "Built-in AI",
+              "href": "https://www.jahia.com/ai-powered-enterprise-cms",
+              "current": false
+            },
+            {
+              "title": "Customer Data & Personalization",
+              "href": "https://www.jahia.com/product/dxp-platform/cdp",
+              "current": false
+            },
+            {
+              "title": "Jahia Cloud ",
+              "href": "https://www.jahia.com/jahia-cloud-and-security",
+              "current": false
+            },
+            {
+              "title": "Integrations",
+              "href": "https://www.jahia.com/product/integrations",
+              "current": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Solutions",
+      "children": [
+        {
+          "title": "Enterprise Web Portal",
+          "href": "https://www.jahia.com/solutions/web-portals",
+          "current": false
+        },
+        {
+          "title": "Global presence",
+          "href": "https://www.jahia.com/solutions/global-presence",
+          "current": false
+        },
+        {
+          "title": "Omnichannel experiences",
+          "href": "https://www.jahia.com/solutions/omnichannel-experiences",
+          "current": false
+        },
+        {
+          "title": "Personalized websites",
+          "href": "https://www.jahia.com/solutions/data-driven-personalization",
+          "current": false
+        },
+        {
+          "title": "AI CMS Migration",
+          "href": "https://www.jahia.com/ai-cms-migration",
+          "current": false
+        }
+      ]
+    },
+    {
+      "title": "Customer stories",
+      "href": "https://www.jahia.com/customers",
+      "current": false
+    },
+    {
+      "title": "Resources",
+      "children": [
+        {
+          "title": "Find a Partner",
+          "href": "https://www.jahia.com/partners",
+          "current": false
+        },
+        {
+          "title": "Blog",
+          "href": "https://www.jahia.com/blog",
+          "current": false
+        },
+        {
+          "title": "Developer Documentation",
+          "href": "https://academy.jahia.com/",
+          "current": false
+        },
+        {
+          "title": "Whitepapers, videos & others",
+          "href": "https://www.jahia.com/resources",
+          "current": false
+        },
+        {
+          "title": "Glossary",
+          "href": "/glossary/",
+          "current": true
+        }
+      ]
+    },
+    {
+      "title": "Pricing ",
+      "href": "https://www.jahia.com/pricing",
+      "current": false
+    }
+  ],
+  "langs": [
+    {
+      "language": "en",
+      "name": "English",
+      "href": "/glossary/"
+    }
+  ],
+  "language": "en",
+  "search": {
+    "query": "",
+    "requested": false,
+    "invalid": false,
+    "results": []
+  }
+}

@@ -1,0 +1,13 @@
+[jahiacom:glossaryEntry] > jnt:content, jahiacommix:content, mix:title, jmix:mainResource, jmix:visibleInContentTree
+ - indexPage (weakreference, picker) < jnt:page
+ - summary (string, textarea) i18n mandatory
+ - aliases (string) i18n multiple
+ - body (string, richtext) i18n
+ - definitionTitle (string) i18n
+ - exampleTitle (string) i18n
+ - example (string, richtext) i18n
+ - faq (string, richtext) i18n
+ - comparisonTitle (string) i18n
+ - comparison (string, richtext) i18n
+ - resources (weakreference, picker) multiple < jnt:page, jmix:mainResource
+ - relatedTerms (weakreference, picker) multiple < jahiacom:glossaryEntry

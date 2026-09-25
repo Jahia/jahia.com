@@ -1,6 +1,12 @@
-import { buildNodeUrl, useJCRQuery, useServerContext } from "@jahia/javascript-modules-library";
+import {
+  buildNodeUrl,
+  server,
+  useJCRQuery,
+  useServerContext,
+} from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
+import { resolveGlossaryIndex } from "../contents/GlossaryEntry/indexPage.js";
 import classes from "./Breadcrumb.module.css";
 
 type BreadcrumbItem = {
@@ -53,7 +59,19 @@ export default function Breadcrumb({ pageType, title }: { pageType?: string; tit
 
   let items: BreadcrumbItem[] = [];
 
-  if (pageType === "blog_post") {
+  if (mainNode.isNodeType("jahiacom:glossaryEntry")) {
+    const index = resolveGlossaryIndex(mainNode, (node) =>
+      server.render.addCacheDependency({ path: node.getPath() }, renderContext),
+    );
+    if (index && index.hasPermission("jcr:read")) {
+      server.render.addCacheDependency({ path: index.getPath() }, renderContext);
+      items = [
+        { id: home.getIdentifier(), label: t("breadcrumb.home"), node: home },
+        { id: index.getIdentifier(), label: index.getDisplayableName(), node: index },
+        { id: mainNode.getIdentifier(), label: title },
+      ];
+    }
+  } else if (pageType === "blog_post") {
     const blogQuery = ["cluster", "theme", "blogPage"].flatMap((name) => {
       const value = request.getParameter(name);
       return value ? [`${name}=${encodeURIComponent(value)}`] : [];

@@ -7,5 +7,7 @@ export type Props = {
   "icon"?: JCRNodeWrapper;
   "technologyCategories"?: string[];
   "technologyPartnerType"?: "strategic" | "integration";
+  "glossaryMetric"?: "none" | "entries" | "letters" | "updated";
+  "glossaryFolder"?: JCRNodeWrapper;
   "partnerRegionTarget"?: "europe" | "americas" | "apac";
 } & CTAProps;

@@ -1,0 +1,43 @@
+{
+  "nodeType": "jahiacom:glossary",
+  "priority": 3,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "glossary-intro",
+          "labelKey": "jahiacom:jahiacom_glossary.form.intro",
+          "rank": 1,
+          "fields": [
+            {
+              "name": "entriesFolder",
+              "rank": 4
+            }
+          ],
+          "descriptionKey": "jahiacom:jahiacom_glossary.form.listingHelp"
+        },
+        {
+          "name": "glossary-search",
+          "labelKey": "jahiacom:jahiacom_glossary.form.search",
+          "descriptionKey": "jahiacom:jahiacom_glossary.form.searchHelp",
+          "rank": 2,
+          "fields": [
+            {
+              "name": "searchLabel",
+              "rank": 1
+            },
+            {
+              "name": "searchPlaceholder",
+              "rank": 2
+            },
+            {
+              "name": "searchHelp",
+              "rank": 3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

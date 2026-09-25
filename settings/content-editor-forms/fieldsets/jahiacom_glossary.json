@@ -1,0 +1,22 @@
+{
+  "name": "jahiacom:glossary",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "updatedLabel",
+      "hide": true
+    },
+    {
+      "name": "jcr:title",
+      "hide": true
+    },
+    {
+      "name": "introduction",
+      "hide": true
+    },
+    {
+      "name": "explanation",
+      "hide": true
+    }
+  ]
+}
