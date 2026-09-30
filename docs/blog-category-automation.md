@@ -122,3 +122,18 @@ sentence fits 160 characters, a complete sentence introduces the article by its
 title; very long titles use a short generic article introduction. Existing
 editorial descriptions remain protected during editing. A separate local audit
 corrects existing truncated descriptions without changing summaries or bodies.
+
+## Form initialization fix — 30 September 2026
+
+Content Editor invokes selector change handlers for initial values and sends
+`undefined` when a field unmounts. Cleanup notifications must not invalidate
+analysis scheduled by another field. Replayed initial values after a section
+refresh are deduplicated by the source fields, preventing suggestion updates
+from triggering another loading/ready cycle.
+
+Opening a populated blog or glossary form analyses its current content without
+requiring a text edit. Empty SEO fields and empty/default-only classification
+fields can be filled in the draft. Existing editorial categories remain selected,
+with missing matches offered as suggestions. Existing SEO and manual edits remain
+protected. Saving and publishing are still explicit editorial actions. This fix
+does not require importing content or changing the content model.

@@ -1032,6 +1032,9 @@
   registry.add("selectorType.onChange", "jahiacomBlogTopicSuggestions", {
     targets: ["*"],
     onChange: function (_, value, field, context) {
+      // Field cleanup notifications are not edits. In particular, switching a
+      // selector or rebuilding sections must not cancel another field's analysis.
+      if (value === undefined) return;
       var nodeType =
         context.mode === "create"
           ? context.nodeTypeName
@@ -1075,15 +1078,22 @@
         }
         return;
       }
-      clearTimeout(session.timer);
-      var ticket = ++session.ticket;
-      // Content Editor also calls handlers with undefined while unmounting a field.
-      if (value === undefined) return;
       var input = {};
       formFields(context).forEach(function (other) {
         input[other.propertyName] = context.formik.values[other.name];
       });
       input[field.propertyName] = value;
+      // Content Editor replays initial values when sections change. Updating the
+      // suggestions descriptor must not start an endless loading/ready cycle.
+      var fingerprint = JSON.stringify(
+        ["jcr:title", "summary", "text", "body", "image"].map(function (property) {
+          return input[property];
+        }),
+      );
+      if (session.fingerprint === fingerprint) return;
+      session.fingerprint = fingerprint;
+      clearTimeout(session.timer);
+      var ticket = ++session.ticket;
       session.timer = setTimeout(function () {
         prefillSeo(session, input);
         if (
