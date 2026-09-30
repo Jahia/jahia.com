@@ -210,6 +210,13 @@ function editorHarness({ categories = [], query, initial = {} } = {}) {
     context.formik.values[field.name] = value;
     onChange(null, value, field, context);
   };
+  const notify = (property, value) =>
+    onChange(
+      null,
+      value,
+      fields.find((item) => item.propertyName === property),
+      context,
+    );
   const flush = async () => {
     const pending = [...timers.values()];
     timers.clear();
@@ -220,7 +227,7 @@ function editorHarness({ categories = [], query, initial = {} } = {}) {
     context.sections[0].fieldSets[0].fields.find(
       (field) => field.propertyName === "j:defaultCategory",
     );
-  return { change, flush, context, calls, changes, categoryField, entries };
+  return { change, notify, flush, context, calls, changes, categoryField, entries };
 }
 const categories = [
   { uuid: "seo", path: root + "content_management/seo", displayName: "SEO" },
@@ -311,7 +318,7 @@ test("rapid changes discard stale asynchronous responses", async () => {
     ["ai"],
   );
 });
-test("other content types, unmount and errors do not change category selections", async () => {
+test("other content types and taxonomy errors do not change category selections", async () => {
   const h = editorHarness({ query: () => Promise.reject(new Error("Unavailable")) });
   h.context.nodeTypeName = "jnt:page";
   h.change("jcr:title", "SEO");
@@ -319,12 +326,63 @@ test("other content types, unmount and errors do not change category selections"
   assert.equal(h.calls.length, 0);
   h.context.nodeTypeName = "jahiacom:blogEntry";
   h.change("jcr:title", "SEO");
-  h.change("jcr:title", undefined);
-  await h.flush();
-  assert.equal(h.calls.length, 0);
-  h.change("jcr:title", "SEO");
   await h.flush();
   assert.equal(h.categoryField().jahiacomTopicSuggestions.status, "error");
+});
+
+test("opening existing FR/EN blogs and glossary entries fills empty fields despite field cleanup", async () => {
+  for (const lang of ["fr", "en"]) {
+    for (const name of ["jahiacom:blogEntry", "jahiacom:glossaryEntry"]) {
+      const h = editorHarness({
+        categories,
+        initial: {
+          "jcr:title": "SEO",
+          "summary": "A complete description.",
+        },
+      });
+      h.context.mode = "edit";
+      h.context.lang = lang;
+      h.context.nodeData = { uuid: "existing", primaryNodeType: { name } };
+      h.notify("jcr:title", "SEO");
+      h.notify("summary", undefined);
+      h.notify("text", undefined);
+      await h.flush();
+      assert.equal(h.context.formik.values["field:htmlTitle"], "SEO");
+      assert.equal(h.context.formik.values["field:jcr:description"], "A complete description.");
+      assert.ok(h.context.formik.values["field:j:defaultCategory"].includes("seo"));
+      assert.equal(h.categoryField().jahiacomTopicSuggestions.status, "ready");
+      const updates = h.changes.length;
+      h.notify("jcr:title", "SEO");
+      h.notify("summary", "A complete description.");
+      await h.flush();
+      assert.equal(h.changes.length, updates, "section refresh must not restart analysis");
+    }
+  }
+});
+
+test("cleanup during taxonomy fetch preserves the pending result and existing editorial values", async () => {
+  let resolve;
+  const h = editorHarness({
+    initial: {
+      "jcr:title": "SEO",
+      "j:defaultCategory": ["editor-choice"],
+      "htmlTitle": "Approved title",
+      "jcr:description": "Approved description.",
+    },
+    query: () =>
+      new Promise((done) => {
+        resolve = done;
+      }),
+  });
+  h.notify("jcr:title", "SEO");
+  await h.flush();
+  h.notify("text", undefined);
+  resolve({ data: { jcr: { nodeByPath: { descendants: { nodes: categories } } } } });
+  await h.flush();
+  assert.equal(h.categoryField().jahiacomTopicSuggestions.status, "ready");
+  assert.deepEqual(h.context.formik.values["field:j:defaultCategory"], ["editor-choice"]);
+  assert.equal(h.context.formik.values["field:htmlTitle"], "Approved title");
+  assert.equal(h.context.formik.values["field:jcr:description"], "Approved description.");
 });
 test("accepting a suggestion preserves existing categories and uses native reference UUIDs", async () => {
   const h = editorHarness({ categories });
