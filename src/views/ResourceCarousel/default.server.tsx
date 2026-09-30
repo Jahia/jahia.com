@@ -10,7 +10,7 @@ import { Image } from "../../components/Image.jsx";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
 import Carousel from "./Carousel.client.jsx";
 import { RESOURCE_MODEL } from "./contentModel.js";
-import { sanitizeCount, selectResources } from "./selection.server.js";
+import { articleResourceTopics, sanitizeCount, selectResources } from "./selection.server.js";
 import type { ResourceCardData, ResourceCarouselProps } from "./types.js";
 import classes from "./component.module.css";
 
@@ -120,7 +120,8 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
             props.manualItems,
         )
       : [];
-  const isBlogCarousel = currentNode.getParent().isNodeType("jahiacom:blogResourceCarouselArea");
+  const article = mainNode || currentNode;
+  const isBlogCarousel = article.isNodeType(RESOURCE_MODEL.blogNodeType);
   const items = selectResources({
     candidates,
     manualNodes,
@@ -135,6 +136,8 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
   });
 
   for (const dependency of [
+    article,
+    ...articleResourceTopics(article),
     ...candidates,
     ...manualNodes,
     ...thematicNodes,

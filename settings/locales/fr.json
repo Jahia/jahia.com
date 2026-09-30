@@ -139,7 +139,7 @@
     "noResults": "Aucune entrée trouvée",
     "tryAgain": "Essayez un autre terme ou une abréviation.",
     "clear": "Effacer la recherche",
-    "backToIndex": "Toutes les lettres",
+    "backToIndex": "Retour à l'index",
     "aliases": "Aussi appelé : {{aliases}}",
     "editHint": "Gérez les entrées dans le dossier de contenus sélectionné, ou ci-dessous si aucun dossier n’est sélectionné. La recherche et la navigation alphabétique sont disponibles en prévisualisation et en ligne.",
     "term": "Glossaire",
@@ -153,7 +153,7 @@
     "distinguish": "Faire la différence",
     "comparisonMissing": "Ajoutez la distinction avant de publier cette fiche.",
     "explore": "Pour aller plus loin",
-    "resourcesTitle": "Ressources sur ce sujet",
+    "resourcesTitle": "Ressources sur ce terme",
     "resourceCount_one": "{{count}} ressource",
     "resourceCount_other": "{{count}} ressources",
     "resourcesIntro": "Approfondissez ce sujet avec les ressources Jahia.",
@@ -167,7 +167,8 @@
       "webinar": "Webinaire",
       "resource": "Ressource",
       "infographic": "Infographie",
-      "product": "Produit"
+      "product": "Produit",
+      "video": "Vidéo"
     },
     "about": "À propos de cette fiche",
     "example": "Exemple concret",
@@ -176,6 +177,7 @@
     "readResource": "Consulter la ressource",
     "topicCta": "Approfondir : {{term}}",
     "showAllResources": "Voir les {{count}} ressources",
-    "overview": "Le glossaire en chiffres"
+    "overview": "Le glossaire en chiffres",
+    "allResources": "Voir toutes les ressources"
   }
 }

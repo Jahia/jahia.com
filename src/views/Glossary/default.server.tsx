@@ -21,6 +21,7 @@ jahiaComponent(
       searchLabel,
       searchPlaceholder,
       searchHelp,
+      showUnusedLetters,
     }: Props,
     { currentNode, currentResource, renderContext },
   ) => {
@@ -66,6 +67,7 @@ jahiaComponent(
           searchLabel,
           searchPlaceholder,
           searchHelp,
+          showUnusedLetters: showUnusedLetters === true,
           explanation,
           updatedLabel: glossaryUpdatedLabel(
             latestUpdate,

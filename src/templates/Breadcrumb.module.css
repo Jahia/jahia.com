@@ -50,7 +50,11 @@
 }
 
 @media (width < 600px) {
-  .breadcrumb li:first-child:has(~ li:nth-child(3)) {
+  .breadcrumb:not([data-glossary]) li:first-child:has(~ li:nth-child(3)) {
     display: none;
   }
+}
+
+.breadcrumb[data-glossary] {
+  font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
 }

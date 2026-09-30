@@ -4,6 +4,7 @@ import { filterTerms, groupTerms, termLetter, type GlossaryItem } from "./model.
 import classes from "./component.module.css";
 
 export interface GlossaryViewProps {
+  showUnusedLetters?: boolean;
   id: string;
   title: string;
   introduction?: string;
@@ -17,18 +18,12 @@ export interface GlossaryViewProps {
   children?: ReactNode;
 }
 
-export function TermCard({ entry }: { entry: GlossaryItem }) {
-  const { t } = useTranslation();
+export function TermRow({ entry }: { entry: GlossaryItem }) {
   return (
     <article className={classes.card}>
       <h3>
         <a href={entry.url}>{entry.title}</a>
       </h3>
-      {entry.aliases.length > 0 && (
-        <p className={classes.aliases}>
-          {t("glossary.aliases", { aliases: entry.aliases.join(", ") })}
-        </p>
-      )}
       <p>{entry.summary}</p>
     </article>
   );
@@ -39,6 +34,7 @@ export default function Glossary({
   searchLabel,
   searchPlaceholder,
   searchHelp,
+  showUnusedLetters = false,
   entries,
   isEditMode,
   children,
@@ -46,8 +42,11 @@ export default function Glossary({
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const groups = groupTerms(filterTerms(entries, query));
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  if (entries.some((entry) => termLetter(entry.title) === "#")) letters.push("#");
+  const letters = showUnusedLetters
+    ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
+    : groups.map(([letter]) => letter);
+  if (showUnusedLetters && entries.some((entry) => termLetter(entry.title) === "#"))
+    letters.push("#");
   const count = groups.reduce((total, [, terms]) => total + terms.length, 0);
   const anchor = (letter: string) => `${id}-letter-${letter === "#" ? "other" : letter}`;
 
@@ -63,54 +62,56 @@ export default function Glossary({
             <p className={classes.editHint}>{t("glossary.editHint")}</p>
           ) : (
             <>
-              <div
-                className={classes.search}
-                role="search"
-                aria-label={searchLabel || t("glossary.search")}
-              >
-                <label htmlFor={`${id}-search`}>{searchLabel || t("glossary.search")}</label>
-                <div className={classes.inputRow}>
-                  <svg
-                    className={classes.searchIcon}
-                    aria-hidden="true"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="10" cy="10" r="6" />
-                    <path d="m15 15 5 5" />
-                  </svg>
-                  <input
-                    id={`${id}-search`}
-                    type="search"
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    placeholder={searchPlaceholder || t("glossary.placeholder")}
-                    aria-describedby={`${id}-help`}
-                  />
+              <div className={classes.controls}>
+                <div
+                  className={classes.search}
+                  role="search"
+                  aria-label={searchLabel || t("glossary.search")}
+                >
+                  <label htmlFor={`${id}-search`}>{searchLabel || t("glossary.search")}</label>
+                  <div className={classes.inputRow}>
+                    <svg
+                      className={classes.searchIcon}
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <circle cx="10" cy="10" r="6" />
+                      <path d="m15 15 5 5" />
+                    </svg>
+                    <input
+                      id={`${id}-search`}
+                      type="search"
+                      value={query}
+                      onChange={(event) => setQuery(event.target.value)}
+                      placeholder={searchPlaceholder || t("glossary.placeholder")}
+                      aria-describedby={`${id}-help`}
+                    />
+                  </div>
+                  <p id={`${id}-help`}>{searchHelp || t("glossary.searchHelp")}</p>
                 </div>
-                <p id={`${id}-help`}>{searchHelp || t("glossary.searchHelp")}</p>
+                <nav id={`${id}-index`} className={classes.index} aria-label={t("glossary.browse")}>
+                  <p>{t("glossary.browse")}</p>
+                  <ul>
+                    {letters.map((letter) => (
+                      <li key={letter}>
+                        {groups.some(([key]) => key === letter) ? (
+                          <a
+                            href={`#${anchor(letter)}`}
+                            aria-label={t("glossary.goToLetter", { letter })}
+                          >
+                            {letter}
+                          </a>
+                        ) : (
+                          <span aria-disabled="true">{letter}</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
               </div>
-              <nav id={`${id}-index`} className={classes.index} aria-label={t("glossary.browse")}>
-                <p>{t("glossary.browse")}</p>
-                <ul>
-                  {letters.map((letter) => (
-                    <li key={letter}>
-                      {groups.some(([key]) => key === letter) ? (
-                        <a
-                          href={`#${anchor(letter)}`}
-                          aria-label={t("glossary.goToLetter", { letter })}
-                        >
-                          {letter}
-                        </a>
-                      ) : (
-                        <span aria-disabled="true">{letter}</span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </nav>
               <p className={classes.results} role="status" aria-live="polite" aria-atomic="true">
                 {query ? t("glossary.results", { count }) : ""}
               </p>
@@ -131,12 +132,13 @@ export default function Glossary({
                     <h2 id={anchor(letter)} tabIndex={-1}>
                       {letter}
                     </h2>
-                    <span>{t("glossary.count", { count: terms.length })}</span>
-                    <a href={`#${id}-index`}>{t("glossary.backToIndex")}</a>
+                    <a className={classes.backToIndex} href={`#${id}-index`}>
+                      {t("glossary.backToIndex")}
+                    </a>
                   </div>
                   <div className={classes.cards}>
                     {terms.map((entry) => (
-                      <TermCard key={entry.id} entry={entry} />
+                      <TermRow key={entry.id} entry={entry} />
                     ))}
                   </div>
                 </section>

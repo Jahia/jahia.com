@@ -1,6 +1,7 @@
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 
 export interface Props {
+  "showUnusedLetters"?: boolean;
   "entriesFolder"?: JCRNodeWrapper;
   "jcr:title"?: string;
   "introduction"?: string;

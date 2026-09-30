@@ -36,6 +36,18 @@
               "rank": 3
             }
           ]
+        },
+        {
+          "name": "glossary-alphabet",
+          "labelKey": "jahiacom:jahiacom_glossary.form.alphabet",
+          "rank": 3,
+          "fields": [
+            {
+              "name": "showUnusedLetters",
+              "rank": 1,
+              "descriptionKey": "jahiacom:jahiacom_glossary.showUnusedLetters.ui.tooltip"
+            }
+          ]
         }
       ]
     }
