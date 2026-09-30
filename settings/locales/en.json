@@ -139,7 +139,7 @@
     "noResults": "No entries found",
     "tryAgain": "Try another term or abbreviation.",
     "clear": "Clear search",
-    "backToIndex": "All letters",
+    "backToIndex": "Back to index",
     "aliases": "Also called: {{aliases}}",
     "editHint": "Manage entries in the selected content folder, or below when no folder is selected. Search and alphabetical navigation are available in preview and live mode.",
     "term": "Glossary",
@@ -167,7 +167,8 @@
       "webinar": "Webinar",
       "resource": "Resource",
       "infographic": "Infographic",
-      "product": "Product"
+      "product": "Product",
+      "video": "Video"
     },
     "about": "About this entry",
     "example": "In practice",
@@ -176,6 +177,7 @@
     "readResource": "Explore this resource",
     "topicCta": "Explore {{term}}",
     "showAllResources": "See all {{count}} resources",
-    "overview": "Glossary at a glance"
+    "overview": "Glossary at a glance",
+    "allResources": "View all resources"
   }
 }

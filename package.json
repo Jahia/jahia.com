@@ -20,7 +20,9 @@
     "package": "yarn pack --out dist/package.tgz",
     "dev": "vite build --watch",
     "watch": "run dev",
-    "watch:callback": "run build:lottie && run package && run deploy"
+    "watch:callback": "run build:lottie && run package && run deploy",
+    "test:glossary": "node --test scripts/test-glossary-links.mjs scripts/test-glossary-related.mjs",
+    "check:glossary": "node scripts/check-glossary-live.mjs"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.6",

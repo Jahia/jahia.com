@@ -65,8 +65,20 @@ export default function Breadcrumb({ pageType, title }: { pageType?: string; tit
     );
     if (index && index.hasPermission("jcr:read")) {
       server.render.addCacheDependency({ path: index.getPath() }, renderContext);
+      const resources = index.getParent() as JCRNodeWrapper;
+      server.render.addCacheDependency({ path: resources.getPath() }, renderContext);
       items = [
         { id: home.getIdentifier(), label: t("breadcrumb.home"), node: home },
+        ...(resources.getIdentifier() !== home.getIdentifier() &&
+        resources.hasPermission("jcr:read")
+          ? [
+              {
+                id: resources.getIdentifier(),
+                label: resources.getDisplayableName(),
+                node: resources,
+              },
+            ]
+          : []),
         { id: index.getIdentifier(), label: index.getDisplayableName(), node: index },
         { id: mainNode.getIdentifier(), label: title },
       ];
@@ -109,7 +121,11 @@ export default function Breadcrumb({ pageType, title }: { pageType?: string; tit
   if (items.length < 2) return null;
 
   return (
-    <nav className={classes.breadcrumb} aria-label={t("breadcrumb.label")}>
+    <nav
+      className={classes.breadcrumb}
+      data-glossary={mainNode.isNodeType("jahiacom:glossaryEntry") || undefined}
+      aria-label={t("breadcrumb.label")}
+    >
       <ol>
         {items.map((item, index) => {
           const current = index === items.length - 1;

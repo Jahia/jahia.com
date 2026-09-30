@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { GlossaryItem } from "../../views/Glossary/model.js";
+import { CTA } from "../../mixins/CTA/index.jsx";
 import classes from "./component.module.css";
 
 export interface EntryResource {
@@ -39,15 +40,13 @@ export default function Entry({
   example,
   exampleTitle,
   faq,
-  updatedLabel,
-  indexUrl,
   resources,
   relatedTerms,
   isEditMode,
 }: EntryViewProps) {
   const { t } = useTranslation();
-  const further = resources.find((resource) => resource.kind === "article") || resources[0];
-  const cta = resources.find((resource) => resource.kind === "solution") || resources[0];
+  // The server ranks direct matches before related matches, regardless of resource kind.
+  const cta = resources[0];
   return (
     <article className={classes.entry} data-theme="day">
       <div className={classes.inner}>
@@ -101,64 +100,8 @@ export default function Entry({
                 <div className="_richtext" dangerouslySetInnerHTML={{ __html: faq }} />
               </section>
             )}
-            {resources.length > 0 ? (
-              <section className={classes.resources} aria-labelledby="resources">
-                <div className={classes.sectionHeading}>
-                  <h2 id="resources" tabIndex={-1}>
-                    {t("glossary.resourcesTitle", {
-                      term: title,
-                      interpolation: { escapeValue: false },
-                    })}
-                  </h2>
-                  <span className={classes.count}>
-                    {t("glossary.resourceCount", { count: resources.length })}
-                  </span>
-                </div>
-                <p>{t("glossary.resourcesIntro")}</p>
-                <ul className={classes.resourceGrid}>
-                  {resources.slice(0, 6).map((resource) => (
-                    <li key={resource.id}>
-                      <a href={resource.url} className={classes.resourceCard}>
-                        <span className={classes.resourceKind}>
-                          {t(`glossary.kinds.${resource.kind}`)}
-                        </span>
-                        <h3>{resource.title}</h3>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-                {resources.length > 6 && (
-                  <details className={classes.moreResources}>
-                    <summary>{t("glossary.showAllResources", { count: resources.length })}</summary>
-                    <ul className={classes.resourceGrid}>
-                      {resources.slice(6).map((resource) => (
-                        <li key={resource.id}>
-                          <a href={resource.url} className={classes.resourceCard}>
-                            <span className={classes.resourceKind}>
-                              {t(`glossary.kinds.${resource.kind}`)}
-                            </span>
-                            <h3>{resource.title}</h3>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                )}
-              </section>
-            ) : isEditMode ? (
-              <p className={classes.editorNote}>{t("glossary.resourcesMissing")}</p>
-            ) : null}
-            {cta && (
-              <section className={classes.cta} data-theme="night" aria-labelledby="topic-cta">
-                <h2 id="topic-cta">
-                  {t("glossary.topicCta", { term: title, interpolation: { escapeValue: false } })}
-                </h2>
-                <p>{cta.title}</p>
-                <a href={cta.url}>{t("glossary.readResource")}</a>
-              </section>
-            )}
           </div>
-          <aside className={classes.sidebar} aria-label={t("glossary.about")}>
+          <aside className={classes.sidebar} aria-label={t("glossary.related")}>
             <div className={classes.sidebarContents}>
               {relatedTerms.length > 0 && (
                 <section className={classes.panel} aria-labelledby="related">
@@ -175,30 +118,64 @@ export default function Entry({
                   </ul>
                 </section>
               )}
-              <section className={classes.panel} aria-labelledby="about-entry">
-                <h2 id="about-entry" className={classes.eyebrow}>
-                  {t("glossary.about")}
-                </h2>
-                {updatedLabel && (
-                  <dl className={classes.meta}>
-                    <dt>{t("glossary.updated")}</dt>
-                    <dd>{updatedLabel}</dd>
-                  </dl>
-                )}
-                {further && (
-                  <>
-                    <p className={classes.metaLabel}>{t("glossary.goFurther")}</p>
-                    <a href={further.url}>{further.title}</a>
-                  </>
-                )}
-                {indexUrl && (
-                  <a className={classes.allTerms} href={indexUrl}>
-                    {t("glossary.allTerms")}
-                  </a>
-                )}
-              </section>
             </div>
           </aside>
+        </div>
+        <div className={classes.followUp}>
+          {resources.length > 0 ? (
+            <section className={classes.resources} aria-labelledby="resources">
+              <div className={classes.sectionHeading}>
+                <h2 id="resources" tabIndex={-1}>
+                  {t("glossary.resourcesTitle", {
+                    term: title,
+                    interpolation: { escapeValue: false },
+                  })}
+                </h2>
+              </div>
+              <ul className={classes.resourceGrid}>
+                {resources.slice(0, 3).map((resource) => (
+                  <li key={resource.id}>
+                    <a href={resource.url} className={classes.resourceCard}>
+                      <span className={classes.resourceKind}>
+                        {t(`glossary.kinds.${resource.kind}`)}
+                      </span>
+                      <h3>{resource.title}</h3>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              {resources.length > 3 && (
+                <details className={classes.moreResources}>
+                  <summary>{t("glossary.showAllResources", { count: resources.length })}</summary>
+                  <ul className={classes.resourceGrid}>
+                    {resources.slice(3).map((resource) => (
+                      <li key={resource.id}>
+                        <a href={resource.url} className={classes.resourceCard}>
+                          <span className={classes.resourceKind}>
+                            {t(`glossary.kinds.${resource.kind}`)}
+                          </span>
+                          <h3>{resource.title}</h3>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+            </section>
+          ) : isEditMode ? (
+            <p className={classes.editorNote}>{t("glossary.resourcesMissing")}</p>
+          ) : null}
+          {cta && (
+            <section className={classes.cta} data-theme="night" aria-labelledby="topic-cta">
+              <h2 id="topic-cta">
+                {t("glossary.topicCta", { term: title, interpolation: { escapeValue: false } })}
+              </h2>
+              <p>{cta.title}</p>
+              <CTA href={cta.url} location="glossary" name="topic-resource">
+                {t("glossary.readResource")}
+              </CTA>
+            </section>
+          )}
         </div>
       </div>
     </article>

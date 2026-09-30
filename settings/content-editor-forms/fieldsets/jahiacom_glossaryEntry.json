@@ -5,6 +5,31 @@
     {
       "name": "indexPage",
       "hide": true
+    },
+    {
+      "name": "resources",
+      "hide": true
+    },
+    {
+      "name": "relatedTerms",
+      "hide": true
+    },
+    {
+      "name": "autoLinks",
+      "defaultValues": [
+        {
+          "type": "Boolean",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "name": "linkKeywords",
+      "hide": true
+    },
+    {
+      "name": "excludedLinks",
+      "hide": true
     }
   ]
 }

@@ -6,4 +6,5 @@
  - searchLabel (string) i18n
  - searchPlaceholder (string) i18n
  - searchHelp (string) i18n
+ - showUnusedLetters (boolean) = false
  + * (jahiacom:glossaryEntry)

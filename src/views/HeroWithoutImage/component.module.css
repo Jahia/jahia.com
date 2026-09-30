@@ -16,3 +16,27 @@
   text-align: center;
   text-wrap: balance;
 }
+
+.compact {
+  composes: container from "../../theme/theme.module.css";
+  padding: 1.5rem 1rem;
+  font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  font-weight: 400;
+}
+
+.compact > div {
+  max-width: var(--jahia-width);
+  margin-inline: auto;
+}
+
+.compact h1 {
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 600;
+  text-wrap: initial;
+}
+
+.compact p {
+  margin: 0;
+  font-size: 1rem;
+}

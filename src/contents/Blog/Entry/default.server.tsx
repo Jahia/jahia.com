@@ -39,9 +39,14 @@ export const BlogCard = ({
   ].filter(Boolean);
   const url = `${buildNodeUrl(currentNode)}${query.length > 0 ? `?${query.join("&")}` : ""}`;
   const fallbackImage = image ? undefined : publicBlogImage(title, featured);
-  const displayedCategories = categories?.some(Boolean)
+  const assignedCategories = categories?.some(Boolean)
     ? categories.filter((category): category is JCRNodeWrapper => category !== null)
     : contentCategories(currentNode);
+  // Technical classification remains available to filters, but is not a public badge.
+  const displayedCategories = assignedCategories.filter(
+    (category) =>
+      !/\/categories\/(pageTypes|resourcestypes|blogTypes)(\/|$)/.test(category.getPath()),
+  );
 
   return (
     <article className={clsx(classes.item, featured && classes.featured)}>

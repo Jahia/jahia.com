@@ -1,4 +1,4 @@
-[jahiacom:glossaryEntry] > jnt:content, jahiacommix:content, mix:title, jmix:mainResource, jmix:visibleInContentTree
+[jahiacom:glossaryEntry] > jnt:content, jahiacommix:content, mix:title, jmix:mainResource, jmix:visibleInContentTree, jmix:categorized
  - indexPage (weakreference, picker) < jnt:page
  - summary (string, textarea) i18n mandatory
  - aliases (string) i18n multiple
@@ -11,3 +11,8 @@
  - comparison (string, richtext) i18n
  - resources (weakreference, picker) multiple < jnt:page, jmix:mainResource
  - relatedTerms (weakreference, picker) multiple < jahiacom:glossaryEntry
+ // Additive fields; legacy reference values are retained without schema changes.
+ - autoLinks (boolean) = false
+ - linkKeywords (string) i18n multiple
+ - linkThemes (weakreference, category[autoSelectParent=false]) multiple < jnt:category
+ - excludedLinks (weakreference, picker) multiple < jnt:page, jmix:mainResource

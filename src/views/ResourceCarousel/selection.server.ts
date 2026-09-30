@@ -104,6 +104,21 @@ const referencedNodes = (node: JCRNodeWrapper, propertyNames: readonly string[])
   return [];
 };
 
+/** Re-read the article's editorial taxonomy; never copy it into the carousel node. */
+export const articleResourceTopics = (node: JCRNodeWrapper) => {
+  if (!node.isNodeType(RESOURCE_MODEL.blogNodeType)) return [];
+  const themes = referencedNodes(node, [RESOURCE_MODEL.properties.categories]).filter((category) =>
+    category.getPath().startsWith("/sites/systemsite/categories/topics/"),
+  );
+  // An explicitly assigned parent must not dilute a more specific assigned topic.
+  const specificThemes = themes.filter(
+    (category) => !themes.some((other) => other.getPath().startsWith(`${category.getPath()}/`)),
+  );
+  return specificThemes.length > 0
+    ? specificThemes
+    : referencedNodes(node, [RESOURCE_MODEL.properties.clusters]);
+};
+
 const categoryLineageIds = (category: JCRNodeWrapper) => {
   const ids: string[] = [];
   let current: JCRNodeWrapper | null = category;
@@ -152,9 +167,12 @@ const resolveResourceType = (
   return allowGenericResource ? { kind: "resource" as const } : null;
 };
 
-const toCard = (
+export const toCard = (
   node: JCRNodeWrapper,
-  { allowGenericResource = false }: { allowGenericResource?: boolean } = {},
+  {
+    allowGenericResource = false,
+    includeCustomerCases = false,
+  }: { allowGenericResource?: boolean; includeCustomerCases?: boolean } = {},
 ): ResourceCardData | null => {
   if (
     !node.isNodeType(RESOURCE_MODEL.blogNodeType) &&
@@ -167,7 +185,7 @@ const toCard = (
 
   const categories = referencedNodes(node, [RESOURCE_MODEL.properties.categories]);
   const resourceType = resolveResourceType(node, categories, allowGenericResource);
-  if (!resourceType || resourceType.kind === "customerCase") return null;
+  if (!resourceType || (!includeCustomerCases && resourceType.kind === "customerCase")) return null;
 
   const { value: date, timestamp } = firstDate(node, RESOURCE_MODEL.properties.dates);
   if (timestamp > Date.now()) return null;
@@ -280,7 +298,11 @@ export function selectResources({
   }
 
   if (mode === "automatic") {
-    const selected = automatic.slice(0, count);
+    const topics = articleResourceTopics(currentNode).map(identity);
+    const related =
+      topics.length > 0 ? automatic.filter((item) => matchesAny(item, topics)) : automatic;
+    // Relevance takes precedence over filling every slot for categorized articles.
+    const selected = related.slice(0, count);
     return selected.length >= minimum ? selected : [];
   }
 
