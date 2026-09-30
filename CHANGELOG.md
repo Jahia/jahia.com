@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.7.1
+
+* Fix automatic classification and SEO initialization in blog and glossary forms. Ignore field cleanup notifications without cancelling pending analysis and prevent repeated section refreshes from restarting the same calculation. Preserve existing editorial values and manual changes; Meta Keywords remain untouched. No content import or content-model migration is required.
+
 ## 1.7.0
 
 * Simplify the glossary index and term pages with a compact configurable hero, a dense searchable list, editable visibility of unused letters, responsive comparison tables and full-width term-specific resources. Automatically select related resources and bilingual related terms while preserving stored legacy fields. Add conservative glossary classification and blog classification/SEO prefilling, generate complete-sentence meta descriptions without filling Meta Keywords, and hide technical taxonomy badges on blog cards. Site content transfers remain separate from module installation.
