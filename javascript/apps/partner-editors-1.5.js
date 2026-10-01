@@ -947,8 +947,36 @@
         ? "Découvrez la définition et les usages de ce terme dans le glossaire Jahia."
         : "Explore the definition and uses of this term in the Jahia glossary.";
   }
+  // Keep in sync with src/utils/blogMetaTitle.ts (server/editor parity is tested).
+  function blogMetaTitle(value, fallback) {
+    var source = (value || "").trim() || (fallback || "").trim();
+    if (!source) return "";
+    var stem = source.replace(/(?:\s*[-|–—]\s*Jahia\s*)+$/i, "").trimEnd();
+    return stem ? stem + " - Jahia" : source;
+  }
+  function prefillBlogTitle(session, input, changedValue) {
+    var context = session.context;
+    var field = formFields(context).find(function (item) {
+      return item.propertyName === "htmlTitle";
+    });
+    if (!field || field.readOnly || context.readOnly || context.formik.isSubmitting) return;
+    var current = changedValue === undefined ? context.formik.values[field.name] : changedValue;
+    var state = fieldState(session, field, current);
+    if (!sameValue(current, state.last)) {
+      state.locked = true;
+      state.manual = true;
+    }
+    // A manual title keeps its wording. Only the terminal brand is normalized.
+    // An explicitly cleared field keeps using the server-side page-title fallback.
+    if (state.locked && emptyValue(current)) return;
+    var next = blogMetaTitle(state.locked ? current : readableText(input["jcr:title"]));
+    if (sameValue(current, next)) return;
+    state.last = next;
+    context.formik.setFieldValue(field.name, next);
+  }
   function prefillSeo(session, input) {
-    fillDraftField(session, "htmlTitle", readableText(input["jcr:title"]));
+    if (session.nodeType === "jahiacom:blogEntry") prefillBlogTitle(session, input);
+    else fillDraftField(session, "htmlTitle", readableText(input["jcr:title"]));
     fillDraftField(
       session,
       "jcr:description",
@@ -1057,6 +1085,7 @@
       if (!session || session.language !== context.lang || session.documentKey !== documentKey) {
         if (session) {
           clearTimeout(session.timer);
+          clearTimeout(session.titleTimer);
           session.ticket++;
         }
         session = { ticket: 0, language: context.lang, documentKey: documentKey, fields: {} };
@@ -1075,6 +1104,19 @@
             state.locked = true;
             state.manual = true;
           }
+        }
+        if (nodeType === "jahiacom:blogEntry" && field.propertyName === "htmlTitle") {
+          clearTimeout(session.titleTimer);
+          session.titleTimer = setTimeout(function () {
+            var titleField = formFields(session.context).find(function (item) {
+              return item.propertyName === "jcr:title";
+            });
+            prefillBlogTitle(
+              session,
+              { "jcr:title": titleField && session.context.formik.values[titleField.name] },
+              value,
+            );
+          }, 600);
         }
         return;
       }

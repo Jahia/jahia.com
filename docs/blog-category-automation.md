@@ -137,3 +137,15 @@ fields can be filled in the draft. Existing editorial categories remain selected
 with missing matches offered as suggestions. Existing SEO and manual edits remain
 protected. Saving and publishing are still explicit editorial actions. This fix
 does not require importing content or changing the content model.
+
+## Blog title branding — 1 October 2026
+
+Blog HTML and OpenGraph titles end with ` - Jahia`, in both languages. Rendering
+uses the existing Meta Title, falling back to the article title, without a bulk
+content migration. The editor applies the same suffix to new and existing titles
+in the draft. Editorial wording is preserved; terminal brand separators and
+duplicate suffixes are normalized. Saving and publishing remain explicit actions.
+
+Titles are never truncated automatically. Sixty characters is an audit threshold,
+not a field constraint. Missing article and Meta Titles require editorial input.
+Other page types, descriptions, keywords and visible article headings are unchanged.

@@ -347,7 +347,10 @@ test("opening existing FR/EN blogs and glossary entries fills empty fields despi
       h.notify("summary", undefined);
       h.notify("text", undefined);
       await h.flush();
-      assert.equal(h.context.formik.values["field:htmlTitle"], "SEO");
+      assert.equal(
+        h.context.formik.values["field:htmlTitle"],
+        name === "jahiacom:blogEntry" ? "SEO - Jahia" : "SEO",
+      );
       assert.equal(h.context.formik.values["field:jcr:description"], "A complete description.");
       assert.ok(h.context.formik.values["field:j:defaultCategory"].includes("seo"));
       assert.equal(h.categoryField().jahiacomTopicSuggestions.status, "ready");
@@ -381,7 +384,7 @@ test("cleanup during taxonomy fetch preserves the pending result and existing ed
   await h.flush();
   assert.equal(h.categoryField().jahiacomTopicSuggestions.status, "ready");
   assert.deepEqual(h.context.formik.values["field:j:defaultCategory"], ["editor-choice"]);
-  assert.equal(h.context.formik.values["field:htmlTitle"], "Approved title");
+  assert.equal(h.context.formik.values["field:htmlTitle"], "Approved title - Jahia");
   assert.equal(h.context.formik.values["field:jcr:description"], "Approved description.");
 });
 test("accepting a suggestion preserves existing categories and uses native reference UUIDs", async () => {
@@ -486,7 +489,7 @@ test("manual SEO edits, including clearing a field, stop subsequent automatic up
   h.change("image", "new-image");
   await h.flush();
   assert.equal(h.context.formik.values["field:jcr:description"], "");
-  assert.equal(h.context.formik.values["field:htmlTitle"], "Titre validé");
+  assert.equal(h.context.formik.values["field:htmlTitle"], "Titre validé - Jahia");
   assert.equal(h.context.formik.values["field:openGraphImage"], "chosen-image");
 });
 test("SEO works without taxonomy access; read-only fields are never filled", async () => {
@@ -744,4 +747,82 @@ test("blog descriptions keep complete sentences and use a complete fallback for 
       value.includes("Portail client") && !value.includes("…") && !value.includes("glossaire"),
     );
   }
+});
+
+const titleModule = { exports: {} };
+vm.runInNewContext(
+  ts.transpileModule(
+    readFileSync(new URL("../src/utils/blogMetaTitle.ts", import.meta.url), "utf8"),
+    {
+      compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+    },
+  ).outputText,
+  { exports: titleModule.exports },
+);
+const { blogMetaTitle } = titleModule.exports;
+
+test("blog title suffix is identical in editor/server and preserves editorial wording", async () => {
+  const cases = [
+    ["Un titre français", "Un titre français - Jahia"],
+    ["An English title - Jahia", "An English title - Jahia"],
+    ["Content as a Service ?  | Jahia", "Content as a Service ? - Jahia"],
+    ["SEO – jahia", "SEO - Jahia"],
+    ["SEO — Jahia - Jahia", "SEO - Jahia"],
+    ["Working with Jahia", "Working with Jahia - Jahia"],
+    ["<SEO> & CMS", "<SEO> & CMS - Jahia"],
+    [
+      "A deliberately long editorial title ".repeat(5),
+      "A deliberately long editorial title ".repeat(5).trim() + " - Jahia",
+    ],
+  ];
+  for (const lang of ["fr", "en"]) {
+    for (const [title, expected] of cases) {
+      const h = editorHarness({ initial: { htmlTitle: title } });
+      h.context.lang = lang;
+      h.change("jcr:title", "Page title must not replace editorial metadata");
+      await h.flush();
+      assert.equal(h.context.formik.values["field:htmlTitle"], expected);
+      assert.equal(blogMetaTitle(title), expected);
+      assert.equal(blogMetaTitle(expected), expected);
+      h.change("summary", "Another description.");
+      await h.flush();
+      assert.equal(h.context.formik.values["field:htmlTitle"], expected);
+    }
+  }
+  assert.equal(blogMetaTitle("", "Fallback title"), "Fallback title - Jahia");
+  assert.equal(blogMetaTitle("   ", "Fallback title"), "Fallback title - Jahia");
+  assert.equal(blogMetaTitle(undefined), "");
+});
+
+test("manual title changes get a suffix without being replaced by the page title", async () => {
+  const h = editorHarness();
+  h.change("jcr:title", "Original title");
+  await h.flush();
+  h.change("htmlTitle", "My own SEO title | Jahia");
+  await h.flush();
+  assert.equal(h.context.formik.values["field:htmlTitle"], "My own SEO title - Jahia");
+  h.change("jcr:title", "Changed heading");
+  await h.flush();
+  assert.equal(h.context.formik.values["field:htmlTitle"], "My own SEO title - Jahia");
+  h.change("htmlTitle", "");
+  await h.flush();
+  assert.equal(h.context.formik.values["field:htmlTitle"], "");
+});
+
+test("title callback uses the edited value before Formik context catches up", async () => {
+  const h = editorHarness({ initial: { "jcr:title": "Heading", "htmlTitle": "Old - Jahia" } });
+  h.notify("htmlTitle", "New editorial title");
+  await h.flush();
+  assert.equal(h.context.formik.values["field:htmlTitle"], "New editorial title - Jahia");
+});
+
+test("initial title callback and late SEO section activation do not require a content edit", async () => {
+  const h = editorHarness({ initial: { "jcr:title": "SEO", "htmlTitle": "Validated SEO" } });
+  h.notify("htmlTitle", "Validated SEO");
+  await h.flush();
+  assert.equal(h.context.formik.values["field:htmlTitle"], "Validated SEO - Jahia");
+  const newlyEnabled = editorHarness({ initial: { "jcr:title": "SEO" } });
+  newlyEnabled.notify("htmlTitle", "");
+  await newlyEnabled.flush();
+  assert.equal(newlyEnabled.context.formik.values["field:htmlTitle"], "SEO - Jahia");
 });
