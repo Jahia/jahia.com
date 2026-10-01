@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.7.2
+
+* Ensure French and English blog HTML and OpenGraph titles end with ` - Jahia`. Normalize existing brand separators and duplicate suffixes while preserving editorial wording. Apply the same rule in Content Editor, including manual title edits, without truncating titles or requiring a content migration.
+
 ## 1.7.1
 
 * Fix automatic classification and SEO initialization in blog and glossary forms. Ignore field cleanup notifications without cancelling pending analysis and prevent repeated section refreshes from restarting the same calculation. Preserve existing editorial values and manual changes; Meta Keywords remain untouched. No content import or content-model migration is required.
