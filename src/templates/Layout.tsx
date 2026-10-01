@@ -20,6 +20,7 @@ import "modern-normalize/modern-normalize.css";
 import "virtual:uno.css";
 import "./global.css";
 import "./themes.css";
+import { blogMetaTitle } from "../utils/blogMetaTitle.js";
 
 interface Props {
   "jcr:title": string;
@@ -60,14 +61,16 @@ export const Layout = ({
     "jsonLd": jsonLd,
     "stylesheets": stylesheets,
   } = props;
+  const metadataTitle =
+    pageType === "blog_post" ? blogMetaTitle(htmlTitle, title) : htmlTitle || title;
 
   return (
     <html lang={lang}>
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{htmlTitle || title}</title>
-        <meta property="og:title" content={htmlTitle || title} />
+        <title>{metadataTitle}</title>
+        <meta property="og:title" content={metadataTitle} />
         {description && (
           <>
             <meta name="description" content={description} />
