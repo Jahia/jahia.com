@@ -14,19 +14,19 @@ The first paragraph of `body` appears below the H1. `definitionTitle` introduces
 
 ## Automatic mentions
 
-HTML is parsed on the server without rewriting stored rich text. Every unambiguous,
-whole-term occurrence links to the corresponding entry, longest labels first. Titles,
-index labels and aliases are recognized; English technical names also match in French.
-Short uppercase acronyms require exact case. Self-links, ambiguous labels, code and
-preformatted text are excluded. Exact paragraph or cell labels split by emphasis markup
-are supported. Existing links in ordinary text are preserved and known glossary URLs
-are resolved through Jahia, including preview mode.
+HTML is parsed on the server without rewriting stored rich text. Automatic links
+require complete multi-word expressions from titles, index labels and aliases. Single
+words and acronyms (including CMS, content, template, module, visitor and goal) never
+trigger automatic links, even as table notions. Longest eligible expressions match first.
+English technical names can match in French; destinations stay in the current language.
 
-Generic short labels (`vue/view`, `champ/field`, `zone/area`, `enfant/child`) do not
-automatically link within prose. They remain eligible as exact standalone paragraph
-or table labels. Longer concepts such as `Zone absolue` and explicit editorial links
-are unaffected. This conservative rule avoids linking everyday uses such as
-`version vue` to a technical entry.
+The first paragraph displayed below H1 contains no links. Outside that introduction,
+only the first eligible occurrence per target is linked, across body, comparison,
+example and FAQ together, with at most six automatic links per page. Existing glossary
+links participate in target deduplication; external editorial source links are preserved.
+Self-links, ambiguous labels shared by multiple targets, code and preformatted text
+are excluded. Exact multi-word paragraph or cell labels split by emphasis are supported.
+Known editorial glossary URLs are resolved through Jahia, including preview mode.
 
 Every rich-text section is sanitized at the final render boundary with `xss`, using
 an explicit tag/attribute allowlist. Scripts, active embeds, event handlers, inline
