@@ -1,6 +1,6 @@
 import { buildNodeUrl, jahiaComponent, server } from "@jahia/javascript-modules-library";
 import type { Props } from "./types.js";
-import { nodeModifiedAt } from "../../views/Glossary/updatedDate.js";
+import { linkedEditorialContent } from "./inlineTerms.server.js";
 import Entry from "./Entry.jsx";
 import { automaticLinks } from "./automaticLinks.server.js";
 import { resolveGlossaryIndex } from "./indexPage.js";
@@ -11,26 +11,23 @@ jahiaComponent(
     const index = resolveGlossaryIndex(currentNode, (node) =>
       server.render.addCacheDependency({ path: node.getPath() }, renderContext),
     );
-    let updatedAt = nodeModifiedAt(currentNode);
-    const translationName = `j:translation_${currentResource.getLocale().getLanguage()}`;
-    if (currentNode.hasNode(translationName)) {
-      const translation = currentNode.getNode(translationName);
-      server.render.addCacheDependency({ path: translation.getPath() }, renderContext);
-      updatedAt = Math.max(updatedAt, nodeModifiedAt(translation));
-    }
-    const updatedLabel = updatedAt
+    const editorialTimestamp = currentNode.hasProperty("editorialDate")
+      ? Date.parse(currentNode.getPropertyAsString("editorialDate"))
+      : 0;
+    const editorialDateLabel = editorialTimestamp
       ? new Intl.DateTimeFormat(currentResource.getLocale().getLanguage(), {
           day: "numeric",
           month: "long",
           year: "numeric",
           timeZone: "UTC",
-        }).format(new Date(updatedAt))
+        }).format(new Date(editorialTimestamp))
       : undefined;
+    const linked = linkedEditorialContent(props);
     const automatic = automaticLinks({ ...props, "jcr:title": title }, []);
     return (
       <Entry
-        {...props}
-        updatedLabel={updatedLabel}
+        {...linked}
+        editorialDateLabel={editorialDateLabel}
         title={title || currentNode.getDisplayableName()}
         summary={props.summary || ""}
         indexUrl={index ? buildNodeUrl(index) : undefined}

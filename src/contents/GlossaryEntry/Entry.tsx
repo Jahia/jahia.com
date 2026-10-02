@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import type { GlossaryItem } from "../../views/Glossary/model.js";
 import { CTA } from "../../mixins/CTA/index.jsx";
+import { splitDefinition } from "./inlineTerms.js";
+import { sanitizeHtml } from "./sanitizeHtml.js";
 import classes from "./component.module.css";
 
 export interface EntryResource {
@@ -14,17 +16,21 @@ export interface EntryResource {
 export interface EntryViewProps {
   title: string;
   summary: string;
-  aliases?: string[];
+  editorialAuthor?: string;
+  editorialDateLabel?: string;
   body?: string;
   definitionTitle?: string;
   exampleTitle?: string;
   example?: string;
   faq?: string;
-  updatedLabel?: string;
   comparisonTitle?: string;
   comparison?: string;
   indexUrl?: string;
   resources: EntryResource[];
+  resourceCtaLabel?: string;
+  resourceCtaVariant?: "primary" | "secondary";
+  relatedCtaVariant?: "primary" | "secondary";
+  resourceDisplayCount?: "3" | "6" | "9";
   relatedTerms: GlossaryItem[];
   isEditMode?: boolean;
 }
@@ -32,7 +38,9 @@ export interface EntryViewProps {
 export default function Entry({
   title,
   summary,
-  aliases = [],
+  editorialAuthor,
+  editorialDateLabel,
+  indexUrl,
   body,
   definitionTitle,
   comparisonTitle,
@@ -41,43 +49,54 @@ export default function Entry({
   exampleTitle,
   faq,
   resources,
+  resourceDisplayCount,
+  resourceCtaLabel,
+  resourceCtaVariant,
+  relatedCtaVariant,
   relatedTerms,
   isEditMode,
 }: EntryViewProps) {
   const { t } = useTranslation();
   // The server ranks direct matches before related matches, regardless of resource kind.
   const cta = resources[0];
+  const visibleCount = resourceDisplayCount === "3" ? 3 : resourceDisplayCount === "9" ? 9 : 6;
+  const definition = splitDefinition(body || "");
   return (
     <article className={classes.entry} data-theme="day">
       <div className={classes.inner}>
         <div className={classes.reading}>
           <div className={classes.body}>
             <header className={classes.heading}>
-              <p className={classes.eyebrow}>{t("glossary.term")}</p>
               <h1>{title}</h1>
-              {aliases.length > 0 && (
-                <p className={classes.aliases}>
-                  {t("glossary.aliases", { aliases: aliases.join(", ") })}
-                </p>
-              )}
-              <p className={classes.summary}>{summary}</p>
-            </header>
-            <section aria-labelledby="definition">
-              <h2 id="definition" tabIndex={-1}>
-                {definitionTitle || t("glossary.definitionTitle")}
-              </h2>
-              {body ? (
-                <div className="_richtext" dangerouslySetInnerHTML={{ __html: body }} />
+              {definition.lead ? (
+                <p
+                  className={classes.summary}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(definition.lead) }}
+                />
               ) : (
-                <p>{summary}</p>
+                <p className={classes.summary}>{summary}</p>
               )}
-            </section>
+            </header>
+            {definition.body.trim() && (
+              <section aria-labelledby="definition">
+                <h2 id="definition" tabIndex={-1}>
+                  {definitionTitle || t("glossary.definitionTitle")}
+                </h2>
+                <div
+                  className="_richtext"
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(definition.body) }}
+                />
+              </section>
+            )}
             {comparison ? (
               <section className={classes.comparison} aria-labelledby="distinction">
                 <h2 id="distinction" tabIndex={-1}>
                   {comparisonTitle || t("glossary.distinction")}
                 </h2>
-                <div className="_richtext" dangerouslySetInnerHTML={{ __html: comparison }} />
+                <div
+                  className="_richtext"
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(comparison) }}
+                />
               </section>
             ) : isEditMode ? (
               <p className={classes.editorNote}>{t("glossary.comparisonMissing")}</p>
@@ -88,7 +107,10 @@ export default function Entry({
                   {exampleTitle || t("glossary.example")}
                 </h2>
                 <div className={classes.example}>
-                  <div className="_richtext" dangerouslySetInnerHTML={{ __html: example }} />
+                  <div
+                    className="_richtext"
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(example) }}
+                  />
                 </div>
               </section>
             )}
@@ -97,29 +119,13 @@ export default function Entry({
                 <h2 id="faq" tabIndex={-1}>
                   {t("glossary.faq")}
                 </h2>
-                <div className="_richtext" dangerouslySetInnerHTML={{ __html: faq }} />
+                <div
+                  className="_richtext"
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(faq) }}
+                />
               </section>
             )}
           </div>
-          <aside className={classes.sidebar} aria-label={t("glossary.related")}>
-            <div className={classes.sidebarContents}>
-              {relatedTerms.length > 0 && (
-                <section className={classes.panel} aria-labelledby="related">
-                  <h2 id="related" className={classes.eyebrow}>
-                    {t("glossary.related")}
-                  </h2>
-                  <ul className={classes.relatedList}>
-                    {relatedTerms.map((term) => (
-                      <li key={term.id}>
-                        <a href={term.url}>{term.title}</a>
-                        <p>{term.summary}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-            </div>
-          </aside>
         </div>
         <div className={classes.followUp}>
           {resources.length > 0 ? (
@@ -133,28 +139,28 @@ export default function Entry({
                 </h2>
               </div>
               <ul className={classes.resourceGrid}>
-                {resources.slice(0, 3).map((resource) => (
+                {resources.slice(0, visibleCount).map((resource) => (
                   <li key={resource.id}>
                     <a href={resource.url} className={classes.resourceCard}>
                       <span className={classes.resourceKind}>
                         {t(`glossary.kinds.${resource.kind}`)}
                       </span>
-                      <h3>{resource.title}</h3>
+                      <p className={classes.resourceTitle}>{resource.title}</p>
                     </a>
                   </li>
                 ))}
               </ul>
-              {resources.length > 3 && (
+              {resources.length > visibleCount && (
                 <details className={classes.moreResources}>
                   <summary>{t("glossary.showAllResources", { count: resources.length })}</summary>
                   <ul className={classes.resourceGrid}>
-                    {resources.slice(3).map((resource) => (
+                    {resources.slice(visibleCount).map((resource) => (
                       <li key={resource.id}>
                         <a href={resource.url} className={classes.resourceCard}>
                           <span className={classes.resourceKind}>
                             {t(`glossary.kinds.${resource.kind}`)}
                           </span>
-                          <h3>{resource.title}</h3>
+                          <p className={classes.resourceTitle}>{resource.title}</p>
                         </a>
                       </li>
                     ))}
@@ -165,17 +171,55 @@ export default function Entry({
           ) : isEditMode ? (
             <p className={classes.editorNote}>{t("glossary.resourcesMissing")}</p>
           ) : null}
-          {cta && (
+          {(cta || relatedTerms.length > 0) && (
             <section className={classes.cta} data-theme="night" aria-labelledby="topic-cta">
-              <h2 id="topic-cta">
-                {t("glossary.topicCta", { term: title, interpolation: { escapeValue: false } })}
-              </h2>
-              <p>{cta.title}</p>
-              <CTA href={cta.url} location="glossary" name="topic-resource">
-                {t("glossary.readResource")}
-              </CTA>
+              <h2 id="topic-cta">{t("glossary.explore")}</h2>
+              {cta && (
+                <>
+                  <p>{cta.title}</p>
+                  <CTA
+                    href={cta.url}
+                    secondary={resourceCtaVariant === "secondary"}
+                    location="glossary"
+                    name="topic-resource"
+                  >
+                    {resourceCtaLabel?.trim() || t("glossary.readResource")}
+                  </CTA>
+                </>
+              )}
+              {relatedTerms.length > 0 && (
+                <ul className={classes.relatedList}>
+                  {relatedTerms.map((term) => (
+                    <li key={term.id}>
+                      <CTA
+                        href={term.url}
+                        secondary={relatedCtaVariant !== "primary"}
+                        location="glossary"
+                        name="related-term"
+                      >
+                        {term.title}
+                      </CTA>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </section>
           )}
+          <footer className={classes.editorialFooter}>
+            <div>
+              {editorialAuthor && (
+                <p>
+                  {t("glossary.author")} : {editorialAuthor}
+                </p>
+              )}
+              {editorialDateLabel && (
+                <p>
+                  {t("glossary.editorialDate")} : {editorialDateLabel}
+                </p>
+              )}
+            </div>
+            {indexUrl && <a href={indexUrl}>{t("glossary.backToGlossary")}</a>}
+          </footer>
         </div>
       </div>
     </article>

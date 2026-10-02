@@ -160,7 +160,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  color: var(--jahia-a11y-blue);
+  color: #0570ae;
   text-decoration: none;
 }
 
@@ -227,7 +227,7 @@
 
 .card a:hover,
 .card a:focus-visible {
-  color: var(--jahia-a11y-blue);
+  color: #0570ae;
   text-decoration: none;
 }
 

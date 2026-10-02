@@ -30,6 +30,26 @@
     {
       "name": "excludedLinks",
       "hide": true
+    },
+    {
+      "name": "mergedInto",
+      "hide": true
+    },
+    {
+      "name": "conceptScope",
+      "hide": true
+    },
+    {
+      "name": "conceptSignals",
+      "hide": true
+    },
+    {
+      "name": "conceptTerms",
+      "hide": true
+    },
+    {
+      "name": "linkThemes",
+      "hide": true
     }
   ]
 }

@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 10
+  version: 8
   cacheKey: 10c0
 
 "@adobe/css-tools@npm:~4.3.1":
@@ -2189,6 +2189,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:^2.20.3":
+  version: 2.20.3
+  resolution: "commander@npm:2.20.3"
+  checksum: 10c0/74c781a5248c2402a0a3e966a0a2bba3c054aad144f5c023364be83265e796b20565aa9feff624132ff629aa64e16999fa40a743c10c12f7c61e96a794b99288
+  languageName: node
+  linkType: hard
+
 "compare-versions@npm:^6.1.1":
   version: 6.1.1
   resolution: "compare-versions@npm:6.1.1"
@@ -2284,6 +2291,13 @@ __metadata:
   bin:
     cssesc: bin/cssesc
   checksum: 10c0/6bcfd898662671be15ae7827120472c5667afb3d7429f1f917737f3bf84c4176003228131b643ae74543f17a394446247df090c597bb9a728cce298606ed0aa7
+  languageName: node
+  linkType: hard
+
+"cssfilter@npm:0.0.10":
+  version: 0.0.10
+  resolution: "cssfilter@npm:0.0.10"
+  checksum: 10c0/478a227a616fb6e9bb338eb95f690df141b86231ec737cbea574484f31a09a51db894b4921afc4987459dae08d584355fd689ff2a7a7c7a74de4bb4c072ce553
   languageName: node
   linkType: hard
 
@@ -2393,6 +2407,13 @@ __metadata:
   dependencies:
     iconv-lite: "npm:^0.6.2"
   checksum: 10c0/36d938712ff00fe1f4bac88b43bcffb5930c1efa57bbcdca9d67e1d9d6c57cfb1200fb01efe0f3109b2ce99b231f90779532814a81370a1bd3274a0f58585039
+  languageName: node
+  linkType: hard
+
+"entities@npm:^6.0.0":
+  version: 6.0.1
+  resolution: "entities@npm:6.0.1"
+  checksum: 10c0/ed836ddac5acb34341094eb495185d527bd70e8632b6c0d59548cbfa23defdbae70b96f9a405c82904efa421230b5b3fd2283752447d737beffd3f3e6ee74414
   languageName: node
   linkType: hard
 
@@ -3403,6 +3424,7 @@ __metadata:
     globals: "npm:^16.5.0"
     i18next: "npm:^25.6.3"
     modern-normalize: "npm:^3.0.1"
+    parse5: "npm:^7.3.0"
     prettier: "npm:^3.7.1"
     pretty-bytes: "npm:^7.1.0"
     react-dom: "npm:^19.2.0"
@@ -3418,6 +3440,7 @@ __metadata:
     unocss: "npm:^66.5.9"
     vite: "npm:^7.2.4"
     vite-css-modules: "npm:^1.11.1"
+    xss: "npm:^1.0.15"
   languageName: unknown
   linkType: soft
 
@@ -4107,6 +4130,15 @@ __metadata:
   version: 1.0.1
   resolution: "parse-node-version@npm:1.0.1"
   checksum: 10c0/999cd3d7da1425c2e182dce82b226c6dc842562d3ed79ec47f5c719c32a7f6c1a5352495b894fc25df164be7f2ede4224758255da9902ddef81f2b77ba46bb2c
+  languageName: node
+  linkType: hard
+
+"parse5@npm:^7.3.0":
+  version: 7.3.0
+  resolution: "parse5@npm:7.3.0"
+  dependencies:
+    entities: "npm:^6.0.0"
+  checksum: 10c0/7fd2e4e247e85241d6f2a464d0085eed599a26d7b0a5233790c49f53473232eb85350e8133344d9b3fd58b89339e7ad7270fe1f89d28abe50674ec97b87f80b5
   languageName: node
   linkType: hard
 
@@ -5472,6 +5504,18 @@ __metadata:
     imurmurhash: "npm:^0.1.4"
     signal-exit: "npm:^4.0.1"
   checksum: 10c0/e8c850a8e3e74eeadadb8ad23c9d9d63e4e792bd10f4836ed74189ef6e996763959f1249c5650e232f3c77c11169d239cbfc8342fc70f3fe401407d23810505d
+  languageName: node
+  linkType: hard
+
+"xss@npm:^1.0.15":
+  version: 1.0.15
+  resolution: "xss@npm:1.0.15"
+  dependencies:
+    commander: "npm:^2.20.3"
+    cssfilter: "npm:0.0.10"
+  bin:
+    xss: bin/xss
+  checksum: 10c0/9b31bee62a208f78e2b7bc8154e3ee87d980f4661dc4ab850ce6f4de7bc50eb152f0bdc13fa759ff8ab6d9bfdf8c0d79cf9f6f86249872b92181912309bccd08
   languageName: node
   linkType: hard
 

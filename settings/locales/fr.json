@@ -140,25 +140,15 @@
     "tryAgain": "Essayez un autre terme ou une abréviation.",
     "clear": "Effacer la recherche",
     "backToIndex": "Retour à l'index",
-    "aliases": "Aussi appelé : {{aliases}}",
     "editHint": "Gérez les entrées dans le dossier de contenus sélectionné, ou ci-dessous si aucun dossier n’est sélectionné. La recherche et la navigation alphabétique sont disponibles en prévisualisation et en ligne.",
-    "term": "Glossaire",
-    "onThisPage": "Sur cette page",
     "definition": "Définition",
     "distinction": "Faire la différence",
     "resources": "Ressources associées",
-    "related": "Termes associés",
-    "understand": "Comprendre",
     "definitionTitle": "Définition",
-    "distinguish": "Faire la différence",
     "comparisonMissing": "Ajoutez la distinction avant de publier cette fiche.",
     "explore": "Pour aller plus loin",
     "resourcesTitle": "Ressources sur ce terme",
-    "resourceCount_one": "{{count}} ressource",
-    "resourceCount_other": "{{count}} ressources",
-    "resourcesIntro": "Approfondissez ce sujet avec les ressources Jahia.",
     "resourcesMissing": "Sélectionnez les ressources pertinentes avant de publier cette fiche.",
-    "allTerms": "Parcourir tous les termes",
     "kinds": {
       "article": "Article",
       "solution": "Solution",
@@ -170,14 +160,13 @@
       "product": "Produit",
       "video": "Vidéo"
     },
-    "about": "À propos de cette fiche",
     "example": "Exemple concret",
     "faq": "Questions fréquentes",
-    "goFurther": "Pour approfondir",
     "readResource": "Consulter la ressource",
-    "topicCta": "Approfondir : {{term}}",
     "showAllResources": "Voir les {{count}} ressources",
     "overview": "Le glossaire en chiffres",
-    "allResources": "Voir toutes les ressources"
+    "author": "Auteur",
+    "editorialDate": "Date éditoriale",
+    "backToGlossary": "Retour au glossaire"
   }
 }

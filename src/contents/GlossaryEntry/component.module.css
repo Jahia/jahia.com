@@ -8,18 +8,18 @@
 }
 
 .inner {
-  width: min(100% - 3rem, var(--jahia-width));
+  width: min(100% - 3rem, 60rem);
   margin-inline: auto;
 }
 
-.entry a {
+.entry a:where(:not([data-element-type="cta"])) {
   color: var(--jahia-a11y-blue);
   text-decoration: none;
 }
 
 .reading {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 18.75rem;
+  grid-template-columns: minmax(0, 1fr);
   gap: 3.5rem;
   align-items: start;
 }
@@ -40,31 +40,11 @@
   overflow-wrap: anywhere;
 }
 
-.eyebrow,
-.resourceKind {
-  font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-}
-
-.heading .eyebrow {
-  color: var(--jahia-a11y-blue);
-}
-
-.aliases {
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-}
-
 .summary {
-  padding-left: 1.25rem;
   margin: 0;
   font-size: 1.25rem;
   line-height: 1.55;
   color: var(--jahia-title-color);
-  border-left: 3px solid var(--jahia-a11y-blue);
 }
 
 .entry h2 {
@@ -119,8 +99,7 @@
   text-align: left;
 }
 
-.example,
-.panel {
+.example {
   padding: 1.5rem;
   background: var(--jahia-neutral-100);
   border: 1px solid var(--jahia-neutral-300);
@@ -168,14 +147,12 @@
   border-radius: 0;
 }
 
-.entry .resourceCard {
-  text-decoration: none;
-}
-
-.resourceCard h3 {
+.resourceTitle {
   margin: 0;
   font-size: 1rem;
+  font-weight: 600;
   line-height: 1.45;
+  color: var(--jahia-title-color);
 }
 
 .resourceCard:hover {
@@ -183,39 +160,21 @@
 }
 
 .resourceKind {
+  font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
   color: var(--jahia-a11y-blue);
   text-transform: none;
   letter-spacing: normal;
 }
 
-.sidebarContents {
-  display: grid;
-  gap: 1.25rem;
-}
-
-.panel h2.eyebrow {
-  margin-bottom: 1.25rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.5;
-}
-
 .relatedList {
-  display: grid;
-  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   padding: 0;
   margin: 0;
   list-style: none;
-}
-
-.relatedList a {
-  font-weight: 600;
-}
-
-.relatedList p {
-  margin: 0.25rem 0 0;
-  font-size: 0.875rem;
-  line-height: 1.55;
 }
 
 .cta {
@@ -230,16 +189,49 @@
 }
 
 .cta a {
-  display: inline-block;
-  padding: 0.875rem 1.25rem;
+  min-height: 44px;
+}
+
+.cta > a {
   margin-top: 0.5rem;
-  font-family: "IBM Plex Mono", monospace;
+}
+
+.editorialFooter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1.5rem;
   font-size: 0.875rem;
-  color: var(--jahia-neutral-50);
-  text-transform: uppercase;
-  text-decoration: none;
-  background: var(--jahia-a11y-blue);
-  border-radius: 0.25rem;
+  border-top: 1px solid var(--jahia-neutral-300);
+}
+
+.editorialFooter p {
+  margin: 0;
+}
+
+.editorialFooter a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.cta .relatedList {
+  margin-top: 1.5rem;
+}
+
+.cta .relatedList li {
+  max-width: 100%;
+}
+
+.cta .relatedList a {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.cta .relatedList a[data-variant="secondary"] {
+  border-color: currentcolor;
 }
 
 .entry :focus-visible {
@@ -257,33 +249,13 @@
   background: var(--jahia-light-blue);
 }
 
-@media (width < 1000px) {
-  .reading {
-    grid-template-columns: minmax(0, 1fr) 16rem;
-    gap: 2rem;
-  }
-}
-
 @media (width < 800px) {
   .resourceGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .reading {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebarContents {
     grid-template-columns: 1fr;
   }
 }
 
 @media (width < 540px) {
-  .resourceGrid,
-  .sidebarContents {
-    grid-template-columns: 1fr;
-  }
-
   .summary {
     font-size: 1.125rem;
   }
@@ -315,10 +287,6 @@
   text-decoration: none;
 }
 
-.panel {
-  background: var(--jahia-neutral-50);
-}
-
 .moreResources > summary {
   display: inline-flex;
   align-items: center;
@@ -333,6 +301,11 @@
 }
 
 @media (width < 540px) {
+  .comparison caption {
+    display: block;
+    width: auto;
+  }
+
   .comparison table,
   .comparison tbody,
   .comparison tr,
