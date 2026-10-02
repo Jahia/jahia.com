@@ -16,3 +16,20 @@
  - linkKeywords (string) i18n multiple
  - linkThemes (weakreference, category[autoSelectParent=false]) multiple < jnt:category
  - excludedLinks (weakreference, picker) multiple < jnt:page, jmix:mainResource
+ // Editorial pack fields, additive and optional for existing content.
+ - indexLabel (string) i18n
+ - editorialAuthor (string) i18n
+ - editorialDate (date, datepicker) i18n
+ - autoTermLinks (boolean) = true
+ - mergedInto (weakreference, picker) < jahiacom:glossaryEntry
+ // Optional editorial controls for automatic resource matching.
+ - conceptTerms (string) multiple
+ - conceptScope (string) multiple
+ - conceptSignals (string) multiple
+ - preferEducational (boolean) = true
+ - resourceDisplayCount (string, choicelist) = '6' < '3', '6', '9'
+
+ // Native CTA variants, preserving the current appearance when unset.
+ - resourceCtaLabel (string) i18n
+ - resourceCtaVariant (string, choicelist[resourceBundle]) = 'primary' < 'primary', 'secondary'
+ - relatedCtaVariant (string, choicelist[resourceBundle]) = 'secondary' < 'primary', 'secondary'

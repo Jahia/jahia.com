@@ -30,6 +30,11 @@
               "name": "aliases",
               "rank": 4,
               "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.aliasesHelp"
+            },
+            {
+              "name": "indexLabel",
+              "rank": 5,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.indexLabelHelp"
             }
           ],
           "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.termHelp"
@@ -88,12 +93,55 @@
               "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.autoLinksHelp"
             },
             {
-              "name": "linkThemes",
-              "rank": 2,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.linkThemesHelp"
+              "name": "resourceDisplayCount",
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.resourceDisplayCountHelp",
+              "rank": 2
+            },
+            {
+              "name": "autoTermLinks",
+              "rank": 3,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.autoTermLinksHelp"
+            },
+            {
+              "name": "preferEducational",
+              "rank": 4,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.preferEducationalHelp"
+            },
+            {
+              "name": "resourceCtaLabel",
+              "rank": 5,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.resourceCtaLabelHelp"
+            },
+            {
+              "name": "resourceCtaVariant",
+              "rank": 6,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.resourceCtaVariantHelp"
+            },
+            {
+              "name": "relatedCtaVariant",
+              "rank": 7,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.relatedCtaVariantHelp"
             }
           ],
           "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.furtherHelp"
+        },
+        {
+          "name": "glossary-editorial",
+          "labelKey": "jahiacom:jahiacom_glossaryEntry.form.editorial",
+          "rank": 4,
+          "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.editorialHelp",
+          "fields": [
+            {
+              "name": "editorialAuthor",
+              "rank": 1,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.editorialAuthorHelp"
+            },
+            {
+              "name": "editorialDate",
+              "rank": 2,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.editorialDateHelp"
+            }
+          ]
         },
         {
           "name": "jmix:internalLink",

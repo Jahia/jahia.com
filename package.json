@@ -21,7 +21,7 @@
     "dev": "vite build --watch",
     "watch": "run dev",
     "watch:callback": "run build:lottie && run package && run deploy",
-    "test:glossary": "node --test scripts/test-glossary-links.mjs scripts/test-glossary-related.mjs",
+    "test:glossary": "node --test scripts/test-glossary-links.mjs scripts/test-glossary-related.mjs scripts/test-glossary-inline.mjs",
     "check:glossary": "node scripts/check-glossary-live.mjs"
   },
   "dependencies": {
@@ -31,8 +31,10 @@
     "@lottiefiles/dotlottie-wc": "^0.9.4",
     "clsx": "^2.1.1",
     "modern-normalize": "^3.0.1",
+    "parse5": "^7.3.0",
     "pretty-bytes": "^7.1.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "xss": "^1.0.15"
   },
   "devDependencies": {
     "@chachalog/types": "^0.5.0",

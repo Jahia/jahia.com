@@ -69,7 +69,210 @@ function contextScores<T extends LinkCandidate>(
   return scores;
 }
 const contains = (text: string, phrase: string) => ` ${canonical(text)} `.includes(` ${phrase} `);
-export function rankLinks<T extends LinkCandidate>(
+/** Each alternative requires all groups; each group accepts bilingual synonyms.
+ * Profiles identify concepts, never resource URLs. Unmapped terms keep their existing ranking.
+ */
+const resourceConcepts: Record<string, string[][][]> = {
+  "absolute-area": [
+    [
+      [
+        "shared content blocks",
+        "content blocks shared",
+        "blocs de contenu partages",
+        "shared fragments",
+        "fragments partages",
+      ],
+      ["sites", "templates", "pages"],
+    ],
+    [
+      [
+        "shared header",
+        "shared footer",
+        "shared navigation",
+        "en tete partage",
+        "pied de page partage",
+        "navigation partagee",
+      ],
+      ["templates", "template", "sites", "pages"],
+    ],
+  ],
+  "content-reference": [
+    [
+      [
+        "content reuse",
+        "content re use",
+        "reuse content",
+        "reusing content",
+        "reutilisation du contenu",
+        "reutilisation de contenu",
+        "reutilisation de pages et de contenus",
+        "contenus reutilisables",
+      ],
+      ["cms", "sites", "pages", "centralisee", "centralized"],
+    ],
+    [
+      ["content references", "references de contenu", "linked content", "contenu lie"],
+      ["source", "reuse", "reutilisation", "reference"],
+    ],
+  ],
+  "property-content": [
+    [
+      [
+        "content type",
+        "content types",
+        "type de contenu",
+        "types de contenu",
+        "content model",
+        "modele de contenu",
+      ],
+      ["editorial properties", "proprietes editoriales", "fields", "champs", "cnd"],
+    ],
+  ],
+  "visibility-condition": [
+    [
+      [
+        "visibility conditions",
+        "conditions de visibilite",
+        "conditional display",
+        "affichage conditionnel",
+        "display conditions",
+        "conditions d affichage",
+      ],
+    ],
+    [
+      [
+        "display content based on",
+        "afficher le contenu en fonction",
+        "show or hide",
+        "afficher ou masquer",
+      ],
+      ["permissions", "roles", "authenticated", "authentifie", "conditions"],
+    ],
+  ],
+  "event-jexperience": [
+    [
+      ["jexperience", "unomi", "jcustomer"],
+      ["event", "events", "evenement", "evenements"],
+      [
+        "collect",
+        "collected",
+        "collecte",
+        "collectees",
+        "collectes",
+        "tracking",
+        "suivi",
+        "interaction",
+        "interactions",
+        "behavior",
+        "behaviors",
+        "comportement",
+        "comportements",
+      ],
+    ],
+  ],
+  "property-jexperience": [
+    [
+      ["jexperience", "unomi", "jcustomer"],
+      [
+        "visitor profile",
+        "visitor profiles",
+        "profil visiteur",
+        "profils visiteurs",
+        "profil des visiteurs",
+      ],
+      [
+        "attribute",
+        "attributes",
+        "attribut",
+        "attributs",
+        "enrich",
+        "enriched",
+        "enrichir",
+        "enrichis",
+        "customer data",
+        "donnees clients",
+      ],
+    ],
+  ],
+};
+
+export interface ResourceOptions {
+  conceptTerms?: string[];
+  conceptScope?: string[];
+  conceptSignals?: string[];
+  preferEducational?: boolean;
+}
+export function resourceProfile(
+  key: string,
+  options: ResourceOptions = {},
+): string[][][] | undefined {
+  const groups = [
+    options.conceptTerms || [],
+    options.conceptScope || [],
+    options.conceptSignals || [],
+  ].map((group) => [...new Set(group.map(canonical).filter(Boolean))]);
+  return groups[0].length ? [groups.filter((group) => group.length)] : resourceConcepts[key];
+}
+export interface SelectionEvidence {
+  reason:
+    | "direct-title"
+    | "direct-alias"
+    | "direct-summary"
+    | "direct-body"
+    | "concept"
+    | "context"
+    | "related";
+  score: number;
+  phrases: string[];
+  passage: string;
+}
+/** Excerpts are normalized for matching; the original page remains the editorial source. */
+function excerpt(text: string, phrase: string): string {
+  const normalized = canonical(text);
+  const at = Math.max(0, normalized.indexOf(phrase));
+  return normalized.slice(Math.max(0, at - 100), at + 350);
+}
+function resourceConceptEvidence(item: LinkCandidate, profile: string[][][]): SelectionEvidence[] {
+  const heading = `${item.title} ${item.description || ""}`;
+  const normalized = canonical(`${heading} ${item.content || ""}`);
+  const evidence: SelectionEvidence[] = [];
+  for (const groups of profile) {
+    for (const anchor of groups[0]) {
+      let start = 0;
+      while ((start = normalized.indexOf(anchor, start)) !== -1) {
+        const passage = normalized.slice(Math.max(0, start - 250), start + 350);
+        start += anchor.length;
+        const phrases = groups.map((group) => group.find((phrase) => contains(passage, phrase)));
+        if (phrases.every(Boolean)) {
+          const headingGroups = groups.filter((group) =>
+            group.some((phrase) => contains(heading, phrase)),
+          ).length;
+          evidence.push({
+            reason: "concept",
+            score: 40 + Math.min(15, headingGroups * 5),
+            phrases: phrases as string[],
+            passage,
+          });
+          break;
+        }
+      }
+    }
+  }
+  return evidence;
+}
+export function educationalPriority(item: LinkCandidate): { adjustment: number; reason: string } {
+  const title = canonical(item.title);
+  if (/^(?:pricing|tarifs|customers|clients|contact|request a demo|demander une demo)$/.test(title))
+    return { adjustment: -12, reason: "commercial-navigation" };
+  if (
+    /\b(?:how to|how can|how integrators|comment|guide|tutorial|tutoriel|definition|what is|qu est ce|steps|etapes|comprendre|explained)\b/.test(
+      title,
+    )
+  )
+    return { adjustment: 8, reason: "educational-title" };
+  return { adjustment: 0, reason: "neutral" };
+}
+export function rankLinksWithEvidence<T extends LinkCandidate>(
   candidates: T[],
   expressions: string[],
   themes: string[],
@@ -78,7 +281,14 @@ export function rankLinks<T extends LinkCandidate>(
   relatedExpressions: string[] = [],
   context = "",
   concepts: string[] = [],
-): T[] {
+  resourceConcept = "",
+  options: ResourceOptions = {},
+): Array<{
+  item: T;
+  evidence: SelectionEvidence;
+  educational: { adjustment: number; reason: string };
+  score: number;
+}> {
   const phrases = [...new Set(expressions.map(canonical).filter((value) => value.length >= 2))];
   const related = [
     ...new Set(
@@ -88,47 +298,100 @@ export function rankLinks<T extends LinkCandidate>(
     ),
   ];
   candidates = candidates.filter(
-    (item) => themes.length === 0 || themes.some((id) => item.taxonomyIds?.includes(id)),
+    (item) => !themes.length || themes.some((id) => item.taxonomyIds?.includes(id)),
   );
-  const contextMatches = contextScores(candidates, context);
+  const profile = resourceProfile(resourceConcept, options);
+  const contextMatches = profile ? new Map<string, number>() : contextScores(candidates, context);
   const conceptPhrases = concepts.map(canonical).filter(usefulExpression);
   const blocked = new Set(excluded);
   const seen = new Set<string>();
   return candidates
     .filter((item) => !blocked.has(item.id) && !seen.has(item.id) && Boolean(seen.add(item.id)))
-    .map((item) => ({
-      item,
-      score: Math.max(
-        contextMatches.get(item.id) || 0,
-        ...conceptPhrases.map((phrase) =>
+    .flatMap((item) => {
+      const matches: SelectionEvidence[] = profile ? resourceConceptEvidence(item, profile) : [];
+      const add = (
+        reason: SelectionEvidence["reason"],
+        score: number,
+        phrase: string,
+        text: string,
+      ) => {
+        if (score > 0)
+          matches.push({ reason, score, phrases: [phrase], passage: excerpt(text, phrase) });
+      };
+      for (const phrase of phrases) {
+        if (contains(item.title, phrase)) add("direct-title", 100, phrase, item.title);
+        else if ((item.aliases || []).some((alias) => contains(alias, phrase)))
+          add("direct-alias", 90, phrase, (item.aliases || []).join(" "));
+        else if (contains(item.description || "", phrase))
+          add("direct-summary", 80, phrase, item.description || "");
+        else if (contains(item.content || "", phrase))
+          add("direct-body", 60, phrase, item.content || "");
+      }
+      for (const phrase of conceptPhrases) {
+        if (
           canonical(item.title) === phrase ||
           (item.aliases || []).some((alias) => canonical(alias) === phrase)
-            ? 85
-            : 0,
-        ),
-        ...phrases.map((phrase) =>
-          contains(item.title, phrase)
-            ? 100
-            : (item.aliases || []).some((alias) => contains(alias, phrase))
-              ? 90
-              : contains(item.description || "", phrase)
-                ? 80
-                : contains(item.content || "", phrase)
-                  ? 60
-                  : 0,
-        ),
-        ...related.map((phrase) =>
-          contains(item.title, phrase) ? 30 : contains(item.description || "", phrase) ? 20 : 0,
-        ),
-      ),
-    }))
-    .filter(({ score }) => score > 0)
+        )
+          add("concept", 85, phrase, item.title);
+      }
+      if (!profile) {
+        for (const phrase of related) {
+          if (contains(item.title, phrase)) add("related", 30, phrase, item.title);
+          else if (contains(item.description || "", phrase))
+            add("related", 20, phrase, item.description || "");
+        }
+        const score = contextMatches.get(item.id) || 0;
+        if (score) {
+          const text = `${item.title} ${item.description || ""} ${item.content || ""}`;
+          const words = new Set(tokens(text));
+          const shared = tokens(context).filter((word) => words.has(word));
+          matches.push({
+            reason: "context",
+            score,
+            phrases: shared,
+            passage: excerpt(text, shared[0] || ""),
+          });
+        }
+      }
+      const evidence = matches.sort((a, b) => b.score - a.score)[0];
+      if (!evidence) return [];
+      const educational = options.preferEducational
+        ? educationalPriority(item)
+        : { adjustment: 0, reason: "disabled" };
+      // The preference only orders already-relevant items within their relevance tier.
+      return [{ item, evidence, educational, score: evidence.score + educational.adjustment }];
+    })
     .sort(
       (a, b) =>
+        Number(b.evidence.score >= 60) - Number(a.evidence.score >= 60) ||
         b.score - a.score ||
         a.item.title.localeCompare(b.item.title) ||
         a.item.id.localeCompare(b.item.id),
     )
-    .slice(0, limit)
-    .map(({ item }) => item);
+    .slice(0, limit);
+}
+export function rankLinks<T extends LinkCandidate>(
+  candidates: T[],
+  expressions: string[],
+  themes: string[],
+  excluded: string[],
+  limit: number,
+  relatedExpressions: string[] = [],
+  context = "",
+  concepts: string[] = [],
+  resourceConcept = "",
+  options: ResourceOptions = {},
+): T[] {
+  return rankLinksWithEvidence(
+    candidates,
+    expressions,
+    themes,
+    excluded,
+    limit,
+    relatedExpressions,
+    context,
+    concepts,
+    resourceConcept,
+    options,
+  ).map((result) => result.item);
 }

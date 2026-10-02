@@ -32,6 +32,7 @@ jahiaComponent(
     const entries = nodes
       .filter(
         (node) =>
+          !node.hasProperty("mergedInto") &&
           node.hasI18N(currentResource.getLocale()) &&
           node.hasPermission("jcr:read") &&
           (!node.hasProperty("j:invalidLanguages") ||
@@ -50,11 +51,17 @@ jahiaComponent(
         }
         return {
           id: node.getIdentifier(),
-          title: node.getPropertyAsString("jcr:title") || node.getName(),
+          title:
+            node.getPropertyAsString("indexLabel") ||
+            node.getPropertyAsString("jcr:title") ||
+            node.getName(),
           summary: node.getPropertyAsString("summary") || "",
-          aliases: node.hasProperty("aliases")
-            ? Array.from(node.getProperty("aliases").getValues(), (value) => value.getString())
-            : [],
+          aliases: [
+            node.getPropertyAsString("jcr:title") || "",
+            ...(node.hasProperty("aliases")
+              ? Array.from(node.getProperty("aliases").getValues(), (value) => value.getString())
+              : []),
+          ],
           url: buildNodeUrl(node),
         };
       });

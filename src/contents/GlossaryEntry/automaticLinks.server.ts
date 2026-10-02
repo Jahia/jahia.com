@@ -60,6 +60,13 @@ export function automaticLinks(
     props["jcr:title"] || currentNode.getDisplayableName(),
     ...(props.aliases || []),
   ];
+  // French headings in the editorial pack may translate established English technical names.
+  // Keep those names searchable in French resources without selecting English-only pages.
+  if (language === "fr" && currentNode.hasNode("j:translation_en")) {
+    const english = currentNode.getNode("j:translation_en");
+    depend(english);
+    expressions.push(english.getPropertyAsString("jcr:title") || "");
+  }
   const themes = (props.linkThemes || []).map((node) => {
     depend(node);
     return node.getIdentifier();
@@ -188,6 +195,11 @@ export function automaticLinks(
   const termNodes = query("jahiacom:glossaryEntry")
     .filter(visible)
     .filter(bilingual)
+    .filter(
+      (node) =>
+        !node.hasProperty("mergedInto") &&
+        node.getParent().getPath() === currentNode.getParent().getPath(),
+    )
     .filter((node) => {
       try {
         return node.hasProperty("j:published") && node.getProperty("j:published").getBoolean();
@@ -228,6 +240,14 @@ export function automaticLinks(
       24,
       relatedExpressions,
       context,
+      [],
+      currentNode.getName(),
+      {
+        conceptTerms: props.conceptTerms,
+        conceptScope: props.conceptScope,
+        conceptSignals: props.conceptSignals,
+        preferEducational: props.preferEducational !== false,
+      },
     ),
     terms,
   };
