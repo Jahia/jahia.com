@@ -106,21 +106,6 @@
               "name": "preferEducational",
               "rank": 4,
               "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.preferEducationalHelp"
-            },
-            {
-              "name": "resourceCtaLabel",
-              "rank": 5,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.resourceCtaLabelHelp"
-            },
-            {
-              "name": "resourceCtaVariant",
-              "rank": 6,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.resourceCtaVariantHelp"
-            },
-            {
-              "name": "relatedCtaVariant",
-              "rank": 7,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.relatedCtaVariantHelp"
             }
           ],
           "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.furtherHelp"

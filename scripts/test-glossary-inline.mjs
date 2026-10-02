@@ -3,21 +3,159 @@ import assert from "node:assert/strict";
 import { linkTermMentions, splitDefinition } from "../src/contents/GlossaryEntry/inlineTerms.ts";
 import { sanitizeHtml } from "../src/contents/GlossaryEntry/sanitizeHtml.ts";
 
-test("ambiguous FR/EN words stay plain in prose but link as explicit table notions", () => {
-  const entries = [
-    { id: "view", url: "/view", labels: ["Vue", "View"] },
-    { id: "field", url: "/field", labels: ["Champ", "Field"] },
-  ];
+const terms = [
+  { id: "portal", url: "/web-portal", labels: ["Web portal", "Portail web"] },
+  { id: "item", url: "/content-item", labels: ["Content item", "Content"] },
+  { id: "type", url: "/content-type", labels: ["Content type", "Type de contenu"] },
+  { id: "cms", url: "/cms", labels: ["CMS", "Système de gestion de contenu"] },
+];
+const count = (html) => (html.match(/data-glossary-mention/g) || []).length;
+
+test("first paragraph below H1 has no links, including editorial anchors", () => {
   const [result] = linkTermMentions(
+    [' <p><a href="/web-portal">Web portal</a> and Content item.</p><p>Web portal.</p>'],
+    terms,
+    "other",
+  );
+  const { lead, body } = splitDefinition(result);
+  assert.doesNotMatch(lead, /<a\b/);
+  assert.equal(count(body), 1);
+});
+
+test("one first eligible occurrence per target across all sections and aliases", () => {
+  const result = linkTermMentions(
     [
-      '<p>Une version vue et un champ libre. A view of the field.</p><table><thead><tr><th>Vue</th></tr></thead><tbody><tr><th scope="row">Vue</th><td>Field</td></tr></tbody></table><p><a href="/view">vue</a> technique.</p>',
+      "<p>Intro</p><p>Portail web, Web portal.</p>",
+      "<table><tr><th scope='row'>Web portal</th><td>Content item</td></tr></table>",
+      "<p>Content item. Type de contenu.</p>",
+      "<p>Content type.</p>",
+    ],
+    terms,
+    "other",
+  );
+  assert.equal(count(result.join("")), 3);
+  assert.equal(count(result[0]), 1);
+  assert.equal(count(result[1]), 1);
+  assert.equal(count(result[2]), 1);
+  assert.equal(count(result[3]), 0);
+});
+
+test("isolated words and acronyms never trigger automatic links, even in table notions", () => {
+  const words = ["content", "CMS", "template", "module", "visitor", "goal", "Vue", "Intranet"];
+  const entries = words.map((word, i) => ({ id: String(i), url: "/term-" + i, labels: [word] }));
+  const result = linkTermMentions(
+    [
+      "<p>Intro</p><p>" +
+        words.join(" ") +
+        "</p><table><tr><td>CMS</td><th scope='row'>template</th></tr></table>",
     ],
     entries,
     "other",
   );
-  assert.match(result, /<p>Une version vue et un champ libre\. A view of the field\.<\/p>/);
-  assert.equal((result.match(/data-glossary-mention/g) || []).length, 2);
-  assert.match(result, /<a href="\/view">vue<\/a>/);
+  assert.equal(count(result.join("")), 0);
+});
+
+test("complete expressions match without linking generic aliases or partial words", () => {
+  const [result] = linkTermMentions(
+    [
+      "<p>Content is the intro.</p><p>Content, CMS, Content items, Content item and Content type.</p>",
+    ],
+    terms,
+    "other",
+  );
+  assert.equal(count(result), 2);
+  assert.match(result, />Content item<\/a>/);
+  assert.match(result, />Content type<\/a>/);
+  assert.doesNotMatch(result, />Content<\/a>/);
+});
+
+test("six automatic links maximum across the full page", () => {
+  const entries = Array.from({ length: 9 }, (_, i) => ({
+    id: String(i),
+    url: "/term-" + i,
+    labels: ["Concept " + i],
+  }));
+  const result = linkTermMentions(
+    [
+      "<p>Intro</p><p>Concept 0, Concept 1, Concept 2.</p>",
+      "<p>Concept 3, Concept 4, Concept 5.</p>",
+      "<p>Concept 6, Concept 7, Concept 8.</p>",
+    ],
+    entries,
+    "other",
+  );
+  assert.equal(count(result.join("")), 6);
+  assert.equal(count(result[2]), 0);
+});
+
+test("titles and column headers stay unlinked; formatted row notion remains eligible", () => {
+  const [result] = linkTermMentions(
+    [
+      '<p>Intro</p><h2><a href="/web-portal">Web portal</a></h2><table><thead><tr><th>Content item</th></tr></thead><tbody><tr><th scope="col">Content type</th><th scope="row"><strong>Web</strong> portal</th></tr></tbody></table>',
+    ],
+    terms,
+    "other",
+  );
+  assert.equal(count(result), 1);
+  assert.match(result, /<h2>Web portal<\/h2>/);
+  assert.match(result, /<a[^>]+><strong>Web<\/strong> portal<\/a>/);
+});
+
+test("authored glossary links participate in target deduplication; external sources survive", () => {
+  const [result] = linkTermMentions(
+    [
+      '<p>Intro</p><p><a href="/web-portal">Portal source</a> Web portal.</p><p><a href="/web-portal">Again</a><a href="https://academy.jahia.com/">Academy</a> Content item.</p>',
+    ],
+    terms,
+    "other",
+  );
+  assert.equal((result.match(/href="\/web-portal"/g) || []).length, 1);
+  assert.match(result, /href="https:\/\/academy.jahia.com\/"/);
+  assert.equal(count(result), 1);
+});
+
+test("self, ambiguous labels, code and unsafe targets remain excluded", () => {
+  const entries = [
+    ...terms,
+    { id: "duplicate", url: "/duplicate", labels: ["Content type"] },
+    { id: "unsafe", url: "javascript:alert(1)", labels: ["Unsafe term"] },
+  ];
+  const [result] = linkTermMentions(
+    [
+      "<p>Intro</p><p>Web portal, Content type, Unsafe term.</p><code>Content item</code><pre>Content item</pre>",
+    ],
+    entries,
+    "portal",
+  );
+  assert.equal(count(result), 0);
+});
+
+test("disabled mentions retain native URL resolution and heading/intro exclusions", () => {
+  const entries = [
+    {
+      id: "portal",
+      url: "/native",
+      urlAliases: ["/fr/glossaire/portail-web"],
+      labels: ["Portail web"],
+    },
+  ];
+  const [result] = linkTermMentions(
+    [
+      '<p>Intro</p><p><a href="/fr/glossaire/portail-web#test">Source</a> Portail web.</p><h3><a href="/native">Title</a></h3>',
+    ],
+    entries,
+    "other",
+    false,
+  );
+  assert.equal(count(result), 0);
+  assert.match(result, /href="\/native#test"/);
+  assert.match(result, /<h3>Title<\/h3>/);
+});
+
+test("generated links can be recalculated without accumulating duplicates", () => {
+  const source = ["<p>Intro</p><p>Web portal, Content item, Web portal.</p>"];
+  const once = linkTermMentions(source, terms, "other");
+  assert.deepEqual(linkTermMentions(once, terms, "other"), once);
 });
 
 test("rich-text sanitizer removes executable markup and dangerous URL schemes", () => {
@@ -29,140 +167,17 @@ test("rich-text sanitizer removes executable markup and dangerous URL schemes", 
   assert.match(result, /src="\/image.png"/);
 });
 
-test("sanitizer preserves editorial tables, inline links and percentages", () => {
+test("sanitizer preserves table semantics, sources and percentages", () => {
   const html =
     '<table><caption>Comparison</caption><thead><tr><th scope="col">Notion</th></tr></thead><tbody><tr><th scope="row"><a href="/term" data-glossary-mention="true">CMS</a></th><td rowspan="2">85% <strong>source</strong></td></tr></tbody></table><a href="https://example.org" target="_blank">Source</a>';
   const result = sanitizeHtml(html);
-  assert.match(result, /scope="row"/);
-  assert.match(result, /rowspan="2"/);
-  assert.match(result, /data-glossary-mention="true"/);
-  assert.match(result, /85% <strong>source<\/strong>/);
-  assert.match(result, /rel="noopener noreferrer"/);
+  for (const fragment of [
+    'scope="row"',
+    'rowspan="2"',
+    'data-glossary-mention="true"',
+    "85% <strong>source</strong>",
+    'rel="noopener noreferrer"',
+  ])
+    assert.ok(result.includes(fragment));
   assert.equal(sanitizeHtml(result), result);
-});
-
-const terms = [
-  { id: "portal", url: "/glossary/web-portal", labels: ["Web portal", "Portail web"] },
-  { id: "intranet", url: "/glossary/intranet", labels: ["Intranet"] },
-  { id: "dam", url: "/glossary/dam", labels: ["DAM"] },
-];
-test("FR and EN repeat mentions across sections without self links", () => {
-  const result = linkTermMentions(
-    ["<p>Portail web et intranet. intranet.</p>", "<p>Web portal, Intranet, DAM, dam.</p>"],
-    terms,
-    "portal",
-  );
-  assert.equal(result.join("").match(/data-glossary-mention/g).length, 4);
-  assert.match(result[0], /<a[^>]+>intranet<\/a>/);
-  assert.doesNotMatch(result.join(""), /<a[^>]+>(?:Portail web|Web portal|dam)<\/a>/);
-});
-test("preserves markup, entities, existing links, headings, code and attributes", () => {
-  const result = linkTermMentions(
-    [
-      '<h2>Intranet</h2><p title="Intranet">&lt;Intranet&gt; &amp; DAM</p><code>DAM</code>',
-      '<a href="/glossary/intranet">Existing intranet link</a>',
-    ],
-    terms,
-    "portal",
-  );
-  assert.equal(result.join("").match(/data-glossary-mention/g).length, 2);
-  assert.match(result[0], /title="Intranet"/);
-  assert.match(result[0], /&lt;<a[^>]+>Intranet<\/a>&gt; &amp;/);
-  assert.match(result[0], /<code>DAM<\/code>/);
-});
-test("ignores ambiguous aliases, partial words and unsafe target URLs", () => {
-  const entries = [
-    ...terms,
-    { id: "other", url: "/other", labels: ["Intranet"] },
-    { id: "bad", url: "javascript:alert(1)", labels: ["unsafe"] },
-  ];
-  assert.equal(
-    linkTermMentions(["<p>intranets Intranet unsafe dam</p>"], entries, "portal")[0],
-    "<p>intranets Intranet unsafe dam</p>",
-  );
-});
-test("longest term wins and definition lead keeps inline markup", () => {
-  const result = linkTermMentions(
-    ["<p>Web portal &amp; portal.</p>"],
-    [...terms, { id: "short", url: "/short", labels: ["portal"] }],
-    "other",
-  );
-  assert.match(result[0], /href="\/glossary\/web-portal"[^>]*>Web portal<\/a>/);
-  assert.deepEqual(splitDefinition("<p>A <strong>definition</strong>.</p><p>Details.</p>"), {
-    lead: "A <strong>definition</strong>.",
-    body: "<p>Details.</p>",
-  });
-});
-
-test("native URL resolution preserves editorial links even with automatic mentions disabled", () => {
-  const target = {
-    id: "intranet",
-    url: "/cms/render/default/fr/sites/mySite/intranet.html",
-    labels: ["Intranet"],
-    urlAliases: ["/fr/glossaire/intranet"],
-  };
-  const html = '<p><a href="/fr/glossaire/intranet#details">Intranet</a>. Intranet.</p>';
-  const result = linkTermMentions([html], [target], "portal", false)[0];
-  assert.match(result, /href="\/cms\/render\/default\/fr\/sites\/mySite\/intranet.html#details"/);
-  assert.doesNotMatch(result, /data-glossary-mention/);
-  assert.match(linkTermMentions([html], [target], "portal")[0], /data-glossary-mention/);
-});
-
-test("case differences no longer create inconsistent links for unique terms", () => {
-  const result = linkTermMentions(
-    ["<p>Un intranet et un objectif. Intranet et Objectif.</p>"],
-    [
-      { id: "intranet", url: "/intranet", labels: ["Intranet"] },
-      { id: "goal", url: "/goal", labels: ["Objectif"] },
-    ],
-    "portal",
-  )[0];
-  assert.equal(result.match(/data-glossary-mention/g).length, 4);
-});
-test("table terms link even after prose or an existing editorial link, preserving emphasis", () => {
-  const result = linkTermMentions(
-    [
-      '<p><a href="/glossary/intranet">Intranet</a>. Intranet.</p>',
-      "<table><tbody><tr><td><strong>Web</strong> portal</td><td>Intranet et intranet</td></tr></tbody></table>",
-    ],
-    terms,
-    "other",
-  );
-  assert.equal(result.join("").match(/data-glossary-mention/g).length, 4);
-  assert.match(result[1], /<td><a[^>]+><strong>Web<\/strong> portal<\/a><\/td>/);
-  assert.doesNotMatch(result.join(""), /<a[^>]*>[^<]*<a/);
-  assert.equal(linkTermMentions(result, terms, "other").join(""), result.join(""));
-});
-
-test("headings and column headers stay unlinked while row terms remain clickable", () => {
-  const sections = [
-    ...[1, 2, 3, 4, 5, 6].map(
-      (level) => `<h${level}>Intranet <a href="/glossary/dam"><strong>DAM</strong></a></h${level}>`,
-    ),
-    '<table><caption><a href="/glossary/intranet">Intranet</a></caption><thead><tr><td>Intranet <a href="/external">DAM</a></td></tr></thead><tbody><tr><th scope="row"><a href="/glossary/intranet">Intranet</a> DAM</th><td>Intranet</td></tr></tbody></table>',
-  ];
-  for (const enabled of [true, false]) {
-    const result = linkTermMentions(sections, terms, "portal", enabled);
-    for (const heading of result.slice(0, 6)) {
-      assert.doesNotMatch(heading, /<a[ >]/);
-      assert.match(heading, /<strong>DAM<\/strong>/);
-    }
-    assert.doesNotMatch(result[6].match(/<thead>.*?<\/thead>/s)[0], /<a[ >]/);
-    assert.match(result[6].match(/<th scope="row">.*?<\/th>/s)[0], /href="\/glossary\/intranet"/);
-    assert.doesNotMatch(result[6].match(/<caption>.*?<\/caption>/s)[0], /<a[ >]/);
-    assert.equal((result[6].match(/data-glossary-mention/g) || []).length, enabled ? 2 : 0);
-    assert.deepEqual(linkTermMentions(result, terms, "portal", enabled), result);
-  }
-});
-
-test("formatted row labels link fully and column scope stays unlinked outside thead", () => {
-  const html =
-    '<table><tbody><tr><th scope="col"><a href="/glossary/intranet">Intranet</a></th></tr><tr><th scope="row"><strong>Web</strong> portal</th><td>Intranet</td></tr></tbody></table>';
-  const result = linkTermMentions([html], terms, "other")[0];
-  assert.match(result, /<th scope="col">Intranet<\/th>/);
-  assert.match(
-    result,
-    /<th scope="row"><a href="\/glossary\/web-portal"[^>]*><strong>Web<\/strong> portal<\/a><\/th>/,
-  );
-  assert.equal((result.match(/data-glossary-mention/g) || []).length, 2);
 });

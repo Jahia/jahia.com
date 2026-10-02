@@ -11,17 +11,9 @@ export interface InlineTerm {
 const escapeHtml = (value: string) =>
   value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const key = (value: string) => value.normalize("NFC").toLocaleLowerCase();
-// Standalone table labels are explicit concepts; these short words in prose are ambiguous.
-const ambiguousProseLabels = new Set([
-  "vue",
-  "view",
-  "champ",
-  "field",
-  "zone",
-  "area",
-  "enfant",
-  "child",
-]);
+// Only complete multi-word expressions are eligible for automatic linking.
+const isCompleteExpression = (value: string) => /\S+\s+\S+/.test(value.trim());
+const maximumAutomaticLinks = 6;
 const unlinked = new Set(["h1", "h2", "h3", "h4", "h5", "h6", "thead", "caption"]);
 const isColumnHeader = (node: Node) =>
   "tagName" in node &&
@@ -29,7 +21,7 @@ const isColumnHeader = (node: Node) =>
   node.attrs.some(({ name, value }) => name === "scope" && /^(col|colgroup)$/i.test(value));
 const blocked = new Set(["a", ...unlinked, "code", "pre", "script", "style", "textarea", "button"]);
 
-/** Link every unambiguous mention, preserving existing markup and editorial links. */
+/** Link the first eligible mention per target, with a shared page-wide budget. */
 export function linkTermMentions(
   sections: string[],
   terms: InlineTerm[],
@@ -49,7 +41,9 @@ export function linkTermMentions(
       else labels.set(normalized, { label, term });
     }
   }
-  const usable = [...labels.values()].filter((item) => item && item.term.id !== currentId);
+  const usable = [...labels.values()].filter(
+    (item) => item && item.term.id !== currentId && isCompleteExpression(item.label),
+  );
   const pattern = usable
     .map((item) => item!.label)
     .sort((a, b) => b.length - a.length)
@@ -57,6 +51,11 @@ export function linkTermMentions(
     .join("|");
   const expression = new RegExp(`(?<![\\p{L}\\p{N}_])(?:${pattern})(?![\\p{L}\\p{N}_])`, "giu");
   const documents = sections.map((html) => parseFragment(html));
+  // This is the paragraph moved directly below H1 by splitDefinition.
+  const first = documents[0]?.childNodes.find(
+    (node) => node.nodeName !== "#text" || ("value" in node && node.value.trim()),
+  );
+  const introduction = first && "tagName" in first && first.tagName === "p" ? first : undefined;
   const urls = new Map(
     terms.flatMap((term) =>
       [term.url, ...(term.urlAliases || [])].map((url) => [url, term] as const),
@@ -65,9 +64,17 @@ export function linkTermMentions(
   const markLinks = (nodes: Node[], insideUnlinked = false): Node[] =>
     nodes.flatMap((node): Node[] => {
       const suppress =
-        insideUnlinked || isColumnHeader(node) || ("tagName" in node && unlinked.has(node.tagName));
+        insideUnlinked ||
+        node === introduction ||
+        isColumnHeader(node) ||
+        ("tagName" in node && unlinked.has(node.tagName));
       if ("childNodes" in node) node.childNodes = markLinks(node.childNodes, suppress);
-      if (suppress && "tagName" in node && node.tagName === "a") return node.childNodes;
+      if (
+        "tagName" in node &&
+        node.tagName === "a" &&
+        (suppress || node.attrs.some((attr) => attr.name === "data-glossary-mention"))
+      )
+        return node.childNodes;
       if ("tagName" in node && node.tagName === "a") {
         const href = node.attrs.find((attr) => attr.name === "href");
         const target = href && urls.get(href.value.split(/[?#]/)[0]);
@@ -81,9 +88,30 @@ export function linkTermMentions(
   documents.forEach((document) => {
     document.childNodes = markLinks(document.childNodes);
   });
-  if (!enabled || !usable.length) return documents.map((document) => serialize(document));
+  if (!enabled) return documents.map((document) => serialize(document));
+  const linkedTargets = new Set<string>();
+  let automaticCount = 0;
+  const eligible = (item: { label: string; term: InlineTerm }) =>
+    item.term.id !== currentId &&
+    isCompleteExpression(item.label) &&
+    !linkedTargets.has(item.term.id) &&
+    automaticCount < maximumAutomaticLinks;
+  const remember = (id: string) => {
+    linkedTargets.add(id);
+    automaticCount++;
+  };
   const visit = (nodes: Node[]): Node[] =>
     nodes.flatMap((node): Node[] => {
+      if (node === introduction) return [node];
+      if ("tagName" in node && node.tagName === "a") {
+        const href = node.attrs.find((attr) => attr.name === "href");
+        const target = href && urls.get(href.value.split(/[?#]/)[0]);
+        if (target) {
+          if (linkedTargets.has(target.id)) return node.childNodes;
+          linkedTargets.add(target.id);
+        }
+        return [node];
+      }
       if (isColumnHeader(node) || ("tagName" in node && blocked.has(node.tagName))) return [node];
       if ("tagName" in node && /^(?:th|td|p)$/.test(node.tagName)) {
         const inlineText = (children: Node[]): string | null => {
@@ -105,9 +133,10 @@ export function linkTermMentions(
         const exact = value ? labels.get(key(value)) : undefined;
         if (
           exact &&
-          exact.term.id !== currentId &&
+          eligible(exact) &&
           (!/^[A-Z0-9]{2,5}$/.test(exact.label) || value === exact.label)
         ) {
+          remember(exact.term.id);
           node.childNodes = parseFragment(
             `<a href="${escapeHtml(exact.term.url)}" data-glossary-mention="true">${serialize(node)}</a>`,
           ).childNodes;
@@ -119,10 +148,10 @@ export function linkTermMentions(
         let html = "";
         for (const match of node.value.matchAll(expression)) {
           const item = labels.get(key(match[0]));
-          if (!item || item.term.id === currentId || ambiguousProseLabels.has(key(match[0])))
-            continue;
+          if (!item || !eligible(item)) continue;
           // Short uppercase acronyms must not turn ordinary words into links.
           if (/^[A-Z0-9]{2,5}$/.test(item.label) && match[0] !== item.label) continue;
+          remember(item.term.id);
           html += escapeHtml(node.value.slice(cursor, match.index));
           html += `<a href="${escapeHtml(item.term.url)}" data-glossary-mention="true">${escapeHtml(match[0])}</a>`;
           cursor = match.index + match[0].length;

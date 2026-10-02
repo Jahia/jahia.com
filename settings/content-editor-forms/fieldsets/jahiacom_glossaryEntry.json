@@ -50,6 +50,18 @@
     {
       "name": "linkThemes",
       "hide": true
+    },
+    {
+      "name": "resourceCtaLabel",
+      "hide": true
+    },
+    {
+      "name": "resourceCtaVariant",
+      "hide": true
+    },
+    {
+      "name": "relatedCtaVariant",
+      "hide": true
     }
   ]
 }

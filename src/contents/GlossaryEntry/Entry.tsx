@@ -27,9 +27,6 @@ export interface EntryViewProps {
   comparison?: string;
   indexUrl?: string;
   resources: EntryResource[];
-  resourceCtaLabel?: string;
-  resourceCtaVariant?: "primary" | "secondary";
-  relatedCtaVariant?: "primary" | "secondary";
   resourceDisplayCount?: "3" | "6" | "9";
   relatedTerms: GlossaryItem[];
   isEditMode?: boolean;
@@ -50,9 +47,6 @@ export default function Entry({
   faq,
   resources,
   resourceDisplayCount,
-  resourceCtaLabel,
-  resourceCtaVariant,
-  relatedCtaVariant,
   relatedTerms,
   isEditMode,
 }: EntryViewProps) {
@@ -177,13 +171,8 @@ export default function Entry({
               {cta && (
                 <>
                   <p>{cta.title}</p>
-                  <CTA
-                    href={cta.url}
-                    secondary={resourceCtaVariant === "secondary"}
-                    location="glossary"
-                    name="topic-resource"
-                  >
-                    {resourceCtaLabel?.trim() || t("glossary.readResource")}
+                  <CTA href={cta.url} location="glossary" name="topic-resource">
+                    {t("glossary.readResource")}
                   </CTA>
                 </>
               )}
@@ -191,12 +180,7 @@ export default function Entry({
                 <ul className={classes.relatedList}>
                   {relatedTerms.map((term) => (
                     <li key={term.id}>
-                      <CTA
-                        href={term.url}
-                        secondary={relatedCtaVariant !== "primary"}
-                        location="glossary"
-                        name="related-term"
-                      >
+                      <CTA href={term.url} location="glossary" name="related-term">
                         {term.title}
                       </CTA>
                     </li>
