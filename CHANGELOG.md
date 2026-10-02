@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.8.0
+
+* Add glossary editorial author/date fields, index labels, automatic links between terms and support for merged-entry redirects. Improve bilingual resource matching and expose 3/6/9 resource counts plus native Primary/Secondary CTA styles in Content Editor. Simplify entry layouts, correct index-link contrast and sanitize rendered rich text. Existing content is preserved; editorial imports and entry consolidation remain a separate migration.
+
 ## 1.7.2
 
 * Ensure French and English blog HTML and OpenGraph titles end with ` - Jahia`. Normalize existing brand separators and duplicate suffixes while preserving editorial wording. Apply the same rule in Content Editor, including manual title edits, without truncating titles or requiring a content migration.
