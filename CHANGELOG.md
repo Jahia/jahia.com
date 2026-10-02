@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.8.1
+
+* Limit automatic glossary links to six complete expressions per page, using only the first eligible occurrence of each target and excluding introductory paragraphs, headings and isolated words. Simplify glossary buttons to native Primary CTAs and hide their obsolete customization fields without changing existing content definitions. Editorial CSV updates remain a separate content migration.
+
 ## 1.8.0
 
 * Add glossary editorial author/date fields, index labels, automatic links between terms and support for merged-entry redirects. Improve bilingual resource matching and expose 3/6/9 resource counts plus native Primary/Secondary CTA styles in Content Editor. Simplify entry layouts, correct index-link contrast and sanitize rendered rich text. Existing content is preserved; editorial imports and entry consolidation remain a separate migration.
