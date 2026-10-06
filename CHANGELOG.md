@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.8.2
+
+* Keep partner region selection in the directory without adding partnerRegion to the URL. Preserve regional cards, counts and filtering, and apply existing regional links before removing their parameter while retaining other filters and URL fragments.
+
 ## 1.8.1
 
 * Limit automatic glossary links to six complete expressions per page, using only the first eligible occurrence of each target and excluding introductory paragraphs, headings and isolated words. Simplify glossary buttons to native Primary CTAs and hide their obsolete customization fields without changing existing content definitions. Editorial CSV updates remain a separate content migration.
