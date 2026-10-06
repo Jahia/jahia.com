@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.8.3
+
+* Remove region query parameters from all partner profile links, including directory cards and similar partners, and clean legacy region parameters from the browser address bar. Show every configured location directly on the profile instead of generating region-specific navigation URLs.
+
 ## 1.8.2
 
 * Keep partner region selection in the directory without adding partnerRegion to the URL. Preserve regional cards, counts and filtering, and apply existing regional links before removing their parameter while retaining other filters and URL fragments.
