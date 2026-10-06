@@ -14,6 +14,7 @@ import Carousel from "../../views/ResourceCarousel/Carousel.client.jsx";
 import classes from "./profile.module.css";
 import { legacyExpertiseBody } from "./expertise.js";
 import { rankSimilarPartners } from "./similarity.js";
+import ProfileUrl from "./ProfileUrl.client.jsx";
 import { TestimonialCard } from "./Testimonial.server.jsx";
 import testimonialClasses from "./testimonials.module.css";
 import {
@@ -23,7 +24,6 @@ import {
   htmlToText,
   legacyRegion,
   PartnerBadge,
-  regionCodes,
   regionCountries,
   type Props,
   type Region,
@@ -70,9 +70,6 @@ const testimonialLogo = (node: JCRNodeWrapper, id?: string): JCRNodeWrapper | un
     return undefined;
   }
 };
-
-const isRegion = (value: string | null): value is Region =>
-  value === "europe" || value === "americas" || value === "apac";
 
 const stringProperty = (node: JCRNodeWrapper, name: string) =>
   node.hasProperty(name) ? node.getProperty(name).getString() : undefined;
@@ -141,19 +138,13 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jahiacom:partner",
     name: "fullPage",
-    properties: {
-      "cache.requestParameters": "region",
-    },
   },
   (props: Props, { currentNode, renderContext, currentResource }) => {
     const { t } = useTranslation();
     const fallbackRegion = legacyRegion(currentNode);
     const regions = configuredRegions(props, fallbackRegion);
-    const requested = renderContext.getRequest().getParameter("region");
-    const activeRegion =
-      isRegion(requested) && regions.includes(requested) ? requested : regions[0];
+    const activeRegion = regions[0];
     const locale = currentResource.getLocale();
-    const url = buildNodeUrl(currentNode);
     const website = /^https?:\/\//i.test(props.website || "") ? props.website : undefined;
     const summary =
       props.heroSubtitle || props.shortDescription || htmlToText(props.description).slice(0, 240);
@@ -264,6 +255,7 @@ jahiaComponent(
 
     return (
       <>
+        <Island component={ProfileUrl} props={undefined} />
         <section className={classes.hero} data-theme="night">
           <div className={classes.heroInner}>
             <div className={classes.heroLogo}>
@@ -303,26 +295,16 @@ jahiaComponent(
                 <div>
                   <span>{t("partner.region")}</span>
                   <strong>
-                    {t(`partner.regions.${activeRegion}`)}
-                    {regionCountries(props, activeRegion).length > 0 &&
-                      ` · ${countryNames(regionCountries(props, activeRegion), locale)}`}
+                    {regions
+                      .map((region) => {
+                        const countries = countryNames(regionCountries(props, region), locale);
+                        return `${t(`partner.regions.${region}`)}${countries ? ` · ${countries}` : ""}`;
+                      })
+                      .join(" / ")}
                   </strong>
                 </div>
               )}
             </div>
-            {type !== "technology" && regions.length > 1 && (
-              <nav className={classes.regionNav} aria-label={t("partner.locations")}>
-                {regions.map((region) => (
-                  <a
-                    key={region}
-                    href={`${url}?region=${region}`}
-                    aria-current={region === activeRegion ? "page" : undefined}
-                  >
-                    {regionCodes[region]}
-                  </a>
-                ))}
-              </nav>
-            )}
           </div>
         </section>
 
