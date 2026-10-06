@@ -33,6 +33,8 @@ const valueFromUrl = <Value extends string>(
 
 const replaceFiltersInUrl = (values: Record<string, string>) => {
   const url = new URL(window.location.href);
+  // Region selection stays in memory; legacy URLs are read before this cleanup.
+  url.searchParams.delete(regionParameter);
   for (const [name, value] of Object.entries(values)) {
     if (value === "all") url.searchParams.delete(name);
     else url.searchParams.set(name, value);
@@ -124,17 +126,14 @@ export default function Directory({
 
   useEffect(() => {
     if (mode === "solution") {
-      replaceFiltersInUrl({
-        [levelParameter]: activeLevel,
-        [regionParameter]: activeRegion,
-      });
+      replaceFiltersInUrl({ [levelParameter]: activeLevel });
     } else if (mode === "technology") {
       replaceFiltersInUrl({
         [technologyParameter]: activeTechnology,
         [partnershipParameter]: activePartnership,
       });
     } else {
-      replaceFiltersInUrl({ [typeParameter]: activeType, [regionParameter]: activeRegion });
+      replaceFiltersInUrl({ [typeParameter]: activeType });
     }
   }, [activeLevel, activePartnership, activeRegion, activeTechnology, activeType, mode]);
 
