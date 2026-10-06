@@ -39,7 +39,7 @@ export const PartnerCard = ({
   const url = buildNodeUrl(currentNode);
   const summary = props.shortDescription || htmlToText(props.description);
   const regionLinks = Object.fromEntries(
-    regions.map((region) => [region, `${regionUrls?.[region] || url}?region=${region}`]),
+    regions.map((region) => [region, regionUrls?.[region] || url]),
   ) as Record<Region, string>;
   const defaultRegionLink = regionLinks[regions[0]];
   const detailUrl = profileUrl || defaultRegionLink;
@@ -150,7 +150,7 @@ const SimilarPartnerCard = ({
         {countries || regionCodes[region]} · <PartnerBadge props={props} locale={locale} />
       </p>
       <CTA
-        href={`${buildNodeUrl(currentNode)}?region=${region}`}
+        href={buildNodeUrl(currentNode)}
         secondary
         icon="i-ri:arrow-right-s-line"
         location="similar_partners"
@@ -178,11 +178,9 @@ jahiaComponent(
     nodeType: "jahiacom:partner",
     name: "similarCard",
   },
-  (props: Props, { currentNode, currentResource, renderContext }) => {
+  (props: Props, { currentNode, currentResource }) => {
     const regions = configuredRegions(props, legacyRegion(currentNode));
-    const requestedRegion = renderContext.getRequest().getParameter("region") as Region | null;
-    const region =
-      requestedRegion && regions.includes(requestedRegion) ? requestedRegion : regions[0];
+    const region = regions[0];
     return (
       <SimilarPartnerCard
         props={props}
