@@ -7,6 +7,7 @@ import { publicBlogImage } from "./publicImages.js";
 import type { Props } from "./types.js";
 import { contentCategories } from "../../../utils/contentCategories.js";
 import classes from "./styles.module.css";
+import BlogDate from "./BlogDate.jsx";
 
 export const BlogCard = ({
   props: {
@@ -23,12 +24,14 @@ export const BlogCard = ({
   currentNode,
   locale,
   featured = false,
+  featuredLead = false,
   listingState,
 }: {
   props: Props;
   currentNode: JCRNodeWrapper;
   locale: string;
   featured?: boolean;
+  featuredLead?: boolean;
   listingState?: { filter1?: string; filter2?: string; page?: string };
 }) => {
   const { t } = useTranslation();
@@ -49,9 +52,15 @@ export const BlogCard = ({
   );
 
   return (
-    <article className={clsx(classes.item, featured && classes.featured)}>
+    <article
+      className={clsx(
+        classes.item,
+        featured && classes.featured,
+        featuredLead && classes.featuredLead,
+      )}
+    >
       <div className={classes.cover}>
-        {image && <Image image={image} sizes={featured ? [720, 1440] : [360, 720]} />}
+        {image && <Image image={image} sizes={featuredLead ? [720, 1440] : [360, 720]} />}
         {fallbackImage && <img src={fallbackImage} alt="" loading={featured ? "eager" : "lazy"} />}
         {!image && !fallbackImage && (
           <span className={classes.imageFallback} aria-hidden="true">
@@ -76,25 +85,12 @@ export const BlogCard = ({
 
         <div className={classes.meta}>
           {author && <span>{author.getPropertyAsString("name")}</span>}
-          {date && (
-            <time dateTime={date}>
-              {new Date(date).toLocaleDateString(locale, {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </time>
-          )}
-          {useLastModifiedDate && lastModified && (
-            <span>
-              {t("blogListing.updatedOn")}{" "}
-              {new Date(lastModified).toLocaleDateString(locale, {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </span>
-          )}
+          <BlogDate
+            date={date}
+            lastModified={lastModified}
+            useLastModifiedDate={useLastModifiedDate}
+            locale={locale}
+          />
         </div>
 
         {(summary || description) && <p className={classes.summary}>{summary || description}</p>}

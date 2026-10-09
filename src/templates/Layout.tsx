@@ -151,7 +151,7 @@ export const Layout = ({
             "JSON-LD": jsonLd?.length,
           })}
         />
-        <div className={classes.stickyHeader} data-theme="night">
+        <div className={classes.stickyHeader} data-theme="night" data-jahia-header>
           <NavBar
             site={renderContext.getSite()}
             root={renderContext.getSite().getHome()}

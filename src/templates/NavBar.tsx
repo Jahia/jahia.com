@@ -10,8 +10,38 @@ import {
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import type { JCRSiteNode } from "org.jahia.services.content.decorator";
-import jahia from "./jahia-light.svg?no-inline";
-import NavBarClient, { type Entry } from "./NavBar.client.jsx";
+import jahia from "../../static/logos/jahia.svg?no-inline";
+import NavBarClient from "./NavBar.client.jsx";
+import type {
+  Entry,
+  NavigationItemFields,
+  NavigationPanel,
+  NavigationPanelFields,
+  Page,
+} from "./NavBar.types.js";
+import cmsIcon from "../../static/icons/navigation/cms.png?no-inline";
+import dxpIcon from "../../static/icons/navigation/dxp.png?no-inline";
+import aiIcon from "../../static/icons/navigation/ai.svg?no-inline";
+import { navigationUrl } from "./navigationUrl.js";
+
+const icons = { cms: cmsIcon, dxp: dxpIcon, ai: aiIcon };
+const text = (
+  node: JCRNodeWrapper,
+  property: keyof NavigationItemFields | keyof NavigationPanelFields,
+) => (node.hasProperty(property) ? node.getPropertyAsString(property) : undefined);
+const itemContent = (node: JCRNodeWrapper) => {
+  const icon = text(node, "navIcon");
+  return {
+    description: text(node, "navDescription"),
+    icon:
+      icon && Object.hasOwn(icons, icon)
+        ? buildModuleFileUrl(icons[icon as keyof typeof icons])
+        : undefined,
+  };
+};
+
+const itemLabel = (node: JCRNodeWrapper) =>
+  text(node, "navLabel")?.trim() || node.getDisplayableName().trim();
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 const emptySearchTerm = "jahia_no_search_requested_92f4c7";
@@ -40,7 +70,12 @@ const searchTerms = (value: string) => {
   return { normalized, terms: valid ? terms : [], valid };
 };
 
-const getEntries = (root: JCRNodeWrapper, current: string): Entry[] =>
+const getEntries = (
+  root: JCRNodeWrapper,
+  current: string,
+  panel: (node: JCRNodeWrapper) => NavigationPanel,
+  cache: (node: JCRNodeWrapper) => void,
+): Entry[] =>
   getChildNodes(
     root,
     -1,
@@ -52,19 +87,26 @@ const getEntries = (root: JCRNodeWrapper, current: string): Entry[] =>
       node.isNodeType("jnt:externalLink"),
   )
     .map((node) => {
+      cache(node);
       // If the node is a menu entry, recursively get its children
       if (node.isNodeType("jnt:navMenuText")) {
         return {
           title: node.getDisplayableName(),
-          children: getEntries(node, current),
+          children: getEntries(node, current, panel, cache),
+          panel: panel(node),
         };
       }
 
       if (node.isNodeType("jnt:externalLink")) {
+        const href = navigationUrl(
+          node.hasProperty("j:url") ? node.getPropertyAsString("j:url") : undefined,
+        );
+        if (!href) return null;
         return {
-          title: node.getDisplayableName(),
-          href: node.hasProperty("j:url") ? node.getPropertyAsString("j:url") : "",
+          title: itemLabel(node),
+          href,
           current: false,
+          ...itemContent(node),
         };
       }
 
@@ -74,14 +116,16 @@ const getEntries = (root: JCRNodeWrapper, current: string): Entry[] =>
         : node;
 
       if (!target) return null;
+      cache(target);
 
       return {
-        title: node.getDisplayableName(),
+        title: itemLabel(node),
         href: buildNodeUrl(target)
           // Jahia only rewrites static HTML links in edit mode, fix the menu links
           // to work in edit mode as well
           .replace("/cms/edit/", "/cms/editframe/"),
         current: current === target.getIdentifier(),
+        ...itemContent(node),
       };
     })
     .filter((entry) => entry !== null);
@@ -98,6 +142,106 @@ export default function NavBar({
   language: string;
 }) {
   const { renderContext } = useServerContext();
+  const referencePage = (reference: JCRNodeWrapper, label?: string): Page | undefined => {
+    try {
+      if (!reference) return;
+      server.render.addCacheDependency({ path: reference.getPath() }, renderContext);
+      const target = reference.isNodeType("jnt:nodeLink")
+        ? reference.hasProperty("j:node") && reference.getProperty("j:node").getValue().getNode()
+        : reference;
+      if (!target) return;
+      server.render.addCacheDependency({ path: target.getPath() }, renderContext);
+      const href = navigationUrl(
+        reference.isNodeType("jnt:externalLink")
+          ? reference.getPropertyAsString("j:url")
+          : buildNodeUrl(target).replace("/cms/edit/", "/cms/editframe/"),
+      );
+      return href
+        ? {
+            title: label || itemLabel(reference),
+            href,
+            current: current.getIdentifier() === target.getIdentifier(),
+          }
+        : undefined;
+    } catch {
+      // Optional weak references may point to removed content.
+      return;
+    }
+  };
+  const panelLink = (
+    node: JCRNodeWrapper,
+    property: "navIntroLink" | "navFeatureLink",
+    label: string | undefined,
+  ) => {
+    try {
+      return node.hasProperty(property)
+        ? referencePage(node.getProperty(property).getValue().getNode(), label)
+        : undefined;
+    } catch {
+      return undefined;
+    }
+  };
+  const panel = (node: JCRNodeWrapper): NavigationPanel => {
+    const introHeading = text(node, "navIntroHeading");
+    const featureLink = panelLink(node, "navFeatureLink", text(node, "navFeatureLabel"));
+    const columns = (["One", "Two"] as const).flatMap((column) => {
+      const property = `navColumn${column}Links` as const;
+      const title = text(node, `navColumn${column}Label`);
+      if (!title || !node.hasProperty(property)) return [];
+      const children = node
+        .getProperty(property)
+        .getValues()
+        .flatMap((value): Page[] => {
+          try {
+            const reference = value.getNode();
+            const page = referencePage(reference);
+            return page ? [{ ...page, ...itemContent(reference) }] : [];
+          } catch {
+            return [];
+          }
+        });
+      return children.length ? [{ title, children }] : [];
+    });
+    return {
+      intro: introHeading
+        ? {
+            eyebrow: text(node, "navIntroEyebrow"),
+            heading: introHeading,
+            text: text(node, "navIntroText"),
+            link: panelLink(node, "navIntroLink", text(node, "navIntroLabel")),
+          }
+        : undefined,
+      feature: featureLink
+        ? {
+            eyebrow: text(node, "navFeatureEyebrow"),
+            heading: text(node, "navFeatureHeading") || featureLink.title,
+            text: text(node, "navFeatureText"),
+            link: featureLink,
+          }
+        : undefined,
+      footerText: text(node, "navFooterText"),
+      columns: columns.length ? columns : undefined,
+    };
+  };
+  const utilityEntries: Page[] = site.hasProperty("utilityNavigationLinks")
+    ? site
+        .getProperty("utilityNavigationLinks")
+        .getValues()
+        .flatMap((value) => {
+          try {
+            const node = value.getNode();
+            if (!node) return [];
+            const page = referencePage(
+              node,
+              text(node, "navUtilityLabel") || node.getDisplayableName(),
+            );
+            return page ? [page] : [];
+          } catch {
+            // A weak reference may outlive a deleted navigation item.
+            return [];
+          }
+        })
+    : [];
   const primaryCTALink =
     site.hasProperty("primaryCTALink") && site.getProperty("primaryCTALink").getValue().getNode();
   const secondaryCTALink =
@@ -168,7 +312,10 @@ export default function NavBar({
           },
           // This can quickly get out of hand, if there are too many pages in the menu we need
           // to rethink the implementation
-          entries: getEntries(root, current.getIdentifier()),
+          entries: getEntries(root, current.getIdentifier(), panel, (node) =>
+            server.render.addCacheDependency({ path: node.getPath() }, renderContext),
+          ),
+          utilityEntries,
           langs,
           language,
           search,
@@ -184,13 +331,7 @@ export default function NavBar({
             data-element-location="header"
             data-element-name={`nav/logo`}
           >
-            <img
-              loading="lazy"
-              src={buildModuleFileUrl(jahia)}
-              alt="Jahia"
-              width="90"
-              height="40"
-            />
+            <img src={buildModuleFileUrl(jahia)} alt="Jahia" width="70" height="32" />
           </a>
         )}
       </Island>

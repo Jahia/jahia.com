@@ -3,9 +3,14 @@
   width: 100%;
   padding: 0.75rem max(1rem, calc((100% - var(--jahia-width)) / 2));
   font-size: 0.8125rem;
-  color: var(--jahia-neutral-200);
-  background: transparent;
-  border-bottom: 1px solid var(--jahia-neutral-600);
+  color: var(--jahia-navy-blue);
+  background: color-mix(
+    in srgb,
+    var(--jahia-neutral-50) var(--jahia-header-opacity, 100%),
+    transparent
+  );
+  border-bottom: 1px solid var(--jahia-neutral-200);
+  transition: background-color var(--jahia-timing);
 
   ol {
     display: flex;
@@ -33,7 +38,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-weight: 500;
-    color: var(--jahia-neutral-50);
+    color: var(--jahia-navy-blue);
     white-space: nowrap;
   }
 
@@ -44,7 +49,7 @@
 
   a:hover,
   a:focus-visible {
-    color: var(--jahia-primary-color);
+    color: var(--jahia-a11y-blue);
     text-decoration: underline;
   }
 }

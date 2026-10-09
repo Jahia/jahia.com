@@ -83,7 +83,7 @@
 
 .index {
   margin-top: 0;
-  scroll-margin-top: 8rem;
+  scroll-margin-top: max(8rem, calc(var(--jahia-header-height, 4rem) + 1rem));
 }
 
 .index ul {
@@ -135,7 +135,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--jahia-title-color);
-  scroll-margin-top: 9rem;
+  scroll-margin-top: max(9rem, calc(var(--jahia-header-height, 4rem) + 1rem));
 }
 
 .cards {

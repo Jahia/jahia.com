@@ -5,7 +5,7 @@
 * {
   max-width: 100%;
   margin-block: 0;
-  scroll-margin-block-start: 4rem; /* For #anchor links, scroll past the navbar */
+  scroll-margin-block-start: calc(var(--jahia-header-height, 4rem) + 1rem);
 }
 
 :root {

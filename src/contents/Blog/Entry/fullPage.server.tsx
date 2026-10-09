@@ -5,7 +5,7 @@ import classes from "./styles.module.css";
 import { Image } from "../../../components/Image.jsx";
 import { Layout } from "../../../templates/Layout.jsx";
 import { ResourceCarousel } from "../../../views/ResourceCarousel/default.server.jsx";
-import { useTranslation } from "react-i18next";
+import BlogDate, { getBlogDate } from "./BlogDate.jsx";
 
 const hasEditableResourceCarousel = (blogEntry: JCRNodeWrapper) => {
   if (!blogEntry.hasNode("resourceCarousel")) return false;
@@ -85,7 +85,6 @@ jahiaComponent(
     }: Props,
     { currentNode, currentResource, renderContext },
   ) => {
-    const { t } = useTranslation();
     const { body, headings } = createToc(formatImageCredits(text || ""));
     const hasEditableCarousel = hasEditableResourceCarousel(currentNode);
 
@@ -106,19 +105,12 @@ jahiaComponent(
 
             <p style={{ fontSize: ".875rem" }} className="_row-3">
               {author && <span>{author.getDisplayableName()}</span>}
-              {date && (
-                <time dateTime={date}>
-                  {new Date(date).toLocaleDateString(currentResource.getLocale().getLanguage())}
-                </time>
-              )}
-              {useLastModifiedDate && lastModified && (
-                <span>
-                  {t("blogListing.updatedOn")}{" "}
-                  {new Date(lastModified).toLocaleDateString(
-                    currentResource.getLocale().getLanguage(),
-                  )}
-                </span>
-              )}
+              <BlogDate
+                date={date}
+                lastModified={lastModified}
+                useLastModifiedDate={useLastModifiedDate}
+                locale={currentResource.getLocale().getLanguage()}
+              />
             </p>
           </div>
         </header>
@@ -158,7 +150,7 @@ jahiaComponent(
             "name": title,
             "description": summary || description,
             "datePublished": date,
-            "dateModified": useLastModifiedDate && lastModified ? lastModified : date,
+            "dateModified": getBlogDate(date, lastModified, useLastModifiedDate).date,
             "author": author && {
               "@type": "Person",
               "@id": `https://www.jahia.com${buildNodeUrl(author)}`,

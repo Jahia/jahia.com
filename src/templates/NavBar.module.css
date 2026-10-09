@@ -1,309 +1,469 @@
-/*
-This value needs to be updated manually when the menu grows or shrinks.
-While this value could be computed on page load, it would cause a layout shift
-to fold the menu if it overflows. Let's go with a static value for now.
-*/
-@value breakpoint: 900px;
-
 .nav {
   position: relative;
-  z-index: 1; /* Above the breadcrumb when a menu is open */
-  padding: 0.5rem;
-  container-type: inline-size;
-  color: var(--jahia-color);
-  background-color: transparent;
-}
-
-:where(.nav) ul {
-  padding: 0;
-  list-style: none;
-}
-
-.barLink {
-  @apply _pack-2;
-
-  padding: 0.5rem;
-  color: inherit;
-  text-decoration: inherit;
-  background: none;
-  border: none;
-}
-
-.searchButton {
-  --reflection: color-mix(in srgb, var(--jahia-neutral-50) 55%, transparent);
-
-  position: relative;
-  contain: paint;
-  color: var(--jahia-neutral-50);
-  cursor: pointer;
-  background: color-mix(in srgb, var(--jahia-neutral-50) 7%, transparent);
-  border: 1px solid color-mix(in srgb, var(--jahia-neutral-50) 38%, transparent);
-  border-radius: 0.25rem;
-  transition:
-    background-color var(--jahia-timing),
-    border-color var(--jahia-timing),
-    transform var(--jahia-motion-timing);
-}
-
-.searchButton::after {
-  position: absolute;
-  inset: 0 calc(-50% - 1rem) 0 auto;
   z-index: 1;
-  width: 50%;
-  pointer-events: none;
-  content: "";
-  background: linear-gradient(to right, transparent, var(--reflection), transparent);
-  transform: skewX(-30deg);
+  font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  font-weight: 500;
+  color: var(--jahia-navy-blue);
 }
 
-.searchButton:hover,
-.searchButton:focus-visible {
-  background: color-mix(in srgb, var(--jahia-neutral-50) 14%, transparent);
-  border-color: color-mix(in srgb, var(--jahia-neutral-50) 65%, transparent);
-}
-
-.searchButton:active {
-  transform: scale(0.98);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .searchButton:hover::after,
-  .searchButton:focus-visible::after {
-    animation: search-shine 0.6s forwards ease-out;
-  }
-}
-
-@keyframes search-shine {
-  from {
-    right: calc(150% + 1rem);
-  }
-}
-
-.desktopMenu a,
-.mobileMenu a {
-  display: block;
-  width: 100%;
+.utilityBar {
   padding: 0.5rem;
-  color: inherit;
-  text-decoration: inherit;
-  border-radius: 0.125rem;
-
-  &[aria-current] {
-    font-weight: bold;
-  }
-}
-
-/* Mobile menu */
-
-.menuButton {
-  display: inline-flex;
-  align-items: center;
-  padding: calc(0.75rem - 1px);
-  color: var(--jahia-blue);
-  background: transparent;
-  border: 1px solid var(--jahia-border);
-  border-radius: 0.25rem;
-
-  @container (width >= breakpoint) {
-    display: none;
-  }
-}
-
-.mobileMenu {
-  position: fixed;
-  inset-inline: 0;
-  max-height: 80vh; /* Leave a small gap below, that, when clicked, closes the menu */
-  padding: 0.5rem;
-  overflow: auto;
-  overscroll-behavior: contain;
-  color: transparent; /* Fade the color to avoid the compression effect of scaleY(0) */
-  background-color: /* Copy properties of the nav to make the transition smoother */ color-mix(
+  color: var(--jahia-neutral-50);
+  background: color-mix(
     in srgb,
-    var(--jahia-container-background) 75%,
+    var(--jahia-navy-blue) var(--jahia-header-opacity, 100%),
     transparent
   );
-  backdrop-filter: blur(0.5rem);
-  transform: translateY(0.5rem) /* The menu needs to be placed outside the padding of the nav */
-    scaleY(0);
-  transform-origin: top;
-  transition:
-    transform var(--jahia-motion-timing),
-    color var(--jahia-timing),
-    background-color var(--jahia-timing);
-
-  [data-open="true"] & {
-    color: inherit;
-    background: var(--jahia-container-background);
-    box-shadow: 0 0 2rem #0008; /* Transparent black so the shadow is visible on navy blue */
-    clip-path: inset(0 0 -2rem 0); /* Only show the shadow at the bottom */
-    transform: translateY(0.5rem) scaleY(1);
-  }
-
-  a:hover,
-  a:focus-visible {
-    background: var(--jahia-neutral-600);
-  }
-
-  @container (width >= breakpoint) {
-    display: none;
-  }
+  transition: background-color var(--jahia-timing);
 }
 
-.mobileMenu .columns {
-  display: grid;
-  grid-template-columns: auto;
-  gap: 0 1rem;
-  padding: 0;
-
-  > * {
-    min-width: 12rem;
-  }
-
-  @container (width >= 400px) {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.mobileSearch {
+.utilityInner,
+.mainInner {
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  width: calc(100% - 1rem);
-  padding: 0.75rem;
-  margin: 0.5rem;
+  max-width: var(--jahia-width);
+  margin-inline: auto;
+}
+
+.mainInner {
+  gap: 1.5rem;
+}
+
+.utilityInner {
+  justify-content: flex-end;
+  font-size: 0.8125rem;
+}
+
+.mainBar {
+  padding: 0.5rem;
+  background: color-mix(
+    in srgb,
+    var(--jahia-neutral-50) var(--jahia-header-opacity, 100%),
+    transparent
+  );
+  transition: background-color var(--jahia-timing);
+}
+
+.logo {
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+}
+
+.logo a {
+  display: block;
+}
+
+.logo img {
+  display: block;
+  width: 70px;
+  height: auto;
+}
+
+.barLink,
+.utilityLink,
+.menuButton,
+.searchButton,
+.submenuLabel {
+  display: inline-flex;
+  gap: 0.375rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.5rem;
   color: inherit;
   text-align: start;
+  text-decoration: none;
   cursor: pointer;
-  background: transparent;
-  border: 1px solid var(--jahia-border);
+  background: none;
+  border: 0;
   border-radius: 0.25rem;
 }
 
-.mobileSearch:hover,
-.mobileSearch:focus-visible {
-  background: var(--jahia-neutral-600);
+.barLink {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.submenu {
-  > ul {
-    height: 0;
-    padding-inline: 1rem;
-    contain: paint;
-    opacity: 0;
-    transform: translateY(-1rem);
-    transition:
-      transform var(--jahia-motion-timing),
-      opacity var(--jahia-timing);
-  }
-
-  &[data-open="true"] > ul {
-    height: auto;
-    opacity: 1;
-    transform: translateY(0);
-  }
+.barLink > span {
+  color: var(--jahia-a11y-blue);
 }
 
-.submenuLabel {
-  @apply _pack-0;
-
-  width: 100%;
-  padding: 0;
-  line-height: 1.5;
-  color: inherit;
-  text-align: start;
-  background: transparent;
-  border: transparent;
-  border-radius: 0.125rem;
-
-  > :first-child {
-    flex: 1;
-    padding: 0.5rem;
-    border-inline-end: 1px solid var(--jahia-border);
-  }
-
-  > :last-child {
-    margin: 0.5rem;
-    margin-inline-start: 0.75rem;
-  }
-
-  &:hover,
-  &:focus-visible {
-    background: var(--jahia-neutral-600);
-
-    > :first-child {
-      border-inline-end: 1px solid var(--jahia-container-background);
-    }
-  }
+.utilityLink {
+  min-height: 2rem;
 }
 
-/* Desktop menu */
-
-.desktopMenu {
-  display: none;
-  min-width: 12rem;
-
-  @container (width >= breakpoint) {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    color: var(--jahia-neutral-700);
-    background: var(--jahia-neutral-50);
-    border-radius: 0.25rem;
-    box-shadow: 0 0.25rem 1rem color-mix(in srgb, var(--jahia-neutral-700) 25%, transparent);
-    opacity: 0;
-    transition: opacity var(--jahia-timing);
-
-    [data-open="true"] & {
-      opacity: 1;
-    }
-  }
-
-  a:hover,
-  a:focus-visible {
-    background: var(--jahia-neutral-100);
-  }
-}
-
-.desktopMenu .singleColumn {
-  padding: 1rem;
-}
-
-.desktopMenu .columns {
+.actions {
   display: flex;
-  padding: 0;
-
-  > * {
-    min-width: 12rem;
-    padding: 1rem;
-  }
-
-  > * + * {
-    border-inline-start: 1px solid var(--jahia-inner-border);
-  }
+  flex-shrink: 0;
+  gap: 0.5rem;
+  align-items: center;
+  margin-inline-start: auto;
 }
 
-/* Shared */
+.menuButton {
+  width: 2.75rem;
+  color: var(--jahia-navy-blue);
+  border: 1px solid var(--jahia-navy-blue);
+}
 
-.menuColumn {
-  display: flex;
-  flex-direction: column;
+.actions > a {
+  min-height: 2.75rem;
+}
 
-  small {
-    padding: 0.5rem;
-    font-weight: 500;
-    color: var(--jahia-blue);
-    text-transform: uppercase;
-  }
+.searchButton {
+  width: 2.75rem;
+  color: var(--jahia-navy-blue);
 }
 
 .desktopBar {
   display: none;
 }
 
-@container (width >= breakpoint) {
-  /* Unocss does not support nested @apply, so we need to repeat .desktopBar */
+.desktopMenu,
+.mobileMenu,
+.languageMenu {
+  position: absolute;
+  color: var(--jahia-navy-blue);
+  background: var(--jahia-neutral-50);
+  border-bottom: 1px solid var(--jahia-neutral-300);
+  box-shadow: 0 0.5rem 1rem #00193226;
+}
+
+.desktopMenu,
+.mobileMenu {
+  inset-inline: 0;
+  top: 100%;
+  max-height: calc(100dvh - var(--jahia-header-height, 10rem) - 1rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.panelInner {
+  min-width: 0;
+}
+
+.panelLayout {
+  display: grid;
+  gap: 1rem;
+}
+
+.panelIntro {
+  padding: 1.75rem;
+  background: var(--jahia-light-blue);
+}
+
+.eyebrow {
+  margin-bottom: 0.75rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.625rem;
+  line-height: 1.6;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.panelHeading {
+  margin-bottom: 0.75rem;
+  font-size: 1.3125rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: pre-line;
+}
+
+.panelText {
+  font-size: 0.75rem;
+  line-height: 1.8;
+  color: var(--jahia-neutral-600);
+}
+
+.panelNavigation {
+  min-width: 0;
+  padding: 0.75rem;
+}
+
+.panelFeature {
+  padding: 1.5rem;
+  margin: 0.25rem;
+  color: var(--jahia-neutral-50);
+  background: var(--jahia-navy-blue);
+  border-radius: 0.375rem;
+}
+
+.panelFeature .panelText {
+  color: var(--jahia-neutral-100);
+}
+
+.panelLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--jahia-a11y-blue);
+  text-decoration: none;
+}
+
+.panelFeature .panelLink {
+  color: var(--jahia-blue);
+}
+
+.panelFooter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.75rem;
+  color: var(--jahia-neutral-600);
+  background: var(--jahia-light-blue);
+  border-top: 1px solid var(--jahia-neutral-200);
+}
+
+.panelFooter .panelLink {
+  margin-top: 0;
+}
+
+.panelIntro .panelLink,
+.panelFooter .panelLink {
+  color: var(--jahia-navy-blue);
+}
+
+.menuLinks {
+  display: grid;
+  gap: 0.25rem 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.menuLinks a {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  min-height: 2.75rem;
+  padding: 0.75rem 0.5rem;
+  color: var(--jahia-navy-blue);
+  text-decoration: none;
+  border-radius: 0.25rem;
+}
+
+.itemIcon {
+  flex-shrink: 0;
+  width: 43px;
+  height: 43px;
+  object-fit: contain;
+}
+
+.itemCopy,
+.itemTitle,
+.itemDescription {
+  display: block;
+}
+
+.itemTitle {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.itemCopy {
+  min-width: 0;
+}
+
+.itemDescription {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--jahia-neutral-600);
+}
+
+.groupTitle {
+  padding: 0 0.5rem 0.5rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.625rem;
+  line-height: 1.6;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.mobileMenu {
+  padding: 0.5rem;
+}
+
+.mobileLink,
+.submenuLabel {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.75rem;
+  color: inherit;
+  border-bottom: 1px solid var(--jahia-neutral-200);
+}
+
+.mobileSubmenu {
+  padding: 0.5rem 0.75rem;
+}
+
+.mobileUtilities {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  background: var(--jahia-neutral-100);
+}
+
+.mobileUtilities .utilityLink {
+  justify-content: flex-start;
+  min-height: 2.75rem;
+}
+
+.mobileLanguages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+}
+
+.mobileLanguages a,
+.languageMenu a {
+  display: block;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  color: var(--jahia-navy-blue);
+}
+
+.languageControl {
+  position: relative;
+}
+
+.languageMenu {
+  top: 100%;
+  right: 0;
+  z-index: 2;
+  min-width: 9rem;
+  padding: 0.5rem;
+}
+
+.nav a:focus-visible,
+.nav button:focus-visible {
+  outline: 2px solid var(--jahia-a11y-blue);
+  outline-offset: 2px;
+}
+
+.barLink:hover,
+.barLink[aria-expanded="true"],
+.barLink[aria-current],
+.menuButton:hover,
+.searchButton:hover {
+  color: var(--jahia-navy-blue);
+  background: var(--jahia-light-blue);
+}
+
+.utilityLink:hover {
+  text-decoration: underline;
+}
+
+.utilityBar .utilityLink:focus-visible {
+  outline-color: var(--jahia-neutral-50);
+}
+
+.panelLink:hover {
+  text-decoration: underline;
+}
+
+.panelFeature a:focus-visible {
+  outline-color: var(--jahia-neutral-50);
+}
+
+.menuLinks a:hover,
+.menuLinks a:focus-visible,
+.submenuLabel:hover,
+.submenuLabel[aria-expanded="true"],
+.mobileLink:hover {
+  background: var(--jahia-light-blue);
+}
+
+.menuLinks a[aria-current],
+.mobileLanguages a[aria-current] {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+@media (width < 1200px) {
+  .utilityBar,
+  .desktopMenu,
+  .panelIntro {
+    display: none;
+  }
+}
+
+@media (width < 400px) {
+  .mainInner,
+  .actions {
+    gap: 0.25rem;
+  }
+
+  .actions > a {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+@media (width >= 1200px) {
   .desktopBar {
-    @apply _pack-4;
+    display: flex;
+    flex: 1;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .menuButton,
+  .mobileMenu {
+    display: none;
+  }
+
+  .actions {
+    margin-inline-start: 0.5rem;
+  }
+
+  .desktopMenu {
+    width: min(var(--jahia-width), calc(100% - 3rem));
+    padding: 0;
+    margin-inline: auto;
+    border: 1px solid var(--jahia-neutral-200);
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
+
+  .panelLayout {
+    gap: 0;
+  }
+
+  .panelLayout[data-intro="true"] {
+    grid-template-columns: 13.75rem minmax(0, 1fr);
+  }
+
+  .panelLayout[data-feature="true"] {
+    grid-template-columns: minmax(0, 1fr) 18rem;
+  }
+
+  .panelLayout[data-intro="true"][data-feature="true"] {
+    grid-template-columns: 13.75rem minmax(0, 1fr) 18rem;
+  }
+
+  .panelNavigation {
+    padding: 1.75rem 1rem;
+  }
+
+  .panelNavigation > .menuLinks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem 1.25rem;
+    align-items: start;
+  }
+
+  .panelFeature {
+    align-self: start;
+    margin: 1.25rem;
   }
 }

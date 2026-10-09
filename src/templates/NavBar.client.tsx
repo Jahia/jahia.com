@@ -1,19 +1,140 @@
-import { useEffect, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import classes from "./NavBar.module.css";
-import clsx from "clsx";
-import { useFloating, autoUpdate, offset, shift } from "@floating-ui/react-dom";
 import { CTA } from "../mixins/CTA/index.jsx";
 import SearchDialog, { type SearchState } from "./Search.client.jsx";
+import type { Entry, Group, Page } from "./NavBar.types.js";
 
-export type Group = { title: string; children: Entry[] };
-export type Page = { title: string; href: string; current: boolean };
-export type Entry = Group | Page;
-
+const tracking = (entry: Page) => ({
+  "data-element-url": entry.href,
+  "data-element-type": "link",
+  "data-element-text": entry.title,
+  "data-element-location": "header",
+  "data-element-name": `nav/${entry.title}`,
+});
+function MenuLinks({ entries }: { entries: Entry[] }) {
+  return (
+    <ul className={classes.menuLinks}>
+      {entries.map((entry) => (
+        <li key={"href" in entry ? entry.href : entry.title}>
+          {"href" in entry ? (
+            <a
+              href={entry.href}
+              aria-current={entry.current ? "page" : undefined}
+              {...tracking(entry)}
+            >
+              {entry.icon && (
+                <img className={classes.itemIcon} src={entry.icon} alt="" width="43" height="43" />
+              )}
+              <span className={classes.itemCopy}>
+                <span className={classes.itemTitle}>{entry.title}</span>
+                {entry.description && (
+                  <span className={classes.itemDescription}>{entry.description}</span>
+                )}
+              </span>
+            </a>
+          ) : (
+            <>
+              <p className={classes.groupTitle}>{entry.title}</p>
+              <MenuLinks entries={entry.children} />
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+function MenuPanel({
+  group,
+  contact,
+}: {
+  group: Group;
+  contact?: { href: string; label: string } | false;
+}) {
+  const intro = group.panel?.intro;
+  const feature = group.panel?.feature;
+  const columns = group.panel?.columns;
+  // Keep existing menu destinations accessible even when optional columns are configured.
+  const selected = new Set(
+    columns?.flatMap((column) =>
+      column.children.flatMap((entry) => ("href" in entry ? [entry.href] : [])),
+    ),
+  );
+  const unselectedEntries = (entries: Entry[]): Entry[] =>
+    entries.flatMap((entry): Entry[] => {
+      if ("href" in entry) return selected.has(entry.href) ? [] : [entry];
+      // Configured columns replace legacy group headings, including in EDIT previews.
+      return unselectedEntries(entry.children);
+    });
+  const remaining = unselectedEntries(group.children);
+  const entries = columns
+    ? columns.map((column, index) =>
+        index === columns.length - 1
+          ? { ...column, children: [...column.children, ...remaining] }
+          : column,
+      )
+    : group.children;
+  return (
+    <div className={classes.panelInner}>
+      <div className={classes.panelLayout} data-intro={!!intro} data-feature={!!feature}>
+        {intro && (
+          <div className={classes.panelIntro}>
+            {intro.eyebrow && <p className={classes.eyebrow}>{intro.eyebrow}</p>}
+            <p className={classes.panelHeading}>{intro.heading}</p>
+            {intro.text && <p className={classes.panelText}>{intro.text}</p>}
+            {intro.link && (
+              <a className={classes.panelLink} href={intro.link.href} {...tracking(intro.link)}>
+                {intro.link.title}
+              </a>
+            )}
+          </div>
+        )}
+        <div className={classes.panelNavigation}>
+          {!intro && <p className={classes.eyebrow}>{group.title}</p>}
+          <MenuLinks entries={entries} />
+        </div>
+        {feature && (
+          <div className={classes.panelFeature}>
+            {feature.eyebrow && <p className={classes.eyebrow}>{feature.eyebrow}</p>}
+            <p className={classes.panelHeading}>{feature.heading}</p>
+            {feature.text && <p className={classes.panelText}>{feature.text}</p>}
+            <a
+              className={classes.panelLink}
+              href={feature.link.href}
+              aria-label={`${feature.link.title} : ${feature.heading}`}
+              {...tracking(feature.link)}
+            >
+              {feature.link.title}
+            </a>
+          </div>
+        )}
+      </div>
+      {group.panel?.footerText && (
+        <div className={classes.panelFooter}>
+          <p>{group.panel.footerText}</p>
+          {contact && (
+            <a className={classes.panelLink} href={contact.href}>
+              {contact.label}
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 export default function NavBarClient({
   primaryCTA,
   secondaryCTA,
   children,
   entries,
+  utilityEntries = [],
   langs,
   language,
   search,
@@ -22,370 +143,325 @@ export default function NavBarClient({
   secondaryCTA?: { href: string; label: string } | false;
   children: ReactNode;
   entries: Entry[];
+  utilityEntries?: Page[];
   langs: Array<{ language: string; name: string; href: string }>;
   language: string;
   search: SearchState;
 }) {
-  const [open, setOpen] = useState(false);
+  const id = useId();
+  const nav = useRef<HTMLElement>(null);
+  const trigger = useRef<HTMLButtonElement | null>(null);
+  const searchTrigger = useRef<HTMLElement | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [submenu, setSubmenu] = useState<number | null>(null);
+  const [languageOpen, setLanguageOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(search.requested);
-  const [submenu, setSubmenu] = useState<string | null>(null);
-
-  /** Used to disable the animation on first render */
-  const [animate, setAnimate] = useState(false);
-
-  const subentries =
-    submenu === "lang"
-      ? langs.map(({ name, href }) => ({ title: name, href, current: false }))
-      : entries.find((entry): entry is Group => !("href" in entry) && entry.title === submenu)
-          ?.children;
-
-  const { refs, floatingStyles } = useFloating({
-    whileElementsMounted: autoUpdate,
-    middleware: [offset(16), shift()],
-  });
-
+  const fr = language === "fr";
   const close = () => {
-    setOpen(false);
-    setAnimate(false);
-    // The submenu is "closed" when the animation is over
-    // (to avoid showing an empty menu during the animation)
+    setMobileOpen(false);
+    setSubmenu(null);
+    setLanguageOpen(false);
   };
-
-  // Resizing the window should close the menu
   useEffect(() => {
-    // Breakpoint defined in NavBar.module.css (900px - 16px of padding)
-    const md = window.matchMedia("(min-width: 884px)");
-    md.addEventListener("change", close);
-    return () => md.removeEventListener("change", close);
+    const element = nav.current;
+    if (!element) return;
+    const header = element.closest<HTMLElement>("[data-jahia-header]");
+    const updateScrolled = () => {
+      const scrolled = String(window.scrollY > 0);
+      if (header && header.dataset.scrolled !== scrolled) header.dataset.scrolled = scrolled;
+    };
+    updateScrolled();
+    window.addEventListener("scroll", updateScrolled, { passive: true });
+    const updateHeight = () => {
+      if (header)
+        document.documentElement.style.setProperty(
+          "--jahia-header-height",
+          `${header.getBoundingClientRect().height}px`,
+        );
+    };
+    const observer = new ResizeObserver(updateHeight);
+    if (header) observer.observe(header);
+    updateHeight();
+    const breakpoint = window.matchMedia("(min-width: 1200px)");
+    breakpoint.addEventListener("change", close);
+    return () => {
+      window.removeEventListener("scroll", updateScrolled);
+      header?.removeAttribute("data-scrolled");
+      observer.disconnect();
+      breakpoint.removeEventListener("change", close);
+      document.documentElement.style.removeProperty("--jahia-header-height");
+    };
   }, []);
-
-  // All clicks outside the menu should close it
   useEffect(() => {
-    document.addEventListener("click", close);
-    return () => document.removeEventListener("click", close);
-  }, []);
-
-  // All scrolls outside the menu should close it
-  useEffect(() => {
-    document.addEventListener("scroll", close);
-    return () => document.removeEventListener("scroll", close);
-  }, []);
-
-  // Pressing escape should also close the menu
-  useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
+    const outside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !nav.current?.contains(event.target)) close();
+    };
+    const keyboard = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
+        searchTrigger.current =
+          document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        close();
         setSearchOpen(true);
-        return;
+      } else if (
+        event.key === "Escape" &&
+        !searchOpen &&
+        (mobileOpen || submenu !== null || languageOpen)
+      ) {
+        event.preventDefault();
+        close();
+        trigger.current?.focus();
       }
-      if (event.key === "Escape") close();
     };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    document.addEventListener("pointerdown", outside);
+    document.addEventListener("keydown", keyboard);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("keydown", keyboard);
+    };
+  }, [mobileOpen, submenu, languageOpen, searchOpen]);
+  const openSearch = (event: MouseEvent<HTMLButtonElement>) => {
+    searchTrigger.current = event.currentTarget;
+    close();
+    setSearchOpen(true);
+  };
+  const closeSearch = useCallback(() => {
+    setSearchOpen(false);
+    requestAnimationFrame(() => {
+      const previous = searchTrigger.current;
+      if (previous?.getBoundingClientRect().width) previous.focus();
+      else
+        Array.from(
+          nav.current?.querySelectorAll<HTMLButtonElement>(
+            `.${classes.menuButton}, [data-navbar-search]`,
+          ) || [],
+        )
+          .find((button) => button.getBoundingClientRect().width)
+          ?.focus();
+    });
   }, []);
-
+  const utilities = (
+    <>
+      {utilityEntries.map((entry) => (
+        <a
+          key={entry.href}
+          className={classes.utilityLink}
+          href={entry.href}
+          aria-current={entry.current ? "page" : undefined}
+          {...tracking(entry)}
+        >
+          {entry.title}
+        </a>
+      ))}
+      {secondaryCTA && (
+        <a
+          className={classes.utilityLink}
+          href={secondaryCTA.href}
+          data-element-url={secondaryCTA.href}
+          data-element-type="cta"
+          data-element-text={secondaryCTA.label}
+          data-element-location="header"
+          data-element-name="nav-secondary"
+        >
+          {secondaryCTA.label}
+        </a>
+      )}
+    </>
+  );
+  const languages = langs.map(({ name, href, language: code }) => (
+    <a
+      key={code}
+      href={href}
+      hrefLang={code}
+      lang={code}
+      aria-current={code === language ? "true" : undefined}
+    >
+      {name}
+    </a>
+  ));
   return (
     <nav
+      ref={nav}
       className={classes.nav}
-      data-theme="night"
-      data-open={open}
-      // Clicking within the menu should not close it
-      onClick={(event) => event.stopPropagation()}
+      aria-label={fr ? "Navigation principale" : "Main navigation"}
+      data-open={mobileOpen || submenu !== null || languageOpen}
+      onBlur={(event) => {
+        if (
+          event.relatedTarget instanceof Node &&
+          !event.currentTarget.contains(event.relatedTarget)
+        )
+          close();
+      }}
     >
-      <div className="_pack-2" style={{ maxWidth: "var(--jahia-width)", marginInline: "auto" }}>
-        {children}
-        <div className="_pack-2" style={{ flex: 1, justifyContent: "end" }}>
+      <div className={classes.utilityBar}>
+        <div className={classes.utilityInner}>
+          {utilities}
+          {langs.length > 1 && (
+            <div className={classes.languageControl}>
+              <button
+                type="button"
+                className={classes.utilityLink}
+                aria-label={fr ? "Choisir la langue" : "Choose language"}
+                aria-expanded={languageOpen}
+                aria-controls={`${id}-languages`}
+                onClick={(event) => {
+                  trigger.current = event.currentTarget;
+                  setLanguageOpen(!languageOpen);
+                  setSubmenu(null);
+                }}
+              >
+                <span className="i-ri:global-line" aria-hidden="true" />
+                {language.toUpperCase()}
+                <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
+              </button>
+              <div id={`${id}-languages`} className={classes.languageMenu} hidden={!languageOpen}>
+                {languages}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className={classes.mainBar}>
+        <div className={classes.mainInner}>
+          <div className={classes.logo}>{children}</div>
           <div className={classes.desktopBar}>
-            {entries.map((entry) =>
+            {entries.map((entry, index) =>
               "href" in entry ? (
                 <a
                   key={entry.href}
+                  className={classes.barLink}
                   href={entry.href}
                   aria-current={entry.current ? "page" : undefined}
-                  className={classes.barLink}
-                  onMouseMove={() => {
-                    setOpen(false);
-                  }}
-                  data-element-url={entry.href}
-                  data-element-type="link"
-                  data-element-text={entry.title}
-                  data-element-location="header"
-                  data-element-name={`nav/${entry.title}`}
+                  {...tracking(entry)}
                 >
                   {entry.title}
                 </a>
               ) : (
-                <button
-                  type="button"
-                  key={entry.title}
-                  className={classes.barLink}
-                  onMouseMove={(event) => {
-                    refs.setReference(event.currentTarget);
-                    if (submenu) setAnimate(true);
-                    setOpen(true);
-                    setSubmenu(entry.title);
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key !== "Enter" && event.key !== " ") return;
-                    refs.setReference(event.currentTarget);
-                    if (submenu) setAnimate(true);
-                    setOpen(true);
-                    setSubmenu(entry.title);
-                    queueMicrotask(() => {
-                      refs.floating.current?.focus();
-                    });
-                  }}
-                >
-                  {entry.title}
-                  <span className="i-ri:arrow-down-wide-line" />
-                </button>
+                <div key={entry.title}>
+                  <button
+                    type="button"
+                    className={classes.barLink}
+                    aria-expanded={submenu === index}
+                    aria-controls={`${id}-desktop-${index}`}
+                    onClick={(event) => {
+                      trigger.current = event.currentTarget;
+                      setSubmenu(submenu === index ? null : index);
+                      setLanguageOpen(false);
+                    }}
+                  >
+                    {entry.title}
+                    <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
+                  </button>
+                  <div
+                    id={`${id}-desktop-${index}`}
+                    className={classes.desktopMenu}
+                    hidden={submenu !== index}
+                    data-theme="day"
+                  >
+                    <MenuPanel group={entry} contact={secondaryCTA} />
+                  </div>
+                </div>
               ),
             )}
-            {langs.length > 1 && (
-              <button
-                type="button"
-                className={classes.barLink}
-                onMouseMove={(event) => {
-                  refs.setReference(event.currentTarget);
-                  if (submenu) setAnimate(true);
-                  setOpen(true);
-                  setSubmenu("lang");
-                }}
-                onFocus={(event) => {
-                  refs.setReference(event.currentTarget);
-                  if (submenu) setAnimate(true);
-                  setOpen(true);
-                  setSubmenu("lang");
-                }}
-              >
-                <span className="i-ri:global-line" aria-label="Language / Langue" />
-              </button>
+          </div>
+          <div className={classes.actions} data-theme="day">
+            <button
+              type="button"
+              className={classes.searchButton}
+              aria-label={fr ? "Rechercher" : "Search"}
+              title={fr ? "Rechercher" : "Search"}
+              aria-haspopup="dialog"
+              onClick={openSearch}
+              data-navbar-search
+            >
+              <span className="i-ri:search-line" aria-hidden="true" />
+            </button>
+            {primaryCTA && (
+              <CTA href={primaryCTA.href} location="header" name="nav-primary">
+                {primaryCTA.label}
+              </CTA>
             )}
             <button
               type="button"
-              className={clsx(classes.barLink, classes.searchButton)}
-              onClick={() => setSearchOpen(true)}
-              aria-label={language === "fr" ? "Rechercher" : "Search"}
+              className={classes.menuButton}
+              aria-label={
+                fr
+                  ? mobileOpen
+                    ? "Fermer le menu"
+                    : "Ouvrir le menu"
+                  : mobileOpen
+                    ? "Close menu"
+                    : "Open menu"
+              }
+              aria-expanded={mobileOpen}
+              aria-controls={`${id}-mobile`}
+              onClick={(event) => {
+                trigger.current = event.currentTarget;
+                setMobileOpen(!mobileOpen);
+                setSubmenu(null);
+              }}
             >
-              <span className="i-ri:search-line" aria-hidden="true" />
-              <span>{language === "fr" ? "Rechercher" : "Search"}</span>
+              <span
+                className={mobileOpen ? "i-ri:close-large-line" : "i-ri:menu-line"}
+                aria-hidden="true"
+              />
             </button>
-            {secondaryCTA && (
-              <CTA href={secondaryCTA.href} icon secondary location="header" name="nav-secondary">
-                {secondaryCTA.label}
-              </CTA>
-            )}
           </div>
-          {primaryCTA && (
-            <CTA href={primaryCTA.href} location="header" name="nav-primary">
-              {primaryCTA.label}
-            </CTA>
-          )}
-
-          <button
-            type="button"
-            className={classes.menuButton}
-            onClick={() => {
-              if (open) close();
-              else setOpen(true);
-            }}
-            aria-label={open ? "Close menu" : "Open menu"}
-          >
-            <span className={open ? "i-ri:close-large-line" : "i-ri:menu-line"} />
-          </button>
         </div>
       </div>
-      {/* Mobile menu */}
-      <div
-        className={classes.mobileMenu}
-        inert={!open}
-        onTransitionEnd={() => {
-          if (!open) setSubmenu(null);
-        }}
-      >
-        {entries.map((entry) =>
+      <div id={`${id}-mobile`} className={classes.mobileMenu} hidden={!mobileOpen} data-theme="day">
+        {entries.map((entry, index) =>
           "href" in entry ? (
             <a
               key={entry.href}
+              className={classes.mobileLink}
               href={entry.href}
               aria-current={entry.current ? "page" : undefined}
-              data-element-url={entry.href}
-              data-element-type="link"
-              data-element-text={entry.title}
-              data-element-location="header"
-              data-element-name={`mobile-nav/${entry.title}`}
+              {...tracking(entry)}
             >
               {entry.title}
             </a>
           ) : (
-            <div key={entry.title} className={classes.submenu} data-open={submenu === entry.title}>
+            <div key={entry.title}>
               <button
                 type="button"
                 className={classes.submenuLabel}
-                onClick={() => setSubmenu((prev) => (prev === entry.title ? null : entry.title))}
-                aria-label={submenu === entry.title ? "Close submenu" : "Open submenu"}
+                aria-expanded={submenu === index}
+                aria-controls={`${id}-mobile-${index}`}
+                onClick={() => setSubmenu(submenu === index ? null : index)}
               >
-                <span>{entry.title}</span>
+                {entry.title}
                 <span
                   className={
-                    submenu === entry.title
-                      ? "i-ri:arrow-up-wide-line"
-                      : "i-ri:arrow-down-wide-line"
+                    submenu === index ? "i-ri:arrow-up-wide-line" : "i-ri:arrow-down-wide-line"
                   }
+                  aria-hidden="true"
                 />
               </button>
-              <ul
-                inert={submenu !== entry.title}
-                className={clsx(
-                  entry.children.every((entry) => !("href" in entry))
-                    ? classes.columns
-                    : classes.singleColumn,
-                )}
+              <div
+                id={`${id}-mobile-${index}`}
+                className={classes.mobileSubmenu}
+                hidden={submenu !== index}
               >
-                {entry.children.map((entry) =>
-                  "href" in entry ? (
-                    <li key={entry.href}>
-                      <a
-                        href={entry.href}
-                        aria-current={entry.current ? "page" : undefined}
-                        data-element-url={entry.href}
-                        data-element-type="link"
-                        data-element-text={entry.title}
-                        data-element-location="header"
-                        data-element-name={`mobile-nav/${entry.title}`}
-                      >
-                        {entry.title}
-                      </a>
-                    </li>
-                  ) : (
-                    <li key={entry.title} className={classes.menuColumn}>
-                      <small>{entry.title}</small>
-                      <ul>
-                        {entry.children.map(
-                          (entry) =>
-                            "href" in entry && (
-                              <li key={entry.href}>
-                                <a
-                                  href={entry.href}
-                                  aria-current={entry.current ? "page" : undefined}
-                                  data-element-url={entry.href}
-                                  data-element-type="link"
-                                  data-element-text={entry.title}
-                                  data-element-location="header"
-                                  data-element-name={`mobile-nav/${entry.title}`}
-                                >
-                                  {entry.title}
-                                </a>
-                              </li>
-                            ),
-                        )}
-                      </ul>
-                    </li>
-                  ),
-                )}
-              </ul>
+                <MenuPanel group={entry} contact={secondaryCTA} />
+              </div>
             </div>
           ),
         )}
-        {secondaryCTA && (
-          <div style={{ padding: ".5rem" }}>
-            <CTA
-              href={secondaryCTA.href}
-              icon
-              secondary
-              location="header"
-              name="mobile-nav-secondary"
-            >
-              {secondaryCTA.label}
-            </CTA>
-          </div>
-        )}
-        <button
-          type="button"
-          className={classes.mobileSearch}
-          onClick={() => {
-            close();
-            setSearchOpen(true);
-          }}
-        >
-          <span className="i-ri:search-line" aria-hidden="true" />
-          {language === "fr" ? "Rechercher" : "Search"}
-        </button>
-      </div>
-      {/* Desktop menu */}
-      <div
-        inert={!open}
-        tabIndex={-1}
-        ref={refs.setFloating}
-        style={{
-          ...floatingStyles,
-          transition: animate
-            ? "transform var(--jahia-motion-timing), opacity var(--jahia-timing)"
-            : undefined,
-        }}
-        onTransitionEnd={() => {
-          setAnimate(false);
-          if (!open) setSubmenu(null);
-        }}
-        className={classes.desktopMenu}
-        data-theme="cloudy"
-      >
-        <ul
-          className={clsx(
-            subentries?.every((entry) => !("href" in entry))
-              ? classes.columns
-              : classes.singleColumn,
+        <div className={classes.mobileUtilities}>
+          {utilities}
+          {langs.length > 1 && (
+            <div className={classes.mobileLanguages} aria-label={fr ? "Langues" : "Languages"}>
+              {languages}
+            </div>
           )}
-        >
-          {subentries?.map((entry) =>
-            "href" in entry ? (
-              <li key={entry.href}>
-                <a
-                  href={entry.href}
-                  aria-current={entry.current ? "page" : undefined}
-                  data-element-url={entry.href}
-                  data-element-type="link"
-                  data-element-text={entry.title}
-                  data-element-location="header"
-                  data-element-name={`nav/${entry.title}`}
-                >
-                  {entry.title}
-                </a>
-              </li>
-            ) : (
-              <li key={entry.title} className={classes.menuColumn}>
-                <small>{entry.title}</small>
-                <ul>
-                  {entry.children.map(
-                    (entry) =>
-                      "href" in entry && (
-                        <li key={entry.href}>
-                          <a
-                            href={entry.href}
-                            aria-current={entry.current ? "page" : undefined}
-                            data-element-url={entry.href}
-                            data-element-type="link"
-                            data-element-text={entry.title}
-                            data-element-location="header"
-                            data-element-name={`nav/${entry.title}`}
-                          >
-                            {entry.title}
-                          </a>
-                        </li>
-                      ),
-                  )}
-                </ul>
-              </li>
-            ),
-          )}
-        </ul>
+        </div>
       </div>
       <SearchDialog
         open={searchOpen}
         language={language}
         initialSearch={search}
-        onClose={() => setSearchOpen(false)}
+        onClose={closeSearch}
       />
     </nav>
   );
