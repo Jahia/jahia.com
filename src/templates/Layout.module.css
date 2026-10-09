@@ -1,10 +1,20 @@
 .stickyHeader {
+  --jahia-header-opacity: 100%;
+
   position: sticky;
   top: 0;
   z-index: 1000001;
-  background: color-mix(in srgb, var(--jahia-navy-blue) 75%, transparent);
   backdrop-filter: blur(0.5rem);
-  transition: background-color var(--jahia-timing);
+}
+
+.stickyHeader[data-scrolled="true"] {
+  --jahia-header-opacity: 75%;
+}
+
+.stickyHeader:hover,
+.stickyHeader:focus-within,
+.stickyHeader:has(nav[data-open="true"]) {
+  --jahia-header-opacity: 100%;
 }
 
 .skipLink {
@@ -23,10 +33,4 @@
   outline: 2px solid var(--jahia-a11y-blue);
   outline-offset: 2px;
   transform: translateY(0);
-}
-
-.stickyHeader:hover,
-.stickyHeader:focus-within,
-.stickyHeader:has(> nav[data-open="true"]) {
-  background-color: var(--jahia-container-background);
 }

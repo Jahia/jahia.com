@@ -1,0 +1,6 @@
+interface:
+  display_name: "Jahia UI/UX"
+  short_description: "Parcours UX, design Jahia et revue fondée sur des preuves"
+  default_prompt: "Utilise $jahia-ui-ux pour concevoir ou auditer ce parcours Jahia, justifier les choix et vérifier charte, accessibilité et expérience éditeur."
+policy:
+  allow_implicit_invocation: true
