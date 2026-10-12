@@ -54,7 +54,7 @@ jahiaComponent(
   {
     componentType: "template",
     nodeType: "jahiacom:blogEntry",
-    properties: { "cache.requestParameters": "search,cluster,theme,blogPage" },
+    properties: { "cache.requestParameters": "search" },
   },
   (props, { currentNode }) => (
     <Layout props={props} pageType="blog_post">

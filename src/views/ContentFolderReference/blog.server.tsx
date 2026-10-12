@@ -101,7 +101,6 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jnt:contentFolderReference",
     name: "blog",
-    properties: { "cache.requestParameters": "filter1,filter2,blogPage" },
   },
   (
     {
@@ -188,7 +187,6 @@ jahiaComponent(
         parentId: "",
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
-    const request = renderContext.getRequest();
     const advancedRoots = blogAdvancedFilter
       ? nodeReferences(blogAdvancedFilter, "filter1Categories")
       : [];
@@ -255,24 +253,8 @@ jahiaComponent(
       : categoryOptions.length
         ? [{ name: "filter1", title: t("blogListing.categories"), options: categoryOptions }]
         : [];
-    const selectedAdvanced = new Map<string, string>();
-    advancedFilters.forEach(({ name, options }, index) => {
-      const requested = request.getParameter(name);
-      const parent =
-        advancedHierarchy && index > 0 ? selectedAdvanced.get(`filter${index}`) || "" : "";
-      selectedAdvanced.set(
-        name,
-        requested &&
-          options.some(
-            ({ id, parentId }) => id === requested && (!advancedHierarchy || parentId === parent),
-          )
-          ? requested
-          : "",
-      );
-    });
     const filteredEntries = regularEntries;
     const pageSize = sanitizePageSize(blogPageSize);
-    const requestedPage = Number.parseInt(request.getParameter("blogPage") || "1", 10);
     const filterDependencies = new Map(
       [
         ...(blogAdvancedFilter ? [blogAdvancedFilter] : []),
@@ -297,7 +279,7 @@ jahiaComponent(
                   ? "blogListing.filterArticles"
                   : "blogListing.browseArticles",
               )}
-              <span aria-hidden="true">↓</span>
+              <span aria-hidden="true">â†“</span>
             </a>
           </div>
           <Render node={featuredEntry} view="featuredLead" />
@@ -306,7 +288,10 @@ jahiaComponent(
           {t("blogListing.allArticles")}
         </h2>
         {advancedFilters.length > 0 && (
-          <Island component={CascadingSelects} props={{ applyFiltersOnChange: true }}>
+          <Island
+            component={CascadingSelects}
+            props={{ applyFiltersOnChange: true, stateId: currentNode.getIdentifier() }}
+          >
             <form className={classes.filterForm} method="get">
               {advancedFilters.map(({ name, title, options }, index) => (
                 <label
@@ -317,7 +302,7 @@ jahiaComponent(
                   <span data-category-title={advancedHierarchy && index > 0 ? "" : undefined}>
                     {title}
                   </span>
-                  <select name={name} defaultValue={selectedAdvanced.get(name)}>
+                  <select name={name} defaultValue="">
                     <option value="">
                       {!advancedHierarchy || index === 0
                         ? t(
@@ -346,7 +331,7 @@ jahiaComponent(
             component={BlogGrid}
             props={{
               pageSize,
-              initialPage: Number.isFinite(requestedPage) ? requestedPage : 1,
+              stateId: currentNode.getIdentifier(),
               gridClassName: classes.grid,
               paginationClassName: classes.pagination,
               paginationLabel: t("blogListing.pagination"),
@@ -364,17 +349,13 @@ jahiaComponent(
                   )
                   .map(({ id }) => `${name}=${id}`),
               );
-              const matches = advancedFilters.every(({ name }) => {
-                const value = selectedAdvanced.get(name);
-                return !value || values.includes(`${name}=${value}`);
-              });
               return (
                 <div
                   key={entry.getIdentifier()}
                   className={classes.cardSlot}
                   data-blog-card-slot=""
                   data-filter-values={values.join("|")}
-                  data-filter-match={matches}
+                  data-filter-match="true"
                 >
                   <Render node={entry} />
                 </div>

@@ -1,9 +1,16 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
+import {
+  readResourceState,
+  restoreResourceFilters,
+  saveResourceState,
+  cleanResourceUrl,
+} from "../../components/resourceSession.js";
+import { updateCascadingSelects } from "../../components/CascadingSelects.client.jsx";
 
 interface Props {
   children: ReactNode;
   pageSize: number;
-  initialPage: number;
+  stateId: string;
   gridClassName: string;
   paginationClassName: string;
   paginationLabel: string;
@@ -15,7 +22,7 @@ interface Props {
 export default function BlogGrid({
   children,
   pageSize,
-  initialPage,
+  stateId,
   gridClassName,
   paginationClassName,
   paginationLabel,
@@ -24,27 +31,49 @@ export default function BlogGrid({
   nextLabel,
 }: Props) {
   const grid = useRef<HTMLDivElement>(null);
-  const [page, setPage] = useState(Math.max(1, initialPage));
+  const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
   const [filterVersion, setFilterVersion] = useState(0);
 
+  const initialized = useRef(false);
   useEffect(() => {
-    const update = () => {
-      setPage(1);
+    const update = (event: Event) => {
+      const detail = (event as CustomEvent<{ stateId: string; resetPage: boolean }>).detail;
+      if (detail?.stateId !== stateId) return;
+      if (detail.resetPage) setPage(1);
       setFilterVersion((version) => version + 1);
     };
     window.addEventListener("blog-filter-change", update);
     return () => window.removeEventListener("blog-filter-change", update);
-  }, []);
+  }, [stateId]);
 
   useEffect(() => {
     if (!grid.current) return;
+    let requestedPage = page;
+    const section = grid.current.closest("section");
+    if (!initialized.current) {
+      requestedPage = readResourceState(stateId).page;
+      if (section) {
+        restoreResourceFilters(section, stateId);
+        updateCascadingSelects(section);
+      }
+      initialized.current = true;
+    }
+    const filters = [
+      ...(section?.querySelectorAll<HTMLSelectElement>("select[name^=filter]") || []),
+    ]
+      .filter((select) => select.value)
+      .map((select) => `${select.name}=${select.value}`);
     const slots = [...grid.current.querySelectorAll<HTMLElement>("[data-blog-card-slot]")];
+    for (const slot of slots) {
+      const values = new Set((slot.dataset.filterValues || "").split("|"));
+      slot.dataset.filterMatch = String(filters.every((filter) => values.has(filter)));
+    }
     const cards = slots.filter(
       (slot) => slot.dataset.filterMatch !== "false" && slot.querySelector("article"),
     );
     const count = Math.max(1, Math.ceil(cards.length / pageSize));
-    const current = Math.min(Math.max(1, page), count);
+    const current = Math.min(Math.max(1, requestedPage), count);
 
     slots.forEach((slot) => (slot.hidden = true));
     cards.forEach((slot, index) => {
@@ -56,11 +85,9 @@ export default function BlogGrid({
     // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     if (current !== page) setPage(current);
 
-    const url = new URL(window.location.href);
-    if (current === 1) url.searchParams.delete("blogPage");
-    else url.searchParams.set("blogPage", String(current));
-    history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-  }, [filterVersion, page, pageSize]);
+    saveResourceState(stateId, { page: current });
+    cleanResourceUrl();
+  }, [filterVersion, page, pageSize, stateId]);
 
   return (
     <>
