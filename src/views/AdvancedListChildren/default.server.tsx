@@ -67,7 +67,6 @@ jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:advancedListChildren",
-    properties: { "cache.requestParameters": "filter1,filter2" },
   },
   (props: Props, { currentNode, renderContext }) => {
     const { t } = useTranslation();
@@ -147,26 +146,8 @@ jahiaComponent(
       return { ...filter, options };
     });
 
-    const requestParams = renderContext.getRequest().getParameterMap();
-    const selected = new Map<string, string>();
-    categoryFilters.forEach(({ name, options }, index) => {
-      const requested = requestParams.containsKey(name) ? requestParams.get(name)[0] : null;
-      const parent = hierarchy && index > 0 ? selected.get(`filter${index}`) || "" : "";
-      selected.set(
-        name,
-        requested &&
-          options.some(
-            (option) =>
-              option.node.getIdentifier() === requested &&
-              (!hierarchy || option.parentId === parent),
-          )
-          ? requested
-          : "",
-      );
-    });
-
     return (
-      <Island component={Filter}>
+      <Island component={Filter} props={{ stateId: currentNode.getIdentifier() }}>
         <div className={classes.filterPanel}>
           <div className={classes.filterFields} data-count={categoryFilters.length}>
             {categoryFilters.map(({ name, title, options }, index) => (
@@ -176,7 +157,7 @@ jahiaComponent(
                 hidden={hierarchy && index > 0}
               >
                 <span data-category-title={hierarchy && index > 0 ? "" : undefined}>{title}</span>
-                <select data-filter="" name={name} defaultValue={selected.get(name)}>
+                <select data-filter="" name={name} defaultValue="">
                   <option value="">
                     {!hierarchy || index === 0 ? t("advancedListChildren.selectOption") : title}
                   </option>
@@ -208,16 +189,8 @@ jahiaComponent(
                 )
                 .map(({ node }) => `${name}=${node.getIdentifier()}`),
             );
-            const hidden = categoryFilters.some(
-              ({ name }) =>
-                Boolean(selected.get(name)) && !values.includes(`${name}=${selected.get(name)}`),
-            );
             return (
-              <div
-                key={child.getIdentifier()}
-                data-filter-values={values.join("|")}
-                hidden={hidden}
-              >
+              <div key={child.getIdentifier()} data-filter-values={values.join("|")}>
                 <Render node={child} />
               </div>
             );

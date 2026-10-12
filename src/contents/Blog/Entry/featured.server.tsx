@@ -9,19 +9,12 @@ for (const name of ["featured", "featuredLead"] as const) {
       nodeType: "jahiacom:blogEntry",
       name,
     },
-    (props: Props, { currentNode, currentResource, renderContext }) => {
-      const request = renderContext.getRequest();
-
+    (props: Props, { currentNode, currentResource }) => {
       return (
         <BlogCard
           props={props}
           currentNode={currentNode}
           locale={currentResource.getLocale().getLanguage()}
-          listingState={{
-            filter1: request.getParameter("filter1") || undefined,
-            filter2: request.getParameter("filter2") || undefined,
-            page: request.getParameter("blogPage") || undefined,
-          }}
           featured
           featuredLead={name === "featuredLead"}
         />

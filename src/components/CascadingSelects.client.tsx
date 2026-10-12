@@ -1,4 +1,5 @@
 import { type FormEvent, type ReactNode, useEffect, useRef } from "react";
+import { restoreResourceFilters, saveResourceFilters } from "./resourceSession.js";
 
 export const updateCascadingSelects = (container: ParentNode) => {
   const levels = [...container.querySelectorAll<HTMLElement>("[data-hierarchy-level]")];
@@ -91,7 +92,7 @@ export const updateCascadingSelects = (container: ParentNode) => {
   }
 };
 
-const applyClientFilters = (container: HTMLElement) => {
+export const applyClientFilters = (container: HTMLElement, stateId: string, resetPage = true) => {
   const form = container.querySelector("form");
   if (!form) return;
   const filters = [...form.querySelectorAll<HTMLSelectElement>("select")]
@@ -102,41 +103,45 @@ const applyClientFilters = (container: HTMLElement) => {
     const values = new Set((child.dataset.filterValues || "").split("|").filter(Boolean));
     child.dataset.filterMatch = String(filters.every((filter) => values.has(filter)));
   }
-  const url = new URL(window.location.href);
-  for (const select of form.querySelectorAll<HTMLSelectElement>("select")) {
-    if (select.value) url.searchParams.set(select.name, select.value);
-    else url.searchParams.delete(select.name);
-  }
-  url.searchParams.delete("blogPage");
-  history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-  window.dispatchEvent(new CustomEvent("blog-filter-change"));
+  saveResourceFilters(form, stateId, resetPage);
+  window.dispatchEvent(new CustomEvent("blog-filter-change", { detail: { stateId, resetPage } }));
 };
 
 export default function CascadingSelects({
   children,
   applyFiltersOnChange = false,
+  stateId = "",
 }: {
   children: ReactNode;
   applyFiltersOnChange?: boolean;
+  stateId?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (ref.current) updateCascadingSelects(ref.current);
-  }, []);
+    if (!ref.current) return;
+    if (applyFiltersOnChange) restoreResourceFilters(ref.current, stateId);
+    updateCascadingSelects(ref.current);
+    if (applyFiltersOnChange) applyClientFilters(ref.current, stateId, false);
+  }, [applyFiltersOnChange, stateId]);
 
   return (
     <div
       ref={ref}
+      onSubmit={(event) => {
+        if (!applyFiltersOnChange) return;
+        event.preventDefault();
+        applyClientFilters(event.currentTarget, stateId);
+      }}
       onChange={(event: FormEvent<HTMLDivElement>) => {
         updateCascadingSelects(event.currentTarget);
-        if (applyFiltersOnChange) applyClientFilters(event.currentTarget);
+        if (applyFiltersOnChange) applyClientFilters(event.currentTarget, stateId);
       }}
       onReset={(event) => {
         if (!applyFiltersOnChange) return;
         const container = event.currentTarget;
         window.setTimeout(() => {
           updateCascadingSelects(container);
-          applyClientFilters(container);
+          applyClientFilters(container, stateId);
         });
       }}
     >

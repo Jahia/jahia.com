@@ -1,5 +1,6 @@
 import {
   buildNodeUrl,
+  Island,
   server,
   useJCRQuery,
   useServerContext,
@@ -8,6 +9,7 @@ import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
 import { resolveGlossaryIndex } from "../contents/GlossaryEntry/indexPage.js";
 import classes from "./Breadcrumb.module.css";
+import ResourceUrl from "../components/ResourceUrl.client.jsx";
 
 type BreadcrumbItem = {
   id: string;
@@ -47,7 +49,6 @@ export default function Breadcrumb({ pageType, title }: { pageType?: string; tit
   const { mainNode, renderContext } = useServerContext();
   const { t } = useTranslation();
   const home = renderContext.getSite().getHome();
-  const request = renderContext.getRequest();
   const resourceLibrary = findResourceLibrary(mainNode, home);
   const blogPages = useJCRQuery({
     query: `
@@ -72,21 +73,12 @@ export default function Breadcrumb({ pageType, title }: { pageType?: string; tit
       ];
     }
   } else if (pageType === "blog_post") {
-    const blogQuery = ["cluster", "theme", "blogPage"].flatMap((name) => {
-      const value = request.getParameter(name);
-      return value ? [`${name}=${encodeURIComponent(value)}`] : [];
-    });
-    const blogHref = blogPages[0]
-      ? `${buildNodeUrl(blogPages[0])}${blogQuery.length > 0 ? `?${blogQuery.join("&")}` : ""}`
-      : undefined;
-
     items = [
       { id: home.getIdentifier(), label: t("breadcrumb.home"), node: home },
       {
         id: blogPages[0]?.getIdentifier() || "blog",
         label: t("breadcrumb.blog"),
         node: blogPages[0],
-        href: blogHref,
       },
       { id: mainNode.getIdentifier(), label: title },
     ];
@@ -114,6 +106,9 @@ export default function Breadcrumb({ pageType, title }: { pageType?: string; tit
       data-glossary={mainNode.isNodeType("jahiacom:glossaryEntry") || undefined}
       aria-label={t("breadcrumb.label")}
     >
+      {(pageType === "blog_post" || pageType === "resource_library" || resourceLibrary) && (
+        <Island component={ResourceUrl} />
+      )}
       <ol>
         {items.map((item, index) => {
           const current = index === items.length - 1;
