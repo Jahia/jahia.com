@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.9.1
+
+* Keep resource listing pagination and filters in tab-scoped session storage. Restore valid selections after reload or returning from an article, clean legacy listing parameters from the URL, and use clean article and breadcrumb links. Preserve filtering when browser storage is unavailable.
+
 ## 1.9.0
 
 * Add an editable two-level navigation with utility links, descriptive dropdown panels, mobile navigation and search beside the demo CTA. Keep the header opaque at the top of the page, apply a translucent blurred background after scrolling, and harmonize the breadcrumb and anchor offsets.
