@@ -53,13 +53,12 @@ const Card = ({
         <span className={classes.badge}>{typeLabel}</span>
       </div>
       <div className={classes.content}>
-        <div className={classes.meta}>
-          <span>{typeLabel}</span>
-          {item.date && (
-            <time dateTime={item.date}>{new Date(item.date).toLocaleDateString(locale)}</time>
-          )}
-        </div>
         <h3>{item.title}</h3>
+        {item.date && (
+          <time className={classes.meta} dateTime={item.date}>
+            {new Date(item.date).toLocaleDateString(locale)}
+          </time>
+        )}
         {item.description && <p>{item.description}</p>}
       </div>
     </a>
