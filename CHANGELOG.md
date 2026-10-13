@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.9.2
+
+* Move resource card dates below their titles and keep the content-type badge only on the image.
+
 ## 1.9.1
 
 * Keep resource listing pagination and filters in tab-scoped session storage. Restore valid selections after reload or returning from an article, clean legacy listing parameters from the URL, and use clean article and breadcrumb links. Preserve filtering when browser storage is unavailable.
