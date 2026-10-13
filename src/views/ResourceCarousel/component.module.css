@@ -138,18 +138,8 @@
 }
 
 .meta {
-  display: flex;
-  gap: 0.625rem;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 0.625rem;
+  margin-top: 0.625rem;
   font-size: 0.75rem;
-}
-
-.meta span {
-  font-weight: 600;
-  color: var(--jahia-primary-color);
-  text-transform: uppercase;
 }
 
 .content h3 {
