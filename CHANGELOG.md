@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.10.1
+
+* Display configured icons beside navbar submenu labels on desktop and mobile.
+
 ## 1.10.0
 
 * Simplify the two-level navbar and make its upper controls editable from Home. Preserve native footer areas, guard unavailable references, and improve glossary navigation and related-resource carousels.
