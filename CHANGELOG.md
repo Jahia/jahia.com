@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 1.10.0
+
+* Simplify the two-level navbar and make its upper controls editable from Home. Preserve native footer areas, guard unavailable references, and improve glossary navigation and related-resource carousels.
+
 ## 1.9.2
 
 * Move resource card dates below their titles and keep the content-type badge only on the image.
