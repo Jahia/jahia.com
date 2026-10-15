@@ -33,6 +33,9 @@ function MenuLinks({ entries }: { entries: Entry[] }) {
               aria-current={entry.current ? "page" : undefined}
               {...tracking(entry)}
             >
+              {entry.icon && (
+                <img className={classes.itemIcon} src={entry.icon} alt="" width={24} height={24} />
+              )}
               <span className={classes.itemTitle}>{entry.title}</span>
             </a>
           ) : (

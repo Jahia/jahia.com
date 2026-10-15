@@ -279,6 +279,13 @@ span.rssIcon {
   font-weight: 700;
 }
 
+.itemIcon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+}
+
 .mobileMenu {
   padding: 0.5rem;
 }
