@@ -35,11 +35,28 @@
  - secondaryCTALabel (string) i18n
  - utilityNavigationLinks (weakreference, picker) multiple < jnt:page, jnt:nodeLink, jnt:externalLink
 
+// Applied to the home page only; existing site-level links remain a runtime fallback.
+[jahiacommix:homeUtilityNavigation] mixin
+ - utilityNavigationLinks (weakreference, picker) multiple < jnt:page, jnt:nodeLink, jnt:externalLink
+ - utilityLinksPosition (long) = 10 < '[0,1000]'
+ - utilitySearchVisible (boolean) = true
+ - utilitySearchLabel (string) i18n
+ - utilitySearchPosition (long) = 30 < '[0,1000]'
+ - utilityLanguagesVisible (boolean) = true
+ - utilityLanguagesLabel (string) i18n
+ - utilityLanguagesPosition (long) = 40 < '[0,1000]'
+ - utilityRssVisible (boolean) = true
+ - utilityRssLabel (string) i18n
+ - utilityRssUrl (string)
+ - utilityRssImage (weakreference, picker) < jmix:image
+ - utilityRssPosition (long) = 20 < '[0,1000]'
+
 // Optional editorial presentation of existing navigation entries and dropdowns.
 [jahiacommix:navigationItem] mixin extends=jnt:page extends=jnt:nodeLink extends=jnt:externalLink
  - navLabel (string) i18n
  - navDescription (string, textarea) i18n
  - navIcon (string, choicelist[resourceBundle]) < 'cms', 'dxp', 'ai'
+ - navIconImage (weakreference, picker) < jmix:image
  - navUtilityLabel (string) i18n
 
 [jahiacommix:navigationPanel] mixin extends=jnt:navMenuText

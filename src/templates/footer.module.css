@@ -8,11 +8,6 @@
 }
 
 @container (width >= 50rem) {
-  .wrapper {
-    display: grid;
-    grid-template-columns: 25rem 1fr;
-  }
-
   .padded {
     padding: 1.5rem;
   }
@@ -22,24 +17,6 @@
 :where(.footer) a {
   color: var(--jahia-neutral-400);
   text-decoration: inherit;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  justify-content: end;
-  padding: 1.5rem;
-  background: var(--jahia-neutral-700) url("./card.svg") center / cover no-repeat;
-}
-
-/* Don't use a H3 tag here, it makes no sense to have a real heading in the footer */
-.big {
-  font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
-  font-size: 1.5em;
-  font-weight: 500;
-  color: var(--jahia-title-color);
-  text-wrap: balance;
 }
 
 .columns {
@@ -56,4 +33,74 @@
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
+}
+
+.icons > div {
+  flex-wrap: wrap;
+}
+
+.bottomBar,
+.legalLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  align-items: center;
+}
+
+.bottomBar {
+  justify-content: space-between;
+}
+
+.bottomBar[data-edit="true"] {
+  display: block;
+}
+
+.socialArea {
+  min-width: 0;
+}
+
+.socialArea > div {
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.socialIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.25rem;
+}
+
+.socialIcon img {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+.socialIcon:focus-visible {
+  outline: 2px solid var(--jahia-neutral-50);
+  outline-offset: 3px;
+}
+
+a.socialIcon:hover {
+  background: var(--jahia-a11y-blue);
+}
+
+.badgeIcon {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+.badgeIcon img {
+  width: auto;
+  max-width: 100%;
+  max-height: 7rem;
+}
+
+.badgeIcon:focus-visible {
+  outline: 2px solid var(--jahia-neutral-50);
+  outline-offset: 3px;
 }

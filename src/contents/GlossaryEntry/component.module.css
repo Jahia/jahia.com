@@ -1,8 +1,9 @@
 .entry {
   padding-block: 2rem 4rem;
   font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  font-size: 1.0625rem;
   font-weight: 400;
-  line-height: 1.7;
+  line-height: 1.8;
   color: var(--jahia-neutral-600);
   background: var(--jahia-neutral-50);
 }
@@ -13,6 +14,7 @@
 }
 
 .entry a:where(:not([data-element-type="cta"])) {
+  font-weight: 600;
   color: var(--jahia-a11y-blue);
   text-decoration: none;
 }
@@ -28,6 +30,7 @@
   display: grid;
   gap: 2.75rem;
   min-width: 0;
+  max-width: 48rem;
 }
 
 .heading h1 {
@@ -106,6 +109,10 @@
   border-radius: 0;
 }
 
+.example a {
+  color: color-mix(in srgb, var(--jahia-a11y-blue) 85%, var(--jahia-navy-blue));
+}
+
 .followUp {
   display: grid;
   gap: 2rem;
@@ -128,21 +135,18 @@
   margin-bottom: 0.75rem;
 }
 
-.resourceGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
-  padding: 0;
-  margin-block: 0 0.5rem;
-  list-style: none;
+.resourceItem {
+  min-width: 0;
+  scroll-snap-align: start;
 }
 
-.resourceCard {
+.entry .resourceCard {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   height: 100%;
   padding: 1.25rem;
+  text-decoration: none;
   border: 1px solid var(--jahia-neutral-300);
   border-radius: 0;
 }
@@ -155,13 +159,25 @@
   color: var(--jahia-title-color);
 }
 
-.resourceCard:hover {
+.resourceCard:focus-within {
   border-color: var(--jahia-a11y-blue);
+}
+
+.resourceCard > a {
+  align-self: flex-start;
+  min-height: 2.75rem;
+  margin-top: auto;
+}
+
+.resourceCard a[data-element-type="cta"][data-variant="secondary"],
+.editorialFooter a[data-element-type="cta"][data-variant="secondary"] {
+  color: var(--jahia-a11y-blue);
+  background: var(--jahia-neutral-50);
 }
 
 .resourceKind {
   font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--jahia-a11y-blue);
   text-transform: none;
@@ -213,6 +229,7 @@
 
 .editorialFooter a {
   display: inline-flex;
+  gap: 0.5rem;
   align-items: center;
   min-height: 44px;
 }
@@ -249,12 +266,6 @@
   background: var(--jahia-light-blue);
 }
 
-@media (width < 800px) {
-  .resourceGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (width < 540px) {
   .summary {
     font-size: 1.125rem;
@@ -285,19 +296,6 @@
 .entry a:hover,
 .entry a:focus-visible {
   text-decoration: none;
-}
-
-.moreResources > summary {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  color: var(--jahia-a11y-blue);
-  cursor: pointer;
-  list-style: none;
-}
-
-.moreResources > summary::-webkit-details-marker {
-  display: none;
 }
 
 @media (width < 540px) {

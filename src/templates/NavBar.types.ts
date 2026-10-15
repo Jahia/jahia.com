@@ -1,9 +1,35 @@
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 
+export type HomeUtilityNavigationFields = {
+  utilityNavigationLinks?: JCRNodeWrapper[];
+  utilityLinksPosition?: number;
+  utilitySearchVisible?: boolean;
+  utilitySearchLabel?: string;
+  utilitySearchPosition?: number;
+  utilityLanguagesVisible?: boolean;
+  utilityLanguagesLabel?: string;
+  utilityLanguagesPosition?: number;
+  utilityRssVisible?: boolean;
+  utilityRssLabel?: string;
+  utilityRssUrl?: string;
+  utilityRssImage?: JCRNodeWrapper;
+  utilityRssPosition?: number;
+};
+
+export type UtilityKind = "links" | "rss" | "search" | "languages";
+export type UtilityControls = {
+  order: UtilityKind[];
+  searchVisible: boolean;
+  searchLabel: string;
+  languagesVisible: boolean;
+  languagesLabel: string;
+};
+
 export type NavigationItemFields = {
   navLabel?: string;
   navDescription?: string;
   navIcon?: "cms" | "dxp" | "ai";
+  navIconImage?: JCRNodeWrapper;
   navUtilityLabel?: string;
 };
 export type NavigationPanelFields = {
@@ -33,7 +59,6 @@ export type Page = {
 export type NavigationPanel = {
   intro?: { eyebrow?: string; heading: string; text?: string; link?: Page };
   feature?: { eyebrow?: string; heading: string; text?: string; link: Page };
-  footerText?: string;
   columns?: Group[];
 };
 export type Group = { title: string; children: Entry[]; panel?: NavigationPanel };

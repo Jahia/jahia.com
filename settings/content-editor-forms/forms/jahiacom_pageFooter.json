@@ -1,0 +1,18 @@
+{
+  "nodeType": "jahiacom:pageFooter",
+  "priority": 3,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "jahiacom:pageFooter",
+          "fields": [{ "name": "jcr:title", "hide": true }]
+        },
+        { "name": "jahiacommix:cta", "hide": true },
+        { "name": "jmix:internalLink", "hide": true },
+        { "name": "jmix:externalLink", "hide": true }
+      ]
+    }
+  ]
+}

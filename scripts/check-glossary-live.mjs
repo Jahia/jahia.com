@@ -3,6 +3,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { performance } from "node:perf_hooks";
+import { readRelatedLinks } from "./glossary-audit-links.mjs";
 
 const arg = (name, fallback) => {
   const i = process.argv.indexOf(name);
@@ -77,12 +78,7 @@ await Promise.all(
         const r = await request(url);
         const html = await r.text();
         const ms = Math.round(performance.now() - started);
-        const section =
-          html.match(/<section[^>]*aria-labelledby="related"[^>]*>([\s\S]*?)<\/section>/)?.[1] ||
-          "";
-        const links = [...section.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(
-          (m) => new URL(m[1].replaceAll("&amp;", "&"), url),
-        );
+        const links = readRelatedLinks(html, url);
         const targets = links.map((link) => link.pathname.replace(/^.*?\/sites\//, "/sites/"));
         const issues = [];
         if (r.status !== 200 || !html.includes('id="definition"')) issues.push("render-error");

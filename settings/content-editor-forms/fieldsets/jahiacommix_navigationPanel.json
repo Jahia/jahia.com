@@ -1,0 +1,12 @@
+{
+  "name": "jahiacommix:navigationPanel",
+  "priority": 2,
+  "fields": [
+    { "name": "navIntroEyebrow", "hide": true },
+    { "name": "navIntroHeading", "hide": true },
+    { "name": "navIntroText", "hide": true },
+    { "name": "navIntroLink", "hide": true },
+    { "name": "navIntroLabel", "hide": true },
+    { "name": "navFooterText", "hide": true }
+  ]
+}

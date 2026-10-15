@@ -98,14 +98,14 @@
               "rank": 2
             },
             {
-              "name": "autoTermLinks",
-              "rank": 3,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.autoTermLinksHelp"
-            },
-            {
               "name": "preferEducational",
               "rank": 4,
               "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.preferEducationalHelp"
+            },
+            {
+              "name": "autoTermLinks",
+              "rank": 3,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.autoTermLinksHelp"
             }
           ],
           "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.furtherHelp"
@@ -117,13 +117,8 @@
           "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.editorialHelp",
           "fields": [
             {
-              "name": "editorialAuthor",
-              "rank": 1,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.editorialAuthorHelp"
-            },
-            {
               "name": "editorialDate",
-              "rank": 2,
+              "rank": 1,
               "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.editorialDateHelp"
             }
           ]

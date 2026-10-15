@@ -7,6 +7,7 @@
     <jahiacom>
       <home
         j:isHomePage="true"
+        jcr:mixinTypes="jahiacommix:homeUtilityNavigation"
         j:templateName="basic"
         jcr:primaryType="jnt:page"
         >

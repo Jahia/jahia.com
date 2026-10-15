@@ -1,9 +1,17 @@
 .nav {
+  --jahia-primary-color: var(--jahia-a11y-blue);
+
   position: relative;
   z-index: 1;
+  container-type: inline-size;
   font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--jahia-navy-blue);
+}
+
+.nav a {
+  text-decoration: none;
 }
 
 .utilityBar {
@@ -31,8 +39,9 @@
 }
 
 .utilityInner {
+  flex-wrap: wrap;
   justify-content: flex-end;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
 }
 
 .mainBar {
@@ -80,18 +89,59 @@
   border-radius: 0.25rem;
 }
 
+.highlight {
+  composes: cta from "../mixins/CTA/component.module.css";
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1.5;
+  text-transform: none;
+  text-wrap: initial;
+}
+
+.highlight[data-variant="secondary"] {
+  color: var(--jahia-navy-blue);
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.highlight[data-variant="secondary"]:hover,
+.highlight[data-variant="secondary"]:focus-visible,
+.highlight[aria-expanded="true"],
+.highlight[aria-current] {
+  color: var(--jahia-navy-blue);
+  background: color-mix(in srgb, var(--jahia-a11y-blue) 10%, transparent);
+  border-color: var(--jahia-a11y-blue);
+}
+
 .barLink {
-  font-size: 0.8125rem;
+  font-size: 1rem;
   font-weight: 600;
   white-space: nowrap;
 }
 
 .barLink > span {
-  color: var(--jahia-a11y-blue);
+  color: inherit;
 }
 
 .utilityLink {
   min-height: 2rem;
+  font: inherit;
+}
+
+.rssIcon {
+  min-width: 2rem;
+  font-size: 1.25rem;
+}
+
+.rssIcon img {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+span.rssIcon {
+  cursor: default;
 }
 
 .actions {
@@ -119,6 +169,14 @@
 
 .desktopBar {
   display: none;
+}
+
+.desktopContact {
+  display: none;
+}
+
+.desktopContact > a {
+  min-height: 2.75rem;
 }
 
 .desktopMenu,
@@ -149,15 +207,10 @@
   gap: 1rem;
 }
 
-.panelIntro {
-  padding: 1.75rem;
-  background: var(--jahia-light-blue);
-}
-
 .eyebrow {
   margin-bottom: 0.75rem;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   line-height: 1.6;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -172,7 +225,7 @@
 }
 
 .panelText {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1.8;
   color: var(--jahia-neutral-600);
 }
@@ -183,7 +236,7 @@
 }
 
 .panelFeature {
-  padding: 1.5rem;
+  padding: 1.25rem;
   margin: 0.25rem;
   color: var(--jahia-neutral-50);
   background: var(--jahia-navy-blue);
@@ -194,41 +247,12 @@
   color: var(--jahia-neutral-100);
 }
 
-.panelLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.75rem;
+.panelAction {
   margin-top: 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--jahia-a11y-blue);
-  text-decoration: none;
 }
 
-.panelFeature .panelLink {
-  color: var(--jahia-blue);
-}
-
-.panelFooter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1.5rem;
-  font-size: 0.75rem;
-  color: var(--jahia-neutral-600);
-  background: var(--jahia-light-blue);
-  border-top: 1px solid var(--jahia-neutral-200);
-}
-
-.panelFooter .panelLink {
-  margin-top: 0;
-}
-
-.panelIntro .panelLink,
-.panelFooter .panelLink {
-  color: var(--jahia-navy-blue);
+.panelAction a {
+  min-height: 2.75rem;
 }
 
 .menuLinks {
@@ -243,48 +267,16 @@
   gap: 0.5rem;
   align-items: flex-start;
   min-height: 2.75rem;
-  padding: 0.75rem 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
   color: var(--jahia-navy-blue);
   text-decoration: none;
   border-radius: 0.25rem;
 }
 
-.itemIcon {
-  flex-shrink: 0;
-  width: 43px;
-  height: 43px;
-  object-fit: contain;
-}
-
-.itemCopy,
-.itemTitle,
-.itemDescription {
-  display: block;
-}
-
 .itemTitle {
-  font-size: 0.8125rem;
+  font-size: 1rem;
   font-weight: 700;
-}
-
-.itemCopy {
-  min-width: 0;
-}
-
-.itemDescription {
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
-  line-height: 1.7;
-  color: var(--jahia-neutral-600);
-}
-
-.groupTitle {
-  padding: 0 0.5rem 0.5rem;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.625rem;
-  line-height: 1.6;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
 .mobileMenu {
@@ -353,54 +345,36 @@
   outline-offset: 2px;
 }
 
-.barLink:hover,
-.barLink[aria-expanded="true"],
-.barLink[aria-current],
-.menuButton:hover,
-.searchButton:hover {
+.menuButton:hover {
   color: var(--jahia-navy-blue);
   background: var(--jahia-light-blue);
 }
 
 .utilityLink:hover {
-  text-decoration: underline;
+  background: color-mix(in srgb, currentcolor 10%, transparent);
 }
 
 .utilityBar .utilityLink:focus-visible {
   outline-color: var(--jahia-neutral-50);
 }
 
-.panelLink:hover {
-  text-decoration: underline;
-}
-
 .panelFeature a:focus-visible {
   outline-color: var(--jahia-neutral-50);
-}
-
-.menuLinks a:hover,
-.menuLinks a:focus-visible,
-.submenuLabel:hover,
-.submenuLabel[aria-expanded="true"],
-.mobileLink:hover {
-  background: var(--jahia-light-blue);
 }
 
 .menuLinks a[aria-current],
 .mobileLanguages a[aria-current] {
   font-weight: 700;
-  text-decoration: underline;
 }
 
-@media (width < 1200px) {
+@container (width < 75rem) {
   .utilityBar,
-  .desktopMenu,
-  .panelIntro {
+  .desktopMenu {
     display: none;
   }
 }
 
-@media (width < 400px) {
+@container (width < 25rem) {
   .mainInner,
   .actions {
     gap: 0.25rem;
@@ -411,7 +385,15 @@
   }
 }
 
-@media (width >= 1200px) {
+@container (width >= 75rem) {
+  .desktopContact {
+    display: block;
+  }
+
+  .mobileSearch {
+    display: none;
+  }
+
   .desktopBar {
     display: flex;
     flex: 1;
@@ -440,20 +422,12 @@
     gap: 0;
   }
 
-  .panelLayout[data-intro="true"] {
-    grid-template-columns: 13.75rem minmax(0, 1fr);
-  }
-
   .panelLayout[data-feature="true"] {
     grid-template-columns: minmax(0, 1fr) 18rem;
   }
 
-  .panelLayout[data-intro="true"][data-feature="true"] {
-    grid-template-columns: 13.75rem minmax(0, 1fr) 18rem;
-  }
-
   .panelNavigation {
-    padding: 1.75rem 1rem;
+    padding: 1.25rem 1rem;
   }
 
   .panelNavigation > .menuLinks {
@@ -464,6 +438,6 @@
 
   .panelFeature {
     align-self: start;
-    margin: 1.25rem;
+    margin: 1rem;
   }
 }

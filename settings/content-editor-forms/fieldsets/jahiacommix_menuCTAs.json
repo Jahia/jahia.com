@@ -1,0 +1,5 @@
+{
+  "name": "jahiacommix:menuCTAs",
+  "priority": 2,
+  "fields": [{ "name": "utilityNavigationLinks", "hide": true }]
+}
