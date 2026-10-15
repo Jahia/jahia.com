@@ -14,3 +14,4 @@
 [jahiacom:footerIcon] > jnt:content, mix:title
  - icon (weakreference, picker) mandatory < jmix:image
  - href (string)
+ - displayStyle (string, choicelist[resourceBundle]) = 'badge' < 'social', 'badge'

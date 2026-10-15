@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+import { Island } from "@jahia/javascript-modules-library";
+import Carousel from "../../views/ResourceCarousel/Carousel.client.jsx";
 import type { GlossaryItem } from "../../views/Glossary/model.js";
 import { CTA } from "../../mixins/CTA/index.jsx";
 import { splitDefinition } from "./inlineTerms.js";
@@ -35,7 +37,6 @@ export interface EntryViewProps {
 export default function Entry({
   title,
   summary,
-  editorialAuthor,
   editorialDateLabel,
   indexUrl,
   body,
@@ -65,7 +66,9 @@ export default function Entry({
               {definition.lead ? (
                 <p
                   className={classes.summary}
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(definition.lead) }}
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHtml(definition.lead),
+                  }}
                 />
               ) : (
                 <p className={classes.summary}>{summary}</p>
@@ -78,7 +81,9 @@ export default function Entry({
                 </h2>
                 <div
                   className="_richtext"
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(definition.body) }}
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHtml(definition.body),
+                  }}
                 />
               </section>
             )}
@@ -132,35 +137,35 @@ export default function Entry({
                   })}
                 </h2>
               </div>
-              <ul className={classes.resourceGrid}>
+              <Island
+                component={Carousel}
+                props={{
+                  itemCount: Math.min(resources.length, visibleCount),
+                  labelledBy: "resources",
+                  fitItems: true,
+                  showArrows: false,
+                }}
+              >
                 {resources.slice(0, visibleCount).map((resource) => (
-                  <li key={resource.id}>
-                    <a href={resource.url} className={classes.resourceCard}>
+                  <article key={resource.id} className={classes.resourceItem} data-carousel-item="">
+                    <div className={classes.resourceCard}>
                       <span className={classes.resourceKind}>
                         {t(`glossary.kinds.${resource.kind}`)}
                       </span>
                       <p className={classes.resourceTitle}>{resource.title}</p>
-                    </a>
-                  </li>
+                      <CTA
+                        secondary
+                        href={resource.url}
+                        location="glossary"
+                        name="resource-detail"
+                        aria-label={`${t("glossary.readResource")} : ${resource.title}`}
+                      >
+                        {t("glossary.readResource")}
+                      </CTA>
+                    </div>
+                  </article>
                 ))}
-              </ul>
-              {resources.length > visibleCount && (
-                <details className={classes.moreResources}>
-                  <summary>{t("glossary.showAllResources", { count: resources.length })}</summary>
-                  <ul className={classes.resourceGrid}>
-                    {resources.slice(visibleCount).map((resource) => (
-                      <li key={resource.id}>
-                        <a href={resource.url} className={classes.resourceCard}>
-                          <span className={classes.resourceKind}>
-                            {t(`glossary.kinds.${resource.kind}`)}
-                          </span>
-                          <p className={classes.resourceTitle}>{resource.title}</p>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </details>
-              )}
+              </Island>
             </section>
           ) : isEditMode ? (
             <p className={classes.editorNote}>{t("glossary.resourcesMissing")}</p>
@@ -191,18 +196,17 @@ export default function Entry({
           )}
           <footer className={classes.editorialFooter}>
             <div>
-              {editorialAuthor && (
-                <p>
-                  {t("glossary.author")} : {editorialAuthor}
-                </p>
-              )}
               {editorialDateLabel && (
                 <p>
                   {t("glossary.editorialDate")} : {editorialDateLabel}
                 </p>
               )}
             </div>
-            {indexUrl && <a href={indexUrl}>{t("glossary.backToGlossary")}</a>}
+            {indexUrl && (
+              <CTA secondary href={indexUrl} location="glossary" name="back-to-glossary">
+                {t("glossary.backToGlossary")}
+              </CTA>
+            )}
           </footer>
         </div>
       </div>

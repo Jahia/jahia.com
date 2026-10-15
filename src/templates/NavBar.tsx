@@ -18,11 +18,14 @@ import type {
   NavigationPanel,
   NavigationPanelFields,
   Page,
+  UtilityControls,
+  UtilityKind,
 } from "./NavBar.types.js";
 import cmsIcon from "../../static/icons/navigation/cms.png?no-inline";
 import dxpIcon from "../../static/icons/navigation/dxp.png?no-inline";
 import aiIcon from "../../static/icons/navigation/ai.svg?no-inline";
 import { navigationUrl } from "./navigationUrl.js";
+import { referenceLink } from "./referenceLink.js";
 
 const icons = { cms: cmsIcon, dxp: dxpIcon, ai: aiIcon };
 const text = (
@@ -31,12 +34,20 @@ const text = (
 ) => (node.hasProperty(property) ? node.getPropertyAsString(property) : undefined);
 const itemContent = (node: JCRNodeWrapper) => {
   const icon = text(node, "navIcon");
+  const image = referenceLink(
+    () => node.hasProperty("navIconImage") && node.getProperty("navIconImage").getValue().getNode(),
+    (image) => {
+      server.render.addCacheDependency({ path: image.getPath() }, useServerContext().renderContext);
+      return buildNodeUrl(image);
+    },
+  );
   return {
     description: text(node, "navDescription"),
     icon:
-      icon && Object.hasOwn(icons, icon)
+      image?.href ||
+      (icon && Object.hasOwn(icons, icon)
         ? buildModuleFileUrl(icons[icon as keyof typeof icons])
-        : undefined,
+        : undefined),
   };
 };
 
@@ -87,46 +98,52 @@ const getEntries = (
       node.isNodeType("jnt:externalLink"),
   )
     .map((node) => {
-      cache(node);
-      // If the node is a menu entry, recursively get its children
-      if (node.isNodeType("jnt:navMenuText")) {
-        return {
-          title: node.getDisplayableName(),
-          children: getEntries(node, current, panel, cache),
-          panel: panel(node),
-        };
-      }
+      try {
+        if (!node.hasPermission("jcr:read")) return null;
+        cache(node);
+        // If the node is a menu entry, recursively get its children
+        if (node.isNodeType("jnt:navMenuText")) {
+          return {
+            title: node.getDisplayableName(),
+            children: getEntries(node, current, panel, cache),
+            panel: panel(node),
+          };
+        }
 
-      if (node.isNodeType("jnt:externalLink")) {
-        const href = navigationUrl(
-          node.hasProperty("j:url") ? node.getPropertyAsString("j:url") : undefined,
-        );
-        if (!href) return null;
+        if (node.isNodeType("jnt:externalLink")) {
+          const href = navigationUrl(
+            node.hasProperty("j:url") ? node.getPropertyAsString("j:url") : undefined,
+          );
+          if (!href) return null;
+          return {
+            title: itemLabel(node),
+            href,
+            current: false,
+            ...itemContent(node),
+          };
+        }
+
+        // The node may be a page or a link to another node
+        const target = node.isNodeType("jnt:nodeLink")
+          ? node.hasProperty("j:node") && node.getProperty("j:node")?.getValue()?.getNode()
+          : node;
+
+        if (!target || !target.hasPermission("jcr:read")) return null;
+        cache(target);
+
         return {
           title: itemLabel(node),
-          href,
-          current: false,
+          href: buildNodeUrl(target)
+            // Jahia only rewrites static HTML links in edit mode, fix the menu links
+            // to work in edit mode as well
+            .replace("/cms/edit/", "/cms/editframe/"),
+          current: current === target.getIdentifier(),
           ...itemContent(node),
         };
+      } catch {
+        // Omit only the inaccessible entry, preserving the remaining menu.
+        return null;
       }
-
-      // The node may be a page or a link to another node
-      const target = node.isNodeType("jnt:nodeLink")
-        ? node.hasProperty("j:node") && node.getProperty("j:node")?.getValue()?.getNode()
-        : node;
-
-      if (!target) return null;
-      cache(target);
-
-      return {
-        title: itemLabel(node),
-        href: buildNodeUrl(target)
-          // Jahia only rewrites static HTML links in edit mode, fix the menu links
-          // to work in edit mode as well
-          .replace("/cms/edit/", "/cms/editframe/"),
-        current: current === target.getIdentifier(),
-        ...itemContent(node),
-      };
     })
     .filter((entry) => entry !== null);
 
@@ -144,12 +161,12 @@ export default function NavBar({
   const { renderContext } = useServerContext();
   const referencePage = (reference: JCRNodeWrapper, label?: string): Page | undefined => {
     try {
-      if (!reference) return;
+      if (!reference || !reference.hasPermission("jcr:read")) return;
       server.render.addCacheDependency({ path: reference.getPath() }, renderContext);
       const target = reference.isNodeType("jnt:nodeLink")
         ? reference.hasProperty("j:node") && reference.getProperty("j:node").getValue().getNode()
         : reference;
-      if (!target) return;
+      if (!target || !target.hasPermission("jcr:read")) return;
       server.render.addCacheDependency({ path: target.getPath() }, renderContext);
       const href = navigationUrl(
         reference.isNodeType("jnt:externalLink")
@@ -219,12 +236,13 @@ export default function NavBar({
             link: featureLink,
           }
         : undefined,
-      footerText: text(node, "navFooterText"),
       columns: columns.length ? columns : undefined,
     };
   };
-  const utilityEntries: Page[] = site.hasProperty("utilityNavigationLinks")
-    ? site
+  const utilityRoot = root.isNodeType("jahiacommix:homeUtilityNavigation") ? root : site;
+  server.render.addCacheDependency({ path: utilityRoot.getPath() }, renderContext);
+  const utilityEntries: Page[] = utilityRoot.hasProperty("utilityNavigationLinks")
+    ? utilityRoot
         .getProperty("utilityNavigationLinks")
         .getValues()
         .flatMap((value) => {
@@ -242,11 +260,81 @@ export default function NavBar({
           }
         })
     : [];
-  const primaryCTALink =
-    site.hasProperty("primaryCTALink") && site.getProperty("primaryCTALink").getValue().getNode();
-  const secondaryCTALink =
-    site.hasProperty("secondaryCTALink") &&
-    site.getProperty("secondaryCTALink").getValue().getNode();
+  const siteCTA = (property: "primaryCTALink" | "secondaryCTALink", label: string) =>
+    referenceLink(
+      () => site.hasProperty(property) && site.getProperty(property).getValue().getNode(),
+      (node) => buildNodeUrl(node),
+      site.hasProperty(label) ? site.getPropertyAsString(label) : undefined,
+    );
+  const primaryCTA = siteCTA("primaryCTALink", "primaryCTALabel");
+  const visible = (name: string) => !root.hasProperty(name) || root.getProperty(name).getBoolean();
+  const label = (name: string, fallback: string) =>
+    (root.hasProperty(name) && root.getPropertyAsString(name)?.trim()) || fallback;
+  const positions: [UtilityKind, string, number][] = [
+    ["links", "utilityLinksPosition", 10],
+    ["rss", "utilityRssPosition", 20],
+    ["search", "utilitySearchPosition", 30],
+    ["languages", "utilityLanguagesPosition", 40],
+  ];
+  const controls: UtilityControls = {
+    order: positions
+      .map(([kind, property, fallback]) => ({
+        kind,
+        position: root.hasProperty(property) ? root.getProperty(property).getLong() : fallback,
+      }))
+      .sort((a, b) => a.position - b.position)
+      .map(({ kind }) => kind),
+    searchVisible: visible("utilitySearchVisible"),
+    searchLabel: label("utilitySearchLabel", language === "fr" ? "Rechercher" : "Search"),
+    languagesVisible: visible("utilityLanguagesVisible"),
+    languagesLabel: label(
+      "utilityLanguagesLabel",
+      language === "fr" ? "Choisir la langue" : "Choose language",
+    ),
+  };
+  server.render.addCacheDependency({ path: root.getPath() }, renderContext);
+  const utilityTranslation = `j:translation_${language}`;
+  if (root.hasNode(utilityTranslation))
+    server.render.addCacheDependency(
+      { path: root.getNode(utilityTranslation).getPath() },
+      renderContext,
+    );
+  const rssPath = ["footer/iconsLeft/rss", "footer/iconsRight/rss"].find((path) =>
+    site.hasNode(path),
+  );
+  const rssNode = rssPath ? site.getNode(rssPath) : undefined;
+  if (rssNode) server.render.addCacheDependency({ path: rssNode.getPath() }, renderContext);
+  const rssImage = referenceLink(
+    () =>
+      root.hasProperty("utilityRssImage") &&
+      root.getProperty("utilityRssImage").getValue().getNode(),
+    (image) => {
+      server.render.addCacheDependency({ path: image.getPath() }, renderContext);
+      return buildNodeUrl(image);
+    },
+  );
+  const rssLabel = label("utilityRssLabel", language === "fr" ? "Flux RSS" : "RSS feed");
+  const rssAddress = root.hasProperty("utilityRssVisible")
+    ? root.hasProperty("utilityRssUrl")
+      ? root.getPropertyAsString("utilityRssUrl")
+      : ""
+    : rssNode?.hasProperty("href")
+      ? rssNode.getPropertyAsString("href")
+      : undefined;
+  const safeRssAddress = navigationUrl(rssAddress);
+  const rss =
+    visible("utilityRssVisible") && (rssNode || root.hasProperty("utilityRssVisible"))
+      ? {
+          href:
+            safeRssAddress && /^(https?:\/\/|\/(?!\/))/i.test(safeRssAddress)
+              ? safeRssAddress
+              : undefined,
+          label: rssLabel,
+          pendingLabel: `${rssLabel} — ${language === "fr" ? "bientôt disponible" : "coming soon"}`,
+          image: rssImage?.href,
+        }
+      : undefined;
+  const secondaryCTA = siteCTA("secondaryCTALink", "secondaryCTALabel");
   const invalidLanguages = new Set(
     current.hasProperty("j:invalidLanguages")
       ? current
@@ -299,23 +387,16 @@ export default function NavBar({
         component={NavBarClient}
         props={{
           // Menu CTAs
-          primaryCTA: primaryCTALink && {
-            href: buildNodeUrl(primaryCTALink),
-            label:
-              site.getPropertyAsString("primaryCTALabel") || primaryCTALink.getDisplayableName(),
-          },
-          secondaryCTA: secondaryCTALink && {
-            href: buildNodeUrl(secondaryCTALink),
-            label:
-              site.getPropertyAsString("secondaryCTALabel") ||
-              secondaryCTALink.getDisplayableName(),
-          },
+          primaryCTA: primaryCTA && { href: primaryCTA.href, label: primaryCTA.title },
+          secondaryCTA: secondaryCTA && { href: secondaryCTA.href, label: secondaryCTA.title },
           // This can quickly get out of hand, if there are too many pages in the menu we need
           // to rethink the implementation
           entries: getEntries(root, current.getIdentifier(), panel, (node) =>
             server.render.addCacheDependency({ path: node.getPath() }, renderContext),
           ),
           utilityEntries,
+          controls,
+          rss,
           langs,
           language,
           search,

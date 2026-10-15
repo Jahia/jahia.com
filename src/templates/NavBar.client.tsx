@@ -1,4 +1,5 @@
 import {
+  Fragment,
   useCallback,
   useEffect,
   useId,
@@ -10,7 +11,7 @@ import {
 import classes from "./NavBar.module.css";
 import { CTA } from "../mixins/CTA/index.jsx";
 import SearchDialog, { type SearchState } from "./Search.client.jsx";
-import type { Entry, Group, Page } from "./NavBar.types.js";
+import type { Entry, Group, Page, UtilityControls, UtilityKind } from "./NavBar.types.js";
 
 const tracking = (entry: Page) => ({
   "data-element-url": entry.href,
@@ -26,39 +27,23 @@ function MenuLinks({ entries }: { entries: Entry[] }) {
         <li key={"href" in entry ? entry.href : entry.title}>
           {"href" in entry ? (
             <a
+              className={classes.highlight}
+              data-variant="secondary"
               href={entry.href}
               aria-current={entry.current ? "page" : undefined}
               {...tracking(entry)}
             >
-              {entry.icon && (
-                <img className={classes.itemIcon} src={entry.icon} alt="" width="43" height="43" />
-              )}
-              <span className={classes.itemCopy}>
-                <span className={classes.itemTitle}>{entry.title}</span>
-                {entry.description && (
-                  <span className={classes.itemDescription}>{entry.description}</span>
-                )}
-              </span>
+              <span className={classes.itemTitle}>{entry.title}</span>
             </a>
           ) : (
-            <>
-              <p className={classes.groupTitle}>{entry.title}</p>
-              <MenuLinks entries={entry.children} />
-            </>
+            <MenuLinks entries={entry.children} />
           )}
         </li>
       ))}
     </ul>
   );
 }
-function MenuPanel({
-  group,
-  contact,
-}: {
-  group: Group;
-  contact?: { href: string; label: string } | false;
-}) {
-  const intro = group.panel?.intro;
+function MenuPanel({ group }: { group: Group }) {
   const feature = group.panel?.feature;
   const columns = group.panel?.columns;
   // Keep existing menu destinations accessible even when optional columns are configured.
@@ -83,21 +68,8 @@ function MenuPanel({
     : group.children;
   return (
     <div className={classes.panelInner}>
-      <div className={classes.panelLayout} data-intro={!!intro} data-feature={!!feature}>
-        {intro && (
-          <div className={classes.panelIntro}>
-            {intro.eyebrow && <p className={classes.eyebrow}>{intro.eyebrow}</p>}
-            <p className={classes.panelHeading}>{intro.heading}</p>
-            {intro.text && <p className={classes.panelText}>{intro.text}</p>}
-            {intro.link && (
-              <a className={classes.panelLink} href={intro.link.href} {...tracking(intro.link)}>
-                {intro.link.title}
-              </a>
-            )}
-          </div>
-        )}
+      <div className={classes.panelLayout} data-feature={!!feature}>
         <div className={classes.panelNavigation}>
-          {!intro && <p className={classes.eyebrow}>{group.title}</p>}
           <MenuLinks entries={entries} />
         </div>
         {feature && (
@@ -105,27 +77,20 @@ function MenuPanel({
             {feature.eyebrow && <p className={classes.eyebrow}>{feature.eyebrow}</p>}
             <p className={classes.panelHeading}>{feature.heading}</p>
             {feature.text && <p className={classes.panelText}>{feature.text}</p>}
-            <a
-              className={classes.panelLink}
-              href={feature.link.href}
-              aria-label={`${feature.link.title} : ${feature.heading}`}
-              {...tracking(feature.link)}
-            >
-              {feature.link.title}
-            </a>
+            <div className={classes.panelAction} data-theme="night">
+              <CTA
+                secondary
+                href={feature.link.href}
+                location="header"
+                name="nav-feature"
+                aria-label={`${feature.link.title} : ${feature.heading}`}
+              >
+                {feature.link.title}
+              </CTA>
+            </div>
           </div>
         )}
       </div>
-      {group.panel?.footerText && (
-        <div className={classes.panelFooter}>
-          <p>{group.panel.footerText}</p>
-          {contact && (
-            <a className={classes.panelLink} href={contact.href}>
-              {contact.label}
-            </a>
-          )}
-        </div>
-      )}
     </div>
   );
 }
@@ -135,6 +100,8 @@ export default function NavBarClient({
   children,
   entries,
   utilityEntries = [],
+  controls,
+  rss,
   langs,
   language,
   search,
@@ -144,6 +111,8 @@ export default function NavBarClient({
   children: ReactNode;
   entries: Entry[];
   utilityEntries?: Page[];
+  controls: UtilityControls;
+  rss?: { href?: string; label: string; pendingLabel: string; image?: string } | false;
   langs: Array<{ language: string; name: string; href: string }>;
   language: string;
   search: SearchState;
@@ -166,13 +135,12 @@ export default function NavBarClient({
     const element = nav.current;
     if (!element) return;
     const header = element.closest<HTMLElement>("[data-jahia-header]");
-    const updateScrolled = () => {
-      const scrolled = String(window.scrollY > 0);
-      if (header && header.dataset.scrolled !== scrolled) header.dataset.scrolled = scrolled;
-    };
-    updateScrolled();
-    window.addEventListener("scroll", updateScrolled, { passive: true });
+    let desktopMode: boolean | undefined;
     const updateHeight = () => {
+      const menuButton = element.querySelector<HTMLElement>(`.${classes.menuButton}`);
+      const desktop = menuButton ? getComputedStyle(menuButton).display === "none" : false;
+      if (desktopMode !== undefined && desktopMode !== desktop) close();
+      desktopMode = desktop;
       if (header)
         document.documentElement.style.setProperty(
           "--jahia-header-height",
@@ -181,14 +149,10 @@ export default function NavBarClient({
     };
     const observer = new ResizeObserver(updateHeight);
     if (header) observer.observe(header);
+    observer.observe(element);
     updateHeight();
-    const breakpoint = window.matchMedia("(min-width: 1200px)");
-    breakpoint.addEventListener("change", close);
     return () => {
-      window.removeEventListener("scroll", updateScrolled);
-      header?.removeAttribute("data-scrolled");
       observer.disconnect();
-      breakpoint.removeEventListener("change", close);
       document.documentElement.style.removeProperty("--jahia-header-height");
     };
   }, []);
@@ -197,7 +161,11 @@ export default function NavBarClient({
       if (event.target instanceof Node && !nav.current?.contains(event.target)) close();
     };
     const keyboard = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+      if (
+        controls.searchVisible &&
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "k"
+      ) {
         event.preventDefault();
         searchTrigger.current =
           document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -219,7 +187,7 @@ export default function NavBarClient({
       document.removeEventListener("pointerdown", outside);
       document.removeEventListener("keydown", keyboard);
     };
-  }, [mobileOpen, submenu, languageOpen, searchOpen]);
+  }, [mobileOpen, submenu, languageOpen, searchOpen, controls.searchVisible]);
   const openSearch = (event: MouseEvent<HTMLButtonElement>) => {
     searchTrigger.current = event.currentTarget;
     close();
@@ -240,7 +208,7 @@ export default function NavBarClient({
           ?.focus();
     });
   }, []);
-  const utilities = (
+  const utilityLinks = (
     <>
       {utilityEntries.map((entry) => (
         <a
@@ -253,20 +221,49 @@ export default function NavBarClient({
           {entry.title}
         </a>
       ))}
-      {secondaryCTA && (
-        <a
-          className={classes.utilityLink}
-          href={secondaryCTA.href}
-          data-element-url={secondaryCTA.href}
-          data-element-type="cta"
-          data-element-text={secondaryCTA.label}
-          data-element-location="header"
-          data-element-name="nav-secondary"
-        >
-          {secondaryCTA.label}
-        </a>
-      )}
     </>
+  );
+  const rssIcon =
+    rss && rss.image ? (
+      <img src={rss.image} alt="" width="20" height="20" />
+    ) : (
+      <span className="i-ri:rss-line" aria-hidden="true" />
+    );
+  const rssControl =
+    rss &&
+    (rss.href ? (
+      <a
+        className={`${classes.utilityLink} ${classes.rssIcon}`}
+        href={rss.href}
+        aria-label={rss.label}
+        title={rss.label}
+      >
+        {rssIcon}
+      </a>
+    ) : (
+      <span
+        className={`${classes.utilityLink} ${classes.rssIcon}`}
+        role="img"
+        aria-label={rss.pendingLabel}
+        title={rss.pendingLabel}
+      >
+        {rssIcon}
+      </span>
+    ));
+  const searchButton = (utility = false) => (
+    <button
+      type="button"
+      className={utility ? classes.utilityLink : `${classes.searchButton} ${classes.highlight}`}
+      data-variant={utility ? undefined : "secondary"}
+      aria-label={controls.searchLabel}
+      title={controls.searchLabel}
+      aria-haspopup="dialog"
+      onClick={openSearch}
+      data-navbar-search
+    >
+      <span className="i-ri:search-line" aria-hidden="true" />
+      {utility && controls.searchLabel}
+    </button>
   );
   const languages = langs.map(({ name, href, language: code }) => (
     <a
@@ -279,10 +276,58 @@ export default function NavBarClient({
       {name}
     </a>
   ));
+  const desktopLanguages = (
+    <>
+      {controls.languagesVisible && langs.length > 1 && (
+        <div className={classes.languageControl}>
+          <button
+            type="button"
+            className={classes.utilityLink}
+            aria-label={controls.languagesLabel}
+            aria-expanded={languageOpen}
+            aria-controls={`${id}-languages`}
+            onClick={(event) => {
+              trigger.current = event.currentTarget;
+              setLanguageOpen(!languageOpen);
+              setSubmenu(null);
+            }}
+          >
+            <span className="i-ri:global-line" aria-hidden="true" />
+            {language.toUpperCase()}
+            <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
+          </button>
+          <div id={`${id}-languages`} className={classes.languageMenu} hidden={!languageOpen}>
+            {languages}
+          </div>
+        </div>
+      )}
+    </>
+  );
+  const renderUtility = (kind: UtilityKind, mobile: boolean) => {
+    switch (kind) {
+      case "links":
+        return utilityLinks;
+      case "rss":
+        return rssControl;
+      case "search":
+        return controls.searchVisible ? searchButton(true) : null;
+      case "languages":
+        return mobile
+          ? controls.languagesVisible && langs.length > 1 && (
+              <div className={classes.mobileLanguages} aria-label={controls.languagesLabel}>
+                {languages}
+              </div>
+            )
+          : desktopLanguages;
+    }
+  };
+  const utilities = (mobile = false) =>
+    controls.order.map((kind) => <Fragment key={kind}>{renderUtility(kind, mobile)}</Fragment>);
   return (
     <nav
       ref={nav}
       className={classes.nav}
+      data-theme="day"
       aria-label={fr ? "Navigation principale" : "Main navigation"}
       data-open={mobileOpen || submenu !== null || languageOpen}
       onBlur={(event) => {
@@ -293,33 +338,16 @@ export default function NavBarClient({
           close();
       }}
     >
-      <div className={classes.utilityBar}>
-        <div className={classes.utilityInner}>
-          {utilities}
-          {langs.length > 1 && (
-            <div className={classes.languageControl}>
-              <button
-                type="button"
-                className={classes.utilityLink}
-                aria-label={fr ? "Choisir la langue" : "Choose language"}
-                aria-expanded={languageOpen}
-                aria-controls={`${id}-languages`}
-                onClick={(event) => {
-                  trigger.current = event.currentTarget;
-                  setLanguageOpen(!languageOpen);
-                  setSubmenu(null);
-                }}
-              >
-                <span className="i-ri:global-line" aria-hidden="true" />
-                {language.toUpperCase()}
-                <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
-              </button>
-              <div id={`${id}-languages`} className={classes.languageMenu} hidden={!languageOpen}>
-                {languages}
-              </div>
-            </div>
-          )}
-        </div>
+      <div
+        className={classes.utilityBar}
+        hidden={
+          !utilityEntries.length &&
+          !rss &&
+          !controls.searchVisible &&
+          !(controls.languagesVisible && langs.length > 1)
+        }
+      >
+        <div className={classes.utilityInner}>{utilities()}</div>
       </div>
       <div className={classes.mainBar}>
         <div className={classes.mainInner}>
@@ -329,7 +357,8 @@ export default function NavBarClient({
               "href" in entry ? (
                 <a
                   key={entry.href}
-                  className={classes.barLink}
+                  className={`${classes.barLink} ${classes.highlight}`}
+                  data-variant="secondary"
                   href={entry.href}
                   aria-current={entry.current ? "page" : undefined}
                   {...tracking(entry)}
@@ -340,7 +369,8 @@ export default function NavBarClient({
                 <div key={entry.title}>
                   <button
                     type="button"
-                    className={classes.barLink}
+                    className={`${classes.barLink} ${classes.highlight}`}
+                    data-variant="secondary"
                     aria-expanded={submenu === index}
                     aria-controls={`${id}-desktop-${index}`}
                     onClick={(event) => {
@@ -358,24 +388,23 @@ export default function NavBarClient({
                     hidden={submenu !== index}
                     data-theme="day"
                   >
-                    <MenuPanel group={entry} contact={secondaryCTA} />
+                    <MenuPanel group={entry} />
                   </div>
                 </div>
               ),
             )}
           </div>
           <div className={classes.actions} data-theme="day">
-            <button
-              type="button"
-              className={classes.searchButton}
-              aria-label={fr ? "Rechercher" : "Search"}
-              title={fr ? "Rechercher" : "Search"}
-              aria-haspopup="dialog"
-              onClick={openSearch}
-              data-navbar-search
-            >
-              <span className="i-ri:search-line" aria-hidden="true" />
-            </button>
+            {controls.searchVisible && !mobileOpen && (
+              <div className={classes.mobileSearch}>{searchButton()}</div>
+            )}
+            {secondaryCTA && (
+              <div className={classes.desktopContact}>
+                <CTA secondary icon href={secondaryCTA.href} location="header" name="nav-secondary">
+                  {secondaryCTA.label}
+                </CTA>
+              </div>
+            )}
             {primaryCTA && (
               <CTA href={primaryCTA.href} location="header" name="nav-primary">
                 {primaryCTA.label}
@@ -414,7 +443,8 @@ export default function NavBarClient({
           "href" in entry ? (
             <a
               key={entry.href}
-              className={classes.mobileLink}
+              className={`${classes.mobileLink} ${classes.highlight}`}
+              data-variant="secondary"
               href={entry.href}
               aria-current={entry.current ? "page" : undefined}
               {...tracking(entry)}
@@ -425,7 +455,8 @@ export default function NavBarClient({
             <div key={entry.title}>
               <button
                 type="button"
-                className={classes.submenuLabel}
+                className={`${classes.submenuLabel} ${classes.highlight}`}
+                data-variant="secondary"
                 aria-expanded={submenu === index}
                 aria-controls={`${id}-mobile-${index}`}
                 onClick={() => setSubmenu(submenu === index ? null : index)}
@@ -443,18 +474,18 @@ export default function NavBarClient({
                 className={classes.mobileSubmenu}
                 hidden={submenu !== index}
               >
-                <MenuPanel group={entry} contact={secondaryCTA} />
+                <MenuPanel group={entry} />
               </div>
             </div>
           ),
         )}
         <div className={classes.mobileUtilities}>
-          {utilities}
-          {langs.length > 1 && (
-            <div className={classes.mobileLanguages} aria-label={fr ? "Langues" : "Languages"}>
-              {languages}
-            </div>
+          {secondaryCTA && (
+            <CTA secondary icon href={secondaryCTA.href} location="header" name="nav-secondary">
+              {secondaryCTA.label}
+            </CTA>
           )}
+          {utilities(true)}
         </div>
       </div>
       <SearchDialog

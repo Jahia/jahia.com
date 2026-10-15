@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { CTA } from "../../mixins/CTA/index.jsx";
 import { filterTerms, groupTerms, termLetter, type GlossaryItem } from "./model.js";
 import classes from "./component.module.css";
 
@@ -19,12 +20,20 @@ export interface GlossaryViewProps {
 }
 
 export function TermRow({ entry }: { entry: GlossaryItem }) {
+  const { t } = useTranslation();
   return (
     <article className={classes.card}>
-      <h3>
-        <a href={entry.url}>{entry.title}</a>
-      </h3>
+      <h3>{entry.title}</h3>
       <p>{entry.summary}</p>
+      <CTA
+        secondary
+        href={entry.url}
+        location="glossary"
+        name="term-detail"
+        aria-label={`${t("glossary.readTerm")} : ${entry.title}`}
+      >
+        {t("glossary.readTerm")}
+      </CTA>
     </article>
   );
 }
@@ -63,6 +72,25 @@ export default function Glossary({
           ) : (
             <>
               <div className={classes.controls}>
+                <nav id={`${id}-index`} className={classes.index} aria-label={t("glossary.browse")}>
+                  <p>{t("glossary.browse")}</p>
+                  <ul>
+                    {letters.map((letter) => (
+                      <li key={letter}>
+                        {groups.some(([key]) => key === letter) ? (
+                          <a
+                            href={`#${anchor(letter)}`}
+                            aria-label={t("glossary.goToLetter", { letter })}
+                          >
+                            {letter}
+                          </a>
+                        ) : (
+                          <span aria-disabled="true">{letter}</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
                 <div
                   className={classes.search}
                   role="search"
@@ -92,25 +120,6 @@ export default function Glossary({
                   </div>
                   <p id={`${id}-help`}>{searchHelp || t("glossary.searchHelp")}</p>
                 </div>
-                <nav id={`${id}-index`} className={classes.index} aria-label={t("glossary.browse")}>
-                  <p>{t("glossary.browse")}</p>
-                  <ul>
-                    {letters.map((letter) => (
-                      <li key={letter}>
-                        {groups.some(([key]) => key === letter) ? (
-                          <a
-                            href={`#${anchor(letter)}`}
-                            aria-label={t("glossary.goToLetter", { letter })}
-                          >
-                            {letter}
-                          </a>
-                        ) : (
-                          <span aria-disabled="true">{letter}</span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
               </div>
               <p className={classes.results} role="status" aria-live="polite" aria-atomic="true">
                 {query ? t("glossary.results", { count }) : ""}
@@ -132,9 +141,9 @@ export default function Glossary({
                     <h2 id={anchor(letter)} tabIndex={-1}>
                       {letter}
                     </h2>
-                    <a className={classes.backToIndex} href={`#${id}-index`}>
-                      {t("glossary.backToIndex")}
-                    </a>
+                    <p className={classes.groupCount}>
+                      {t("glossary.terms", { count: terms.length })}
+                    </p>
                   </div>
                   <div className={classes.cards}>
                     {terms.map((entry) => (
@@ -146,6 +155,13 @@ export default function Glossary({
             </>
           )}
           {children}
+          {!isEditMode && count > 0 && (
+            <div className={classes.directoryFooter}>
+              <CTA href={`#${id}-index`} location="glossary" name="back-to-top">
+                {t("glossary.backToTop")}
+              </CTA>
+            </div>
+          )}
         </div>
       </section>
     </div>

@@ -1,5 +1,5 @@
 .stickyHeader {
-  --jahia-header-opacity: 100%;
+  --jahia-header-opacity: 75%;
 
   position: sticky;
   top: 0;
@@ -7,11 +7,6 @@
   backdrop-filter: blur(0.5rem);
 }
 
-.stickyHeader[data-scrolled="true"] {
-  --jahia-header-opacity: 75%;
-}
-
-.stickyHeader:hover,
 .stickyHeader:focus-within,
 .stickyHeader:has(nav[data-open="true"]) {
   --jahia-header-opacity: 100%;

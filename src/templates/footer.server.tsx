@@ -5,9 +5,19 @@ import {
   RenderChildren,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
-import { MixinCTA, type CTAProps } from "../mixins/CTA/server.jsx";
 import classes from "./footer.module.css";
 import clsx from "clsx";
+import { navigationUrl } from "./navigationUrl.js";
+import { referenceLink } from "./referenceLink.js";
+
+const footerLinks = (nodes?: Array<JCRNodeWrapper | null>) =>
+  nodes?.flatMap((node) => {
+    const link = referenceLink(
+      () => node,
+      (target) => buildNodeUrl(target),
+    );
+    return link ? [link] : [];
+  });
 
 jahiaComponent(
   {
@@ -15,52 +25,54 @@ jahiaComponent(
     nodeType: "jahiacom:pageFooter",
   },
   (
-    {
-      "jcr:title": title,
-      bottomLinks,
-      ...cta
-    }: { "jcr:title"?: string; "bottomLinks"?: Array<JCRNodeWrapper | null> } & CTAProps,
+    { bottomLinks }: { bottomLinks?: Array<JCRNodeWrapper | null> },
     { currentNode, renderContext },
-  ) => (
-    <footer className={classes.footer} data-theme="night">
-      <div className={classes.wrapper}>
-        <div className={classes.card}>
-          <p className={classes.big}>{title || "(title missing!)"}</p>
-          {cta.ctaType !== "none" && (
-            <p>
-              <MixinCTA cta={cta} location="footer" name={currentNode.getName()} />
-            </p>
-          )}
-        </div>
+  ) => {
+    return (
+      <footer className={classes.footer} data-theme="night">
         <div>
           <AbsoluteArea parent={currentNode} name="columns" nodeType="jahiacom:footerColumns" />
           <hr />
           <div className={renderContext.isEditMode() ? classes.padded : classes.icons}>
-            <AbsoluteArea parent={currentNode} name="iconsLeft" nodeType="jahiacom:footerIcons" />
+            {renderContext.isEditMode() && (
+              <AbsoluteArea parent={currentNode} name="iconsLeft" nodeType="jahiacom:footerIcons" />
+            )}
             <AbsoluteArea parent={currentNode} name="iconsRight" nodeType="jahiacom:footerIcons" />
           </div>
           <hr />
-          <div className={clsx("_row-2", classes.padded)}>
-            {bottomLinks
-              ?.filter((node) => node !== null)
-              .map((node) => (
+          <div
+            className={clsx(classes.bottomBar, classes.padded)}
+            data-edit={renderContext.isEditMode()}
+          >
+            <div className={classes.legalLinks}>
+              {footerLinks(bottomLinks)?.map((link) => (
                 <a
-                  href={buildNodeUrl(node)}
-                  key={node.getIdentifier()}
-                  data-element-url={buildNodeUrl(currentNode)}
+                  href={link.href}
+                  key={link.id}
+                  data-element-url={link.href}
                   data-element-type="link"
-                  data-element-text={node.getPropertyAsString("jcr:title")}
+                  data-element-text={link.title}
                   data-element-location="footer"
-                  data-element-name={node.getName()}
+                  data-element-name={link.name}
                 >
-                  {node.getPropertyAsString("jcr:title")}
+                  {link.title}
                 </a>
               )) || <em>Add links here!</em>}
+            </div>
+            {!renderContext.isEditMode() && (
+              <div className={classes.socialArea}>
+                <AbsoluteArea
+                  parent={currentNode}
+                  name="iconsLeft"
+                  nodeType="jahiacom:footerIcons"
+                />
+              </div>
+            )}
           </div>
         </div>
-      </div>
-    </footer>
-  ),
+      </footer>
+    );
+  },
 );
 
 jahiaComponent(
@@ -89,21 +101,19 @@ jahiaComponent(
   }) => (
     <div className="_stack-2">
       <strong>{title}</strong>
-      {links
-        ?.filter((node) => node !== null)
-        .map((node) => (
-          <a
-            href={buildNodeUrl(node)}
-            key={node.getIdentifier()}
-            data-element-url={buildNodeUrl(node)}
-            data-element-type="link"
-            data-element-text={node.getPropertyAsString("jcr:title")}
-            data-element-location="footer"
-            data-element-name={node.getName()}
-          >
-            {node.getPropertyAsString("jcr:title")}
-          </a>
-        ))}
+      {footerLinks(links)?.map((link) => (
+        <a
+          href={link.href}
+          key={link.id}
+          data-element-url={link.href}
+          data-element-type="link"
+          data-element-text={link.title}
+          data-element-location="footer"
+          data-element-name={link.name}
+        >
+          {link.title}
+        </a>
+      ))}
     </div>
   ),
 );
@@ -130,45 +140,59 @@ jahiaComponent(
       "jcr:title": title,
       icon,
       href,
-    }: { "jcr:title"?: string; "icon"?: JCRNodeWrapper; "href"?: string },
-    { renderContext, currentNode },
+      displayStyle = "badge",
+    }: {
+      "jcr:title"?: string;
+      "icon"?: JCRNodeWrapper;
+      "href"?: string;
+      "displayStyle"?: "social" | "badge";
+    },
+    { renderContext, currentNode, currentResource },
   ) => {
+    const invalid =
+      currentNode.hasProperty("j:invalidLanguages") &&
+      Array.from(currentNode.getProperty("j:invalidLanguages").getValues()).some(
+        (value) => value.getString() === currentResource.getLocale().getLanguage(),
+      );
+    if (invalid && !renderContext.isEditMode()) return null;
+    const iconClass = displayStyle === "badge" ? classes.badgeIcon : classes.socialIcon;
+    const safeHref = navigationUrl(href);
+    const image = referenceLink(
+      () => icon,
+      (node) => buildNodeUrl(node),
+    );
     if (renderContext.isEditMode()) {
       return (
         <span className="_pack-2">
-          {icon && (
-            <img
-              loading="lazy"
-              src={buildNodeUrl(icon)}
-              alt={title}
-              style={{ maxHeight: "4rem" }}
-            />
+          {image && (
+            <img loading="lazy" src={image.href} alt={title} style={{ maxHeight: "4rem" }} />
           )}
           {title || "(title missing!)"}
         </span>
       );
     }
 
-    return href ? (
+    if (!image) return null;
+    return safeHref ? (
       <a
-        href={href}
+        className={iconClass}
+        href={safeHref}
         target="_blank"
         rel="noopener noreferrer"
         title={title}
+        aria-label={title}
         data-element-url={href}
         data-element-type="image"
         data-element-text={`${title} image`}
         data-element-location="footer"
         data-element-name={currentNode.getName()}
       >
-        {icon && (
-          <img loading="lazy" src={buildNodeUrl(icon)} alt={title} style={{ maxHeight: "7rem" }} />
-        )}
+        <img loading="lazy" src={image.href} alt="" />
       </a>
-    ) : icon ? (
-      <img loading="lazy" src={buildNodeUrl(icon)} alt={title} style={{ maxHeight: "7rem" }} />
     ) : (
-      <del>{title}</del>
+      <span className={iconClass} title={title}>
+        <img loading="lazy" src={image.href} alt={title} />
+      </span>
     );
   },
 );

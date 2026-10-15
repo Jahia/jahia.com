@@ -3,6 +3,10 @@
   "priority": 2,
   "fields": [
     {
+      "name": "editorialAuthor",
+      "hide": true
+    },
+    {
       "name": "indexPage",
       "hide": true
     },

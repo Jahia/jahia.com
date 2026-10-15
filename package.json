@@ -21,8 +21,9 @@
     "dev": "vite build --watch",
     "watch": "run dev",
     "watch:callback": "run build:lottie && run package && run deploy",
-    "test:glossary": "node --test scripts/test-glossary-links.mjs scripts/test-glossary-related.mjs scripts/test-glossary-inline.mjs",
-    "check:glossary": "node scripts/check-glossary-live.mjs"
+    "test:glossary": "node --test scripts/test-glossary-links.mjs scripts/test-glossary-related.mjs scripts/test-glossary-inline.mjs scripts/test-glossary-audit.mjs",
+    "check:glossary": "node scripts/check-glossary-live.mjs",
+    "test:navigation": "node --test scripts/test-navigation-references.mjs"
   },
   "dependencies": {
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
