@@ -11,8 +11,11 @@ export declare class Locale {
 
 // @ts-expect-error This is a Java class
 export const Locale = Java.type("java.util.Locale");
-// @ts-expect-error This is a Java call
-const Messages = Java.type("org.jahia.utils.i18n.Messages");
+// Resolved on first use, not at module evaluation: a failing `Java.type` during the engine's
+// init script leaves a pooled GraalVM context without any of this module's views.
+let Messages:
+  | { get: (bundle: string, key: string, locale: Locale, defaultValue: string) => string }
+  | undefined;
 
 export interface Props {
   "jcr:title": string;
@@ -179,8 +182,15 @@ export const htmlToText = (html: string) =>
     .replace(/\s+/g, " ")
     .trim();
 
-const getMessage = (key: string, locale: Locale, defaultValue: string): string =>
-  Messages.get("resources.jahiacom", key, locale, defaultValue);
+const getMessage = (key: string, locale: Locale, defaultValue: string): string => {
+  try {
+    // @ts-expect-error This is a Java call
+    Messages ??= Java.type("org.jahia.utils.i18n.Messages");
+    return Messages!.get("resources.jahiacom", key, locale, defaultValue);
+  } catch {
+    return defaultValue;
+  }
+};
 
 export const levels = (
   level: Props["certification"],
