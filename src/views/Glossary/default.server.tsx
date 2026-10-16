@@ -9,6 +9,7 @@ import {
 import { glossaryUpdatedLabel, nodeModifiedAt } from "./updatedDate.js";
 import Glossary from "./Glossary.client.jsx";
 import type { Props } from "./types.js";
+import { glossaryEntries } from "./entries.server.js";
 
 jahiaComponent(
   { componentType: "view", nodeType: "jahiacom:glossary" },
@@ -29,42 +30,31 @@ jahiaComponent(
     server.render.addCacheDependency({ path: parent.getPath() }, renderContext);
     const nodes = getChildNodes(parent, -1, 0, (node) => node.isNodeType("jahiacom:glossaryEntry"));
     let latestUpdate = 0;
-    const entries = nodes
-      .filter(
-        (node) =>
-          !node.hasProperty("mergedInto") &&
-          node.hasI18N(currentResource.getLocale()) &&
-          node.hasPermission("jcr:read") &&
-          (!node.hasProperty("j:invalidLanguages") ||
-            !Array.from(node.getProperty("j:invalidLanguages").getValues(), (value) =>
-              value.getString(),
-            ).includes(currentResource.getLocale().getLanguage())),
-      )
-      .map((node) => {
-        server.render.addCacheDependency({ path: node.getPath() }, renderContext);
-        latestUpdate = Math.max(latestUpdate, nodeModifiedAt(node));
-        const translationName = `j:translation_${currentResource.getLocale().getLanguage()}`;
-        if (node.hasNode(translationName)) {
-          const translation = node.getNode(translationName);
-          server.render.addCacheDependency({ path: translation.getPath() }, renderContext);
-          latestUpdate = Math.max(latestUpdate, nodeModifiedAt(translation));
-        }
-        return {
-          id: node.getIdentifier(),
-          title:
-            node.getPropertyAsString("indexLabel") ||
-            node.getPropertyAsString("jcr:title") ||
-            node.getName(),
-          summary: node.getPropertyAsString("summary") || "",
-          aliases: [
-            node.getPropertyAsString("jcr:title") || "",
-            ...(node.hasProperty("aliases")
-              ? Array.from(node.getProperty("aliases").getValues(), (value) => value.getString())
-              : []),
-          ],
-          url: buildNodeUrl(node),
-        };
-      });
+    const entries = glossaryEntries(parent).map((node) => {
+      server.render.addCacheDependency({ path: node.getPath() }, renderContext);
+      latestUpdate = Math.max(latestUpdate, nodeModifiedAt(node));
+      const translationName = `j:translation_${currentResource.getLocale().getLanguage()}`;
+      if (node.hasNode(translationName)) {
+        const translation = node.getNode(translationName);
+        server.render.addCacheDependency({ path: translation.getPath() }, renderContext);
+        latestUpdate = Math.max(latestUpdate, nodeModifiedAt(translation));
+      }
+      return {
+        id: node.getIdentifier(),
+        title:
+          node.getPropertyAsString("indexLabel") ||
+          node.getPropertyAsString("jcr:title") ||
+          node.getName(),
+        summary: node.getPropertyAsString("summary") || "",
+        aliases: [
+          node.getPropertyAsString("jcr:title") || "",
+          ...(node.hasProperty("aliases")
+            ? Array.from(node.getProperty("aliases").getValues(), (value) => value.getString())
+            : []),
+        ],
+        url: buildNodeUrl(node),
+      };
+    });
     const isEditMode = renderContext.isEditMode();
     return (
       <Island

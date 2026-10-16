@@ -1,5 +1,44 @@
 # Editorial glossary pack
 
+## Automatic structured data and social metadata
+
+The page layout generates separate JSON-LD scripts for glossary entries:
+`DefinedTerm`, `WebPage`, `BreadcrumbList` (when an index is configured), and
+`FAQPage` (when the visible FAQ has nonempty h3 question/answer pairs). FAQ answers
+come from the sanitized rich text; updating editorial FAQ content updates the
+schema. Publication dates use `editorialDate`; modification dates use the current
+translation's `jcr:lastModified`. Missing or invalid dates are omitted.
+
+Pages containing the native Glossary component generate a localized
+`DefinedTermSet` and a two-level breadcrumb, also shown in the existing header.
+The set uses the same eligibility function and displayed labels as the directory;
+merged, inaccessible and unavailable translations are omitted. Nested child-page
+directories do not turn their ancestor pages into hubs.
+
+URLs come from Jahia's native default vanity selection and site URL generator,
+with native live URLs as a fallback when no vanity exists. No host or glossary
+slug is hard-coded. FR and EN use separate set identifiers. Existing editorial
+JSON-LD of these glossary types is replaced at render time, including blocks in
+arrays or `@graph`; unrelated valid schemas remain. Stored content is unchanged.
+
+Unlike the delivery ZIP examples, `inLanguage` is placed on `WebPage`, `FAQPage`
+and `DefinedTermSet`, not `DefinedTerm`: the latter is not one of the types
+supported by [Schema.org's inLanguage property](https://schema.org/inLanguage)
+(checked 16 October 2026). Language-specific URLs and set membership identify
+each translated term.
+
+Glossary entries and hubs also generate `og:url`, `og:type`, `og:locale` and
+Twitter card/title/description metadata. The existing `openGraphImage` field on
+an entry wins; otherwise an entry inherits its configured glossary index's image.
+Set the approved 1200 × 630 glossary image once on the hub to share it across
+entries. Without an assigned image, no image URL is invented. Both Open Graph and
+Twitter use the resolved image; Content Editor hints show the inherited image.
+
+No content-model migration, content import, deployment, or change to automatic
+related-term/resource selection is included. `yarn test:glossary` includes the
+structured-data and server-adapter tests; these do not replace an HTTP rendering
+check in Jahia after a separately authorized deployment.
+
 Local integration of the editorial pack reviewed on 1 October 2026. Installing the module changes rendering and exposes the fields below; it does **not** import or replace editorial content.
 
 ## Editorial fields
