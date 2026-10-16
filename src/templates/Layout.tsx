@@ -21,6 +21,7 @@ import "virtual:uno.css";
 import "./global.css";
 import "./themes.css";
 import { blogMetaTitle } from "../utils/blogMetaTitle.js";
+import { glossaryMetadata } from "../contents/GlossaryEntry/metadata.server.js";
 
 interface Props {
   "jcr:title": string;
@@ -63,6 +64,8 @@ export const Layout = ({
   } = props;
   const metadataTitle =
     pageType === "blog_post" ? blogMetaTitle(htmlTitle, title) : htmlTitle || title;
+  const glossary = glossaryMetadata(props, t("breadcrumb.home"));
+  const socialImage = glossary?.image || openGraphImage;
 
   return (
     <html lang={lang}>
@@ -71,6 +74,22 @@ export const Layout = ({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{metadataTitle}</title>
         <meta property="og:title" content={metadataTitle} />
+        {glossary && (
+          <>
+            <meta property="og:url" content={glossary.url} />
+            <meta property="og:type" content={glossary.type} />
+            <meta property="og:locale" content={glossary.locale} />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={metadataTitle} />
+            {description && <meta name="twitter:description" content={description} />}
+            {socialImage && (
+              <meta
+                name="twitter:image"
+                content={socialImage.getAbsoluteUrl(renderContext.getRequest())}
+              />
+            )}
+          </>
+        )}
         {description && (
           <>
             <meta name="description" content={description} />
@@ -78,28 +97,28 @@ export const Layout = ({
           </>
         )}
         {keywords && keywords.length > 0 && <meta name="keywords" content={keywords?.join(", ")} />}
-        {openGraphImage && (
+        {socialImage && (
           <>
             <meta
               property="og:image"
-              content={openGraphImage.getAbsoluteUrl(renderContext.getRequest())}
+              content={socialImage.getAbsoluteUrl(renderContext.getRequest())}
             />
-            {openGraphImage.hasProperty("jcr:title") && (
+            {socialImage.hasProperty("jcr:title") && (
               <meta
                 property="og:image:alt"
-                content={openGraphImage.getPropertyAsString("jcr:title")}
+                content={socialImage.getPropertyAsString("jcr:title")}
               />
             )}
-            {openGraphImage.hasProperty("j:width") && (
+            {socialImage.hasProperty("j:width") && (
               <meta
                 property="og:image:width"
-                content={openGraphImage.getPropertyAsString("j:width")}
+                content={socialImage.getPropertyAsString("j:width")}
               />
             )}
-            {openGraphImage.hasProperty("j:height") && (
+            {socialImage.hasProperty("j:height") && (
               <meta
                 property="og:image:height"
-                content={openGraphImage.getPropertyAsString("j:height")}
+                content={socialImage.getPropertyAsString("j:height")}
               />
             )}
           </>
@@ -110,7 +129,7 @@ export const Layout = ({
           .map((stylesheet) => (
             <style key={stylesheet.getIdentifier()}>{stylesheet.getPropertyAsString("css")}</style>
           ))}
-        {jsonLd?.map((content) => (
+        {(glossary?.jsonLd || jsonLd)?.map((content) => (
           <script type="application/ld+json" key={content}>
             {content}
           </script>
@@ -146,9 +165,9 @@ export const Layout = ({
             "Description": description,
             "Keywords": keywords?.join(", "),
             "OpenGraph image":
-              openGraphImage &&
-              `${openGraphImage.getPropertyAsString("jcr:title")} (${openGraphImage.getPropertyAsString("j:width")}x${openGraphImage.getPropertyAsString("j:height")}, ${prettyBytes(openGraphImage.getNode("jcr:content").getProperty("jcr:data").getLength())})`,
-            "JSON-LD": jsonLd?.length,
+              socialImage &&
+              `${socialImage.getPropertyAsString("jcr:title")} (${socialImage.getPropertyAsString("j:width")}x${socialImage.getPropertyAsString("j:height")}, ${prettyBytes(socialImage.getNode("jcr:content").getProperty("jcr:data").getLength())})`,
+            "JSON-LD": (glossary?.jsonLd || jsonLd)?.length,
           })}
         />
         <div className={classes.stickyHeader} data-theme="night" data-jahia-header>
@@ -158,7 +177,11 @@ export const Layout = ({
             current={mainNode}
             language={lang}
           />
-          <Breadcrumb pageType={pageType ?? props.pageType} title={title} />
+          <Breadcrumb
+            pageType={pageType ?? props.pageType}
+            title={title}
+            glossaryHub={glossary?.isHub}
+          />
         </div>
         <main id="main-content" tabIndex={-1}>
           {children}

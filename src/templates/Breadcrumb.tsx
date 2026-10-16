@@ -45,7 +45,15 @@ const findResourceLibrary = (
   return undefined;
 };
 
-export default function Breadcrumb({ pageType, title }: { pageType?: string; title: string }) {
+export default function Breadcrumb({
+  pageType,
+  title,
+  glossaryHub,
+}: {
+  pageType?: string;
+  title: string;
+  glossaryHub?: boolean;
+}) {
   const { mainNode, renderContext } = useServerContext();
   const { t } = useTranslation();
   const home = renderContext.getSite().getHome();
@@ -72,6 +80,11 @@ export default function Breadcrumb({ pageType, title }: { pageType?: string; tit
         { id: mainNode.getIdentifier(), label: title },
       ];
     }
+  } else if (glossaryHub) {
+    items = [
+      { id: home.getIdentifier(), label: t("breadcrumb.home"), node: home },
+      { id: mainNode.getIdentifier(), label: title },
+    ];
   } else if (pageType === "blog_post") {
     items = [
       { id: home.getIdentifier(), label: t("breadcrumb.home"), node: home },
