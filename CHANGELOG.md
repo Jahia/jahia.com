@@ -1,5 +1,11 @@
 # Jahia.com Template Set Changelog
 
+## 1.10.2
+
+* Generate localized glossary structured data from the displayed entries and FAQ, using Jahia's default vanity URLs and translation modification dates. Add glossary social metadata, inherit the hub's editable Open Graph image when an entry has none, and show the hub breadcrumb. Automatic related-term and resource selection remains unchanged.
+
+* Resolve the `org.jahia.utils.i18n.Messages` Java class on first use instead of at module load, so a failed lookup no longer leaves a JavaScript engine context without the module's views (intermittent "Une erreur s'est produite lors du rendu du contenu" in jContent). Partner level labels fall back to their English default if the lookup fails.
+
 ## 1.10.1
 
 * Display configured icons beside navbar submenu labels on desktop and mobile.
