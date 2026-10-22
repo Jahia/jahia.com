@@ -14,26 +14,23 @@ import jahia from "../../static/logos/jahia.svg?no-inline";
 import NavBarClient from "./NavBar.client.jsx";
 import type {
   Entry,
+  HomeNavbarButtonFields,
+  NavbarButton,
   NavigationItemFields,
   NavigationPanel,
   NavigationPanelFields,
   Page,
   UtilityControls,
-  UtilityKind,
+  UtilityEntry,
 } from "./NavBar.types.js";
-import cmsIcon from "../../static/icons/navigation/cms.png?no-inline";
-import dxpIcon from "../../static/icons/navigation/dxp.png?no-inline";
-import aiIcon from "../../static/icons/navigation/ai.svg?no-inline";
 import { navigationUrl } from "./navigationUrl.js";
 import { referenceLink } from "./referenceLink.js";
 
-const icons = { cms: cmsIcon, dxp: dxpIcon, ai: aiIcon };
 const text = (
   node: JCRNodeWrapper,
-  property: keyof NavigationItemFields | keyof NavigationPanelFields,
+  property: keyof NavigationItemFields | keyof NavigationPanelFields | keyof HomeNavbarButtonFields,
 ) => (node.hasProperty(property) ? node.getPropertyAsString(property) : undefined);
 const itemContent = (node: JCRNodeWrapper) => {
-  const icon = text(node, "navIcon");
   const image = referenceLink(
     () => node.hasProperty("navIconImage") && node.getProperty("navIconImage").getValue().getNode(),
     (image) => {
@@ -42,12 +39,7 @@ const itemContent = (node: JCRNodeWrapper) => {
     },
   );
   return {
-    description: text(node, "navDescription"),
-    icon:
-      image?.href ||
-      (icon && Object.hasOwn(icons, icon)
-        ? buildModuleFileUrl(icons[icon as keyof typeof icons])
-        : undefined),
+    icon: image?.href,
   };
 };
 
@@ -187,7 +179,7 @@ export default function NavBar({
   };
   const panelLink = (
     node: JCRNodeWrapper,
-    property: "navIntroLink" | "navFeatureLink",
+    property: "navFeatureLink",
     label: string | undefined,
   ) => {
     try {
@@ -199,7 +191,6 @@ export default function NavBar({
     }
   };
   const panel = (node: JCRNodeWrapper): NavigationPanel => {
-    const introHeading = text(node, "navIntroHeading");
     const featureLink = panelLink(node, "navFeatureLink", text(node, "navFeatureLabel"));
     const columns = (["One", "Two"] as const).flatMap((column) => {
       const property = `navColumn${column}Links` as const;
@@ -220,14 +211,6 @@ export default function NavBar({
       return children.length ? [{ title, children }] : [];
     });
     return {
-      intro: introHeading
-        ? {
-            eyebrow: text(node, "navIntroEyebrow"),
-            heading: introHeading,
-            text: text(node, "navIntroText"),
-            link: panelLink(node, "navIntroLink", text(node, "navIntroLabel")),
-          }
-        : undefined,
       feature: featureLink
         ? {
             eyebrow: text(node, "navFeatureEyebrow"),
@@ -241,49 +224,93 @@ export default function NavBar({
   };
   const utilityRoot = root.isNodeType("jahiacommix:homeUtilityNavigation") ? root : site;
   server.render.addCacheDependency({ path: utilityRoot.getPath() }, renderContext);
-  const utilityEntries: Page[] = utilityRoot.hasProperty("utilityNavigationLinks")
-    ? utilityRoot
-        .getProperty("utilityNavigationLinks")
-        .getValues()
-        .flatMap((value) => {
+  const legacyUtilityEntries = (): Page[] =>
+    utilityRoot.hasProperty("utilityNavigationLinks")
+      ? utilityRoot
+          .getProperty("utilityNavigationLinks")
+          .getValues()
+          .flatMap((value) => {
+            try {
+              const node = value.getNode();
+              if (!node) return [];
+              const page = referencePage(
+                node,
+                text(node, "navUtilityLabel") || node.getDisplayableName(),
+              );
+              return page ? [page] : [];
+            } catch {
+              // A weak reference may outlive a deleted navigation item.
+              return [];
+            }
+          })
+      : [];
+  let utilityEntries: UtilityEntry[];
+  try {
+    const stored: unknown = root.hasProperty("utilityItemsData")
+      ? JSON.parse(root.getPropertyAsString("utilityItemsData"))
+      : undefined;
+    utilityEntries = Array.isArray(stored)
+      ? stored.flatMap((row): UtilityEntry[] => {
           try {
-            const node = value.getNode();
-            if (!node) return [];
-            const page = referencePage(
-              node,
-              text(node, "navUtilityLabel") || node.getDisplayableName(),
-            );
-            return page ? [page] : [];
+            if (!row || typeof row !== "object") return [];
+            if (row.kind === "rss" || row.kind === "search" || row.kind === "languages")
+              return [{ kind: row.kind }];
+            if (row.kind === "internal" && typeof row.id === "string") {
+              const reference = root.getSession().getNodeByIdentifier(row.id);
+              if (!reference.hasPermission("jcr:read")) return [];
+              const page = referencePage(reference, text(reference, "navUtilityLabel"));
+              return page ? [page] : [];
+            }
+            if (row.kind !== "external" || typeof row.url !== "string") return [];
+            const href = /^https?:\/\/[^\s/]+(?:[/?#][^\s]*)?$/i.test(row.url.trim())
+              ? navigationUrl(row.url)
+              : undefined;
+            const title = row.labels?.[language] || row.labels?.en || row.labels?.fr;
+            return href && typeof title === "string" && title.trim()
+              ? [{ href, title: title.trim(), current: false }]
+              : [];
           } catch {
-            // A weak reference may outlive a deleted navigation item.
             return [];
           }
         })
-    : [];
-  const siteCTA = (property: "primaryCTALink" | "secondaryCTALink", label: string) =>
-    referenceLink(
-      () => site.hasProperty(property) && site.getProperty(property).getValue().getNode(),
+      : legacyUtilityEntries();
+  } catch {
+    utilityEntries = legacyUtilityEntries();
+  }
+
+  const buttonSource = root.isNodeType("jahiacommix:homeNavbarButtons") ? root : site;
+  const buttons: NavbarButton[] = (["contact", "demo"] as const).flatMap((id) => {
+    const prefix = id === "contact" ? "secondaryCTA" : "primaryCTA";
+    const link = referenceLink(
+      () =>
+        buttonSource.hasProperty(`${prefix}Link`) &&
+        buttonSource.getProperty(`${prefix}Link`).getValue().getNode(),
       (node) => buildNodeUrl(node),
-      site.hasProperty(label) ? site.getPropertyAsString(label) : undefined,
+      text(buttonSource, `${prefix}Label`),
     );
-  const primaryCTA = siteCTA("primaryCTALink", "primaryCTALabel");
+    if (!link) return [];
+    return [
+      {
+        id,
+        href: link.href,
+        label: link.title,
+        style:
+          text(root, `${prefix}Style`) === "primary"
+            ? "primary"
+            : text(root, `${prefix}Style`) === "secondary"
+              ? "secondary"
+              : id === "contact"
+                ? "secondary"
+                : "primary",
+        placement: text(root, `${prefix}Placement`) === "upper" ? "upper" : "main",
+      },
+    ];
+  });
+  if (text(root, "navbarCTAOrder") === "demoContact") buttons.reverse();
   const visible = (name: string) => !root.hasProperty(name) || root.getProperty(name).getBoolean();
   const label = (name: string, fallback: string) =>
     (root.hasProperty(name) && root.getPropertyAsString(name)?.trim()) || fallback;
-  const positions: [UtilityKind, string, number][] = [
-    ["links", "utilityLinksPosition", 10],
-    ["rss", "utilityRssPosition", 20],
-    ["search", "utilitySearchPosition", 30],
-    ["languages", "utilityLanguagesPosition", 40],
-  ];
   const controls: UtilityControls = {
-    order: positions
-      .map(([kind, property, fallback]) => ({
-        kind,
-        position: root.hasProperty(property) ? root.getProperty(property).getLong() : fallback,
-      }))
-      .sort((a, b) => a.position - b.position)
-      .map(({ kind }) => kind),
     searchVisible: visible("utilitySearchVisible"),
     searchLabel: label("utilitySearchLabel", language === "fr" ? "Rechercher" : "Search"),
     languagesVisible: visible("utilityLanguagesVisible"),
@@ -334,7 +361,6 @@ export default function NavBar({
           image: rssImage?.href,
         }
       : undefined;
-  const secondaryCTA = siteCTA("secondaryCTALink", "secondaryCTALabel");
   const invalidLanguages = new Set(
     current.hasProperty("j:invalidLanguages")
       ? current
@@ -387,8 +413,7 @@ export default function NavBar({
         component={NavBarClient}
         props={{
           // Menu CTAs
-          primaryCTA: primaryCTA && { href: primaryCTA.href, label: primaryCTA.title },
-          secondaryCTA: secondaryCTA && { href: secondaryCTA.href, label: secondaryCTA.title },
+          buttons,
           // This can quickly get out of hand, if there are too many pages in the menu we need
           // to rethink the implementation
           entries: getEntries(root, current.getIdentifier(), panel, (node) =>

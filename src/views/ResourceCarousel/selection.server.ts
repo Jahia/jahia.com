@@ -167,12 +167,25 @@ const resolveResourceType = (
   return allowGenericResource ? { kind: "resource" as const } : null;
 };
 
+/** Resolve presentation only for candidates that will actually be rendered. */
+export const cardPresentation = (node: JCRNodeWrapper) => ({
+  url: buildNodeUrl(node),
+  image: referencedNodes(node, RESOURCE_MODEL.properties.images)[0],
+});
+
 export const toCard = (
   node: JCRNodeWrapper,
   {
     allowGenericResource = false,
     includeCustomerCases = false,
-  }: { allowGenericResource?: boolean; includeCustomerCases?: boolean } = {},
+    includePresentation = true,
+    includeTaxonomy = true,
+  }: {
+    allowGenericResource?: boolean;
+    includeCustomerCases?: boolean;
+    includePresentation?: boolean;
+    includeTaxonomy?: boolean;
+  } = {},
 ): ResourceCardData | null => {
   if (
     !node.isNodeType(RESOURCE_MODEL.blogNodeType) &&
@@ -183,7 +196,11 @@ export const toCard = (
 
   if (!isPublished(node)) return null;
 
-  const categories = referencedNodes(node, [RESOURCE_MODEL.properties.categories]);
+  // Blog kind does not depend on categories. Pages still need them to resolve kind.
+  const categories =
+    includeTaxonomy || !node.isNodeType(RESOURCE_MODEL.blogNodeType)
+      ? referencedNodes(node, [RESOURCE_MODEL.properties.categories])
+      : [];
   const resourceType = resolveResourceType(node, categories, allowGenericResource);
   if (!resourceType || (!includeCustomerCases && resourceType.kind === "customerCase")) return null;
 
@@ -197,18 +214,22 @@ export const toCard = (
     id: identity(node),
     title,
     description: firstString(node, RESOURCE_MODEL.properties.descriptions),
-    url: buildNodeUrl(node),
+    url: includePresentation ? buildNodeUrl(node) : "",
     date,
     timestamp: Number.isFinite(timestamp) ? timestamp : 0,
-    image: referencedNodes(node, RESOURCE_MODEL.properties.images)[0],
+    image: includePresentation
+      ? referencedNodes(node, RESOURCE_MODEL.properties.images)[0]
+      : undefined,
     kind: resourceType.kind,
     typeLabel: "label" in resourceType ? resourceType.label : undefined,
-    taxonomyIds: [
-      ...new Set([
-        ...categories.flatMap(categoryLineageIds),
-        ...referencedNodes(node, [RESOURCE_MODEL.properties.clusters]).map(identity),
-      ]),
-    ],
+    taxonomyIds: includeTaxonomy
+      ? [
+          ...new Set([
+            ...categories.flatMap(categoryLineageIds),
+            ...referencedNodes(node, [RESOURCE_MODEL.properties.clusters]).map(identity),
+          ]),
+        ]
+      : [],
   };
 };
 
@@ -223,18 +244,8 @@ const byNewest = (first: ResourceCardData, second: ResourceCardData) =>
 const matchesAny = (item: ResourceCardData, categoryIds: string[]) =>
   categoryIds.length === 0 || categoryIds.some((id) => item.taxonomyIds.includes(id));
 
-const matchesFilters = (
-  item: ResourceCardData,
-  thematicIds: string[],
-  contentTypeIds: string[],
-  legacyIds: string[],
-) => {
-  if (thematicIds.length > 0 || contentTypeIds.length > 0) {
-    return matchesAny(item, thematicIds) && matchesAny(item, contentTypeIds);
-  }
-
-  return matchesAny(item, legacyIds);
-};
+const matchesFilters = (item: ResourceCardData, thematicIds: string[], contentTypeIds: string[]) =>
+  matchesAny(item, thematicIds) && matchesAny(item, contentTypeIds);
 
 export const sanitizeCount = (value?: number) =>
   Math.max(MIN_CONFIGURED_ITEMS, Math.min(MAX_ITEMS, Number(value) || DEFAULT_ITEMS));
@@ -247,7 +258,6 @@ export function selectResources({
   mode,
   thematicIds,
   contentTypeIds,
-  legacyIds,
   completeFallback,
   minimumItems,
 }: {
@@ -258,7 +268,6 @@ export function selectResources({
   mode: SelectionMode;
   thematicIds: string[];
   contentTypeIds: string[];
-  legacyIds: string[];
   completeFallback: boolean;
   minimumItems: number;
 }) {
@@ -288,9 +297,7 @@ export function selectResources({
         .map((node) => toCard(node, { allowGenericResource: true }))
         .filter((item): item is ResourceCardData => Boolean(item)),
     ).filter((item) => item.id !== currentId);
-    const fallback = filterPool.filter((item) =>
-      matchesFilters(item, thematicIds, contentTypeIds, legacyIds),
-    );
+    const fallback = filterPool.filter((item) => matchesFilters(item, thematicIds, contentTypeIds));
     const selected = completeFallback
       ? unique([...manual, ...fallback, ...automatic]).slice(0, count)
       : manual;
@@ -306,9 +313,7 @@ export function selectResources({
     return selected.length >= minimum ? selected : [];
   }
 
-  const filtered = filterPool.filter((item) =>
-    matchesFilters(item, thematicIds, contentTypeIds, legacyIds),
-  );
+  const filtered = filterPool.filter((item) => matchesFilters(item, thematicIds, contentTypeIds));
   const selected = completeFallback
     ? unique([...filtered, ...automatic]).slice(0, count)
     : filtered;

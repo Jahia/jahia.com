@@ -1,0 +1,123 @@
+{
+  "name": "jahiacommix:homeNavbarButtons",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "secondaryCTALink"
+    },
+    {
+      "name": "secondaryCTALabel"
+    },
+    {
+      "name": "secondaryCTAStyle",
+      "valueConstraints": [
+        {
+          "value": {
+            "type": "String",
+            "value": "primary"
+          },
+          "displayValue": "primary",
+          "displayValueKey": "jahiacom:navbarButtons.primary"
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "secondary"
+          },
+          "displayValue": "secondary",
+          "displayValueKey": "jahiacom:navbarButtons.secondary"
+        }
+      ]
+    },
+    {
+      "name": "secondaryCTAPlacement",
+      "valueConstraints": [
+        {
+          "value": {
+            "type": "String",
+            "value": "main"
+          },
+          "displayValue": "main",
+          "displayValueKey": "jahiacom:navbarButtons.main"
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "upper"
+          },
+          "displayValue": "upper",
+          "displayValueKey": "jahiacom:navbarButtons.upper"
+        }
+      ]
+    },
+    {
+      "name": "primaryCTALink"
+    },
+    {
+      "name": "primaryCTALabel"
+    },
+    {
+      "name": "primaryCTAStyle",
+      "valueConstraints": [
+        {
+          "value": {
+            "type": "String",
+            "value": "primary"
+          },
+          "displayValue": "primary",
+          "displayValueKey": "jahiacom:navbarButtons.primary"
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "secondary"
+          },
+          "displayValue": "secondary",
+          "displayValueKey": "jahiacom:navbarButtons.secondary"
+        }
+      ]
+    },
+    {
+      "name": "primaryCTAPlacement",
+      "valueConstraints": [
+        {
+          "value": {
+            "type": "String",
+            "value": "main"
+          },
+          "displayValue": "main",
+          "displayValueKey": "jahiacom:navbarButtons.main"
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "upper"
+          },
+          "displayValue": "upper",
+          "displayValueKey": "jahiacom:navbarButtons.upper"
+        }
+      ]
+    },
+    {
+      "name": "navbarCTAOrder",
+      "valueConstraints": [
+        {
+          "value": {
+            "type": "String",
+            "value": "contactDemo"
+          },
+          "displayValue": "contactDemo",
+          "displayValueKey": "jahiacom:navbarButtons.contactDemo"
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "demoContact"
+          },
+          "displayValue": "demoContact",
+          "displayValueKey": "jahiacom:navbarButtons.demoContact"
+        }
+      ]
+    }
+  ]
+}

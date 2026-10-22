@@ -1,6 +1,72 @@
 (function () {
   "use strict";
 
+  // Native ChoiceList uses i18next keys for translated static constraints.
+  if (window.jahia.i18n) {
+    window.jahia.i18n.addResourceBundle(
+      "fr",
+      "jahiacom",
+      {
+        navbarButtons: {
+          primary: "Primary",
+          secondary: "Secondary",
+          main: "Barre principale",
+          upper: "Barre supérieure",
+          contactDemo: "Contact → Démo",
+          demoContact: "Démo → Contact",
+        },
+        cardPurpose: {
+          standard: "Carte classique",
+          partnerRegion: "Région partenaire",
+          glossaryStatistic: "Statistique du glossaire",
+        },
+        buttonDestination: {
+          none: "Aucun bouton",
+          internal: "Lien interne",
+          external: "Lien externe",
+        },
+        carouselMode: {
+          automatic: "Automatique — thèmes de l’article ou ressources récentes",
+          filtered: "Par catégories — thématiques et types de contenu",
+          manual: "Manuel — articles et pages de ressources",
+        },
+      },
+      true,
+      false,
+    );
+    window.jahia.i18n.addResourceBundle(
+      "en",
+      "jahiacom",
+      {
+        navbarButtons: {
+          primary: "Primary",
+          secondary: "Secondary",
+          main: "Main bar",
+          upper: "Upper bar",
+          contactDemo: "Contact → Demo",
+          demoContact: "Demo → Contact",
+        },
+        cardPurpose: {
+          standard: "Standard card",
+          partnerRegion: "Partner region",
+          glossaryStatistic: "Glossary statistic",
+        },
+        buttonDestination: {
+          none: "No button",
+          internal: "Internal link",
+          external: "External link",
+        },
+        carouselMode: {
+          automatic: "Automatic — article topics or latest resources",
+          filtered: "By categories — themes and content types",
+          manual: "Manual — blog pages and resources",
+        },
+      },
+      true,
+      false,
+    );
+  }
+
   var REACT_ELEMENT = Symbol.for("react.element");
   var REGIONS = ["europe", "americas", "apac"];
 
@@ -16,8 +82,18 @@
     };
   }
 
-  function labels() {
-    var french = (document.documentElement.lang || "").toLowerCase().indexOf("fr") === 0;
+  function isFrench(context) {
+    var store = window.jahia.reduxStore;
+    var language =
+      (context && context.uilang) ||
+      (store && store.getState().uilang) ||
+      document.documentElement.lang ||
+      "en";
+    return String(language).toLowerCase().indexOf("fr") === 0;
+  }
+
+  function labels(context) {
+    var french = isFrench(context);
     return french
       ? {
           add: "Ajouter",
@@ -26,7 +102,6 @@
           country: "Pays",
           countryPlaceholder: "Ex. France",
           emptyRegion: "Choisir une région",
-          incomplete: "Sélectionnez une région et renseignez son pays.",
           remove: "Supprimer",
           regions: { europe: "Europe", americas: "Amériques", apac: "Asie-Pacifique" },
         }
@@ -37,7 +112,6 @@
           country: "Country",
           countryPlaceholder: "E.g. France",
           emptyRegion: "Choose a region",
-          incomplete: "Select a region and enter its country.",
           remove: "Remove",
           regions: { europe: "Europe", americas: "Americas", apac: "Asia Pacific" },
         };
@@ -65,7 +139,7 @@
 
   function PartnerLocationsPicker(props) {
     var moonstone = window.jahia.moonstone;
-    var text = labels();
+    var text = labels(props.editorContext);
     var rows = parse(props.value);
     var disabled = Boolean(props.readOnly || props.disabled);
     function change(nextRows) {
@@ -218,9 +292,7 @@
           h(
             window.jahia.moonstone.Button,
             {
-              label: (document.documentElement.lang || "").startsWith("fr")
-                ? "Retirer le logo"
-                : "Remove logo",
+              label: isFrench(props.parent.editorContext) ? "Retirer le logo" : "Remove logo",
               variant: "ghost",
               isDisabled: props.disabled,
               onClick: function () {
@@ -235,13 +307,10 @@
 
   function PartnerTestimonialsPicker(props) {
     var moonstone = window.jahia.moonstone;
-    var french = (document.documentElement.lang || "").startsWith("fr");
+    var french = isFrench(props.editorContext);
     var text = french
       ? {
           logo: "Logo de l’entreprise",
-          selectLogo: "Choisir un logo",
-          changeLogo: "Changer le logo",
-          removeLogo: "Retirer le logo",
           comment: "Commentaire",
           attribution: "Auteur / Entreprise",
           add: "Ajouter",
@@ -250,9 +319,6 @@
         }
       : {
           logo: "Company logo",
-          selectLogo: "Choose a logo",
-          changeLogo: "Change logo",
-          removeLogo: "Remove logo",
           comment: "Comment",
           attribution: "Author / Company",
           add: "Add",
@@ -388,6 +454,682 @@
   // Blog suggestions use Content Editor's current, unsaved values and native Category selector.
   // Prefill the draft only; publishing and saving remain normal editorial actions.
   var registry = window.jahia.uiExtender.registry;
+  // Reuse the native selector and link mixin handler. A field unmount is not
+  // a request to remove a stored link when a region card hides its CTA mode.
+  registry.add("selectorType", "ContextualButtonMode", {
+    cmp: function (props) {
+      var field = props.field;
+      if (!field || !field.valueConstraints)
+        return h(registry.get("selectorType", "Choicelist").cmp, props);
+      return h(
+        registry.get("selectorType", "Choicelist").cmp,
+        Object.assign({}, props, {
+          field: Object.assign({}, field, {
+            valueConstraints: field.valueConstraints.map(function (choice) {
+              var value = choice.value && choice.value.string;
+              return ["none", "internal", "external"].indexOf(value) === -1
+                ? choice
+                : Object.assign({}, choice, {
+                    displayValueKey: "jahiacom:buttonDestination." + value,
+                  });
+            }),
+          }),
+        }),
+      );
+    },
+    supportMultiple: false,
+    initValue: function (field) {
+      return registry.get("selectorType", "Choicelist").initValue(field);
+    },
+  });
+  registry.add("selectorType.onChange", "jahiacomButtonLinkMixins", {
+    targets: ["ContextualButtonMode"],
+    onChange: function (previous, value, field, context, selector, helper) {
+      if (value === undefined) return;
+      registry
+        .get("selectorType.onChange", "addMixinChoicelist")
+        .onChange(previous, value, field, context, selector, helper);
+    },
+  });
+  var buttonFieldVisibility = new WeakMap();
+  registry.add("selectorType.onChange", "jahiacomContextualButtons", {
+    targets: ["*"],
+    onChange: function (_, value, currentField, context) {
+      if (
+        value === undefined ||
+        ["ctaType", "cardPurpose"].indexOf(currentField.propertyName) === -1 ||
+        !context.formik ||
+        !context.onSectionsUpdate
+      )
+        return;
+      var sections = context.sections || [];
+      var fields = sections.flatMap(function (section) {
+        return (section.fieldSets || []).flatMap(function (fieldset) {
+          return fieldset.fields || [];
+        });
+      });
+      var mode = fields.find(function (field) {
+        return field.propertyName === "ctaType" && field.nodeType === "jahiacommix:cta";
+      });
+      if (!mode) return;
+      function fieldValue(property) {
+        if (currentField.propertyName === property) return value;
+        var field = fields.find(function (field) {
+          return field.propertyName === property;
+        });
+        return field && context.formik.values[field.name];
+      }
+      var nodeType = context.nodeTypeName || context.nodeData?.primaryNodeType?.name;
+      var region = nodeType === "jahiacom:card" && fieldValue("cardPurpose") === "partnerRegion";
+      var kind = fieldValue("ctaType") || "none";
+      var active = !region && (kind === "internal" || kind === "external");
+      var changed = false;
+      sections.forEach(function (section) {
+        (section.fieldSets || []).forEach(function (fieldset) {
+          fieldset.fields = (fieldset.fields || []).map(function (field) {
+            var applicable;
+            if (field.nodeType === "jahiacommix:cta")
+              applicable = field.propertyName === "ctaType" ? !region : active;
+            else if (field.nodeType === "jmix:internalLink")
+              applicable = active && kind === "internal";
+            else if (field.nodeType === "jmix:externalLink")
+              applicable = active && kind === "external";
+            else if (nodeType === "jahiacom:card" && field.propertyName === "hideCtaIcon")
+              applicable = active;
+            else return field;
+            if (!buttonFieldVisibility.has(field)) buttonFieldVisibility.set(field, field.visible);
+            var original = buttonFieldVisibility.get(field);
+            var visible = original && applicable;
+            if (field.visible === visible) return field;
+            changed = true;
+            var next = Object.assign({}, field, { visible: visible });
+            buttonFieldVisibility.set(next, original);
+            return next;
+          });
+        });
+      });
+      if (changed) context.onSectionsUpdate();
+    },
+  });
+  // Scope the shorter toolbar to explicitly configured editorial fields.
+  // Keep native RichText, its plugins and its HTML filtering; retain the rules
+  // formerly supplied by the removed font/color/alignment controls.
+  registry.add("selectorType", "EditorialRichText", {
+    cmp: function (props) {
+      var options = (props.field.selectorOptions || []).slice();
+      var remove = options.find(function (option) {
+        return option.name === "ckeditor.removeButtons";
+      });
+      var extra = options.find(function (option) {
+        return option.name === "ckeditor.extraAllowedContent";
+      });
+      options = options.filter(function (option) {
+        return (
+          ["ckeditor.removeButtons", "ckeditor.extraAllowedContent"].indexOf(option.name) === -1
+        );
+      });
+      options.push({
+        name: "ckeditor.removeButtons",
+        value: [
+          remove && remove.value,
+          "Font,FontSize,TextColor,BGColor,Smiley,Templates,Cut,Copy,Paste,PasteText,PasteFromWord,Find,Replace,SelectAll,JustifyLeft,JustifyCenter,JustifyRight,JustifyBlock,CreateDiv,ShowBlocks",
+        ]
+          .filter(Boolean)
+          .join(","),
+      });
+      options.push({
+        name: "ckeditor.extraAllowedContent",
+        value: [
+          extra && extra.value,
+          "span{font-family,font-size,color,background-color};font[face,size,color];*{text-align};div[id,dir,lang,title](*){*}",
+        ]
+          .filter(Boolean)
+          .join(";"),
+      });
+      return h(
+        registry.get("selectorType", "RichText").cmp,
+        Object.assign({}, props, {
+          field: Object.assign({}, props.field, { selectorOptions: options }),
+        }),
+      );
+    },
+    supportMultiple: false,
+  });
+  // Edit forms call initValue only when the property is absent. Keep stored
+  // values and native validation intact; opening the form never writes JCR.
+  registry.add("selectorType", "CarouselItemCount", {
+    cmp: function (props) {
+      return h(registry.get("selectorType", "Text").cmp, props);
+    },
+    supportMultiple: false,
+    initValue: function (field) {
+      return field.defaultValues && field.defaultValues[0]
+        ? field.defaultValues[0].string
+        : undefined;
+    },
+  });
+  // Project the existing native fields into their tool row, without copying persisted values.
+  var utilitySettingNames = {
+    search: ["utilitySearchVisible", "utilitySearchLabel"],
+    languages: ["utilityLanguagesVisible", "utilityLanguagesLabel"],
+    rss: ["utilityRssVisible", "utilityRssLabel", "utilityRssUrl", "utilityRssImage"],
+  };
+  registry.add("selectorType.onChange", "jahiacomInlineUtilitySettings", {
+    targets: ["UtilityItemsPicker"],
+    onChange: function (_, value, currentField, context) {
+      if (value === undefined || currentField.inlineUtilityFields || !context.onSectionsUpdate)
+        return;
+      var rows;
+      try {
+        rows = JSON.parse(value);
+      } catch {
+        return;
+      }
+      if (
+        !Array.isArray(rows) ||
+        !Object.keys(utilitySettingNames).every(function (kind) {
+          return (
+            rows.filter(function (row) {
+              return row && row.kind === kind;
+            }).length === 1
+          );
+        })
+      )
+        return;
+      var names = Object.values(utilitySettingNames).flat();
+      var sections = context.sections || [];
+      var fields = sections
+        .flatMap(function (section) {
+          return (section.fieldSets || []).flatMap(function (fieldset) {
+            return fieldset.fields || [];
+          });
+        })
+        .filter(function (field) {
+          return (
+            field.nodeType === "jahiacommix:homeUtilityNavigation" &&
+            names.indexOf(field.propertyName) !== -1
+          );
+        });
+      if (fields.length !== names.length) return; // Keep native controls if metadata is incomplete.
+      function refresh() {
+        sections.forEach(function (section) {
+          (section.fieldSets || []).forEach(function (fieldset) {
+            fieldset.fields = (fieldset.fields || []).map(function (field) {
+              if (field.name === currentField.name)
+                return Object.assign({}, field, {
+                  inlineUtilityFields: fields,
+                  refreshInlineUtilities: refresh,
+                });
+              return fields.some(function (setting) {
+                return setting.name === field.name;
+              })
+                ? Object.assign({}, field, { visible: false })
+                : field;
+            });
+          });
+        });
+        context.onSectionsUpdate();
+      }
+      refresh();
+    },
+  });
+
+  // FastField does not refresh a shared JSON field when only localized values change.
+  function InlineUtilityLanguageSync(props) {
+    this.props = props;
+  }
+  InlineUtilityLanguageSync.prototype.isReactComponent = {};
+  InlineUtilityLanguageSync.prototype.render = function () {
+    return null;
+  };
+  InlineUtilityLanguageSync.prototype.componentDidUpdate = function (previous) {
+    if (previous.initialValues !== this.props.initialValues) this.props.refresh();
+  };
+
+  function InlineUtilityField(props) {
+    var parent = props.parent,
+      field = props.field,
+      form = parent.form;
+    if (!field || !form) return null;
+    var disabled = Boolean(
+      parent.readOnly || parent.disabled || field.readOnly || form.isSubmitting,
+    );
+    var selector = registry.get("selectorType", field.selectorType);
+    if (selector.resolver) selector = selector.resolver(field.selectorOptions, field);
+    var displayField = props.visibility
+      ? Object.assign({}, field, { displayName: props.showLabel })
+      : field;
+    function changeSetting(value) {
+      if (disabled) return;
+      form.setFieldValue(field.name, value);
+      parent.field.refreshInlineUtilities();
+    }
+    var control = h(selector.cmp, {
+      id: field.name,
+      name: field.name,
+      field: displayField,
+      value: form.values[field.name],
+      readOnly: disabled,
+      disabled: disabled,
+      editorContext: parent.editorContext,
+      inputContext: Object.assign({}, parent.inputContext, {
+        selectorType: selector,
+        displayActions: false,
+      }),
+      onChange: changeSetting,
+      onBlur: function () {
+        if (!disabled) form.setFieldTouched(field.name, true);
+      },
+    });
+    return props.visibility
+      ? h("label", {
+          htmlFor: field.name,
+          style: { display: "flex", alignItems: "center", gap: 8 },
+          children: [control, props.showLabel],
+        })
+      : h(window.jahia.moonstone.Field, {
+          children: [
+            h("label", { htmlFor: field.name, children: field.displayName }),
+            control,
+            field.selectorType === "Picker" &&
+              form.values[field.name] &&
+              h(
+                window.jahia.moonstone.Button,
+                {
+                  type: "button",
+                  label: isFrench(parent.editorContext) ? "Retirer l’image" : "Remove image",
+                  isDisabled: disabled,
+                  onClick: function () {
+                    changeSetting(undefined);
+                  },
+                },
+                "clear",
+              ),
+            field.description &&
+              h(
+                window.jahia.moonstone.Typography,
+                {
+                  variant: "caption",
+                  children: field.description,
+                },
+                "help",
+              ),
+          ],
+        });
+  }
+
+  // One ordered list; native Picker for internal targets, inline fields for external URLs.
+  registry.add("selectorType", "UtilityItemsPicker", {
+    supportMultiple: false,
+    initValue: function () {
+      return JSON.stringify([{ kind: "rss" }, { kind: "search" }, { kind: "languages" }]);
+    },
+    cmp: function (props) {
+      var french = isFrench(props.editorContext);
+      var text = french
+        ? {
+            tools: { rss: "Flux RSS", search: "Recherche", languages: "Langues" },
+            show: "Afficher",
+            settings: "Réglages",
+            internal: "Ajouter un lien interne",
+            external: "Ajouter un lien externe",
+            up: "Monter",
+            down: "Descendre",
+            remove: "Supprimer",
+            link: "Lien",
+            fr: "Libellé français",
+            en: "Libellé anglais",
+            url: "URL externe",
+            invalid: "Renseignez les deux libellés et une URL complète en https:// ou http://.",
+            broken:
+              "La liste enregistrée est invalide. Elle est conservée ; contactez un administrateur.",
+          }
+        : {
+            tools: { rss: "RSS feed", search: "Search", languages: "Languages" },
+            show: "Show",
+            settings: "Settings",
+            internal: "Add internal link",
+            external: "Add external link",
+            up: "Move up",
+            down: "Move down",
+            remove: "Remove",
+            link: "Link",
+            fr: "French label",
+            en: "English label",
+            url: "External URL",
+            invalid: "Enter both labels and a complete https:// or http:// URL.",
+            broken: "The saved list is invalid. It has been preserved; contact an administrator.",
+          };
+      var rows;
+      try {
+        rows = JSON.parse(props.value || "[]");
+        if (!Array.isArray(rows)) throw new Error("Invalid list");
+      } catch {
+        return h("p", { role: "alert", children: text.broken });
+      }
+      var disabled = Boolean(props.readOnly || props.disabled);
+      var ui = window.jahia.moonstone;
+      function change(next) {
+        if (!disabled && props.onChange) props.onChange(JSON.stringify(next));
+      }
+      function update(index, changes) {
+        var next = rows.slice();
+        next[index] = Object.assign({}, next[index], changes);
+        change(next);
+      }
+      function button(label, onClick, key, inactive) {
+        return h(
+          ui.Button,
+          { type: "button", label: label, isDisabled: disabled || inactive, onClick: onClick },
+          key,
+        );
+      }
+      function moveButtons(index) {
+        return [-1, 1].map(function (delta) {
+          return button(
+            delta < 0 ? text.up : text.down,
+            function () {
+              if (index + delta < 0 || index + delta >= rows.length) return;
+              var next = rows.slice();
+              next[index] = rows[index + delta];
+              next[index + delta] = rows[index];
+              change(next);
+            },
+            delta,
+            index + delta < 0 || index + delta >= rows.length,
+          );
+        });
+      }
+      function input(label, value, onChange, invalid, key) {
+        return h(
+          ui.Field,
+          {
+            label: label,
+            children: h(ui.Input, {
+              "aria-label": label,
+              "aria-invalid": invalid || undefined,
+              "value": value || "",
+              "isDisabled": disabled,
+              "onChange": function (event) {
+                onChange(event.target.value);
+              },
+              "onBlur": props.onBlur,
+            }),
+          },
+          key,
+        );
+      }
+      return h("div", {
+        style: { display: "flex", flexDirection: "column", gap: 24 },
+        children: rows
+          .map(function (row, index) {
+            var tool = text.tools[row.kind];
+            if (tool) {
+              var settings = (props.field.inlineUtilityFields || []).filter(function (field) {
+                return utilitySettingNames[row.kind].indexOf(field.propertyName) !== -1;
+              });
+              var visibility = settings.find(function (field) {
+                return field.propertyName.endsWith("Visible");
+              });
+              return h(
+                "div",
+                {
+                  "role": "group",
+                  "aria-label": tool,
+                  "style": { display: "flex", flexDirection: "column", gap: 8 },
+                  "children": [
+                    h(
+                      "div",
+                      {
+                        style: {
+                          border: "1px solid var(--color-gray_light, #d5d5d5)",
+                          padding: 12,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 12,
+                        },
+                        children: [
+                          h(
+                            "div",
+                            {
+                              style: {
+                                display: "flex",
+                                alignItems: "center",
+                                flexWrap: "wrap",
+                                gap: 12,
+                              },
+                              children: [
+                                h(
+                                  "div",
+                                  {
+                                    style: { flex: 1 },
+                                    children: [
+                                      h(ui.Typography, { children: tool }, "title"),
+                                      h(
+                                        ui.Typography,
+                                        {
+                                          variant: "caption",
+                                          children: french
+                                            ? "Outil de navigation"
+                                            : "Navigation tool",
+                                        },
+                                        "type",
+                                      ),
+                                    ],
+                                  },
+                                  "label",
+                                ),
+                                visibility &&
+                                  h(
+                                    InlineUtilityField,
+                                    {
+                                      parent: props,
+                                      field: visibility,
+                                      visibility: true,
+                                      showLabel: text.show,
+                                    },
+                                    "visibility",
+                                  ),
+                              ],
+                            },
+                            "header",
+                          ),
+                          settings.length > 1 &&
+                            h(
+                              "details",
+                              {
+                                children: [
+                                  h("summary", { children: text.settings }, "summary"),
+                                  h(
+                                    "div",
+                                    {
+                                      style: {
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: 16,
+                                        paddingTop: 12,
+                                      },
+                                      children: settings
+                                        .filter(function (field) {
+                                          return field !== visibility;
+                                        })
+                                        .map(function (field) {
+                                          return h(
+                                            InlineUtilityField,
+                                            { parent: props, field: field },
+                                            field.name,
+                                          );
+                                        }),
+                                    },
+                                    "fields",
+                                  ),
+                                ],
+                              },
+                              "settings",
+                            ),
+                        ],
+                      },
+                      "card",
+                    ),
+                    h(
+                      "div",
+                      {
+                        style: { display: "flex", flexWrap: "wrap", gap: 8 },
+                        children: moveButtons(index),
+                      },
+                      "actions",
+                    ),
+                  ],
+                },
+                row.kind,
+              );
+            }
+
+            var validUrl =
+              /^https?:\/\/[^\s/]+(?:[/?#][^\s]*)?$/i.test(row.url || "") &&
+              Array.from(row.url || "").every(function (character) {
+                return character.charCodeAt(0) > 32 && character.charCodeAt(0) !== 127;
+              });
+            var validLabels =
+              row.labels &&
+              String(row.labels.fr || "").trim() &&
+              String(row.labels.en || "").trim();
+            var fields;
+            if (row.kind === "internal") {
+              var field = Object.assign({}, props.field, {
+                name: props.field.name + "-internal-" + index,
+                multiple: false,
+                readOnly: disabled,
+                selectorOptions: [],
+                valueConstraints: ["jnt:page", "jnt:nodeLink", "jnt:externalLink"].map(
+                  function (type) {
+                    return { displayValue: type, value: { string: type } };
+                  },
+                ),
+              });
+              var picker = registry
+                .get("selectorType", "Picker")
+                .resolver(field.selectorOptions, field);
+              fields = h(picker.cmp, {
+                field: field,
+                value: row.id || undefined,
+                editorContext: props.editorContext,
+                inputContext: Object.assign({}, props.inputContext, {
+                  selectorType: picker,
+                  displayActions: false,
+                }),
+                readOnly: disabled,
+                onBlur: props.onBlur,
+                onChange: function (value) {
+                  update(index, { id: value || "" });
+                },
+              });
+            } else {
+              fields = h("div", {
+                style: { display: "flex", flexDirection: "column", gap: 12 },
+                children: [
+                  ["fr", "en"].map(function (lang) {
+                    return input(
+                      text[lang],
+                      row.labels && row.labels[lang],
+                      function (value) {
+                        update(index, { labels: Object.assign({}, row.labels, { [lang]: value }) });
+                      },
+                      !row.labels || !String(row.labels[lang] || "").trim(),
+                      lang,
+                    );
+                  }),
+                  input(
+                    text.url,
+                    row.url,
+                    function (value) {
+                      update(index, { url: value });
+                    },
+                    !validUrl,
+                    "url",
+                  ),
+                  (!validUrl || !validLabels) &&
+                    h("p", { role: "status", children: text.invalid }, "validation"),
+                ],
+              });
+            }
+            return h(
+              "fieldset",
+              {
+                style: { border: 0, padding: 0, margin: 0, minWidth: 0 },
+                children: [
+                  h("legend", { children: text.link + " " + (index + 1) }, "legend"),
+                  fields,
+                  h(
+                    "div",
+                    {
+                      style: { display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 },
+                      children: [
+                        moveButtons(index),
+                        button(
+                          text.remove,
+                          function () {
+                            change(
+                              rows.filter(function (_, pos) {
+                                return pos !== index;
+                              }),
+                            );
+                          },
+                          "remove",
+                        ),
+                      ],
+                    },
+                    "actions",
+                  ),
+                ],
+              },
+              index,
+            );
+          })
+          .concat(
+            h(
+              "div",
+              {
+                style: { display: "flex", flexWrap: "wrap", gap: 8 },
+                children: [
+                  button(
+                    text.internal,
+                    function () {
+                      change(rows.concat({ kind: "internal", id: "" }));
+                    },
+                    "internal",
+                  ),
+                  button(
+                    text.external,
+                    function () {
+                      change(
+                        rows.concat({ kind: "external", labels: { fr: "", en: "" }, url: "" }),
+                      );
+                    },
+                    "external",
+                  ),
+                ],
+              },
+              "add",
+            ),
+            window.jahia.jcontent &&
+              props.field.refreshInlineUtilities &&
+              h(
+                window.jahia.jcontent.ContentEditorContext.Consumer,
+                {
+                  children: function (context) {
+                    return h(InlineUtilityLanguageSync, {
+                      initialValues: context.initialValues,
+                      refresh: props.field.refreshInlineUtilities,
+                    });
+                  },
+                },
+                "language-sync",
+              ),
+          ),
+      });
+    },
+  });
   var topicRoot = "/sites/systemsite/categories/topics/";
   var suggestionSessions = new WeakMap();
   var aliases = {
@@ -688,7 +1430,7 @@
   };
 
   function assistantLabels(context) {
-    return String(context.uilang || context.lang || "").indexOf("fr") === 0
+    return isFrench(context)
       ? {
           title: "Classification automatique",
           help:
@@ -1107,6 +1849,11 @@
         }
         if (nodeType === "jahiacom:blogEntry" && field.propertyName === "htmlTitle") {
           clearTimeout(session.titleTimer);
+          if (
+            context.mode !== "create" &&
+            sameValue(value, (context.formik.initialValues || {})[field.name])
+          )
+            return;
           session.titleTimer = setTimeout(function () {
             var titleField = formFields(session.context).find(function (item) {
               return item.propertyName === "jcr:title";
@@ -1125,6 +1872,17 @@
         input[other.propertyName] = context.formik.values[other.name];
       });
       input[field.propertyName] = value;
+      // Native selectors replay stored values on opening and language changes.
+      // Keep suggestions available, but do not turn an existing blog or glossary entry
+      // into a draft by filling missing metadata or categories on that replay.
+      var canPrefill =
+        context.mode === "create" ||
+        formFields(context).some(function (other) {
+          return (
+            ["jcr:title", "summary", "text", "body", "image"].indexOf(other.propertyName) !== -1 &&
+            !sameValue(input[other.propertyName], (context.formik.initialValues || {})[other.name])
+          );
+        });
       // Content Editor replays initial values when sections change. Updating the
       // suggestions descriptor must not start an endless loading/ready cycle.
       var fingerprint = JSON.stringify(
@@ -1137,7 +1895,7 @@
       clearTimeout(session.timer);
       var ticket = ++session.ticket;
       session.timer = setTimeout(function () {
-        prefillSeo(session, input);
+        if (canPrefill) prefillSeo(session, input);
         if (
           !formFields(context).some(function (other) {
             return other.propertyName === "j:defaultCategory";
@@ -1172,14 +1930,15 @@
                 ? suggestGlossaryTopics(categories, input)
                 : suggestClassification(categories, input);
             if (nodeType === "jahiacom:glossaryEntry") {
-              fillDraftField(
-                session,
-                "j:defaultCategory",
-                suggestions.map(function (item) {
-                  return item.uuid;
-                }),
-              );
-            } else {
+              if (canPrefill)
+                fillDraftField(
+                  session,
+                  "j:defaultCategory",
+                  suggestions.map(function (item) {
+                    return item.uuid;
+                  }),
+                );
+            } else if (canPrefill) {
               prefillClassification(session, categories, suggestions, input);
             }
             showSuggestions(session.context, { status: "ready", items: suggestions });
@@ -1191,16 +1950,6 @@
       }, 600);
     },
   });
-  function isFrench(context) {
-    var store = window.jahia.reduxStore;
-    var language =
-      (context && context.uilang) ||
-      (store && store.getState().uilang) ||
-      document.documentElement.lang ||
-      "en";
-    return String(language).toLowerCase().indexOf("fr") === 0;
-  }
-
   // Edit each existing footer reference and its optional localized label in one place.
   registry.add("selectorType.onChange", "jahiacomFooterLabels", {
     targets: ["FooterLinksPicker"],
@@ -1397,16 +2146,4 @@
       });
     },
   });
-
-  // FastField does not refresh a shared JSON field when only localized values change.
-  function InlineUtilityLanguageSync(props) {
-    this.props = props;
-  }
-  InlineUtilityLanguageSync.prototype.isReactComponent = {};
-  InlineUtilityLanguageSync.prototype.render = function () {
-    return null;
-  };
-  InlineUtilityLanguageSync.prototype.componentDidUpdate = function (previous) {
-    if (previous.initialValues !== this.props.initialValues) this.props.refresh();
-  };
 })();

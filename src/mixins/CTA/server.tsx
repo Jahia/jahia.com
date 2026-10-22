@@ -23,10 +23,12 @@ export const MixinCTA = ({
   cta,
   location,
   name,
+  icon = true,
 }: {
   cta: MixinCTAProps;
   location: string;
   name: string;
+  icon?: boolean | string;
 }) => (
   <CTA
     href={
@@ -35,7 +37,7 @@ export const MixinCTA = ({
         : cta["j:url"]
     }
     title={cta.ctaType === "external" ? cta["j:linkTitle"] : undefined}
-    icon
+    icon={icon}
     secondary={cta.ctaVariant === "secondary"}
     location={location}
     name={name}

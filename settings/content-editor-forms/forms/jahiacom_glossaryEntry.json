@@ -52,7 +52,8 @@
             {
               "name": "body",
               "rank": 2,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.bodyHelp"
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.bodyHelp",
+              "selectorType": "EditorialRichText"
             },
             {
               "name": "comparisonTitle",
@@ -62,7 +63,8 @@
             {
               "name": "comparison",
               "rank": 4,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.comparisonHelp"
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.comparisonHelp",
+              "selectorType": "EditorialRichText"
             },
             {
               "name": "exampleTitle",
@@ -72,12 +74,14 @@
             {
               "name": "example",
               "rank": 6,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.exampleHelp"
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.exampleHelp",
+              "selectorType": "EditorialRichText"
             },
             {
               "name": "faq",
               "rank": 7,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.faqHelp"
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.faqHelp",
+              "selectorType": "EditorialRichText"
             }
           ],
           "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.explanationHelp"

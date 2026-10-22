@@ -9,16 +9,10 @@
  - faq (string, richtext) i18n
  - comparisonTitle (string) i18n
  - comparison (string, richtext) i18n
- - resources (weakreference, picker) multiple < jnt:page, jmix:mainResource
- - relatedTerms (weakreference, picker) multiple < jahiacom:glossaryEntry
- // Additive fields; legacy reference values are retained without schema changes.
  - autoLinks (boolean) = false
- - linkKeywords (string) i18n multiple
  - linkThemes (weakreference, category[autoSelectParent=false]) multiple < jnt:category
- - excludedLinks (weakreference, picker) multiple < jnt:page, jmix:mainResource
  // Editorial pack fields, additive and optional for existing content.
  - indexLabel (string) i18n
- - editorialAuthor (string) i18n
  - editorialDate (date, datepicker) i18n
  - autoTermLinks (boolean) = true
  - mergedInto (weakreference, picker) < jahiacom:glossaryEntry
@@ -28,8 +22,3 @@
  - conceptSignals (string) multiple
  - preferEducational (boolean) = true
  - resourceDisplayCount (string, choicelist) = '6' < '3', '6', '9'
-
- // Native CTA variants, preserving the current appearance when unset.
- - resourceCtaLabel (string) i18n
- - resourceCtaVariant (string, choicelist[resourceBundle]) = 'primary' < 'primary', 'secondary'
- - relatedCtaVariant (string, choicelist[resourceBundle]) = 'secondary' < 'primary', 'secondary'

@@ -7,13 +7,86 @@ export interface LinkCandidate {
   aliases?: string[];
   taxonomyIds?: string[];
 }
+interface SeparatorPattern {
+  matcher(value: string): { replaceAll(replacement: string): string };
+}
+let nativeSeparators: SeparatorPattern | null | undefined;
+const replaceSeparators = (value: string) => {
+  // Java and ECMAScript agree on letter/number categories in Latin-1 and
+  // General Punctuation. Keep the original Unicode engine for other blocks,
+  // including supplementary characters and unpaired surrogates.
+  if (/[\u0100-\u1fff\u2070-\uffff]/.test(value)) return value.replace(/[^\p{L}\p{N}]+/gu, " ");
+  if (nativeSeparators === undefined) {
+    // Resolve lazily: Node tests and runtimes without Java keep the same fallback.
+    // Only an immutable pattern is retained, never text, content or permissions.
+    try {
+      const platform = globalThis as typeof globalThis & {
+        Java?: { type(name: string): { compile(pattern: string): SeparatorPattern } };
+      };
+      nativeSeparators =
+        platform.Java?.type("java.util.regex.Pattern").compile("[^\\p{L}\\p{N}]+") || null;
+    } catch {
+      nativeSeparators = null;
+    }
+  }
+  return nativeSeparators
+    ? String(nativeSeparators.matcher(value).replaceAll(" "))
+    : value.replace(/[^\p{L}\p{N}]+/gu, " ");
+};
+
+// Use the platform's immutable text primitives for the common editorial alphabet.
+// Latin-1, Latin Extended-A, Combining Diacritical Marks and General Punctuation
+// have the same mappings in the JVM and ECMAScript versions used here.
+// Other scripts, supplementary characters and unavailable APIs keep the old path.
+let nativeNormalization: ((value: string) => string) | null | undefined;
+function normalizeEditorialAlphabet(value: string): string | undefined {
+  if (/[\u0180-\u02ff\u0370-\u1fff\u2070-\uffff]/.test(value)) return undefined;
+  if (nativeNormalization === undefined) {
+    try {
+      const platform = globalThis as typeof globalThis & {
+        Java?: { type(name: string): unknown };
+      };
+      if (!platform.Java) nativeNormalization = null;
+      else {
+        const Text = platform.Java.type("java.lang.String") as new (value: string) => {
+          toLowerCase(locale: unknown): unknown;
+        };
+        const locale = (platform.Java.type("java.util.Locale") as { ROOT: unknown }).ROOT;
+        const normalizer = platform.Java.type("java.text.Normalizer") as {
+          normalize(value: unknown, form: unknown): string;
+        };
+        const form = (platform.Java.type("java.text.Normalizer$Form") as { NFD: unknown }).NFD;
+        const pattern = platform.Java.type("java.util.regex.Pattern") as {
+          compile(value: string): SeparatorPattern;
+        };
+        const marks = pattern.compile("[\\u0300-\\u036f]");
+        const separators = pattern.compile("[^\\p{L}\\p{N}]+");
+        nativeNormalization = (text) =>
+          String(
+            separators
+              .matcher(
+                marks
+                  .matcher(normalizer.normalize(new Text(text).toLowerCase(locale), form))
+                  .replaceAll(""),
+              )
+              .replaceAll(" "),
+          ).trim();
+      }
+    } catch {
+      nativeNormalization = null;
+    }
+  }
+  return nativeNormalization?.(value);
+}
+
 const normalize = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^\p{L}\p{N}]+/gu, " ")
-    .trim();
+  normalizeEditorialAlphabet(value) ??
+  replaceSeparators(
+    value
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, ""),
+  ).trim();
 // Keep exact phrase matching as the default. A/B testing has common bilingual
 // spellings whose word order differs; normalize the expression, not arbitrary words.
 export const canonical = (value: string) =>
@@ -25,20 +98,23 @@ const genericWords = new Set(
     " ",
   ),
 );
-export const tokens = (value: string) => [
+const matchingTokens = (value: string, canonicalize = canonical) => [
   ...new Set(
-    canonical(value)
+    canonicalize(value)
       .split(" ")
       .filter((word) => word.length >= 3 && !genericWords.has(word)),
   ),
 ];
+export const tokens = (value: string) => matchingTokens(value);
 export const usefulExpression = (value: string) => tokens(value).length > 0;
 
 /** Shared vocabulary is weighted against this candidate pool, not a list of promoted URLs. */
 function contextScores<T extends LinkCandidate>(
   candidates: T[],
   context: string,
+  canonicalize = canonical,
 ): Map<string, number> {
+  const tokens = (value: string) => matchingTokens(value, canonicalize);
   const query = tokens(context);
   if (query.length < 3) return new Map();
   const documents = candidates.map((item) => ({
@@ -68,7 +144,8 @@ function contextScores<T extends LinkCandidate>(
   }
   return scores;
 }
-const contains = (text: string, phrase: string) => ` ${canonical(text)} `.includes(` ${phrase} `);
+const contains = (text: string, phrase: string, canonicalize = canonical) =>
+  ` ${canonicalize(text)} `.includes(` ${phrase} `);
 /** Each alternative requires all groups; each group accepts bilingual synonyms.
  * Profiles identify concepts, never resource URLs. Unmapped terms keep their existing ranking.
  */
@@ -227,14 +304,18 @@ export interface SelectionEvidence {
   passage: string;
 }
 /** Excerpts are normalized for matching; the original page remains the editorial source. */
-function excerpt(text: string, phrase: string): string {
-  const normalized = canonical(text);
+function excerpt(text: string, phrase: string, canonicalize = canonical): string {
+  const normalized = canonicalize(text);
   const at = Math.max(0, normalized.indexOf(phrase));
   return normalized.slice(Math.max(0, at - 100), at + 350);
 }
-function resourceConceptEvidence(item: LinkCandidate, profile: string[][][]): SelectionEvidence[] {
+function resourceConceptEvidence(
+  item: LinkCandidate,
+  profile: string[][][],
+  canonicalize = canonical,
+): SelectionEvidence[] {
   const heading = `${item.title} ${item.description || ""}`;
-  const normalized = canonical(`${heading} ${item.content || ""}`);
+  const normalized = canonicalize(`${heading} ${item.content || ""}`);
   const evidence: SelectionEvidence[] = [];
   for (const groups of profile) {
     for (const anchor of groups[0]) {
@@ -242,10 +323,12 @@ function resourceConceptEvidence(item: LinkCandidate, profile: string[][][]): Se
       while ((start = normalized.indexOf(anchor, start)) !== -1) {
         const passage = normalized.slice(Math.max(0, start - 250), start + 350);
         start += anchor.length;
-        const phrases = groups.map((group) => group.find((phrase) => contains(passage, phrase)));
+        const phrases = groups.map((group) =>
+          group.find((phrase) => contains(passage, phrase, canonicalize)),
+        );
         if (phrases.every(Boolean)) {
           const headingGroups = groups.filter((group) =>
-            group.some((phrase) => contains(heading, phrase)),
+            group.some((phrase) => contains(heading, phrase, canonicalize)),
           ).length;
           evidence.push({
             reason: "concept",
@@ -289,11 +372,22 @@ export function rankLinksWithEvidence<T extends LinkCandidate>(
   educational: { adjustment: number; reason: string };
   score: number;
 }> {
-  const phrases = [...new Set(expressions.map(canonical).filter((value) => value.length >= 2))];
+  // Reuse exact string normalization within this ranking only. No JCR nodes,
+  // user data or results survive the call; publication and permission checks stay live.
+  const normalizedTexts = new Map<string, string>();
+  const canonicalize = (value: string) => {
+    const existing = normalizedTexts.get(value);
+    if (existing !== undefined) return existing;
+    const normalized = canonical(value);
+    normalizedTexts.set(value, normalized);
+    return normalized;
+  };
+  const tokens = (value: string) => matchingTokens(value, canonicalize);
+  const phrases = [...new Set(expressions.map(canonicalize).filter((value) => value.length >= 2))];
   const related = [
     ...new Set(
       relatedExpressions
-        .map(canonical)
+        .map(canonicalize)
         .filter((value) => value.length >= 3 && usefulExpression(value)),
     ),
   ];
@@ -301,14 +395,18 @@ export function rankLinksWithEvidence<T extends LinkCandidate>(
     (item) => !themes.length || themes.some((id) => item.taxonomyIds?.includes(id)),
   );
   const profile = resourceProfile(resourceConcept, options);
-  const contextMatches = profile ? new Map<string, number>() : contextScores(candidates, context);
-  const conceptPhrases = concepts.map(canonical).filter(usefulExpression);
+  const contextMatches = profile
+    ? new Map<string, number>()
+    : contextScores(candidates, context, canonicalize);
+  const conceptPhrases = concepts.map(canonicalize).filter(usefulExpression);
   const blocked = new Set(excluded);
   const seen = new Set<string>();
   return candidates
     .filter((item) => !blocked.has(item.id) && !seen.has(item.id) && Boolean(seen.add(item.id)))
     .flatMap((item) => {
-      const matches: SelectionEvidence[] = profile ? resourceConceptEvidence(item, profile) : [];
+      const matches: SelectionEvidence[] = profile
+        ? resourceConceptEvidence(item, profile, canonicalize)
+        : [];
       const add = (
         reason: SelectionEvidence["reason"],
         score: number,
@@ -316,28 +414,34 @@ export function rankLinksWithEvidence<T extends LinkCandidate>(
         text: string,
       ) => {
         if (score > 0)
-          matches.push({ reason, score, phrases: [phrase], passage: excerpt(text, phrase) });
+          matches.push({
+            reason,
+            score,
+            phrases: [phrase],
+            passage: excerpt(text, phrase, canonicalize),
+          });
       };
       for (const phrase of phrases) {
-        if (contains(item.title, phrase)) add("direct-title", 100, phrase, item.title);
-        else if ((item.aliases || []).some((alias) => contains(alias, phrase)))
+        if (contains(item.title, phrase, canonicalize))
+          add("direct-title", 100, phrase, item.title);
+        else if ((item.aliases || []).some((alias) => contains(alias, phrase, canonicalize)))
           add("direct-alias", 90, phrase, (item.aliases || []).join(" "));
-        else if (contains(item.description || "", phrase))
+        else if (contains(item.description || "", phrase, canonicalize))
           add("direct-summary", 80, phrase, item.description || "");
-        else if (contains(item.content || "", phrase))
+        else if (contains(item.content || "", phrase, canonicalize))
           add("direct-body", 60, phrase, item.content || "");
       }
       for (const phrase of conceptPhrases) {
         if (
-          canonical(item.title) === phrase ||
-          (item.aliases || []).some((alias) => canonical(alias) === phrase)
+          canonicalize(item.title) === phrase ||
+          (item.aliases || []).some((alias) => canonicalize(alias) === phrase)
         )
           add("concept", 85, phrase, item.title);
       }
       if (!profile) {
         for (const phrase of related) {
-          if (contains(item.title, phrase)) add("related", 30, phrase, item.title);
-          else if (contains(item.description || "", phrase))
+          if (contains(item.title, phrase, canonicalize)) add("related", 30, phrase, item.title);
+          else if (contains(item.description || "", phrase, canonicalize))
             add("related", 20, phrase, item.description || "");
         }
         const score = contextMatches.get(item.id) || 0;
@@ -349,7 +453,7 @@ export function rankLinksWithEvidence<T extends LinkCandidate>(
             reason: "context",
             score,
             phrases: shared,
-            passage: excerpt(text, shared[0] || ""),
+            passage: excerpt(text, shared[0] || "", canonicalize),
           });
         }
       }

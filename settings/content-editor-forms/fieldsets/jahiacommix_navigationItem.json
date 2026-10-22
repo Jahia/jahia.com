@@ -1,5 +1,0 @@
-{
-  "name": "jahiacommix:navigationItem",
-  "priority": 2,
-  "fields": [{ "name": "navIcon", "hide": true }]
-}

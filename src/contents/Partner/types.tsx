@@ -1,3 +1,5 @@
+import { classificationOf, type PartnerClassification } from "./classification.js";
+export { classificationOf } from "./classification.js";
 import clsx from "clsx";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import classes from "./component.module.css";
@@ -19,36 +21,23 @@ let Messages:
 
 export interface Props {
   "jcr:title": string;
-  "certification": "silver" | "gold" | "diamond";
+  "partnerClassification"?: PartnerClassification;
   "description": string;
   "logo"?: JCRNodeWrapper;
-  "partnerType"?: "integrator" | "technology";
-  "partnerLevel"?: string;
-  "integrationPartner"?: boolean;
-  "strategicPartner"?: boolean;
   "heroSubtitle"?: string;
   "shortDescription"?: string;
   "website"?: string;
   "partnerSince"?: string;
-  "countries"?: string[];
-  "regions"?: Region[];
-  "locationCountries"?: string[];
   "partnerLocationsData"?: string;
   "tags"?: Array<JCRNodeWrapper | null>;
   "aboutTitle"?: string;
   "expertiseTitle"?: string;
   "expertiseBody"?: string;
-  "expertiseText"?: string;
-  "expertise"?: string[];
-  "technologyDetails"?: string;
   "partnership"?: string;
   "partnershipImage"?: JCRNodeWrapper;
   "certifiedConsultants"?: number;
   "scope"?: string;
   "testimonialsData"?: string;
-  "quote"?: string;
-  "quoteAuthor"?: string;
-  "quoteAuthorTitle"?: string;
   "htmlTitle"?: string;
   "seoDescription"?: string;
   "seoKeywords"?: string[];
@@ -105,35 +94,23 @@ export const legacyRegion = (node: JCRNodeWrapper): Region => {
 };
 
 export const regionCountries = (
-  props: Pick<Props, "partnerLocationsData" | "regions" | "locationCountries" | "countries">,
+  props: Pick<Props, "partnerLocationsData">,
   region: Region,
 ): string[] => {
-  const compositeLocations = compositePartnerLocations(props.partnerLocationsData);
-  if (compositeLocations.length) {
-    return compositeLocations
-      .filter((location) => location.region === region)
-      .map((location) => location.country || "")
-      .filter(Boolean);
-  }
-
-  const locationIndex = props.regions?.indexOf(region) ?? -1;
-  const freeTextCountry =
-    locationIndex >= 0 ? props.locationCountries?.[locationIndex]?.trim() : undefined;
-  if (freeTextCountry) return [freeTextCountry];
-  if (locationIndex >= 0 && props.locationCountries !== undefined) return [];
-
-  if (props.regions?.length) return props.countries || [];
-
-  return props.countries || [];
+  return compositePartnerLocations(props.partnerLocationsData)
+    .filter((location) => location.region === region)
+    .map((location) => location.country || "")
+    .filter(Boolean);
 };
 
-export const configuredRegions = (props: Props, fallbackRegion: Region = "europe"): Region[] => {
+export const configuredRegions = (
+  props: Pick<Props, "partnerLocationsData">,
+  fallbackRegion: Region = "europe",
+): Region[] => {
   const compositeRegions = compositePartnerLocations(props.partnerLocationsData).map(
     ({ region }) => region,
   );
   if (compositeRegions.length) return [...new Set(compositeRegions)];
-
-  if (props.regions?.length) return [...new Set(props.regions)];
 
   return [fallbackRegion];
 };
@@ -192,81 +169,62 @@ const getMessage = (key: string, locale: Locale, defaultValue: string): string =
   }
 };
 
-export const levels = (
-  level: Props["certification"],
-  locale: Locale,
-  partnerLevel?: Props["partnerLevel"],
-  integrationPartner?: Props["integrationPartner"],
-  strategicPartner?: Props["strategicPartner"],
-) =>
-  strategicPartner ? (
-    <span className={classes.level}>
-      {getMessage("jahiacom_partner.strategicPartner", locale, "Strategic partner")}
-    </span>
-  ) : integrationPartner ? (
-    <span className={classes.level}>
-      {getMessage("jahiacom_partner.integrationPartner", locale, "Integration partner")}
-    </span>
-  ) : partnerLevel?.trim() ? (
-    <span className={classes.level}>{partnerLevel.trim()}</span>
-  ) : (
-    {
-      silver: (
-        <span className={classes.level}>
-          <span className={clsx("i-ri:star-fill", classes.silver)} aria-hidden="true" />
-          <span>
-            {getMessage("jahiacom_partner.certification.silver", locale, "Silver Partner")}
-          </span>
-        </span>
-      ),
-      gold: (
-        <span className={classes.level}>
-          <span className={clsx("i-ri:vip-crown-2-fill", classes.gold)} aria-hidden="true" />
-          <span>{getMessage("jahiacom_partner.certification.gold", locale, "Gold Partner")}</span>
-        </span>
-      ),
-      diamond: (
-        <span className={classes.level}>
-          <svg className={classes.diamond} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path
-              fill="currentColor"
-              d="M4.878 3.003h14.254a1 1 0 0 1 .809.412l3.822 5.256a.5.5 0 0 1-.037.633l-11.354 12.3a.5.5 0 0 1-.735 0L.283 9.305a.5.5 0 0 1-.037-.633l3.823-5.256a1 1 0 0 1 .809-.412"
-            />
-            <path
-              className={classes.diamondFacets}
-              d="M1.5 9h21M8 3.8 6.5 9 12 20.5 17.5 9 16 3.8M8 3.8 12 9l4-5.2"
-              fill="none"
-              strokeWidth="1.25"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span>
-            {getMessage("jahiacom_partner.certification.diamond", locale, "Diamond Partner")}
-          </span>
-        </span>
-      ),
-    }[level]
-  );
+const levels = (classification: PartnerClassification | undefined, locale: Locale) => {
+  const value = classificationOf(classification);
+  if (!value) return null;
+  if (value.partnership)
+    return (
+      <span className={classes.level}>
+        {getMessage(
+          `jahiacom_partner.badge.${value.partnership}`,
+          locale,
+          value.partnership === "strategic" ? "Strategic partner" : "Integration partner",
+        )}
+      </span>
+    );
+  return {
+    silver: (
+      <span className={classes.level}>
+        <span className={clsx("i-ri:star-fill", classes.silver)} aria-hidden="true" />
+        <span>{getMessage("jahiacom_partner.badge.silver", locale, "Silver Partner")}</span>
+      </span>
+    ),
+    gold: (
+      <span className={classes.level}>
+        <span className={clsx("i-ri:vip-crown-2-fill", classes.gold)} aria-hidden="true" />
+        <span>{getMessage("jahiacom_partner.badge.gold", locale, "Gold Partner")}</span>
+      </span>
+    ),
+    diamond: (
+      <span className={classes.level}>
+        <svg className={classes.diamond} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            fill="currentColor"
+            d="M4.878 3.003h14.254a1 1 0 0 1 .809.412l3.822 5.256a.5.5 0 0 1-.037.633l-11.354 12.3a.5.5 0 0 1-.735 0L.283 9.305a.5.5 0 0 1-.037-.633l3.823-5.256a1 1 0 0 1 .809-.412"
+          />
+          <path
+            className={classes.diamondFacets}
+            d="M1.5 9h21M8 3.8 6.5 9 12 20.5 17.5 9 16 3.8M8 3.8 12 9l4-5.2"
+            fill="none"
+            strokeWidth="1.25"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <span>{getMessage("jahiacom_partner.badge.diamond", locale, "Diamond Partner")}</span>
+      </span>
+    ),
+  }[value.level!];
+};
 
-export const PartnerBadge = ({
-  props,
-  locale,
-  technologyMode = props.partnerType === "technology",
-}: {
-  props: Props;
-  locale: Locale;
-  technologyMode?: boolean;
-}) => (
+export const PartnerBadge = ({ props, locale }: { props: Props; locale: Locale }) => (
   <span
-    className={clsx(classes.small, props.strategicPartner && classes.strategic)}
+    className={clsx(
+      classes.small,
+      classificationOf(props.partnerClassification)?.partnership === "strategic" &&
+        classes.strategic,
+    )}
     data-partner-badge=""
   >
-    {levels(
-      props.certification,
-      locale,
-      technologyMode ? undefined : props.partnerLevel,
-      technologyMode || props.integrationPartner,
-      props.strategicPartner,
-    )}
+    {levels(props.partnerClassification, locale)}
   </span>
 );

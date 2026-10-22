@@ -12,9 +12,15 @@ import { htmlToText } from "../Partner/types.js";
 import { selectRelatedTerms, mergeRelatedTranslations } from "./relatedTerms.js";
 import { resolveGlossaryIndex } from "./indexPage.js";
 import { rankLinks, usefulExpression } from "./linkSelection.js";
+import { glossaryMemo, memoProfile, resourceMetadata, editorialParts } from "./memo.server.js";
 import type { Props } from "./types.js";
+import { createBoundedTextReader } from "./editorialText.js";
 import type { EntryResource } from "./Entry.jsx";
 import type { GlossaryItem } from "../../views/Glossary/model.js";
+
+// Cache only a pure conversion of the exact value just read through JCR.
+// Nodes, permissions, sessions and selection results are never retained here.
+const editorialTextValue = createBoundedTextReader(htmlToText);
 
 export function automaticLinks(
   props: Props,
@@ -39,7 +45,11 @@ export function automaticLinks(
       depend(node);
       if (!node.hasPermission("jcr:read") || !node.hasI18N(locale)) return false;
       const translation = `j:translation_${language}`;
-      if (node.hasNode(translation)) depend(node.getNode(translation));
+      if (node.hasNode(translation)) {
+        const translated = node.getNode(translation);
+        depend(translated);
+        if (!translated.hasPermission("jcr:read")) return false;
+      }
       return (
         !node.hasProperty("j:invalidLanguages") ||
         !Array.from(node.getProperty("j:invalidLanguages").getValues(), (v) =>
@@ -71,15 +81,17 @@ export function automaticLinks(
     depend(node);
     return node.getIdentifier();
   });
-  const context = htmlToText(`${props.summary || ""} ${props.body || ""}`);
+  const context = editorialTextValue(`${props.summary || ""} ${props.body || ""}`);
   const concepts = [
     ...(props.comparison || "").matchAll(/<th\b[^>]*scope=["']row["'][^>]*>([\s\S]*?)<\/th>/gi),
   ]
-    .map((match) => htmlToText(match[1]))
+    .map((match) => editorialTextValue(match[1]))
     .filter(usefulExpression);
   // Search editorial text only: do not follow resource references or shared navigation.
   // Stop at child pages: their content belongs to a separate candidate URL.
   const editorialText = (root: JCRNodeWrapper) => {
+    const cached = editorialParts(memo, sitePath, language, root.getPath());
+    if (cached) return cached.map(editorialTextValue).join(" ");
     const parts: string[] = [];
     let visited = 0;
     const visit = (node: JCRNodeWrapper, depth: number) => {
@@ -87,7 +99,11 @@ export function automaticLinks(
       depend(node);
       if (node.hasI18N(locale)) {
         const translation = `j:translation_${language}`;
-        if (node.hasNode(translation)) depend(node.getNode(translation));
+        if (node.hasNode(translation)) {
+          const translated = node.getNode(translation);
+          depend(translated);
+          if (!translated.hasPermission("jcr:read")) return false;
+        }
         const invalid =
           node.hasProperty("j:invalidLanguages") &&
           Array.from(node.getProperty("j:invalidLanguages").getValues(), (value) =>
@@ -103,12 +119,12 @@ export function automaticLinks(
           "description",
         ]) {
           if (node.hasProperty(property))
-            parts.push(htmlToText(node.getPropertyAsString(property) || ""));
+            parts.push(editorialTextValue(node.getPropertyAsString(property) || ""));
         }
       }
       if (depth < 6 && visited < 160) {
         for (const child of getChildNodes(node, 160 - visited, 0)) {
-          if (!child.isNodeType("jnt:page") && !child.getName().startsWith("j:"))
+          if (!child.getName().startsWith("j:") && !child.isNodeType("jnt:page"))
             visit(child, depth + 1);
         }
       }
@@ -116,32 +132,51 @@ export function automaticLinks(
     visit(root, 0);
     return parts.join(" ");
   };
-  const resourceCandidates = [
-    ...query(RESOURCE_MODEL.blogNodeType),
-    ...query(RESOURCE_MODEL.pageNodeType),
-  ]
-    .filter(visible)
-    .map((node) => {
-      // Reuse carousel metadata, category lineage, publication and future-date guards.
-      const card = toCard(node, { allowGenericResource: true, includeCustomerCases: true });
-      if (!card) return null;
-      const pageType = node.getPropertyAsString("pageType");
-      // Older native pages may have no pageType. Relevance is determined by their
-      // actual title/description; do not discard valid feature pages for missing metadata.
-      return {
-        ...card,
-        content: editorialText(node),
-        kind:
-          card.kind === "blog"
-            ? "article"
-            : card.kind === "customerCase"
-              ? "customerStory"
-              : pageType === "solution_page"
-                ? "solution"
-                : card.kind,
-      };
-    })
-    .filter((item): item is NonNullable<typeof item> => item !== null);
+  const memo = glossaryMemo();
+  const resourceNodes = new Map<string, JCRNodeWrapper>();
+  const collectResources = (metadata?: JCRNodeWrapper[]) =>
+    (
+      metadata ||
+      [...query(RESOURCE_MODEL.blogNodeType), ...query(RESOURCE_MODEL.pageNodeType)].filter(visible)
+    )
+      .map((node) => {
+        // Reuse carousel metadata, category lineage, publication and future-date guards.
+        // Ranking needs editorial metadata, not URLs or image references.
+        const card = toCard(node, {
+          allowGenericResource: true,
+          includeCustomerCases: true,
+          includePresentation: false,
+          includeTaxonomy: themes.length > 0,
+        });
+        if (!card) return null;
+        const current = metadata ? currentNode.getSession().getNodeByIdentifier(card.id) : node;
+        if (!visible(current)) return null;
+        resourceNodes.set(card.id, current);
+        const pageType = node.getPropertyAsString("pageType");
+        // Older native pages may have no pageType. Relevance is determined by their
+        // actual title/description; do not discard valid feature pages for missing metadata.
+        return {
+          ...card,
+          content: editorialText(current),
+          kind:
+            card.kind === "blog"
+              ? "article"
+              : card.kind === "customerCase"
+                ? "customerStory"
+                : pageType === "solution_page"
+                  ? "solution"
+                  : card.kind,
+        };
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null);
+  let resourceCandidates;
+  try {
+    const metadata = resourceMetadata(memo, sitePath, language, themes.length > 0);
+    resourceCandidates = collectResources(metadata);
+    if (metadata && !memo?.valid()) resourceCandidates = collectResources();
+  } catch {
+    resourceCandidates = collectResources();
+  }
   // Shared FR/EN eligibility and ranking; localize only after selecting identifiers.
   const relatedLanguages = ["en", "fr"];
   const bilingual = (node: JCRNodeWrapper) => {
@@ -156,41 +191,49 @@ export function automaticLinks(
     );
   };
   const sharedProfile = (node: JCRNodeWrapper) =>
-    mergeRelatedTranslations(
-      node.getIdentifier(),
-      relatedLanguages.flatMap((lang) => {
-        const path = `j:translation_${lang}`;
-        if (!node.hasNode(path)) return [];
-        const translation = node.getNode(path);
-        depend(translation);
-        if (!translation.hasPermission("jcr:read")) return [];
-        const comparison = translation.getPropertyAsString("comparison") || "";
-        return [
-          {
-            id: node.getIdentifier(),
-            language: lang,
-            taxonomyIds: node.hasProperty("j:defaultCategory")
-              ? Array.from(node.getProperty("j:defaultCategory").getValues(), (value) =>
-                  value.getString(),
-                )
-              : [],
-            title: translation.getPropertyAsString("jcr:title") || node.getName(),
-            aliases: translation.hasProperty("aliases")
-              ? Array.from(translation.getProperty("aliases").getValues(), (value) =>
-                  value.getString(),
-                )
-              : [],
-            description: htmlToText(translation.getPropertyAsString("summary") || ""),
-            content: htmlToText(translation.getPropertyAsString("body") || ""),
-            comparison: htmlToText(comparison),
-            concepts: [
-              ...comparison.matchAll(/<th\b[^>]*scope=["']row["'][^>]*>([\s\S]*?)<\/th>/gi),
-            ]
-              .map((match) => htmlToText(match[1]))
-              .filter(usefulExpression),
-          },
-        ];
-      }),
+    memoProfile(
+      memo,
+      node,
+      sitePath,
+      language,
+      () =>
+        mergeRelatedTranslations(
+          node.getIdentifier(),
+          relatedLanguages.flatMap((lang) => {
+            const path = `j:translation_${lang}`;
+            if (!node.hasNode(path)) return [];
+            const translation = node.getNode(path);
+            depend(translation);
+            if (!translation.hasPermission("jcr:read")) return [];
+            const comparison = translation.getPropertyAsString("comparison") || "";
+            return [
+              {
+                id: node.getIdentifier(),
+                language: lang,
+                taxonomyIds: node.hasProperty("j:defaultCategory")
+                  ? Array.from(node.getProperty("j:defaultCategory").getValues(), (value) =>
+                      value.getString(),
+                    )
+                  : [],
+                title: translation.getPropertyAsString("jcr:title") || node.getName(),
+                aliases: translation.hasProperty("aliases")
+                  ? Array.from(translation.getProperty("aliases").getValues(), (value) =>
+                      value.getString(),
+                    )
+                  : [],
+                description: editorialTextValue(translation.getPropertyAsString("summary") || ""),
+                content: editorialTextValue(translation.getPropertyAsString("body") || ""),
+                comparison: editorialTextValue(comparison),
+                concepts: [
+                  ...comparison.matchAll(/<th\b[^>]*scope=["']row["'][^>]*>([\s\S]*?)<\/th>/gi),
+                ]
+                  .map((match) => editorialTextValue(match[1]))
+                  .filter(usefulExpression),
+              },
+            ];
+          }),
+        ),
+      depend,
     );
   const termNodes = query("jahiacom:glossaryEntry")
     .filter(visible)
@@ -207,26 +250,28 @@ export function automaticLinks(
         return false;
       }
     });
-  const termCandidates = termNodes.map((node) => ({
-    id: node.getIdentifier(),
-    title: node.getDisplayableName(),
-    url: buildNodeUrl(node),
-    summary: node.getPropertyAsString("summary") || "",
-    description: node.getPropertyAsString("summary") || "",
-    content: htmlToText(node.getPropertyAsString("body") || ""),
-    comparison: htmlToText(node.getPropertyAsString("comparison") || ""),
-    aliases: node.hasProperty("aliases")
-      ? Array.from(node.getProperty("aliases").getValues(), (v) => v.getString())
-      : [],
-  }));
   const currentProfile = sharedProfile(currentNode);
   const selectedTerms = selectRelatedTerms(
     termNodes.map(sharedProfile),
     currentProfile,
     currentProfile.concepts,
   );
-  const localizedTerms = new Map(termCandidates.map((term) => [term.id, term]));
-  const terms = selectedTerms.map((term) => localizedTerms.get(term.id)!);
+  // Localized display data does not participate in the bilingual ranking.
+  // Resolve it only for the selected terms, keeping the original nodes and order.
+  const localizedNodes = new Map(termNodes.map((node) => [node.getIdentifier(), node]));
+  const localizeTerm = (node: JCRNodeWrapper) => ({
+    id: node.getIdentifier(),
+    title: node.getDisplayableName(),
+    url: buildNodeUrl(node),
+    summary: node.getPropertyAsString("summary") || "",
+    description: node.getPropertyAsString("summary") || "",
+    content: editorialTextValue(node.getPropertyAsString("body") || ""),
+    comparison: editorialTextValue(node.getPropertyAsString("comparison") || ""),
+    aliases: node.hasProperty("aliases")
+      ? Array.from(node.getProperty("aliases").getValues(), (v) => v.getString())
+      : [],
+  });
+  const terms = selectedTerms.map((term) => localizeTerm(localizedNodes.get(term.id)!));
   const relatedExpressions = [
     ...concepts,
     ...terms.slice(0, 3).flatMap((term) => [term.title, ...term.aliases]),
@@ -248,7 +293,7 @@ export function automaticLinks(
         conceptSignals: props.conceptSignals,
         preferEducational: props.preferEducational !== false,
       },
-    ),
+    ).map((card) => ({ ...card, url: buildNodeUrl(resourceNodes.get(card.id)!) })),
     terms,
   };
 }

@@ -143,8 +143,11 @@ test("broken site CTA does not remove the valid CTA or the navigation", () => {
     }),
   });
   const props = harness().nav(site, [node("product")]);
-  assert.equal(props.primaryCTA, undefined);
-  assert.equal(props.secondaryCTA.href, "/contact.html");
+  assert.equal(
+    props.buttons.find((button) => button.id === "demo"),
+    undefined,
+  );
+  assert.equal(props.buttons.find((button) => button.id === "contact").href, "/contact.html");
   assert.equal(props.entries[0].href, "/product.html");
 });
 
@@ -166,11 +169,10 @@ test("broken internal menu reference and URL failure preserve valid siblings", (
   );
 });
 
-test("navigation image overrides the preset and a broken image keeps the existing icon", () => {
+test("navigation uses the single image field and broken images preserve their menu entries", () => {
   const entry = (name, image) =>
     node(name, {
-      hasProperty: (property) => ["navIcon", "navIconImage"].includes(property),
-      getPropertyAsString: () => "cms",
+      hasProperty: (property) => property === "navIconImage",
       getProperty: () => ({ getValue: () => ({ getNode: image }) }),
     });
   const props = harness().nav(node("site"), [
@@ -179,8 +181,12 @@ test("navigation image overrides the preset and a broken image keeps the existin
     entry("bad-url", () => node("image", { badUrl: true })),
   ]);
   assert.equal(props.entries[0].icon, "/custom-image.html");
-  assert.equal(props.entries[1].icon, "image.svg");
-  assert.equal(props.entries[2].icon, "image.svg");
+  assert.equal(props.entries[1].icon, undefined);
+  assert.equal(props.entries[2].icon, undefined);
+  assert.deepEqual(
+    Array.from(props.entries, (entry) => entry.href),
+    ["/custom.html", "/deleted.html", "/bad-url.html"],
+  );
 });
 
 for (const [view, property] of [
@@ -280,25 +286,22 @@ test("an explicitly empty Home selection does not restore the legacy site links"
   assert.equal(harness().nav(site, [], home).utilityEntries.length, 0);
 });
 
-test("Home controls accept explicit false and sort positions independently of labels", () => {
+test("Home visibility controls remain independent from the ordered link list", () => {
   const values = {
     utilitySearchVisible: false,
     utilityLanguagesVisible: false,
     utilityRssVisible: false,
-    utilitySearchPosition: 0,
-    utilityLinksPosition: 30,
-    utilityRssPosition: 20,
-    utilityLanguagesPosition: 10,
   };
   const home = {
     hasProperty: (name) => Object.hasOwn(values, name),
-    getProperty: (name) => ({ getBoolean: () => values[name], getLong: () => values[name] }),
+    getProperty: (name) => ({ getBoolean: () => values[name] }),
+    getPropertyAsString: (name) => values[name],
   };
   const props = harness().nav(node("site"), [], home);
   assert.equal(props.controls.searchVisible, false);
   assert.equal(props.controls.languagesVisible, false);
   assert.equal(props.rss, undefined);
-  assert.deepEqual([...props.controls.order], ["search", "languages", "rss", "links"]);
+  assert.equal(Object.hasOwn(props.controls, "order"), false);
 });
 
 test("RSS rejects executable, network and non-feed protocols while accepting HTTPS and local paths", () => {
@@ -325,6 +328,312 @@ test("RSS rejects executable, network and non-feed protocols while accepting HTT
     };
     assert.equal(harness().nav(node("site"), [], home).rss.href, address);
   }
+});
+
+test("selected reusable footer links preserve labels and reject private nodes and targets", () => {
+  const reusable = (name, target, extra = {}) =>
+    node(name, {
+      isNodeType: (type) => type === "jahiacom:footerLink",
+      getPropertyAsString: () => "internal",
+      getProperty: () => ({ getValue: () => ({ getNode: () => target }) }),
+      ...extra,
+    });
+  const html = harness().footer("footerColumn", {
+    links: [
+      reusable("Editorial label", node("destination")),
+      reusable("private-link", node("hidden"), { hasPermission: () => false }),
+      reusable("private-target", node("hidden-target", { hasPermission: () => false })),
+      reusable("broken", null),
+    ],
+  });
+  assert.match(html, /href="\/destination.html"/);
+  assert.match(html, />Editorial label<\/a>/);
+  assert.doesNotMatch(html, /private-link|private-target|hidden|broken/);
+});
+
+test("upper navigation mixes pages and external links in editorial order with safe URLs", () => {
+  const external = (name, url, label = name) =>
+    node(name, {
+      isNodeType: (type) => type === "jnt:externalLink",
+      hasProperty: (property) => ["j:url", "navUtilityLabel"].includes(property),
+      getPropertyAsString: (property) => (property === "j:url" ? url : label),
+    });
+  const home = {
+    isNodeType: (type) => type === "jahiacommix:homeUtilityNavigation",
+    hasProperty: (property) => property === "utilityNavigationLinks",
+    getProperty: () => ({
+      getValues: () =>
+        [
+          node("contact"),
+          external("academy-link", "https://academy.example.com/training", "Academy"),
+          external("unsafe", "javascript:alert(1)"),
+          node("documentation"),
+        ].map((target) => ({ getNode: () => target })),
+    }),
+  };
+  const entries = harness().nav(node("site"), [], home).utilityEntries;
+  assert.deepEqual(
+    Array.from(entries, ({ title, href }) => ({ title, href })),
+    [
+      { title: "contact", href: "/contact.html" },
+      { title: "Academy", href: "https://academy.example.com/training" },
+      { title: "documentation", href: "/documentation.html" },
+    ],
+  );
+});
+
+test("inline upper links preserve order, localized labels and internal permissions", () => {
+  const targets = {
+    public: node("public"),
+    private: node("private", { hasPermission: () => false }),
+  };
+  const rows = [
+    {
+      kind: "external",
+      labels: { fr: "Académie", en: "Academy" },
+      url: "https://academy.example.com/training",
+    },
+    { kind: "internal", id: "public" },
+    { kind: "internal", id: "private" },
+    { kind: "internal", id: "missing" },
+    { kind: "external", labels: { en: "Unsafe" }, url: "javascript:alert(1)" },
+    { kind: "external", labels: { en: "Unsafe" }, url: "https://example.com\n/test" },
+    { kind: "external", labels: {}, url: "https://example.com" },
+  ];
+  const home = {
+    hasProperty: (key) => key === "utilityItemsData",
+    getPropertyAsString: () => JSON.stringify(rows),
+    getSession: () => ({
+      getNodeByIdentifier: (id) => {
+        if (!targets[id]) throw new Error("missing");
+        return targets[id];
+      },
+    }),
+  };
+  const entries = harness().nav(node("site"), [], home).utilityEntries;
+  assert.deepEqual(
+    Array.from(entries, ({ title, href }) => ({ title, href })),
+    [
+      { title: "Academy", href: "https://academy.example.com/training" },
+      { title: "public", href: "/public.html" },
+    ],
+  );
+  home.getPropertyAsString = () => "[]";
+  assert.equal(harness().nav(node("site"), [], home).utilityEntries.length, 0);
+});
+
+test("one mixed navigation list preserves tools between individual links", () => {
+  const rows = [
+    { kind: "rss" },
+    {
+      kind: "external",
+      labels: { en: "Academy", fr: "Académie" },
+      url: "https://academy.example.com",
+    },
+    { kind: "search" },
+    { kind: "external", labels: { en: "Docs" }, url: "https://docs.example.com" },
+    { kind: "languages" },
+  ];
+  const home = {
+    hasProperty: (key) => key === "utilityItemsData",
+    getPropertyAsString: () => JSON.stringify(rows),
+  };
+  const props = harness().nav(node("site"), [], home);
+  assert.deepEqual(
+    Array.from(props.utilityEntries, (entry) => entry.kind || entry.title),
+    ["rss", "Academy", "search", "Docs", "languages"],
+  );
+  assert.equal(Object.hasOwn(props.controls, "order"), false);
+});
+
+function inlineSettingsHarness({ readOnly = false } = {}) {
+  const registrations = new Map();
+  const registry = {
+    add: (type, key, value) => registrations.set(type + "/" + key, value),
+    get: (type, key) => registrations.get(type + "/" + key),
+  };
+  for (const kind of ["Text", "Checkbox", "Picker"]) {
+    const selector = { cmp: (props) => ({ type: "Native" + kind, props }) };
+    if (kind === "Picker") selector.resolver = () => selector;
+    registry.add("selectorType", kind, selector);
+  }
+  runInNewContext(readFileSync(resolve("javascript/apps/partner-editors-1.5.js"), "utf8"), {
+    window: {
+      jahia: {
+        uiExtender: { registry },
+        moonstone: { Button: "Button", Field: "Field", Typography: "Typography" },
+        jcontent: { ContentEditorContext: { Consumer: "EditorContextConsumer" } },
+      },
+    },
+    document: { documentElement: { lang: "fr" } },
+  });
+  const names = [
+    "utilitySearchVisible",
+    "utilitySearchLabel",
+    "utilityLanguagesVisible",
+    "utilityLanguagesLabel",
+    "utilityRssVisible",
+    "utilityRssLabel",
+    "utilityRssUrl",
+    "utilityRssImage",
+  ];
+  const fields = ["utilityItemsData", ...names].map((propertyName) => ({
+    name: "home_" + propertyName,
+    propertyName,
+    nodeType: "jahiacommix:homeUtilityNavigation",
+    visible: true,
+    readOnly,
+    displayName: propertyName,
+    selectorType: propertyName.endsWith("Visible")
+      ? "Checkbox"
+      : propertyName.endsWith("Image")
+        ? "Picker"
+        : "Text",
+  }));
+  const value = JSON.stringify([{ kind: "rss" }, { kind: "search" }, { kind: "languages" }]);
+  const values = Object.fromEntries(
+    fields.map((field) => [
+      field.name,
+      field.propertyName === "utilityItemsData"
+        ? value
+        : field.propertyName.endsWith("Visible")
+          ? true
+          : "original-" + field.propertyName,
+    ]),
+  );
+  const writes = [];
+  const form = {
+    values,
+    setFieldValue(name, value) {
+      writes.push([name, value]);
+      values[name] = value;
+    },
+    setFieldTouched() {},
+  };
+  const fieldset = { fields };
+  const context = { sections: [{ fieldSets: [fieldset] }], onSectionsUpdate() {} };
+  const hook = registry.get("selectorType.onChange", "jahiacomInlineUtilitySettings");
+  const render = () => {
+    const nodes = [];
+    function visit(tree) {
+      if (Array.isArray(tree)) return tree.forEach(visit);
+      if (!tree || typeof tree !== "object") return;
+      if (typeof tree.type === "function") return visit(tree.type(tree.props));
+      nodes.push(tree);
+      visit(tree.props?.children);
+    }
+    visit(
+      registry
+        .get("selectorType", "UtilityItemsPicker")
+        .cmp({ field: fieldset.fields[0], value, form, editorContext: { uilang: "fr" } }),
+    );
+    return nodes;
+  };
+  return { hook, context, fieldset, value, values, writes, render };
+}
+
+test("inline tool settings reuse native values, hide duplicate controls and do not write on open", () => {
+  const h = inlineSettingsHarness();
+  const original = { ...h.values };
+  h.hook.onChange(undefined, h.value, h.fieldset.fields[0], h.context);
+  assert.deepEqual(h.values, original);
+  assert.equal(h.writes.length, 0);
+  assert.equal(h.fieldset.fields.filter((field) => field.visible).length, 1);
+  const nodes = h.render();
+  assert.ok(nodes.some((n) => n.type === "label" && n.props.htmlFor === "home_utilitySearchLabel"));
+  const consumer = nodes.find((n) => n.type === "EditorContextConsumer");
+  const initialValues = {};
+  const syncNode = consumer.props.children({ initialValues });
+  const sync = new syncNode.type(syncNode.props);
+  const beforeLanguageChange = h.fieldset.fields[0];
+  sync.componentDidUpdate({ initialValues });
+  assert.equal(h.fieldset.fields[0], beforeLanguageChange);
+  sync.props = consumer.props.children({ initialValues: { language: "en" } }).props;
+  sync.componentDidUpdate({ initialValues });
+  assert.notEqual(h.fieldset.fields[0], beforeLanguageChange);
+  assert.equal(h.writes.length, 0);
+  assert.equal(nodes.filter((n) => n.type === "details").length, 3);
+  assert.ok(nodes.filter((n) => n.type === "details").every((n) => !n.props.open));
+  const checkbox = nodes.find(
+    (n) => n.type === "NativeCheckbox" && n.props.field.propertyName === "utilitySearchVisible",
+  );
+  const fieldBefore = h.fieldset.fields[0];
+  checkbox.props.onChange(false);
+  assert.equal(h.values.home_utilitySearchVisible, false);
+  assert.equal(h.values.home_utilityItemsData, h.value);
+  assert.notEqual(h.fieldset.fields[0], fieldBefore);
+  assert.equal(
+    h
+      .render()
+      .find(
+        (n) => n.type === "NativeCheckbox" && n.props.field.propertyName === "utilitySearchVisible",
+      ).props.value,
+    false,
+  );
+  const label = h
+    .render()
+    .find((n) => n.type === "NativeText" && n.props.field.propertyName === "utilitySearchLabel");
+  label.props.onChange("Find");
+  assert.equal(h.values.home_utilitySearchLabel, "Find");
+  assert.equal(h.values.home_utilityRssUrl, original.home_utilityRssUrl);
+  assert.equal(h.values.home_utilityRssImage, original.home_utilityRssImage);
+  const image = h.render().find((n) => n.type === "NativePicker");
+  image.props.onChange("new-image-id");
+  assert.equal(h.values.home_utilityRssImage, "new-image-id");
+  h.render()
+    .find((n) => n.type === "Button" && n.props.label === "Retirer l’image")
+    .props.onClick();
+  assert.equal(h.values.home_utilityRssImage, undefined);
+  assert.equal(h.values.home_utilityItemsData, h.value);
+});
+
+test("inline settings respect field permissions and keep native controls if metadata is incomplete", () => {
+  const h = inlineSettingsHarness({ readOnly: true });
+  h.hook.onChange(undefined, h.value, h.fieldset.fields[0], h.context);
+  for (const node of h.render().filter((n) => n.type?.startsWith("Native")))
+    node.props.onChange("changed");
+  assert.equal(h.writes.length, 0);
+  const incomplete = inlineSettingsHarness();
+  incomplete.fieldset.fields.pop();
+  incomplete.hook.onChange(
+    undefined,
+    incomplete.value,
+    incomplete.fieldset.fields[0],
+    incomplete.context,
+  );
+  assert.ok(incomplete.fieldset.fields.every((field) => field.visible));
+});
+
+test("navbar buttons use home labels, styles, placement and order without reviving cleared legacy links", () => {
+  const values = {
+    primaryCTALink: node("demo"),
+    primaryCTALabel: "Voir une démo",
+    secondaryCTALink: node("contact"),
+    secondaryCTALabel: "Parlons ensemble",
+    primaryCTAStyle: "secondary",
+    secondaryCTAStyle: "primary",
+    primaryCTAPlacement: "upper",
+    secondaryCTAPlacement: "main",
+    navbarCTAOrder: "demoContact",
+  };
+  const home = {
+    isNodeType: (type) => type === "jahiacommix:homeNavbarButtons",
+    hasProperty: (key) => Object.hasOwn(values, key),
+    getPropertyAsString: (key) => values[key],
+    getProperty: (key) => ({ getValue: () => ({ getNode: () => values[key] }) }),
+  };
+  const props = harness().nav(node("site"), [], home);
+  assert.deepEqual(
+    Array.from(props.buttons, (b) => [b.id, b.label, b.style, b.placement]),
+    [
+      ["demo", "Voir une démo", "secondary", "upper"],
+      ["contact", "Parlons ensemble", "primary", "main"],
+    ],
+  );
+  delete values.secondaryCTALink;
+  assert.equal(harness().nav(node("site"), [], home).buttons.length, 1);
+  values.primaryCTALink = node("private", { hasPermission: () => false });
+  assert.equal(harness().nav(node("site"), [], home).buttons.length, 0);
 });
 
 test("footer labels override existing references without adding creation areas to EDIT", () => {

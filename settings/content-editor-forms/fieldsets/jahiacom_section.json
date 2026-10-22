@@ -1,0 +1,10 @@
+{
+  "name": "jahiacom:section",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "subtitle",
+      "selectorType": "EditorialRichText"
+    }
+  ]
+}

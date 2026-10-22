@@ -1,5 +1,6 @@
 import {
   Island,
+  buildNodeUrl,
   jahiaComponent,
   Render,
   server,
@@ -12,21 +13,21 @@ import BlogGrid from "./BlogGrid.client.jsx";
 import classes from "./styles.module.css";
 import { contentCategories } from "../../utils/contentCategories.js";
 
+import {
+  blogPage,
+  blogPageSize as sanitizePageSize,
+  blogPageUrl,
+  paginateBlog,
+} from "./blogPagination.js";
+import { eligibleBlogEntries, timestamp } from "./blogEntries.server.js";
+
 interface Props {
   "j:node"?: JCRNodeWrapper;
   "blogPageSize"?: string;
   "featuredArticle"?: JCRNodeWrapper;
-  "featuredArticles"?: Array<JCRNodeWrapper | null>;
   "featuredIncludeUpdatedArticles"?: boolean;
   "blogAdvancedFilter"?: JCRNodeWrapper;
 }
-
-const pageSizes = new Set([6, 12, 18, 24]);
-
-const sanitizePageSize = (value?: string) => {
-  const parsed = Number.parseInt(value || "12", 10);
-  return pageSizes.has(parsed) ? parsed : 12;
-};
 
 const referencedNodes = (entry: JCRNodeWrapper, propertyName: string) => {
   if (!entry.hasProperty(propertyName)) return [];
@@ -42,9 +43,6 @@ const categoryPaths = (entry: JCRNodeWrapper) =>
 
 const pathIsInBranch = (path: string, branchPath: string) =>
   path === branchPath || path.startsWith(`${branchPath}/`);
-
-const configuredNodes = (nodes?: Array<JCRNodeWrapper | null>) =>
-  (nodes || []).filter((node): node is JCRNodeWrapper => node !== null);
 
 const nodeString = (node: JCRNodeWrapper, name: string) => {
   if (node.hasProperty(name) && node.getPropertyAsString(name))
@@ -62,35 +60,6 @@ const nodeString = (node: JCRNodeWrapper, name: string) => {
 const nodeReferences = (node: JCRNodeWrapper, name: string) =>
   node.hasProperty(name) ? referencedNodes(node, name) : [];
 
-const timestamp = (entry: JCRNodeWrapper, propertyName: string) => {
-  if (!entry.hasProperty(propertyName)) return 0;
-  try {
-    const dateValue = entry.getProperty(propertyName).getValue() as unknown as {
-      getDate: () => { getTimeInMillis: () => number };
-    };
-    const value = Number(dateValue.getDate().getTimeInMillis());
-    if (Number.isFinite(value)) return value;
-  } catch {
-    // Fall through to support legacy string properties.
-  }
-
-  const fallback = Date.parse(entry.getPropertyAsString(propertyName));
-  return Number.isFinite(fallback) ? fallback : 0;
-};
-
-const isPublished = (entry: JCRNodeWrapper) =>
-  entry.hasProperty("j:published") && entry.getProperty("j:published").getBoolean();
-
-const isCurrentlyVisible = (entry: JCRNodeWrapper) => {
-  const publicationDate = timestamp(entry, "date");
-  return (
-    isPublished(entry) &&
-    (!publicationDate || publicationDate <= Date.now()) &&
-    entry.hasProperty("jcr:title") &&
-    Boolean(entry.getPropertyAsString("jcr:title").trim())
-  );
-};
-
 const effectiveFeaturedTimestamp = (entry: JCRNodeWrapper) =>
   entry.hasProperty("useLastModifiedDate") && entry.getProperty("useLastModifiedDate").getBoolean()
     ? timestamp(entry, "jcr:lastModified") || timestamp(entry, "date")
@@ -101,13 +70,16 @@ jahiaComponent(
     componentType: "view",
     nodeType: "jnt:contentFolderReference",
     name: "blog",
+    properties: {
+      "cache.requestParameters": "blogPage,filter1,filter2",
+      "cache.mainResource": "true",
+    },
   },
   (
     {
       "j:node": folder,
       blogPageSize,
       featuredArticle,
-      featuredArticles,
       featuredIncludeUpdatedArticles,
       blogAdvancedFilter,
     }: Props,
@@ -121,15 +93,7 @@ jahiaComponent(
       );
     if (!folder) return null;
 
-    const cutoff = new Date().toISOString();
-    const queriedEntries = useJCRQuery({
-      query: `SELECT * FROM [jahiacom:blogEntry]
-              WHERE ISDESCENDANTNODE(${JSON.stringify(folder.getPath())})
-                AND [j:published] = true
-                AND [date] <= CAST(${JSON.stringify(cutoff)} AS DATE)
-              ORDER BY [date] DESC`,
-    });
-    const entries = queriedEntries.filter(isCurrentlyVisible);
+    const entries = eligibleBlogEntries(folder);
     if (renderContext.isEditMode())
       return (
         <div>
@@ -140,17 +104,8 @@ jahiaComponent(
       );
     if (entries.length === 0) return null;
 
-    const configuredArticles = configuredNodes(featuredArticles);
     const entriesById = new Map(entries.map((entry) => [entry.getIdentifier(), entry]));
-    const configuredEntries = [
-      ...new Map(
-        configuredArticles
-          .map((node) => entriesById.get(node.getIdentifier()))
-          .filter((entry): entry is JCRNodeWrapper => entry !== undefined)
-          .map((entry) => [entry.getIdentifier(), entry]),
-      ).values(),
-    ];
-    const legacyFeaturedEntry = featuredArticle
+    const configuredFeaturedEntry = featuredArticle
       ? entriesById.get(featuredArticle.getIdentifier())
       : undefined;
     const automaticFeatured = featuredIncludeUpdatedArticles
@@ -158,7 +113,7 @@ jahiaComponent(
           (first, second) => effectiveFeaturedTimestamp(second) - effectiveFeaturedTimestamp(first),
         )
       : entries;
-    const featuredEntry = configuredEntries[0] || legacyFeaturedEntry || automaticFeatured[0];
+    const featuredEntry = configuredFeaturedEntry || automaticFeatured[0];
     const regularEntries = entries.filter(
       (entry) => entry.getIdentifier() !== featuredEntry.getIdentifier(),
     );
@@ -253,8 +208,49 @@ jahiaComponent(
       : categoryOptions.length
         ? [{ name: "filter1", title: t("blogListing.categories"), options: categoryOptions }]
         : [];
-    const filteredEntries = regularEntries;
+    const request = renderContext.getRequest();
+    const selectedFilters: Record<string, string> = {};
+    for (const filter of advancedFilters) {
+      const value = request.getParameter(filter.name) || "";
+      const option = filter.options.find((option) => option.id === value);
+      if (
+        option &&
+        (!advancedHierarchy ||
+          filter.name === "filter1" ||
+          option.parentId === selectedFilters.filter1)
+      )
+        selectedFilters[filter.name] = value;
+    }
+    const filterValues = new Map(
+      regularEntries.map((entry) => {
+        const assignedPaths = categoryPathsByEntry.get(entry.getIdentifier()) || [];
+        return [
+          entry.getIdentifier(),
+          advancedFilters.flatMap(({ name, options }) =>
+            options
+              .filter(({ path }) =>
+                assignedPaths.some((assigned) => pathIsInBranch(assigned, path)),
+              )
+              .map(({ id }) => name + "=" + id),
+          ),
+        ];
+      }),
+    );
+    const filteredEntries = regularEntries.filter((entry) =>
+      Object.entries(selectedFilters).every(([name, value]) =>
+        filterValues.get(entry.getIdentifier())!.includes(name + "=" + value),
+      ),
+    );
     const pageSize = sanitizePageSize(blogPageSize);
+    const pagination = paginateBlog(
+      filteredEntries,
+      pageSize,
+      blogPage(request.getParameter("blogPage")),
+    );
+    const baseUrl = buildNodeUrl(renderContext.getMainResource().getNode());
+    const pageUrls = Array.from({ length: pagination.count }, (_, index) =>
+      blogPageUrl(baseUrl, index + 1, selectedFilters),
+    );
     const filterDependencies = new Map(
       [
         ...(blogAdvancedFilter ? [blogAdvancedFilter] : []),
@@ -266,33 +262,33 @@ jahiaComponent(
 
     const articlesId = `blog-articles-${currentNode.getIdentifier()}`;
     return (
-      <section className={classes.blogListing}>
+      <section
+        className={classes.blogListing}
+        data-blog-pagination=""
+        data-blog-page={pagination.page}
+        data-blog-pages={pagination.count}
+      >
         <section
           className={classes.featuredArticles}
           aria-label={t("blogListing.featuredArticles")}
         >
-          <div className={classes.featuredHeader}>
-            <h2 className={classes.featuredHeading}>{t("blogListing.featured")}</h2>
-            <a className={classes.articlesLink} href={`#${articlesId}`}>
-              {t(
-                advancedFilters.length
-                  ? "blogListing.filterArticles"
-                  : "blogListing.browseArticles",
-              )}
-              <span aria-hidden="true">â†“</span>
-            </a>
-          </div>
+          <h2 className={classes.featuredHeading}>{t("blogListing.featured")}</h2>
           <Render node={featuredEntry} view="featuredLead" />
         </section>
         <h2 id={articlesId} tabIndex={-1} className={classes.articlesHeading}>
           {t("blogListing.allArticles")}
         </h2>
         {advancedFilters.length > 0 && (
-          <Island
-            component={CascadingSelects}
-            props={{ applyFiltersOnChange: true, stateId: currentNode.getIdentifier() }}
-          >
-            <form className={classes.filterForm} method="get">
+          <Island component={CascadingSelects} props={{ navigateOnChange: true }}>
+            <form className={classes.filterForm} method="get" action={baseUrl + "#" + articlesId}>
+              <div hidden>
+                {regularEntries.map((entry) => (
+                  <span
+                    key={entry.getIdentifier()}
+                    data-filter-values={filterValues.get(entry.getIdentifier())!.join("|")}
+                  />
+                ))}
+              </div>
               {advancedFilters.map(({ name, title, options }, index) => (
                 <label
                   key={name}
@@ -302,7 +298,7 @@ jahiaComponent(
                   <span data-category-title={advancedHierarchy && index > 0 ? "" : undefined}>
                     {title}
                   </span>
-                  <select name={name} defaultValue="">
+                  <select name={name} defaultValue={selectedFilters[name] || ""}>
                     <option value="">
                       {!advancedHierarchy || index === 0
                         ? t(
@@ -321,7 +317,8 @@ jahiaComponent(
                 </label>
               ))}
               <div className={classes.filterActions}>
-                <button type="reset">{t("blogListing.resetFilters")}</button>
+                <button type="submit">{t("blogListing.applyFilters")}</button>
+                <a href={baseUrl + "#" + articlesId}>{t("blogListing.resetFilters")}</a>
               </div>
             </form>
           </Island>
@@ -330,8 +327,8 @@ jahiaComponent(
           <Island
             component={BlogGrid}
             props={{
-              pageSize,
-              stateId: currentNode.getIdentifier(),
+              page: pagination.page,
+              pageUrls: pageUrls.map((url) => url + "#" + articlesId),
               gridClassName: classes.grid,
               paginationClassName: classes.pagination,
               paginationLabel: t("blogListing.pagination"),
@@ -340,7 +337,7 @@ jahiaComponent(
               nextLabel: t("blogListing.nextPage"),
             }}
           >
-            {filteredEntries.map((entry) => {
+            {pagination.items.map((entry) => {
               const assignedPaths = categoryPathsByEntry.get(entry.getIdentifier()) || [];
               const values = advancedFilters.flatMap(({ name, options }) =>
                 options

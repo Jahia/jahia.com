@@ -1,18 +1,32 @@
 # Resource listing state
 
-Blog pagination and category filters in blog, ListChildren and AdvancedListChildren lists are now stored in sessionStorage, keyed by the current pathname (including site/language) and the content component identifier. Each listing restores its own valid selections after reload or returning from an article. Reset clears the filters; changing a blog filter returns its grid to page one. Saved pages are clamped to the current result count and unavailable category options fall back to the default selection.
+## Blog pagination
 
-Article and breadcrumb links do not carry listing state. Old blogPage/filter1/filter2 links seed the initial client selection and are cleaned after hydration. Legacy cluster/theme parameters are removed, without deleting unrelated tracking/search parameters or anchors. Detail pages under the resource breadcrumb also clean legacy listing parameters.
+Blog pages use server-rendered pagination with explicit URLs: the clean listing URL is page one and ?blogPage=2 is page two. Previous/next controls are real HTML links; the page selector navigates to the same URLs. Each response contains only its selected article slice, with the existing featured article retained. The article sequence, editorial page size, eligibility rules and category matching are preserved.
 
-The SSR response contains the full eligible content and default filters. Client effects restore filtering and paginate after hydration; no new CND property or content migration is needed. With JavaScript disabled the resource cards remain available, but session state is not restored. With sessionStorage blocked or malformed, controls still work and persistence falls back to memory until the page is unloaded. A shared clean link cannot transfer the sender's selections.
+The URL takes precedence over any old sessionStorage state. A reload, shared link, browser back navigation or return from an article restores the same page and filters. Filter forms use GET and offer an Apply button for browsers without JavaScript; JavaScript submits on selection changes. Applying or resetting filters returns to page one. Category availability still uses metadata for the whole eligible collection, not just the current page.
 
-This change is developed on a separate checkout from origin/main. Global search and partner directory URL behavior remain outside this resource listing change. ResourceCarousel already uses in-page navigation without query parameters; its 3/2/1 responsive behavior is unchanged.
+The clean first page retains Jahia's native canonical and language alternates. Pages two and later provide exactly one canonical containing their normalized page number; the native site-settings-seo filter detects that existing tag and does not add another. Pagination numbers are not assumed to be equivalent translations: the actual FR/EN collections have different lengths, so numbered pages do not emit misleading hreflang links to other collections. Filter combinations remain navigable but are marked noindex,follow to preserve the previous intent that private filter combinations are not separate indexed landing pages.
+
+Malformed page numbers resolve to page one. Numbers beyond the last result page resolve to the final available slice and its canonical URL. The blog view and basic page template declare blogPage/filter1/filter2 as module cache-key parameters, preventing page/filter fragments from being reused for another URL. This is module code, not server cache configuration. No CND change or content migration is required.
+
+## Other resource lists and detail pages
+
+ListChildren and AdvancedListChildren keep their existing sessionStorage behavior, keyed by pathname and component identifier. Their valid selections survive reload and article return. Malformed or blocked storage still falls back to in-memory state. Legacy filter and listing parameters continue to be cleaned on those lists and detail pages without deleting unrelated tracking parameters or anchors.
+
+Global search, the partner directory, glossary suggestions and ResourceCarousel pagination are outside this change. The carousel's 3/2/1 responsive behavior is unchanged.
 
 ## Validation
 
-- Six Node regression tests cover persistence, isolation, old URLs, invalid data, blocked storage and reset.
-- Chrome interaction fixture uses the actual React components: blog filtering/pagination, reload, article return, independent resource lists, language isolation, legacy URL migration, anchors/tracking preservation, keyboard and 375 px viewport, blocked storage.
-- Formatting, ESLint/Stylelint, TypeScript, full Vite/SSR build, package and diff checks are required before publication.
-- UX scope: navigation continuity and control behavior. No visual styles, brand assets, editorial fields or CND constraints change. Full Jahia EDIT/LIVE and screen reader checks are not covered by the browser fixture; live Docker was not replaced because it also contains unrelated ongoing work.
+- Unit tests cover URL normalization, page boundaries, complete non-overlapping slices and the initial previous/next link tree. Existing session-state tests remain applicable to other resource lists.
+- On the isolated clone, crawl every unfiltered FR/EN blog page as HTML without JavaScript; check one canonical per page, complete original article order and no duplicate/missing articles.
+- Browser checks cover page selector, previous/next, browser back, filter submission/reset, reload, return from an article, mobile and no-JavaScript navigation.
+- Formatting, ESLint/Stylelint, TypeScript, Vite/SSR build, package generation and diff checks are required. Validate representative EDIT/preview paths and record any checks not performed; this is not a complete Content Editor or accessibility audit.
 
-Session lifetime and browser storage exceptions: [MDN sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage).
+Source: [Google pagination recommendations](https://developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading), checked 21 October 2026. Technical crawlability does not establish actual indexing or a traffic improvement.
+
+## Glossary metadata cache
+
+Public guest LIVE glossary suggestions reuse plain resource metadata, bilingual term profiles and editorial text traversals. The service is owned by the active module bundle and unregisters its two JCR listeners when that bundle stops or updates. Its shared budget is 2,048 entries and 2,000,000 characters; entries expire after 30 seconds. Editorial traversals have a separate limit of 1,000 roots and 12,000,000 characters with the same expiry; they preserve the 160-node/six-level traversal rules. Jahia saves in DEFAULT or LIVE invalidate both caches. Internal Jackrabbit maintenance writes bypass these Jahia events and must be followed by module reload or explicit invalidation. No sessions, JCR nodes or user access decisions are stored.
+
+Resource queries, read access, language visibility and publication eligibility are checked on each request. Bilingual profiles are separated by site, language, node identity and currently readable translations. Current nodes still resolve public URLs; the existing ranking and card algorithms remain authoritative. Failed initialization, concurrent invalidation or exceeded cache limits use normal JCR reads. EDIT/DEFAULT and authenticated requests bypass the service. No preparation endpoint or background HTTP crawler is part of the module.

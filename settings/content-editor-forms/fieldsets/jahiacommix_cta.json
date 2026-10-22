@@ -1,0 +1,10 @@
+{
+  "name": "jahiacommix:cta",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "ctaType",
+      "selectorType": "ContextualButtonMode"
+    }
+  ]
+}

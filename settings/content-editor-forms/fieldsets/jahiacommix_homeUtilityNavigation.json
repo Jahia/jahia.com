@@ -1,0 +1,14 @@
+{
+  "name": "jahiacommix:homeUtilityNavigation",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "utilityItemsData",
+      "selectorType": "UtilityItemsPicker"
+    },
+    {
+      "name": "utilityNavigationLinks",
+      "hide": true
+    }
+  ]
+}

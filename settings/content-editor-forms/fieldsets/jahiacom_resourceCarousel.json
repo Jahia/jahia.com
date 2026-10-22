@@ -3,6 +3,10 @@
   "priority": 2.0,
   "fields": [
     {
+      "name": "itemCount",
+      "selectorType": "CarouselItemCount"
+    },
+    {
       "name": "selectionMode",
       "valueConstraints": [
         {
@@ -10,48 +14,44 @@
             "type": "String",
             "value": "automatic"
           },
-          "displayValue": "Automatic — article topics on blogs, latest resources elsewhere",
-          "propertyList": []
+          "displayValue": "Automatic â€” article topics on blogs, latest resources elsewhere",
+          "propertyList": [
+            {
+              "name": "defaultProperty",
+              "value": "true"
+            }
+          ],
+          "displayValueKey": "jahiacom:carouselMode.automatic"
         },
         {
           "value": {
             "type": "String",
             "value": "filtered"
           },
-          "displayValue": "By categories — themes and content types",
+          "displayValue": "By categories â€” themes and content types",
           "propertyList": [
             {
               "name": "addMixin",
               "value": "jahiacommix:resourceCarouselFilteredSelection"
             }
-          ]
+          ],
+          "displayValueKey": "jahiacom:carouselMode.filtered"
         },
         {
           "value": {
             "type": "String",
             "value": "manual"
           },
-          "displayValue": "Manual — blog pages and resources",
+          "displayValue": "Manual â€” blog pages and resources",
           "propertyList": [
             {
               "name": "addMixin",
               "value": "jahiacommix:resourceCarouselManualSelection"
             }
-          ]
+          ],
+          "displayValueKey": "jahiacom:carouselMode.manual"
         }
       ]
-    },
-    {
-      "name": "clusters",
-      "hide": true
-    },
-    {
-      "name": "manualItems",
-      "hide": true
-    },
-    {
-      "name": "selectedItems",
-      "hide": true
     }
   ]
 }

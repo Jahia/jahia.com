@@ -1,48 +1,26 @@
 [jahiacom:partner] > jnt:content, jahiacommix:content, mix:title, jmix:visibleInContentTree, jmix:mainResource
- - certification (string, choicelist[resourceBundle]) mandatory < silver, gold, diamond
- // Kept exactly as released for repository compatibility; hidden from Content Editor.
- - countries (string, choicelist[country]) multiple mandatory
+ - partnerClassification (string, choicelist[resourceBundle]) < solution_silver, solution_gold, solution_diamond, technology_integration, technology_strategic
  - description (string, richtext) mandatory i18n
  - logo (weakreference, picker) < jmix:image
- // Optional fields keep existing Partner nodes valid when the module is upgraded.
- - partnerType (string, choicelist[resourceBundle]) = 'integrator' < integrator, technology
- // Optional display label for partners whose relationship is not a Silver/Gold/Diamond certification.
- - partnerLevel (string) i18n
- // Shared across languages. The legacy localized label above remains available as a display fallback.
- - integrationPartner (boolean) = false
- // Shared across languages. When enabled, this status takes precedence over integration and certification labels.
- - strategicPartner (boolean) = false
  // Dedicated Hero summary. shortDescription remains dedicated to the directory card.
  - heroSubtitle (string) i18n
  - shortDescription (string) i18n
  - website (string) i18n
  - partnerSince (date)
- // Legacy location fields kept unchanged for repository compatibility and hidden in Content Editor.
- - regions (string, choicelist[resourceBundle]) multiple < europe, americas, apac
- - locationCountries (string) multiple
- // Optional composite editor. Existing location properties remain available as a fallback.
+ // Shared location list used by partner profiles and the directory.
  - partnerLocationsData (string)
  - tags (weakreference, category[autoSelectParent=false]) multiple
  - aboutTitle (string) i18n
  - expertiseTitle (string) i18n
- // Unified rich content; legacy properties remain unchanged for upgrade compatibility.
+ // Unified rich content. Retired expertise sources require the local migration.
  - expertiseBody (string, richtext) i18n
- // Single-value editor introduced without changing the deployed multiple expertise property.
- - expertiseText (string) i18n
- - expertise (string) multiple i18n
- // Preserves detailed editorial copy migrated from legacy Technology Partner pages.
- - technologyDetails (string, richtext) i18n
  - partnership (string, richtext) i18n
  - partnershipImage (weakreference, picker) i18n < jmix:image
  - certifiedConsultants (long)
  - scope (string) i18n
  - testimonialsData (string) i18n
- - quote (string, richtext) i18n
- - quoteAuthor (string) i18n
- - quoteAuthorTitle (string) i18n
  + * (jahiacom:partnerProject)
  + * (jahiacom:partnerLocation)
- + * (jahiacom:partnerTestimonial)
 
 // SEO fields for Partner resources. Kept separate from the page-only seoOptions mixin.
 [jahiacommix:partnerSeo] mixin extends=jahiacom:partner itemtype=seo
@@ -61,12 +39,3 @@
  - projectType (string) i18n
  - description (string) i18n
  - image (weakreference, picker) i18n < jmix:image
-
-// Individual testimonials belong to one Partner. Existing quote fields are retained.
-[jahiacom:partnerTestimonial] > jnt:content, mix:title, jmix:visibleInContentTree, jmix:hiddenType
- - author (string) mandatory i18n
- - authorTitle (string) i18n
- - comment (string, textarea) mandatory i18n
- // Deprecated Docker prototype rating. Optional so new citations do not require a score.
- - rating (string, choicelist[resourceBundle]) < '1', '2', '3', '4', '5'
- - position (long) = 0

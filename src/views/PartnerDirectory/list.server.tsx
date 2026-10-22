@@ -7,6 +7,7 @@ import {
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { PartnerCard } from "../../contents/Partner/default.server.jsx";
 import {
+  classificationOf,
   configuredRegions,
   legacyRegion,
   regionCountries,
@@ -37,14 +38,6 @@ const normalizedTitle = (title: string) =>
 const stringProperty = (node: JCRNodeWrapper, name: string) =>
   node.hasProperty(name) ? node.getProperty(name).getString() : undefined;
 
-const stringProperties = (node: JCRNodeWrapper, name: string) =>
-  node.hasProperty(name)
-    ? Array.from(node.getProperty(name).getValues(), (value) => value.getString())
-    : undefined;
-
-const booleanProperty = (node: JCRNodeWrapper, name: string) =>
-  node.hasProperty(name) ? node.getProperty(name).getBoolean() : undefined;
-
 const nodeProperties = (node: JCRNodeWrapper, name: string) =>
   node.hasProperty(name)
     ? Array.from(node.getProperty(name).getValues(), (value) => value.getNode())
@@ -66,19 +59,14 @@ const partnerDescendants = (root: JCRNodeWrapper) => {
 
 const partnerProps = (node: JCRNodeWrapper): PartnerProps => ({
   "jcr:title": stringProperty(node, "jcr:title") || node.getName(),
-  "certification": (stringProperty(node, "certification") ||
-    "silver") as PartnerProps["certification"],
+  "partnerClassification": stringProperty(
+    node,
+    "partnerClassification",
+  ) as PartnerProps["partnerClassification"],
   "description": stringProperty(node, "description") || "",
   "logo": node.hasProperty("logo") ? node.getProperty("logo").getValue().getNode() : undefined,
-  "partnerType": stringProperty(node, "partnerType") as PartnerProps["partnerType"],
-  "partnerLevel": stringProperty(node, "partnerLevel"),
-  "integrationPartner": booleanProperty(node, "integrationPartner"),
-  "strategicPartner": booleanProperty(node, "strategicPartner"),
   "shortDescription": stringProperty(node, "shortDescription"),
   "partnership": stringProperty(node, "partnership"),
-  "countries": stringProperties(node, "countries"),
-  "regions": stringProperties(node, "regions") as Region[] | undefined,
-  "locationCountries": stringProperties(node, "locationCountries"),
   "partnerLocationsData": stringProperty(node, "partnerLocationsData"),
   "tags": nodeProperties(node, "tags"),
 });
@@ -116,10 +104,9 @@ jahiaComponent(
     });
     const allPartners = configuredRoot ? partnerDescendants(configuredRoot) : queriedPartners;
     const partners = allPartners.filter((partner) => {
-      const type = stringProperty(partner, "partnerType") || "integrator";
-      if (mode === "solution") return type !== "technology";
-      if (mode === "technology")
-        return type === "technology" && partner.getName().toLowerCase() !== "efficy";
+      const type = classificationOf(stringProperty(partner, "partnerClassification"))?.type;
+      if (mode === "solution") return type === "integrator";
+      if (mode === "technology") return type === "technology";
       return true;
     });
     for (const dependency of allPartners) {
@@ -160,7 +147,6 @@ jahiaComponent(
         props: {
           ...merged,
           regions,
-          locationCountries: regions.map((region) => countries[region][0] || ""),
           partnerLocationsData: JSON.stringify(
             regions.flatMap((region) =>
               countries[region].length > 0
@@ -184,7 +170,9 @@ jahiaComponent(
       return leftTitle < rightTitle ? -1 : leftTitle > rightTitle ? 1 : 0;
     });
 
-    const integratorCount = cards.filter(({ props }) => props.partnerType !== "technology").length;
+    const integratorCount = cards.filter(
+      ({ props }) => classificationOf(props.partnerClassification)?.type === "integrator",
+    ).length;
     const technologyCount = cards.length - integratorCount;
     const regionCounts = {
       europe: cards.filter(({ props }) => props.regions?.includes("europe")).length,
@@ -196,7 +184,7 @@ jahiaComponent(
       { value: string; label: string; partnerships: Set<"strategic" | "integration"> }
     >();
     for (const { props } of cards) {
-      const partnership = props.strategicPartner ? "strategic" : "integration";
+      const partnership = classificationOf(props.partnerClassification)?.partnership;
       for (const tag of (props.tags || []).filter(
         (value): value is JCRNodeWrapper => value !== null,
       )) {
@@ -206,7 +194,7 @@ jahiaComponent(
           label: tag.getDisplayableName(),
           partnerships: new Set<"strategic" | "integration">(),
         };
-        existing.partnerships.add(partnership);
+        if (partnership) existing.partnerships.add(partnership);
         technologyOptions.set(value, existing);
       }
     }
@@ -214,12 +202,18 @@ jahiaComponent(
       .map(({ value, label, partnerships }) => ({ value, label, partnerships: [...partnerships] }))
       .sort((left, right) => left.label.localeCompare(right.label));
     const levelCounts = {
-      diamond: cards.filter(({ props }) => props.certification === "diamond").length,
-      gold: cards.filter(({ props }) => props.certification === "gold").length,
-      silver: cards.filter(({ props }) => props.certification === "silver").length,
+      diamond: cards.filter(
+        ({ props }) => classificationOf(props.partnerClassification)?.level === "diamond",
+      ).length,
+      gold: cards.filter(
+        ({ props }) => classificationOf(props.partnerClassification)?.level === "gold",
+      ).length,
+      silver: cards.filter(
+        ({ props }) => classificationOf(props.partnerClassification)?.level === "silver",
+      ).length,
     };
     const filterItems = cards.map(({ props }) => ({
-      level: props.certification,
+      level: classificationOf(props.partnerClassification)?.level,
       regions: props.regions || [],
     }));
 

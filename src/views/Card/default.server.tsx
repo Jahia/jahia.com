@@ -10,10 +10,10 @@ import { CTA } from "../../mixins/CTA/index.jsx";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
 import type { Props } from "./types.js";
 import { navigationUrl } from "../../templates/navigationUrl.js";
-import CardMedia from "../../components/CardMedia.jsx";
 import { glossaryUpdatedLabel, nodeModifiedAt } from "../Glossary/updatedDate.js";
 import { termLetter } from "../Glossary/model.js";
 import { htmlToText } from "../../contents/Partner/types.js";
+import CardMedia from "../../components/CardMedia.jsx";
 
 export const Card = jahiaComponent(
   {
@@ -27,22 +27,25 @@ export const Card = jahiaComponent(
       icon,
       image,
       background,
+      cardPurpose,
+      "regionTarget": configuredRegion,
+      metric,
+      entriesFolder,
       cardTheme,
+      hideCtaIcon,
       compact = false,
-      partnerRegionTarget,
-      glossaryMetric,
-      glossaryFolder,
       ...cta
     }: Props & { compact?: boolean },
     { currentNode, currentResource, renderContext },
   ) => {
     const { t } = useTranslation();
+    const regionTarget = cardPurpose === "partnerRegion" ? configuredRegion : undefined;
     let metricValue: string | number | undefined;
-    if (glossaryMetric && glossaryMetric !== "none" && glossaryFolder) {
-      server.render.addCacheDependency({ path: glossaryFolder.getPath() }, renderContext);
+    if (cardPurpose === "glossaryStatistic" && metric && entriesFolder) {
+      server.render.addCacheDependency({ path: entriesFolder.getPath() }, renderContext);
       const locale = currentResource.getLocale();
       const language = locale.getLanguage();
-      const entries = getChildNodes(glossaryFolder, -1, 0, (node) =>
+      const entries = getChildNodes(entriesFolder, -1, 0, (node) =>
         node.isNodeType("jahiacom:glossaryEntry"),
       ).filter(
         (node) =>
@@ -65,9 +68,9 @@ export const Card = jahiaComponent(
         }
       }
       metricValue =
-        glossaryMetric === "entries"
+        metric === "entries"
           ? entries.length
-          : glossaryMetric === "letters"
+          : metric === "letters"
             ? new Set(
                 entries.map((node) =>
                   termLetter(node.getPropertyAsString("jcr:title") || node.getName()),
@@ -77,7 +80,7 @@ export const Card = jahiaComponent(
     }
     // Old region cards stored a generated count in rich text. Keep other editorial copy.
     const legacyRegionCount =
-      partnerRegionTarget && /^\d+\s+part(?:ner|enaire)s?$/i.test(htmlToText(body || "").trim());
+      regionTarget && /^\d+\s+part(?:ner|enaire)s?$/i.test(htmlToText(body || "").trim());
     const cardHref = compact
       ? navigationUrl(
           cta.ctaType === "internal"
@@ -130,12 +133,12 @@ export const Card = jahiaComponent(
             dangerouslySetInnerHTML={{ __html: body }}
           />
         )}
-        {partnerRegionTarget && <p data-partner-region-count={partnerRegionTarget} />}
-        {partnerRegionTarget ? (
+        {regionTarget && <p data-partner-region-count={regionTarget} />}
+        {regionTarget ? (
           <p style={{ marginTop: compact ? 0 : "1rem" }}>
             <CTA
               href="#partner-directory"
-              data-partner-region-target={partnerRegionTarget}
+              data-partner-region-target={regionTarget}
               icon="i-ri:arrow-right-s-line"
               secondary
               location="partner_regions"
@@ -146,7 +149,7 @@ export const Card = jahiaComponent(
           </p>
         ) : !compact && cta.ctaType !== "none" ? (
           <p style={{ marginTop: compact ? 0 : "1rem" }}>
-            <MixinCTA cta={cta} location="card" name={currentNode.getName()} />
+            <MixinCTA cta={cta} location="card" name={currentNode.getName()} icon={!hideCtaIcon} />
           </p>
         ) : null}
       </>

@@ -1,24 +1,8 @@
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 
-export type HomeUtilityNavigationFields = {
-  utilityNavigationLinks?: JCRNodeWrapper[];
-  utilityLinksPosition?: number;
-  utilitySearchVisible?: boolean;
-  utilitySearchLabel?: string;
-  utilitySearchPosition?: number;
-  utilityLanguagesVisible?: boolean;
-  utilityLanguagesLabel?: string;
-  utilityLanguagesPosition?: number;
-  utilityRssVisible?: boolean;
-  utilityRssLabel?: string;
-  utilityRssUrl?: string;
-  utilityRssImage?: JCRNodeWrapper;
-  utilityRssPosition?: number;
-};
-
-export type UtilityKind = "links" | "rss" | "search" | "languages";
+export type UtilityTool = "rss" | "search" | "languages";
+export type UtilityEntry = Page | { kind: UtilityTool };
 export type UtilityControls = {
-  order: UtilityKind[];
   searchVisible: boolean;
   searchLabel: string;
   languagesVisible: boolean;
@@ -28,22 +12,15 @@ export type UtilityControls = {
 export type NavigationItemFields = {
   navLabel?: string;
   navDescription?: string;
-  navIcon?: "cms" | "dxp" | "ai";
   navIconImage?: JCRNodeWrapper;
   navUtilityLabel?: string;
 };
 export type NavigationPanelFields = {
-  navIntroEyebrow?: string;
-  navIntroHeading?: string;
-  navIntroText?: string;
-  navIntroLink?: JCRNodeWrapper;
-  navIntroLabel?: string;
   navFeatureEyebrow?: string;
   navFeatureHeading?: string;
   navFeatureText?: string;
   navFeatureLink?: JCRNodeWrapper;
   navFeatureLabel?: string;
-  navFooterText?: string;
   navColumnOneLabel?: string;
   navColumnOneLinks?: JCRNodeWrapper[];
   navColumnTwoLabel?: string;
@@ -53,13 +30,30 @@ export type Page = {
   title: string;
   href: string;
   current: boolean;
-  description?: string;
   icon?: string;
 };
 export type NavigationPanel = {
-  intro?: { eyebrow?: string; heading: string; text?: string; link?: Page };
   feature?: { eyebrow?: string; heading: string; text?: string; link: Page };
   columns?: Group[];
 };
 export type Group = { title: string; children: Entry[]; panel?: NavigationPanel };
 export type Entry = Group | Page;
+
+export type HomeNavbarButtonFields = {
+  primaryCTALink?: JCRNodeWrapper;
+  primaryCTALabel?: string;
+  primaryCTAStyle?: "primary" | "secondary";
+  primaryCTAPlacement?: "main" | "upper";
+  secondaryCTALink?: JCRNodeWrapper;
+  secondaryCTALabel?: string;
+  secondaryCTAStyle?: "primary" | "secondary";
+  secondaryCTAPlacement?: "main" | "upper";
+  navbarCTAOrder?: "contactDemo" | "demoContact";
+};
+export type NavbarButton = {
+  id: "contact" | "demo";
+  href: string;
+  label: string;
+  style: "primary" | "secondary";
+  placement: "main" | "upper";
+};

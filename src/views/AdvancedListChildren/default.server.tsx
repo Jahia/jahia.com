@@ -15,22 +15,8 @@ interface Props {
   parent?: JCRNodeWrapper;
   nodeType?: string;
   filterMode?: string;
-  filterCount?: string;
   filter1Title?: string;
-  filter1Category?: JCRNodeWrapper;
   filter1Categories?: Array<JCRNodeWrapper | null>;
-  filter2Title?: string;
-  filter2Category?: JCRNodeWrapper;
-  filter2Categories?: Array<JCRNodeWrapper | null>;
-  filter3Title?: string;
-  filter3Category?: JCRNodeWrapper;
-  filter3Categories?: Array<JCRNodeWrapper | null>;
-  filter4Title?: string;
-  filter4Category?: JCRNodeWrapper;
-  filter4Categories?: Array<JCRNodeWrapper | null>;
-  filter5Title?: string;
-  filter5Category?: JCRNodeWrapper;
-  filter5Categories?: Array<JCRNodeWrapper | null>;
   emptyState?: string;
 }
 

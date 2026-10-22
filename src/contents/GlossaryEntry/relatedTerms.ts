@@ -96,26 +96,31 @@ const distinctiveName = (name: string) =>
 // Per-JavaScript-context LRU. Exact content keys avoid collisions and stale editorial data.
 // No JCR wrappers, render contexts, URLs or permission decisions are retained.
 function prepareCorpus(documents: RelatedCandidate[]) {
-  const sets = documents.map((item) => new Set(words(document(item))));
+  // These pure text projections are reused only while preparing this exact corpus.
+  // Keep all eligibility checks and the existing content-keyed cache unchanged.
+  const texts = new Map(documents.map((item) => [item.id, document(item)]));
+  const documentWords = new Map(documents.map((item) => [item.id, words(texts.get(item.id)!)]));
+  const itemNames = new Map(documents.map((item) => [item.id, names(item)]));
+  const sets = documents.map((item) => new Set(documentWords.get(item.id)!));
   const weights = new Map<string, number>();
   for (const set of sets) for (const word of set) weights.set(word, (weights.get(word) || 0) + 1);
   for (const [word, count] of weights) weights.set(word, Math.log(1 + documents.length / count));
   const vector = (item: RelatedCandidate) => {
     const map = new Map<string, number>();
-    for (const [text, boost] of [
-      [document(item), 1],
-      [item.description || "", 2],
-      [names(item).join(" "), 3],
+    for (const [terms, boost] of [
+      [documentWords.get(item.id)!, 1],
+      [words(item.description || ""), 2],
+      [words(itemNames.get(item.id)!.join(" ")), 3],
     ] as const)
-      for (const word of words(text))
+      for (const word of terms)
         map.set(word, (map.get(word) || 0) + boost * (weights.get(word) || 0));
     return map;
   };
   const normalizedDocuments = new Map(
-    documents.map((item) => [item.id, ` ${phrase(document(item))} `]),
+    documents.map((item) => [item.id, ` ${phrase(texts.get(item.id)!)} `]),
   );
   const normalizedNames = new Map(
-    documents.map((item) => [item.id, names(item).map((name) => ` ${phrase(name)} `)]),
+    documents.map((item) => [item.id, itemNames.get(item.id)!.map((name) => ` ${phrase(name)} `)]),
   );
   const comparisonPhrases = new Map(
     documents.map((item) => [item.id, new Set((item.concepts || []).map(phrase))]),
@@ -123,7 +128,8 @@ function prepareCorpus(documents: RelatedCandidate[]) {
   const graphNames = new Map(
     documents.map((item) => [
       item.id,
-      names(item)
+      itemNames
+        .get(item.id)!
         .filter((name) => distinctiveName(name) && phrase(name).split(" ").length > 1)
         .map((name) => ` ${phrase(name)} `),
     ]),
@@ -223,6 +229,11 @@ export function selectRelatedTermDetails<T extends RelatedCandidate>(
   const currentVector = vector(current);
   const currentDomains = domains(current);
   const currentText = normalizedDocuments.get(current.id)!;
+  // Current-entry names and comparison phrases are invariant across every candidate.
+  const currentMentions = names(current)
+    .filter(distinctiveName)
+    .map((name) => ` ${phrase(name)} `);
+  const comparisonNames = new Set(concepts.map(phrase));
   const similarity = (a: Map<string, number>, b: Map<string, number>) => {
     let dot = 0,
       normA = 0,
@@ -243,16 +254,14 @@ export function selectRelatedTermDetails<T extends RelatedCandidate>(
   const ranked = pool
     .map((item) => {
       const itemNames = names(item);
-      const explicit = itemNames.some((name) =>
-        concepts.some((concept) => phrase(concept) === phrase(name)),
-      );
+      const explicit = itemNames.some((name) => comparisonNames.has(phrase(name)));
       const matchNames = normalizedNames.get(item.id)!;
       const forward = itemNames
         .filter(distinctiveName)
         .some((name) => currentText.includes(` ${phrase(name)} `));
-      const reverse = names(current)
-        .filter(distinctiveName)
-        .some((name) => normalizedDocuments.get(item.id)!.includes(` ${phrase(name)} `));
+      const reverse = currentMentions.some((name) =>
+        normalizedDocuments.get(item.id)!.includes(name),
+      );
       const itemDomains = domains(item);
       const sameDomain = [...currentDomains].some((domain) => itemDomains.has(domain));
       const architecture = new Set([

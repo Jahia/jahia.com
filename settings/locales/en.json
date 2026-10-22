@@ -72,8 +72,6 @@
     "allCategories": "All categories",
     "featured": "Featured",
     "allArticles": "All articles",
-    "browseArticles": "View all articles",
-    "filterArticles": "Filter articles",
     "readArticle": "Read article",
     "updatedOn": "Updated on",
     "featuredArticles": "Featured article",
@@ -206,5 +204,13 @@
     "copied": "Copied to clipboard.",
     "copyFailed": "Unable to copy. Select the text to copy it.",
     "downloadKit": "Download (ZIP)"
+  },
+  "sectionLayout": {
+    "rows": "Complete rows",
+    "complete": "Yes",
+    "incomplete": "Needs more items",
+    "irregular-1-2": "Alternate one full-width item and a row of two items. Examples: 1, 3, 4, 6 or 7 items.",
+    "irregular-3-2": "On wide screens: two items, then three per row. To also complete tablet rows, use 7, 10, 12 or 15 items.",
+    "irregular-67-33": "Two items per row, alternating the wider item on the left and right. Use an even number of items."
   }
 }

@@ -8,18 +8,18 @@ import {
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
+import { sanitizeHtml } from "../GlossaryEntry/sanitizeHtml.js";
 import { CTA } from "../../mixins/CTA/index.jsx";
 import { Layout } from "../../templates/Layout.jsx";
 import Carousel from "../../views/ResourceCarousel/Carousel.client.jsx";
 import classes from "./profile.module.css";
-import { legacyExpertiseBody } from "./expertise.js";
 import { rankSimilarPartners } from "./similarity.js";
 import ProfileUrl from "./ProfileUrl.client.jsx";
 import { TestimonialCard } from "./Testimonial.server.jsx";
 import testimonialClasses from "./testimonials.module.css";
 import {
+  classificationOf,
   configuredRegions,
-  compositePartnerLocations,
   countryNames,
   htmlToText,
   legacyRegion,
@@ -39,11 +39,11 @@ interface InlineTestimonial {
   html?: string;
 }
 
-const parseTestimonials = (value?: string): InlineTestimonial[] | undefined => {
-  if (value === undefined) return undefined;
+const parseTestimonials = (value?: string): InlineTestimonial[] => {
+  if (value === undefined) return [];
   try {
     const rows: unknown = JSON.parse(value);
-    if (!Array.isArray(rows)) return undefined;
+    if (!Array.isArray(rows)) return [];
     return rows.filter(
       (row): row is InlineTestimonial =>
         row &&
@@ -56,7 +56,7 @@ const parseTestimonials = (value?: string): InlineTestimonial[] | undefined => {
         (row.html === undefined || typeof row.html === "string"),
     );
   } catch {
-    return undefined;
+    return [];
   }
 };
 
@@ -79,17 +79,11 @@ const stringProperties = (node: JCRNodeWrapper, name: string) =>
     ? Array.from(node.getProperty(name).getValues(), (value) => value.getString())
     : [];
 
-const nodeRegions = (node: JCRNodeWrapper): Region[] => {
-  const compositeLocations = compositePartnerLocations(
-    stringProperty(node, "partnerLocationsData"),
+const nodeRegions = (node: JCRNodeWrapper): Region[] =>
+  configuredRegions(
+    { partnerLocationsData: stringProperty(node, "partnerLocationsData") },
+    legacyRegion(node),
   );
-  if (compositeLocations.length > 0) {
-    return [...new Set(compositeLocations.map(({ region }) => region))];
-  }
-
-  const regions = stringProperties(node, "regions") as Region[];
-  return regions.length > 0 ? regions : [legacyRegion(node)];
-};
 
 const normalizedCountry = (
   country: string,
@@ -148,7 +142,8 @@ jahiaComponent(
     const website = /^https?:\/\//i.test(props.website || "") ? props.website : undefined;
     const summary =
       props.heroSubtitle || props.shortDescription || htmlToText(props.description).slice(0, 240);
-    const type = props.partnerType || "integrator";
+    const classification = classificationOf(props.partnerClassification);
+    const type = classification?.type;
     const projects = useJCRQuery({
       query: `
         SELECT * FROM [jahiacom:partnerProject]
@@ -157,16 +152,8 @@ jahiaComponent(
       `,
     });
     const siteRoot = currentNode.getPath().match(/^\/sites\/[^/]+/)?.[0] || "/sites";
-    const testimonials = useJCRQuery({
-      query: `SELECT * FROM [jahiacom:partnerTestimonial]
-        WHERE ISCHILDNODE(${JSON.stringify(currentNode.getPath())})
-        ORDER BY [position], [jcr:created]`,
-    });
     const inlineTestimonials = parseTestimonials(props.testimonialsData);
-    const quoteCount =
-      inlineTestimonials === undefined
-        ? testimonials.length + (props.quote ? 1 : 0)
-        : inlineTestimonials.length;
+    const quoteCount = inlineTestimonials.length;
     const partnerCandidates = useJCRQuery({
       query: `
         SELECT * FROM [jahiacom:partner]
@@ -184,7 +171,7 @@ jahiaComponent(
         .trim()
         .toLocaleLowerCase();
       if (title === currentTitle) return false;
-      const candidateType = stringProperty(node, "partnerType") || "integrator";
+      const candidateType = classificationOf(stringProperty(node, "partnerClassification"))?.type;
       const candidateRegions = nodeRegions(node);
       return (
         candidateType === type &&
@@ -207,10 +194,7 @@ jahiaComponent(
     const similarityProfiles = uniqueSimilar.map((node) => {
       const candidateCountries = regionCountries(
         {
-          regions: nodeRegions(node),
-          locationCountries: stringProperties(node, "locationCountries"),
           partnerLocationsData: stringProperty(node, "partnerLocationsData"),
-          countries: stringProperties(node, "countries"),
         },
         activeRegion,
       );
@@ -218,23 +202,17 @@ jahiaComponent(
         node,
         tags: stringProperties(node, "tags"),
         countries: candidateCountries.map((country) => normalizedCountry(country, locale)),
-        level:
-          stringProperty(node, "strategicPartner") === "true"
-            ? "strategic"
-            : stringProperty(node, "integrationPartner") === "true"
-              ? "integration"
-              : stringProperty(node, "certification"),
+        level: (() => {
+          const value = classificationOf(stringProperty(node, "partnerClassification"));
+          return value?.partnership || value?.level;
+        })(),
       };
     });
     const similar = rankSimilarPartners(
       {
         tags: (props.tags || []).flatMap((tag) => (tag ? [tag.getIdentifier()] : [])),
         countries: currentCountries,
-        level: props.strategicPartner
-          ? "strategic"
-          : props.integrationPartner
-            ? "integration"
-            : props.certification,
+        level: classification?.partnership || classification?.level,
       },
       similarityProfiles,
       quoteCount > 3 ? 3 : 8,
@@ -247,9 +225,9 @@ jahiaComponent(
     const directoryPage = pageAncestor(directoryComponent);
     const directoryUrl = directoryPage ? buildNodeUrl(directoryPage) : "#";
     const tagNodes = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
-    const expertiseBody = props.expertiseBody ?? legacyExpertiseBody(props);
+    const expertiseBody = props.expertiseBody;
 
-    for (const dependency of [...projects, ...partnerCandidates, ...testimonials]) {
+    for (const dependency of [...projects, ...partnerCandidates]) {
       server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
     }
 
@@ -281,7 +259,7 @@ jahiaComponent(
                   {type === "technology" ? t("partner.technology") : t("partner.integrators")}
                 </strong>
               </div>
-              {!(type === "technology" && props.strategicPartner) && (
+              {!(classification?.partnership === "strategic") && (
                 <div>
                   <span>
                     {type === "technology" ? t("partner.partnershipType") : t("partner.level")}
@@ -417,18 +395,7 @@ jahiaComponent(
                     showPagination: quoteCount > 3,
                   }}
                 >
-                  {inlineTestimonials === undefined && props.quote && (
-                    <TestimonialCard
-                      author={props.quoteAuthor}
-                      authorTitle={props.quoteAuthorTitle}
-                    >
-                      <div
-                        className="_richtext"
-                        dangerouslySetInnerHTML={{ __html: props.quote }}
-                      />
-                    </TestimonialCard>
-                  )}
-                  {inlineTestimonials?.map((testimonial, index) => (
+                  {inlineTestimonials.map((testimonial, index) => (
                     <TestimonialCard
                       // Stateless SSR cards: each request renders the complete editorial order.
                       // eslint-disable-next-line @eslint-react/no-array-index-key
@@ -444,17 +411,13 @@ jahiaComponent(
                       {testimonial.html ? (
                         <div
                           className="_richtext"
-                          dangerouslySetInnerHTML={{ __html: testimonial.html }}
+                          dangerouslySetInnerHTML={{ __html: sanitizeHtml(testimonial.html) }}
                         />
                       ) : (
                         testimonial.comment
                       )}
                     </TestimonialCard>
                   ))}
-                  {inlineTestimonials === undefined &&
-                    testimonials.map((testimonial) => (
-                      <Render key={testimonial.getIdentifier()} node={testimonial} />
-                    ))}
                 </Island>
               )}
             </div>
