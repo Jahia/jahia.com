@@ -173,5 +173,38 @@
     "author": "Author",
     "editorialDate": "Editorial date",
     "backToGlossary": "Back to glossary"
+  },
+  "pressRoom": {
+    "year": "Year",
+    "reset": "Reset filters",
+    "sort": "Sort by",
+    "allYears": "All years",
+    "type": "Content type",
+    "empty": "No news matches your criteria. You can reset the filters.",
+    "allThemes": "All topics",
+    "theme": "Topic",
+    "news": "Press releases, media coverage and awards",
+    "oldest": "Oldest first",
+    "recent": "Newest first",
+    "results_zero": "0 results",
+    "results_one": "{{count}} result",
+    "results_other": "{{count}} results",
+    "search": "Search news",
+    "types": {
+      "communique": "Press release",
+      "presse": "In the press",
+      "evenement": "Event",
+      "tribune": "Opinion",
+      "recompense": "Award"
+    },
+    "pagination": "News pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "choosePage": "Choose a page",
+    "pagePosition": "Page {{page}} of {{total}}",
+    "all": "All",
+    "copied": "Copied to clipboard.",
+    "copyFailed": "Unable to copy. Select the text to copy it.",
+    "downloadKit": "Download (ZIP)"
   }
 }

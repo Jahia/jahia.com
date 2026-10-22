@@ -5,6 +5,9 @@ export type Props = {
   "jcr:title"?: string;
   "body"?: string;
   "icon"?: JCRNodeWrapper;
+  "image"?: JCRNodeWrapper;
+  "cardTheme"?: "day" | "cloudy" | "night";
+  "background"?: string;
   "technologyCategories"?: string[];
   "technologyPartnerType"?: "strategic" | "integration";
   "glossaryMetric"?: "none" | "entries" | "letters" | "updated";

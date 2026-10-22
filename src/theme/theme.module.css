@@ -1,11 +1,4 @@
-.container {
-  @apply _stack-8;
-
-  padding: 4rem 1rem;
-  container-type: inline-size;
-  color: var(--jahia-color);
-  background: var(--jahia-container-background) center / cover;
-
+.decor {
   /* Visual variations, configurable in the "Layout" section of jContent */
   &[data-bg="plusses"] {
     background: var(--jahia-container-background) url("./plusses.svg") center no-repeat;
@@ -33,6 +26,17 @@
     background: var(--jahia-container-background) url("./aura-bottom.svg") center top / 100% auto
       no-repeat;
   }
+}
+
+.container {
+  composes: decor;
+
+  @apply _stack-8;
+
+  padding: 4rem 1rem;
+  container-type: inline-size;
+  color: var(--jahia-color);
+  background: var(--jahia-container-background) center / cover;
 
   > * {
     width: 100%;

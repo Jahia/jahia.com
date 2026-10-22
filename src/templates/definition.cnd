@@ -7,6 +7,15 @@
 
 [jahiacom:footerColumn] > jnt:content, mix:title
  - links (weakreference, picker) multiple mandatory < jnt:page, jmix:mainResource
+ - selectedLinkLabels (string) i18n
+ // Optional reusable links; the column links property defines display order.
+ + items (jahiacom:footerLinkList)
+
+[jahiacom:footerLinkList] > jnt:content, jmix:hiddenType orderable
+ - layout (string, choicelist[resourceBundle]) = 'column' < 'column', 'row'
+ + * (jahiacom:footerLink)
+
+[jahiacom:footerLink] > jnt:content, mix:title, jahiacommix:cta, jmix:editorialContent, jmix:mainResource
 
 [jahiacom:footerIcons] > jnt:content, jmix:hiddenType orderable
  + * (jahiacom:footerIcon)

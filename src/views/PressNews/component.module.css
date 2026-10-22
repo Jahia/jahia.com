@@ -1,0 +1,261 @@
+.room {
+  color: var(--jahia-color);
+  overflow-wrap: anywhere;
+}
+
+.badge {
+  padding: 0.375rem 0.5rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  color: #001932;
+  background: #e3f7ff;
+  border-radius: 0.25rem;
+}
+
+.filters {
+  padding: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: 1.5rem;
+  background: color-mix(in srgb, var(--jahia-primary-color) 5%, var(--jahia-background));
+  border: 1px solid var(--jahia-border);
+}
+
+.filters label {
+  display: block;
+  flex: 1 1 12rem;
+  min-width: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filters input[type="search"],
+.filters select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 2.875rem;
+  padding: 0.75rem;
+  margin-top: 0.375rem;
+  color: #001932;
+  background: white;
+  border: 1px solid #727d87;
+  border-radius: 0.25rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: end;
+  margin-top: 1rem;
+}
+
+.reset[type="reset"] {
+  min-height: 2.875rem;
+  padding: 0.75rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.875rem;
+  color: #037cc2;
+  text-transform: uppercase;
+  background: white;
+  border: 1px solid #037cc2;
+  border-radius: 0.25rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  scroll-margin-top: 10rem;
+}
+
+.release {
+  composes: item from "../../contents/Blog/Entry/styles.module.css";
+  min-width: 0;
+  overflow: hidden;
+}
+
+.grid[data-layout="cards"] .release:where(:not([hidden])) {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  background-color: var(--jahia-container-background);
+  border: 1px solid var(--jahia-border);
+}
+
+.release[hidden] {
+  display: none;
+}
+
+.releaseVisual {
+  min-height: 0;
+}
+
+.releaseBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0;
+}
+
+.grid[data-layout="cards"] .releaseBody {
+  padding: 1.5rem;
+}
+
+.releaseBody h3,
+.releaseBody p {
+  margin: 0;
+}
+
+.releaseBody h3 {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  line-height: 1.35;
+  color: var(--jahia-title-color);
+}
+
+.releaseBody h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.releaseMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.releaseCategories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--jahia-primary-color);
+}
+
+.grid[data-layout="list"] {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+.grid[data-layout="list"] .release {
+  background-color: var(--jahia-container-background);
+  border-width: 0 0 1px;
+  border-radius: 0;
+}
+
+.room:where([data-theme="night"])
+  .grid:where([data-layout="list"])
+  .release:where(:not([data-theme])) {
+  --jahia-color: var(--jahia-neutral-100);
+  --jahia-title-color: var(--jahia-neutral-50);
+  --jahia-primary-color: var(--jahia-blue);
+
+  color: var(--jahia-color);
+  border-color: var(--jahia-neutral-600);
+}
+
+.grid[data-layout="list"] .releaseVisual {
+  display: none;
+}
+
+.grid[data-layout="list"] .releaseBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem 2rem;
+  padding: 1.75rem 0;
+}
+
+.grid[data-layout="list"] .releaseMeta {
+  grid-column: 1 / -1;
+}
+
+.grid:where([data-layout="list"]) :where(h3, p),
+.grid[data-layout="list"] .releaseCategories {
+  grid-column: 1;
+}
+
+.grid[data-layout="coverage"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid[data-layout="coverage"] .release {
+  background: transparent;
+  border-radius: 0;
+}
+
+.grid[data-layout="coverage"] > :first-child {
+  @apply _cut-before;
+}
+
+.grid[data-layout="coverage"] > :last-child {
+  @apply _cut-after;
+}
+
+.room :focus-visible {
+  outline: 2px solid var(--jahia-primary-color);
+  outline-offset: 2px;
+}
+
+@media (width <= 900px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width <= 600px) {
+  .releaseBody,
+  .grid[data-layout="cards"] .releaseBody {
+    padding: 1.25rem;
+  }
+
+  .grid[data-layout="coverage"],
+  .grid[data-layout="list"] .releaseBody {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.releaseMeta .badge {
+  padding: 0;
+  color: var(--jahia-primary-color);
+  background: transparent;
+}
+
+.grid[data-layout="cards"] .releaseBody h3 {
+  font-size: 1.125rem;
+}
+
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filterBar button {
+  min-height: 2.75rem;
+  padding: 0.625rem 1rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--jahia-a11y-blue);
+  text-transform: uppercase;
+  cursor: pointer;
+  background: white;
+  border: 1px solid var(--jahia-a11y-blue);
+  border-radius: 0.25rem;
+}
+
+.filterBar button[aria-pressed="true"] {
+  color: white;
+  background: var(--jahia-a11y-blue);
+}
+
+.listingHeader {
+  min-width: 0;
+}

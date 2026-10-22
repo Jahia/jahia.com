@@ -10,12 +10,36 @@ import clsx from "clsx";
 import { navigationUrl } from "./navigationUrl.js";
 import { referenceLink } from "./referenceLink.js";
 
+const footerReferenceLink = (node?: JCRNodeWrapper | null) => {
+  if (!node) return undefined;
+  try {
+    if (!node.hasPermission("jcr:read")) return undefined;
+    if (!node.isNodeType("jahiacom:footerLink"))
+      return referenceLink(
+        () => node,
+        (target) => buildNodeUrl(target),
+      );
+    const type = node.getPropertyAsString("ctaType");
+    const href =
+      type === "internal"
+        ? referenceLink(
+            () => node.getProperty("j:linknode").getValue().getNode(),
+            (target) => buildNodeUrl(target),
+          )?.href
+        : type === "external"
+          ? navigationUrl(node.getPropertyAsString("j:url"))
+          : undefined;
+    return href
+      ? { href, title: node.getDisplayableName(), id: node.getIdentifier(), name: node.getName() }
+      : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 const footerLinks = (nodes?: Array<JCRNodeWrapper | null>) =>
   nodes?.flatMap((node) => {
-    const link = referenceLink(
-      () => node,
-      (target) => buildNodeUrl(target),
-    );
+    const link = footerReferenceLink(node);
     return link ? [link] : [];
   });
 
@@ -95,27 +119,71 @@ jahiaComponent(
   ({
     "jcr:title": title,
     links,
+    selectedLinkLabels,
   }: {
     "jcr:title"?: string;
     "links"?: Array<JCRNodeWrapper | null>;
-  }) => (
-    <div className="_stack-2">
-      <strong>{title}</strong>
-      {footerLinks(links)?.map((link) => (
-        <a
-          href={link.href}
-          key={link.id}
-          data-element-url={link.href}
-          data-element-type="link"
-          data-element-text={link.title}
-          data-element-location="footer"
-          data-element-name={link.name}
-        >
-          {link.title}
-        </a>
-      ))}
+    "selectedLinkLabels"?: string;
+  }) => {
+    let labels: Record<string, unknown> = {};
+    try {
+      const parsed: unknown = JSON.parse(selectedLinkLabels || "{}");
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed))
+        labels = parsed as Record<string, unknown>;
+    } catch {
+      // Preserve the existing links if optional editorial labels are malformed.
+    }
+    return (
+      <div className="_stack-2">
+        <strong>{title}</strong>
+        {footerLinks(links)?.map((link) => {
+          const override = Object.hasOwn(labels, link.id) ? labels[link.id] : undefined;
+          const label = typeof override === "string" ? override.trim() || link.title : link.title;
+          return (
+            <a
+              href={link.href}
+              key={link.id}
+              data-element-url={link.href}
+              data-element-type="link"
+              data-element-text={label}
+              data-element-location="footer"
+              data-element-name={link.name}
+            >
+              {label}
+            </a>
+          );
+        })}
+      </div>
+    );
+  },
+);
+
+jahiaComponent(
+  { componentType: "view", nodeType: "jahiacom:footerLinkList" },
+  ({ layout = "column" }: { layout?: "column" | "row" }) => (
+    <div className={layout === "row" ? "_row-2" : "_stack-2"}>
+      <RenderChildren filter="jahiacom:footerLink" />
     </div>
   ),
+);
+
+jahiaComponent(
+  { componentType: "view", nodeType: "jahiacom:footerLink" },
+  ({ "jcr:title": title }: { "jcr:title"?: string }, { currentNode }) => {
+    const href = footerReferenceLink(currentNode)?.href;
+    return href ? (
+      <a
+        href={href}
+        data-element-type="link"
+        data-element-location="footer"
+        data-element-name={currentNode.getName()}
+      >
+        {title}
+      </a>
+    ) : (
+      <span>{title}</span>
+    );
+  },
 );
 
 jahiaComponent(

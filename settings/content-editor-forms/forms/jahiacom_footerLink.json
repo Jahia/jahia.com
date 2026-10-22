@@ -1,0 +1,22 @@
+{
+  "nodeType": "jahiacom:footerLink",
+  "priority": 3,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "jahiacom:footerLink",
+          "fields": [{ "name": "jcr:title", "mandatory": true }]
+        },
+        {
+          "name": "jahiacommix:cta",
+          "fields": [
+            { "name": "ctaLabel", "hide": true },
+            { "name": "ctaVariant", "hide": true }
+          ]
+        }
+      ]
+    }
+  ]
+}

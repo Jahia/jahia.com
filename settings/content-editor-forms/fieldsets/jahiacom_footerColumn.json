@@ -1,0 +1,14 @@
+{
+  "name": "jahiacom:footerColumn",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "links",
+      "mandatory": true,
+      "selectorType": "FooterLinksPicker"
+    },
+    {
+      "name": "selectedLinkLabels"
+    }
+  ]
+}

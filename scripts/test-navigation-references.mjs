@@ -326,3 +326,173 @@ test("RSS rejects executable, network and non-feed protocols while accepting HTT
     assert.equal(harness().nav(node("site"), [], home).rss.href, address);
   }
 });
+
+test("footer labels override existing references without adding creation areas to EDIT", () => {
+  const h = harness();
+  const props = {
+    "jcr:title": "Comparisons",
+    "links": [node("selected")],
+    "selectedLinkLabels": JSON.stringify({ selected: "Short label" }),
+  };
+  const edit = h.footer("footerColumn", props, { edit: true });
+  const live = h.footer("footerColumn", props);
+  assert.doesNotMatch(edit, /data-absolute-area="items"|footer.customLinksHelp/);
+  assert.doesNotMatch(live, /data-absolute-area="items"|footer.customLinksHelp/);
+  assert.match(live, /href="\/selected.html"/);
+  assert.match(live, />Short label<\/a>/);
+  assert.match(live, /data-element-text="Short label"/);
+  for (const value of [undefined, "invalid", "[]", '{"selected":"  "}', '{"selected":42}']) {
+    assert.match(
+      h.footer("footerColumn", { ...props, selectedLinkLabels: value }),
+      />selected<\/a>/,
+    );
+  }
+  assert.match(
+    h.footer("footerColumn", { ...props, links: [node("other"), node("selected")] }),
+    /other<\/a>.*Short label<\/a>/,
+  );
+});
+
+test("selected reusable footer links preserve labels and reject private nodes and targets", () => {
+  const reusable = (name, target, extra = {}) =>
+    node(name, {
+      isNodeType: (type) => type === "jahiacom:footerLink",
+      getPropertyAsString: () => "internal",
+      getProperty: () => ({ getValue: () => ({ getNode: () => target }) }),
+      ...extra,
+    });
+  const html = harness().footer("footerColumn", {
+    links: [
+      reusable("Editorial label", node("destination")),
+      reusable("private-link", node("hidden"), { hasPermission: () => false }),
+      reusable("private-target", node("hidden-target", { hasPermission: () => false })),
+      reusable("broken", null),
+    ],
+  });
+  assert.match(html, /href="\/destination.html"/);
+  assert.match(html, />Editorial label<\/a>/);
+  assert.doesNotMatch(html, /private-link|private-target|hidden|broken/);
+});
+
+function footerEditorRegistry() {
+  const registrations = new Map();
+  const registry = {
+    add: (type, key, value) => registrations.set(type + "/" + key, value),
+    get: (type, key) => registrations.get(type + "/" + key),
+  };
+  for (const kind of ["Text", "Checkbox", "Picker"]) {
+    const selector = { cmp: (props) => ({ type: "Native" + kind, props }) };
+    if (kind === "Picker") selector.resolver = () => selector;
+    registry.add("selectorType", kind, selector);
+  }
+  runInNewContext(readFileSync(resolve("javascript/apps/partner-editors-1.5.js"), "utf8"), {
+    window: {
+      jahia: {
+        uiExtender: { registry },
+        moonstone: { Button: "Button", Field: "Field", Typography: "Typography" },
+        jcontent: { ContentEditorContext: { Consumer: "EditorContextConsumer" } },
+      },
+    },
+    document: { documentElement: { lang: "fr" } },
+  });
+  return registry;
+}
+
+test("footer inline labels preserve references on open, follow UUIDs and respect permissions", () => {
+  const registry = footerEditorRegistry();
+  const fields = ["links", "selectedLinkLabels"].map((propertyName) => ({
+    name: "footer_" + propertyName,
+    propertyName,
+    nodeType: "jahiacom:footerColumn",
+    selectorOptions: [],
+    visible: true,
+  }));
+  const fieldset = { fields };
+  const context = { sections: [{ fieldSets: [fieldset] }], onSectionsUpdate() {} };
+  const values = { footer_selectedLinkLabels: '{"page-a":"Court"}' };
+  const writes = [];
+  const form = {
+    values,
+    setFieldValue: (name, value) => {
+      writes.push([name, value]);
+      values[name] = value;
+    },
+    setFieldTouched() {},
+  };
+  registry
+    .get("selectorType.onChange", "jahiacomFooterLabels")
+    .onChange(undefined, ["page-a", "page-b"], fields[0], context);
+  assert.equal(writes.length, 0);
+  assert.equal(fieldset.fields[1].visible, false);
+  const render = (extra = {}) => {
+    const nodes = [];
+    function visit(tree) {
+      if (Array.isArray(tree)) return tree.forEach(visit);
+      if (!tree || typeof tree !== "object") return;
+      if (typeof tree.type === "function") return visit(tree.type(tree.props));
+      nodes.push(tree);
+      visit(tree.props?.children);
+    }
+    visit(
+      registry
+        .get("selectorType", "FooterLinksPicker")
+        .cmp({ field: fieldset.fields[0], value: ["page-b", "page-a"], form, ...extra }),
+    );
+    return nodes;
+  };
+  const inputs = render().filter((n) => n.type === "input");
+  assert.equal(inputs[0].props.value, "");
+  assert.equal(inputs[1].props.value, "Court");
+  inputs[1].props.onChange({ target: { value: "Autre titre" } });
+  assert.deepEqual(JSON.parse(values.footer_selectedLinkLabels), { "page-a": "Autre titre" });
+  const before = writes.length;
+  render({ readOnly: true })
+    .find((n) => n.type === "input")
+    .props.onChange({ target: { value: "Forbidden" } });
+  assert.equal(writes.length, before);
+  render()
+    .filter((n) => n.type === "input")[1]
+    .props.onChange({ target: { value: "" } });
+  assert.deepEqual(JSON.parse(values.footer_selectedLinkLabels), {});
+});
+
+test("footer personalization keeps main links and respects an explicitly empty list", () => {
+  const h = harness();
+  assert.match(h.footer("footerColumn", { links: [node("legacy")] }), /legacy/);
+  assert.doesNotMatch(h.footer("footerColumn", { links: [] }), /legacy/);
+});
+
+test("footer reusable external links reject executable protocols and keep editorial labels", () => {
+  const external = (url) =>
+    node("Academy", {
+      isNodeType: (type) => type === "jahiacom:footerLink",
+      getPropertyAsString: (property) => (property === "ctaType" ? "external" : url),
+    });
+  const h = harness();
+  assert.match(
+    h.footer("footerColumn", { links: [external("https://academy.jahia.com/")] }),
+    /href="https:\/\/academy.jahia.com\/"[^>]*>Academy<\/a>/,
+  );
+  for (const url of ["javascript:alert(1)", "data:text/html,unsafe", "file:///secret"]) {
+    assert.doesNotMatch(h.footer("footerColumn", { links: [external(url)] }), /<a/);
+  }
+});
+
+test("footer options preserve every existing main CND declaration without a migration", () => {
+  const cnd = readFileSync(resolve("src/templates/definition.cnd"), "utf8");
+  assert.match(
+    cnd,
+    / - links \(weakreference, picker\) multiple mandatory < jnt:page, jmix:mainResource/,
+  );
+  assert.doesNotMatch(cnd, / - selectedLinks /);
+  const definition = cnd.split("[jahiacom:footerLink]")[1].split("\n")[0];
+  assert.match(definition, /jmix:mainResource/);
+  const fieldset = JSON.parse(
+    readFileSync(
+      resolve("settings/content-editor-forms/fieldsets/jahiacom_footerColumn.json"),
+      "utf8",
+    ),
+  );
+  assert.equal(fieldset.fields[0].name, "links");
+  assert.equal(fieldset.fields[0].selectorType, "FooterLinksPicker");
+});

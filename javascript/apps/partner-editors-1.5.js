@@ -1191,4 +1191,222 @@
       }, 600);
     },
   });
+  function isFrench(context) {
+    var store = window.jahia.reduxStore;
+    var language =
+      (context && context.uilang) ||
+      (store && store.getState().uilang) ||
+      document.documentElement.lang ||
+      "en";
+    return String(language).toLowerCase().indexOf("fr") === 0;
+  }
+
+  // Edit each existing footer reference and its optional localized label in one place.
+  registry.add("selectorType.onChange", "jahiacomFooterLabels", {
+    targets: ["FooterLinksPicker"],
+    onChange: function (_, value, currentField, context) {
+      if (currentField.footerLabelsField || !context.onSectionsUpdate) return;
+      var sections = context.sections || [];
+      var labelField = sections
+        .flatMap(function (section) {
+          return (section.fieldSets || []).flatMap(function (fieldset) {
+            return fieldset.fields || [];
+          });
+        })
+        .find(function (field) {
+          return (
+            field.nodeType === "jahiacom:footerColumn" &&
+            field.propertyName === "selectedLinkLabels"
+          );
+        });
+      if (!labelField) return;
+      function refresh() {
+        sections.forEach(function (section) {
+          (section.fieldSets || []).forEach(function (fieldset) {
+            fieldset.fields = (fieldset.fields || []).map(function (field) {
+              if (field.name === currentField.name)
+                return Object.assign({}, field, {
+                  footerLabelsField: labelField,
+                  refreshFooterLabels: refresh,
+                });
+              return field.name === labelField.name
+                ? Object.assign({}, field, { visible: false })
+                : field;
+            });
+          });
+        });
+        context.onSectionsUpdate();
+      }
+      refresh();
+    },
+  });
+  registry.add("selectorType", "FooterLinksPicker", {
+    supportMultiple: true,
+    cmp: function (props) {
+      var nativePicker = registry.get("selectorType", "Picker");
+      var field = props.field;
+      var companion = field.footerLabelsField;
+      if (!companion || !props.form) {
+        var fallback = nativePicker.resolver(field.selectorOptions, field);
+        return h(fallback.cmp, props);
+      }
+      var french = isFrench(props.editorContext);
+      var disabled = Boolean(
+        props.readOnly || props.disabled || field.readOnly || props.form.isSubmitting,
+      );
+      var labelsDisabled = disabled || companion.readOnly;
+      var rows = Array.isArray(props.value) ? props.value : [];
+      var labels;
+      try {
+        labels = JSON.parse(props.form.values[companion.name] || "{}");
+        if (!labels || typeof labels !== "object" || Array.isArray(labels))
+          throw new Error("Invalid labels");
+      } catch {
+        return h("p", {
+          role: "alert",
+          children: french
+            ? "Les libellés enregistrés sont invalides. Contactez un administrateur."
+            : "Stored labels are invalid. Contact an administrator.",
+        });
+      }
+      function change(next) {
+        if (!disabled && props.onChange) props.onChange(next);
+      }
+      function picker(value, index) {
+        var single = Object.assign({}, field, {
+          name: field.name + "-" + index,
+          multiple: false,
+          mandatory: false,
+          readOnly: disabled,
+        });
+        var selector = nativePicker.resolver(single.selectorOptions, single);
+        return h(selector.cmp, {
+          field: single,
+          value: value,
+          editorContext: props.editorContext,
+          inputContext: Object.assign({}, props.inputContext, {
+            selectorType: selector,
+            displayActions: false,
+          }),
+          readOnly: disabled,
+          onBlur: props.onBlur,
+          onChange: function (target) {
+            var next = rows.slice();
+            if (index === rows.length) {
+              if (target && next.indexOf(target) === -1) next.push(target);
+            } else if (!target) next.splice(index, 1);
+            else if (target === value || next.indexOf(target) === -1) next[index] = target;
+            change(next);
+          },
+        });
+      }
+      return h("div", {
+        style: { display: "flex", flexDirection: "column", gap: 12 },
+        children: rows
+          .map(function (id, index) {
+            var inputId = field.name + "-label-" + id;
+            var caption = french ? "Libellé personnalisé (facultatif)" : "Custom label (optional)";
+            return h(
+              "div",
+              {
+                "role": "group",
+                "aria-label": (french ? "Lien " : "Link ") + (index + 1),
+                "children": [
+                  picker(id, index),
+                  h("details", {
+                    children: [
+                      h("summary", { children: caption + (labels[id] ? " : " + labels[id] : "") }),
+                      h("label", { htmlFor: inputId, children: caption }),
+                      h("input", {
+                        id: inputId,
+                        type: "text",
+                        value: typeof labels[id] === "string" ? labels[id] : "",
+                        disabled: labelsDisabled,
+                        style: { width: "100%", boxSizing: "border-box", padding: 8 },
+                        placeholder: french
+                          ? "Vide : titre habituel de la page"
+                          : "Empty: usual page title",
+                        onChange: function (event) {
+                          if (labelsDisabled) return;
+                          var next = Object.assign({}, labels);
+                          if (event.target.value) next[id] = event.target.value;
+                          else delete next[id];
+                          props.form.setFieldValue(companion.name, JSON.stringify(next));
+                          field.refreshFooterLabels();
+                        },
+                        onBlur: function () {
+                          props.form.setFieldTouched(companion.name, true, false);
+                        },
+                      }),
+                    ],
+                  }),
+                  [-1, 1].map(function (delta) {
+                    return h(
+                      window.jahia.moonstone.Button,
+                      {
+                        type: "button",
+                        label:
+                          delta < 0
+                            ? french
+                              ? "Monter"
+                              : "Move up"
+                            : french
+                              ? "Descendre"
+                              : "Move down",
+                        isDisabled: disabled || index + delta < 0 || index + delta >= rows.length,
+                        onClick: function () {
+                          if (index + delta < 0 || index + delta >= rows.length) return;
+                          var next = rows.slice();
+                          next[index] = rows[index + delta];
+                          next[index + delta] = rows[index];
+                          change(next);
+                        },
+                      },
+                      delta,
+                    );
+                  }),
+                  h(window.jahia.moonstone.Button, {
+                    type: "button",
+                    label: french ? "Retirer" : "Remove",
+                    isDisabled: disabled,
+                    onClick: function () {
+                      change(
+                        rows.filter(function (_, rowIndex) {
+                          return rowIndex !== index;
+                        }),
+                      );
+                    },
+                  }),
+                ],
+              },
+              id,
+            );
+          })
+          .concat(
+            picker(undefined, rows.length),
+            window.jahia.jcontent &&
+              h(window.jahia.jcontent.ContentEditorContext.Consumer, {
+                children: function (context) {
+                  return h(InlineUtilityLanguageSync, {
+                    initialValues: context.initialValues,
+                    refresh: field.refreshFooterLabels,
+                  });
+                },
+              }),
+          ),
+      });
+    },
+  });
+
+  // FastField does not refresh a shared JSON field when only localized values change.
+  function InlineUtilityLanguageSync(props) {
+    this.props = props;
+  }
+  InlineUtilityLanguageSync.prototype.isReactComponent = {};
+  InlineUtilityLanguageSync.prototype.render = function () {
+    return null;
+  };
+  InlineUtilityLanguageSync.prototype.componentDidUpdate = function (previous) {
+    if (previous.initialValues !== this.props.initialValues) this.props.refresh();
+  };
 })();

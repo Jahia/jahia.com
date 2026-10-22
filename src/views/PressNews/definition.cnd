@@ -1,0 +1,5 @@
+[jahiacom:pressNews] > jnt:content, mix:title, jahiacommix:container, jmix:editorialContent orderable
+ - subtitle (string, textarea) i18n
+ - pageSize (long) = '6' < '[1,60]'
+ - layout (string, choicelist[resourceBundle]) = 'cards' < 'cards', 'list', 'coverage'
+ + * (jahiacom:pressItem)
