@@ -1,0 +1,10 @@
+{
+  "name": "jahiacommix:resourceCarouselFilteredSelection",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "filteredBlogTypes",
+      "hide": true
+    }
+  ]
+}

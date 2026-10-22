@@ -615,7 +615,7 @@
     rss: ["utilityRssVisible", "utilityRssLabel", "utilityRssUrl", "utilityRssImage"],
   };
   registry.add("selectorType.onChange", "jahiacomInlineUtilitySettings", {
-    targets: ["UtilityItemsPicker"],
+    targets: ["UtilityItemsPicker", "UpgradeUtilityItemsPicker"],
     onChange: function (_, value, currentField, context) {
       if (value === undefined || currentField.inlineUtilityFields || !context.onSectionsUpdate)
         return;
@@ -2144,6 +2144,410 @@
               }),
           ),
       });
+    },
+  });
+  // Load legacy child citations through the native editor client, without mutating JCR.
+  var upgradeCitations = new Map(),
+    upgradeLanguages = new WeakMap();
+  registry.add("jcontent-editor-onbefore-context-hook", "jahiacomLegacyCitations", {
+    hook: function (context, client) {
+      var node = context.nodeData;
+      if (
+        !node ||
+        node.primaryNodeType.name !== "jahiacom:partner" ||
+        node.properties.some(function (p) {
+          return p.name === "testimonialsData";
+        })
+      )
+        return;
+      var translations = ["fr", "en"].map(function (language) {
+        var field = gqlField(
+          "properties",
+          [gqlField("name"), gqlField("value"), gqlField("values")],
+          [gqlArgument("language", { kind: "StringValue", value: language })],
+        );
+        field.alias = gqlName(language);
+        return field;
+      });
+      var query = {
+        kind: "Document",
+        definitions: [
+          {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: gqlName("LegacyPartnerCitations"),
+            variableDefinitions: [],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                gqlField("jcr", [
+                  gqlField(
+                    "nodeById",
+                    [
+                      gqlField("children", [
+                        gqlField(
+                          "nodes",
+                          [gqlField("primaryNodeType", [gqlField("name")])].concat(translations),
+                        ),
+                      ]),
+                    ],
+                    [gqlArgument("uuid", { kind: "StringValue", value: node.uuid })],
+                  ),
+                ]),
+              ],
+            },
+          },
+        ],
+      };
+      return client.query({ query: query, fetchPolicy: "network-only" }).then(function (response) {
+        if (response.errors && response.errors.length)
+          throw new Error("Cannot load existing partner citations");
+        var nodes = response.data.jcr.nodeById.children.nodes.filter(function (child) {
+            return child.primaryNodeType.name === "jahiacom:partnerTestimonial";
+          }),
+          languages = {};
+        ["fr", "en"].forEach(function (language) {
+          languages[language] = nodes
+            .map(function (child) {
+              var properties = child[language] || [];
+              function text(name) {
+                var p = properties.find(function (p) {
+                  return p.name === name;
+                });
+                return p && p.value;
+              }
+              return {
+                comment: text("comment") || "",
+                author: text("author"),
+                authorTitle: text("authorTitle"),
+                position: Number(text("position") || 0),
+              };
+            })
+            .sort(function (a, b) {
+              return a.position - b.position;
+            })
+            .filter(function (row) {
+              return row.comment.trim();
+            })
+            .map(function (row) {
+              return { comment: row.comment, author: row.author, authorTitle: row.authorTitle };
+            });
+        });
+        upgradeCitations.set(node.uuid, languages);
+      });
+    },
+  });
+  // Project old stored values into the new controls in memory. No save occurs on opening.
+  function upgradeValues(node, language) {
+    var properties = node.properties || [];
+    function stored(name) {
+      return properties.find(function (p) {
+        return p.name === name;
+      });
+    }
+    function value(name) {
+      var p = stored(name);
+      return p && (p.values || p.value);
+    }
+    function scalar(name) {
+      var v = value(name);
+      return Array.isArray(v) ? v[0] : v;
+    }
+    function list(name) {
+      var v = value(name);
+      return v === undefined ? undefined : Array.isArray(v) ? v : [v];
+    }
+    var result = {},
+      type = node.primaryNodeType && node.primaryNodeType.name;
+    function set(name, v) {
+      if (!stored(name) && v !== undefined) result[name] = v;
+    }
+    if (type === "jahiacom:partner") {
+      var tech =
+        scalar("partnerType") === "technology" ||
+        scalar("integrationPartner") === "true" ||
+        scalar("strategicPartner") === "true";
+      if (tech || scalar("certification"))
+        set(
+          "partnerClassification",
+          tech
+            ? scalar("strategicPartner") === "true"
+              ? "technology_strategic"
+              : "technology_integration"
+            : "solution_" + scalar("certification"),
+        );
+      var regions = list("regions"),
+        countries = list("countries"),
+        free = list("locationCountries");
+      if (regions || countries) {
+        var context = (node.path || "").toLowerCase(),
+          fallback = /america|amérique/.test(context)
+            ? "americas"
+            : /asia|asie|apac/.test(context)
+              ? "apac"
+              : "europe";
+        set(
+          "partnerLocationsData",
+          JSON.stringify(
+            (regions && regions.length ? regions : [fallback]).flatMap(function (region, i) {
+              var values =
+                free && regions
+                  ? free[i] && free[i].trim()
+                    ? [free[i].trim()]
+                    : []
+                  : countries || [];
+              values = values.filter(function (v) {
+                return v && v.toUpperCase() !== "ZZ";
+              });
+              return values.length
+                ? values.map(function (country) {
+                    return { region: region, country: country };
+                  })
+                : [{ region: region }];
+            }),
+          ),
+        );
+      }
+      var escape = function (s) {
+        return s
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      };
+      var expertise = Array.from(
+        new Set(
+          (scalar("expertiseText") || "")
+            .split(/\r?\n/)
+            .concat(list("expertise") || [])
+            .map(function (v) {
+              return v.trim();
+            })
+            .filter(Boolean),
+        ),
+      );
+      if (expertise.length || scalar("technologyDetails"))
+        set(
+          "expertiseBody",
+          [
+            expertise.length
+              ? "<ul>" +
+                expertise
+                  .map(function (v) {
+                    return "<li>" + escape(v) + "</li>";
+                  })
+                  .join("") +
+                "</ul>"
+              : "",
+            scalar("technologyDetails"),
+          ]
+            .filter(Boolean)
+            .join("\n"),
+        );
+      var citations = [];
+      if (scalar("quote"))
+        citations.push({
+          comment: scalar("quote")
+            .replace(/<[^>]+>/g, " ")
+            .trim(),
+          html: scalar("quote"),
+          author: scalar("quoteAuthor"),
+          authorTitle: scalar("quoteAuthorTitle"),
+        });
+      var childCitations = upgradeCitations.get(node.uuid);
+      if (childCitations) citations = citations.concat(childCitations[language || "fr"] || []);
+      if (citations.length) set("testimonialsData", JSON.stringify(citations));
+    }
+    if (type === "jahiacom:card") {
+      if (scalar("partnerRegionTarget")) {
+        set("cardPurpose", "partnerRegion");
+        set("regionTarget", scalar("partnerRegionTarget"));
+      } else if (scalar("glossaryMetric") && scalar("glossaryMetric") !== "none") {
+        set("cardPurpose", "glossaryStatistic");
+        set("metric", scalar("glossaryMetric"));
+        set("entriesFolder", scalar("glossaryFolder"));
+      }
+    }
+    var selected = ["selectedItems", "selectedResources", "manualItems"].find(function (name) {
+      return stored(name);
+    });
+    if (selected) set("selectedContent", list(selected));
+    if (stored("featuredArticles")) set("featuredArticle", (list("featuredArticles") || [])[0]);
+    if (stored("filter1Category")) set("filter1Categories", list("filter1Category"));
+    if (
+      stored("utilityNavigationLinks") ||
+      [
+        "utilityLinksPosition",
+        "utilityRssPosition",
+        "utilitySearchPosition",
+        "utilityLanguagesPosition",
+      ].some(stored)
+    ) {
+      var tools = ["links", "rss", "search", "languages"],
+        positions = [
+          "utilityLinksPosition",
+          "utilityRssPosition",
+          "utilitySearchPosition",
+          "utilityLanguagesPosition",
+        ];
+      set(
+        "utilityItemsData",
+        JSON.stringify(
+          tools
+            .map(function (kind, i) {
+              return {
+                kind: kind,
+                position:
+                  scalar(positions[i]) === undefined ? (i + 1) * 10 : Number(scalar(positions[i])),
+              };
+            })
+            .sort(function (a, b) {
+              return a.position - b.position;
+            })
+            .flatMap(function (row) {
+              return row.kind === "links"
+                ? (list("utilityNavigationLinks") || []).map(function (id) {
+                    return { kind: "internal", id: id };
+                  })
+                : [{ kind: row.kind }];
+            }),
+        ),
+      );
+    }
+    return result;
+  }
+  function sameUpgradeValue(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
+  var upgradeInitials = new WeakSet();
+  function UpgradeInitialValues(props) {
+    this.props = props;
+  }
+  UpgradeInitialValues.prototype.isReactComponent = {};
+  UpgradeInitialValues.prototype.render = function () {
+    return null;
+  };
+  UpgradeInitialValues.prototype.componentDidMount = function () {
+    this.prepare();
+  };
+  UpgradeInitialValues.prototype.componentDidUpdate = function () {
+    this.prepare();
+  };
+  UpgradeInitialValues.prototype.prepare = function () {
+    var form = this.props.form,
+      context = this.props.context,
+      node = context && context.nodeData,
+      initial = context && context.initialValues;
+    if (!form || !node || !initial || upgradeInitials.has(initial)) return;
+    upgradeInitials.add(initial);
+    if (form.dirty || form.isSubmitting) return; // Never reset an edit already made by the author.
+    upgradeLanguages.set(node, context.lang || "fr");
+    var projected = upgradeValues(node, context.lang),
+      next = Object.assign({}, form.initialValues),
+      changed = false;
+    Object.keys(next).forEach(function (name) {
+      var key = Object.keys(projected).find(function (p) {
+        return name.endsWith("_" + p);
+      });
+      if (!key) return;
+      var fieldValue = projected[key];
+      if (!sameUpgradeValue(next[name], fieldValue)) {
+        next[name] = fieldValue;
+        changed = true;
+      }
+    });
+    if (
+      projected.cardPurpose &&
+      !node.properties.some(function (p) {
+        return p.name === "cardPurpose";
+      })
+    ) {
+      var mixin =
+        projected.cardPurpose === "partnerRegion"
+          ? "jahiacommix:cardPartnerRegion"
+          : "jahiacommix:cardGlossaryStatistic";
+      if (Object.hasOwn(next, mixin) && !next[mixin]) {
+        next[mixin] = true;
+        changed = true;
+      }
+    }
+    if (changed) form.resetForm({ values: next }); // The projected values are the pristine form baseline.
+  };
+  [
+    "Choicelist",
+    "EditorialRichText",
+    "Picker",
+    "UtilityItemsPicker",
+    "PartnerLocationsPicker",
+    "PartnerTestimonialsPicker",
+  ].forEach(function (key) {
+    function native(field) {
+      var base = registry.get("selectorType", key);
+      return base.resolver ? base.resolver(field.selectorOptions, field) : base;
+    }
+    registry.add("selectorType", "Upgrade" + key, {
+      supportMultiple: key === "Picker",
+      initValue: function (field) {
+        var selector = native(field);
+        return selector.initValue ? selector.initValue(field) : undefined;
+      },
+      adaptValue: function (field, property) {
+        var selector = native(field);
+        return selector.adaptValue
+          ? selector.adaptValue(field, property)
+          : field.multiple
+            ? property.values
+            : property.value;
+      },
+      cmp: function (props) {
+        function render(context) {
+          return h("div", {
+            children: [
+              h(UpgradeInitialValues, { form: props.form, context: context }),
+              h(native(props.field).cmp, props),
+            ],
+          });
+        }
+        return window.jahia.jcontent
+          ? h(window.jahia.jcontent.ContentEditorContext.Consumer, { children: render })
+          : render(props.editorContext);
+      },
+    });
+  });
+  registry.add("selectorType.onChange", "jahiacomUpgradeChoiceMixins", {
+    targets: ["UpgradeChoicelist"],
+    onChange: function (previous, value, field, context, selector, helper) {
+      if (value !== undefined)
+        registry
+          .get("selectorType.onChange", "addMixinChoicelist")
+          .onChange(previous, value, field, context, selector, helper);
+    },
+  });
+  // An unrelated save must not materialize the projected fields in the repository.
+  registry.add("contentEditor.onEdit", "jahiacomUnchangedUpgradeValues", {
+    onEdit: function (request, node) {
+      var projected = upgradeValues(node, upgradeLanguages.get(node)),
+        values = request.propertiesToSave || [],
+        changedCard = values.some(function (p) {
+          return (
+            ["cardPurpose", "regionTarget", "metric", "entriesFolder"].indexOf(p.name) !== -1 &&
+            Object.hasOwn(projected, p.name) &&
+            !sameUpgradeValue(p.values || p.value, projected[p.name])
+          );
+        });
+      request.propertiesToSave = values.filter(function (p) {
+        return (
+          !Object.hasOwn(projected, p.name) ||
+          (changedCard &&
+            ["cardPurpose", "regionTarget", "metric", "entriesFolder"].indexOf(p.name) !== -1) ||
+          !sameUpgradeValue(p.values || p.value, projected[p.name])
+        );
+      });
+      if (projected.cardPurpose && !changedCard)
+        request.mixinsToAdd = (request.mixinsToAdd || []).filter(function (m) {
+          return m !== "jahiacommix:cardPartnerRegion" && m !== "jahiacommix:cardGlossaryStatistic";
+        });
+      return request;
     },
   });
 })();

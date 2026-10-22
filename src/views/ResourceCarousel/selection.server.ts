@@ -258,6 +258,7 @@ export function selectResources({
   mode,
   thematicIds,
   contentTypeIds,
+  legacyIds = [],
   completeFallback,
   minimumItems,
 }: {
@@ -268,6 +269,7 @@ export function selectResources({
   mode: SelectionMode;
   thematicIds: string[];
   contentTypeIds: string[];
+  legacyIds?: string[];
   completeFallback: boolean;
   minimumItems: number;
 }) {
@@ -280,7 +282,8 @@ export function selectResources({
   )
     .filter((item) => item.id !== currentId)
     .sort(byNewest);
-  const hasCategoryFilters = thematicIds.length > 0 || contentTypeIds.length > 0;
+  const hasCategoryFilters =
+    thematicIds.length > 0 || contentTypeIds.length > 0 || legacyIds.length > 0;
   const filterPool = hasCategoryFilters
     ? unique(
         candidates
@@ -297,7 +300,9 @@ export function selectResources({
         .map((node) => toCard(node, { allowGenericResource: true }))
         .filter((item): item is ResourceCardData => Boolean(item)),
     ).filter((item) => item.id !== currentId);
-    const fallback = filterPool.filter((item) => matchesFilters(item, thematicIds, contentTypeIds));
+    const fallback = filterPool.filter(
+      (item) => matchesFilters(item, thematicIds, contentTypeIds) && matchesAny(item, legacyIds),
+    );
     const selected = completeFallback
       ? unique([...manual, ...fallback, ...automatic]).slice(0, count)
       : manual;
@@ -313,7 +318,9 @@ export function selectResources({
     return selected.length >= minimum ? selected : [];
   }
 
-  const filtered = filterPool.filter((item) => matchesFilters(item, thematicIds, contentTypeIds));
+  const filtered = filterPool.filter(
+    (item) => matchesFilters(item, thematicIds, contentTypeIds) && matchesAny(item, legacyIds),
+  );
   const selected = completeFallback
     ? unique([...filtered, ...automatic]).slice(0, count)
     : filtered;

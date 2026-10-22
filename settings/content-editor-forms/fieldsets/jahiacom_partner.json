@@ -18,11 +18,12 @@
     },
     {
       "name": "partnerClassification",
-      "mandatory": true
+      "mandatory": true,
+      "selectorType": "UpgradeChoicelist"
     },
     {
       "name": "partnerLocationsData",
-      "selectorType": "PartnerLocationsPicker"
+      "selectorType": "UpgradePartnerLocationsPicker"
     },
     {
       "name": "partnerSince",
@@ -43,7 +44,7 @@
     },
     {
       "name": "expertiseBody",
-      "selectorType": "EditorialRichText"
+      "selectorType": "UpgradeEditorialRichText"
     },
     {
       "name": "partnership",
@@ -64,7 +65,65 @@
     },
     {
       "name": "testimonialsData",
-      "selectorType": "PartnerTestimonialsPicker"
+      "selectorType": "UpgradePartnerTestimonialsPicker"
+    },
+    {
+      "name": "certification",
+      "hide": true,
+      "mandatory": false
+    },
+    {
+      "name": "countries",
+      "hide": true,
+      "mandatory": false
+    },
+    {
+      "name": "partnerType",
+      "hide": true
+    },
+    {
+      "name": "partnerLevel",
+      "hide": true
+    },
+    {
+      "name": "integrationPartner",
+      "hide": true
+    },
+    {
+      "name": "strategicPartner",
+      "hide": true
+    },
+    {
+      "name": "regions",
+      "hide": true
+    },
+    {
+      "name": "locationCountries",
+      "hide": true
+    },
+    {
+      "name": "expertiseText",
+      "hide": true
+    },
+    {
+      "name": "expertise",
+      "hide": true
+    },
+    {
+      "name": "technologyDetails",
+      "hide": true
+    },
+    {
+      "name": "quote",
+      "hide": true
+    },
+    {
+      "name": "quoteAuthor",
+      "hide": true
+    },
+    {
+      "name": "quoteAuthorTitle",
+      "hide": true
     }
   ]
 }

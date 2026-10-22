@@ -1,3 +1,4 @@
+import { partnerIdentity } from "../../contents/Partner/legacy.server.js";
 import {
   buildNodeUrl,
   Island,
@@ -58,6 +59,7 @@ const partnerDescendants = (root: JCRNodeWrapper) => {
 };
 
 const partnerProps = (node: JCRNodeWrapper): PartnerProps => ({
+  ...partnerIdentity(node),
   "jcr:title": stringProperty(node, "jcr:title") || node.getName(),
   "partnerClassification": stringProperty(
     node,
@@ -104,7 +106,7 @@ jahiaComponent(
     });
     const allPartners = configuredRoot ? partnerDescendants(configuredRoot) : queriedPartners;
     const partners = allPartners.filter((partner) => {
-      const type = classificationOf(stringProperty(partner, "partnerClassification"))?.type;
+      const type = classificationOf(partnerIdentity(partner))?.type;
       if (mode === "solution") return type === "integrator";
       if (mode === "technology") return type === "technology";
       return true;
@@ -171,7 +173,7 @@ jahiaComponent(
     });
 
     const integratorCount = cards.filter(
-      ({ props }) => classificationOf(props.partnerClassification)?.type === "integrator",
+      ({ props }) => classificationOf(props)?.type === "integrator",
     ).length;
     const technologyCount = cards.length - integratorCount;
     const regionCounts = {
@@ -184,7 +186,7 @@ jahiaComponent(
       { value: string; label: string; partnerships: Set<"strategic" | "integration"> }
     >();
     for (const { props } of cards) {
-      const partnership = classificationOf(props.partnerClassification)?.partnership;
+      const partnership = classificationOf(props)?.partnership;
       for (const tag of (props.tags || []).filter(
         (value): value is JCRNodeWrapper => value !== null,
       )) {
@@ -202,18 +204,12 @@ jahiaComponent(
       .map(({ value, label, partnerships }) => ({ value, label, partnerships: [...partnerships] }))
       .sort((left, right) => left.label.localeCompare(right.label));
     const levelCounts = {
-      diamond: cards.filter(
-        ({ props }) => classificationOf(props.partnerClassification)?.level === "diamond",
-      ).length,
-      gold: cards.filter(
-        ({ props }) => classificationOf(props.partnerClassification)?.level === "gold",
-      ).length,
-      silver: cards.filter(
-        ({ props }) => classificationOf(props.partnerClassification)?.level === "silver",
-      ).length,
+      diamond: cards.filter(({ props }) => classificationOf(props)?.level === "diamond").length,
+      gold: cards.filter(({ props }) => classificationOf(props)?.level === "gold").length,
+      silver: cards.filter(({ props }) => classificationOf(props)?.level === "silver").length,
     };
     const filterItems = cards.map(({ props }) => ({
-      level: classificationOf(props.partnerClassification)?.level,
+      level: classificationOf(props)?.level,
       regions: props.regions || [],
     }));
 

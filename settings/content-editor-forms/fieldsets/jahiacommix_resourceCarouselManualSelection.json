@@ -1,0 +1,22 @@
+{
+  "name": "jahiacommix:resourceCarouselManualSelection",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "selectedContent",
+      "selectorType": "UpgradePicker"
+    },
+    {
+      "name": "selectedItems",
+      "hide": true
+    },
+    {
+      "name": "manualBlogTypes",
+      "hide": true
+    },
+    {
+      "name": "selectedResources",
+      "hide": true
+    }
+  ]
+}

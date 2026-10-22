@@ -28,9 +28,12 @@ export const Card = jahiaComponent(
       image,
       background,
       cardPurpose,
+      partnerRegionTarget,
+      glossaryMetric,
+      glossaryFolder,
       "regionTarget": configuredRegion,
-      metric,
-      entriesFolder,
+      "metric": configuredMetric,
+      "entriesFolder": configuredFolder,
       cardTheme,
       hideCtaIcon,
       compact = false,
@@ -39,9 +42,19 @@ export const Card = jahiaComponent(
     { currentNode, currentResource, renderContext },
   ) => {
     const { t } = useTranslation();
-    const regionTarget = cardPurpose === "partnerRegion" ? configuredRegion : undefined;
+    const purpose = currentNode.hasProperty("cardPurpose")
+      ? cardPurpose
+      : partnerRegionTarget
+        ? "partnerRegion"
+        : glossaryMetric && glossaryMetric !== "none"
+          ? "glossaryStatistic"
+          : cardPurpose;
+    const regionTarget =
+      purpose === "partnerRegion" ? (configuredRegion ?? partnerRegionTarget) : undefined;
+    const metric = configuredMetric ?? glossaryMetric;
+    const entriesFolder = configuredFolder ?? glossaryFolder;
     let metricValue: string | number | undefined;
-    if (cardPurpose === "glossaryStatistic" && metric && entriesFolder) {
+    if (purpose === "glossaryStatistic" && metric && entriesFolder) {
       server.render.addCacheDependency({ path: entriesFolder.getPath() }, renderContext);
       const locale = currentResource.getLocale();
       const language = locale.getLanguage();

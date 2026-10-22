@@ -5,6 +5,14 @@
     {
       "name": "subtitle",
       "selectorType": "EditorialRichText"
+    },
+    {
+      "name": "secondaryCTALabel",
+      "hide": true
+    },
+    {
+      "name": "secondaryCTAUrl",
+      "hide": true
     }
   ]
 }

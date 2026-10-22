@@ -283,7 +283,9 @@ test("an explicitly empty Home selection does not restore the legacy site links"
   });
   assert.equal(harness().nav(site, []).utilityEntries[0].title, "legacy");
   const home = { isNodeType: (type) => type === "jahiacommix:homeUtilityNavigation" };
-  assert.equal(harness().nav(site, [], home).utilityEntries.length, 0);
+  const entries = Array.from(harness().nav(site, [], home).utilityEntries);
+  assert.deepEqual(entries.map(row => row.kind), ["rss", "search", "languages"]);
+  assert.equal(entries.some(row => row.title === "legacy"), false);
 });
 
 test("Home visibility controls remain independent from the ordered link list", () => {
@@ -373,11 +375,14 @@ test("upper navigation mixes pages and external links in editorial order with sa
   };
   const entries = harness().nav(node("site"), [], home).utilityEntries;
   assert.deepEqual(
-    Array.from(entries, ({ title, href }) => ({ title, href })),
+    Array.from(entries, row => row.kind ? {kind:row.kind} : { title:row.title, href:row.href }),
     [
       { title: "contact", href: "/contact.html" },
       { title: "Academy", href: "https://academy.example.com/training" },
       { title: "documentation", href: "/documentation.html" },
+      {kind:"rss"},
+      {kind:"search"},
+      {kind:"languages"},
     ],
   );
 });

@@ -6,6 +6,12 @@
  - body (string, richtext) i18n
  - cardPurpose (string, choicelist[resourceBundle]) = 'standard' < 'standard', 'partnerRegion', 'glossaryStatistic'
  - hideCtaIcon (boolean) = false
+ // Legacy fields: retain their storage definitions, not duplicate editor controls.
+ - technologyCategories (string, choicelist[resourceBundle]) multiple < 'aiGenai', 'crm', 'marketingAutomation', 'damMedia', 'pim', 'translationLocalization', 'analyticsData', 'seoContent', 'accessibilityQuality', 'supportService', 'collaboration'
+ - technologyPartnerType (string, choicelist[resourceBundle]) = 'integration' < 'strategic', 'integration'
+ - partnerRegionTarget (string, choicelist[resourceBundle]) < 'europe', 'americas', 'apac'
+ - glossaryMetric (string, choicelist[resourceBundle]) = 'none' < 'none', 'entries', 'letters', 'updated'
+ - glossaryFolder (weakreference, picker) < jnt:contentFolder
 
 [jahiacommix:cardPartnerRegion] > jmix:dynamicFieldset mixin
  extends = jahiacom:card

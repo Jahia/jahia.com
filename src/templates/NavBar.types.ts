@@ -13,6 +13,7 @@ export type NavigationItemFields = {
   navLabel?: string;
   navDescription?: string;
   navIconImage?: JCRNodeWrapper;
+  navIcon?: "cms" | "dxp" | "ai";
   navUtilityLabel?: string;
 };
 export type NavigationPanelFields = {

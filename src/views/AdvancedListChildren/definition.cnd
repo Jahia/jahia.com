@@ -5,3 +5,83 @@
  - filter1Title (string) mandatory i18n
  - filter1Categories (weakreference, category[autoSelectParent=false]) multiple
  - emptyState (string, richtext) mandatory i18n
+ // Legacy fields: retain their storage definitions, not duplicate editor controls.
+ - filterCount (string, choicelist) = '1' autocreated < '1', '2', '3', '4', '5'
+ - filter1Category (weakreference, category[autoSelectParent=false])
+
+// Legacy definition retained for non-destructive upgrades.
+[jahiacommix:advancedListChildrenFilter2] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter2Title (string) i18n
+ - filter2Category (weakreference, category[autoSelectParent=false])
+ - filter2Categories (weakreference, category[autoSelectParent=false]) multiple
+
+// Legacy definition retained for non-destructive upgrades.
+[jahiacommix:advancedListChildrenFilter3] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter3Title (string) i18n
+ - filter3Category (weakreference, category[autoSelectParent=false])
+ - filter3Categories (weakreference, category[autoSelectParent=false]) multiple
+
+// Legacy definition retained for non-destructive upgrades.
+[jahiacommix:advancedListChildrenFilter4] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter4Title (string) i18n
+ - filter4Category (weakreference, category[autoSelectParent=false])
+ - filter4Categories (weakreference, category[autoSelectParent=false]) multiple
+
+// Legacy definition retained for non-destructive upgrades.
+[jahiacommix:advancedListChildrenFilter5] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter5Title (string) i18n
+ - filter5Category (weakreference, category[autoSelectParent=false])
+ - filter5Categories (weakreference, category[autoSelectParent=false]) multiple
+
+// One mixin per selected count: Content Editor only applies one addMixin instruction
+// from a choicelist value. Keep the original mixins above for local content compatibility.
+
+// Legacy definition retained for non-destructive upgrades.
+[jahiacommix:advancedListChildrenFilters2] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter2Title (string) i18n
+ - filter2Category (weakreference, category[autoSelectParent=false])
+ - filter2Categories (weakreference, category[autoSelectParent=false]) multiple
+
+// Legacy definition retained for non-destructive upgrades.
+[jahiacommix:advancedListChildrenFilters3] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter2Title (string) i18n
+ - filter2Category (weakreference, category[autoSelectParent=false])
+ - filter2Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter3Title (string) i18n
+ - filter3Category (weakreference, category[autoSelectParent=false])
+ - filter3Categories (weakreference, category[autoSelectParent=false]) multiple
+
+// Legacy definition retained for non-destructive upgrades.
+[jahiacommix:advancedListChildrenFilters4] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter2Title (string) i18n
+ - filter2Category (weakreference, category[autoSelectParent=false])
+ - filter2Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter3Title (string) i18n
+ - filter3Category (weakreference, category[autoSelectParent=false])
+ - filter3Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter4Title (string) i18n
+ - filter4Category (weakreference, category[autoSelectParent=false])
+ - filter4Categories (weakreference, category[autoSelectParent=false]) multiple
+
+// Legacy definition retained for non-destructive upgrades.
+[jahiacommix:advancedListChildrenFilters5] > jmix:dynamicFieldset mixin
+ extends = jahiacom:advancedListChildren
+ - filter2Title (string) i18n
+ - filter2Category (weakreference, category[autoSelectParent=false])
+ - filter2Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter3Title (string) i18n
+ - filter3Category (weakreference, category[autoSelectParent=false])
+ - filter3Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter4Title (string) i18n
+ - filter4Category (weakreference, category[autoSelectParent=false])
+ - filter4Categories (weakreference, category[autoSelectParent=false]) multiple
+ - filter5Title (string) i18n
+ - filter5Category (weakreference, category[autoSelectParent=false])
+ - filter5Categories (weakreference, category[autoSelectParent=false]) multiple

@@ -1,3 +1,4 @@
+import { partnerIdentity, partnerExpertise } from "./legacy.server.js";
 import {
   AbsoluteArea,
   buildNodeUrl,
@@ -80,10 +81,7 @@ const stringProperties = (node: JCRNodeWrapper, name: string) =>
     : [];
 
 const nodeRegions = (node: JCRNodeWrapper): Region[] =>
-  configuredRegions(
-    { partnerLocationsData: stringProperty(node, "partnerLocationsData") },
-    legacyRegion(node),
-  );
+  configuredRegions(partnerIdentity(node), legacyRegion(node));
 
 const normalizedCountry = (
   country: string,
@@ -142,7 +140,7 @@ jahiaComponent(
     const website = /^https?:\/\//i.test(props.website || "") ? props.website : undefined;
     const summary =
       props.heroSubtitle || props.shortDescription || htmlToText(props.description).slice(0, 240);
-    const classification = classificationOf(props.partnerClassification);
+    const classification = classificationOf(props);
     const type = classification?.type;
     const projects = useJCRQuery({
       query: `
@@ -152,7 +150,36 @@ jahiaComponent(
       `,
     });
     const siteRoot = currentNode.getPath().match(/^\/sites\/[^/]+/)?.[0] || "/sites";
-    const inlineTestimonials = parseTestimonials(props.testimonialsData);
+    const legacyQuotes =
+      props.testimonialsData === undefined
+        ? useJCRQuery({
+            query: `SELECT * FROM [jahiacom:partnerTestimonial] WHERE ISCHILDNODE(${JSON.stringify(currentNode.getPath())}) ORDER BY [position]`,
+          }).filter((node) => node.hasPermission("jcr:read") && node.hasI18N(locale))
+        : [];
+    const inlineTestimonials: InlineTestimonial[] =
+      props.testimonialsData !== undefined
+        ? parseTestimonials(props.testimonialsData)
+        : [
+            ...(props.quote?.trim()
+              ? [
+                  {
+                    comment: htmlToText(props.quote),
+                    html: props.quote,
+                    author: props.quoteAuthor,
+                    authorTitle: props.quoteAuthorTitle,
+                  },
+                ]
+              : []),
+            ...legacyQuotes
+              .map((node) => ({
+                comment: stringProperty(node, "comment") || "",
+                author: stringProperty(node, "author"),
+                authorTitle: stringProperty(node, "authorTitle"),
+              }))
+              .filter((row) => row.comment.trim()),
+          ];
+    for (const node of legacyQuotes)
+      server.render.addCacheDependency({ path: node.getPath() }, renderContext);
     const quoteCount = inlineTestimonials.length;
     const partnerCandidates = useJCRQuery({
       query: `
@@ -171,7 +198,7 @@ jahiaComponent(
         .trim()
         .toLocaleLowerCase();
       if (title === currentTitle) return false;
-      const candidateType = classificationOf(stringProperty(node, "partnerClassification"))?.type;
+      const candidateType = classificationOf(partnerIdentity(node))?.type;
       const candidateRegions = nodeRegions(node);
       return (
         candidateType === type &&
@@ -194,7 +221,7 @@ jahiaComponent(
     const similarityProfiles = uniqueSimilar.map((node) => {
       const candidateCountries = regionCountries(
         {
-          partnerLocationsData: stringProperty(node, "partnerLocationsData"),
+          ...partnerIdentity(node),
         },
         activeRegion,
       );
@@ -203,7 +230,7 @@ jahiaComponent(
         tags: stringProperties(node, "tags"),
         countries: candidateCountries.map((country) => normalizedCountry(country, locale)),
         level: (() => {
-          const value = classificationOf(stringProperty(node, "partnerClassification"));
+          const value = classificationOf(partnerIdentity(node));
           return value?.partnership || value?.level;
         })(),
       };
@@ -225,7 +252,7 @@ jahiaComponent(
     const directoryPage = pageAncestor(directoryComponent);
     const directoryUrl = directoryPage ? buildNodeUrl(directoryPage) : "#";
     const tagNodes = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
-    const expertiseBody = props.expertiseBody;
+    const expertiseBody = partnerExpertise(props);
 
     for (const dependency of [...projects, ...partnerCandidates]) {
       server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);

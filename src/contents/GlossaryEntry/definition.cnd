@@ -22,3 +22,12 @@
  - conceptSignals (string) multiple
  - preferEducational (boolean) = true
  - resourceDisplayCount (string, choicelist) = '6' < '3', '6', '9'
+ // Legacy fields: retain their storage definitions, not duplicate editor controls.
+ - resources (weakreference, picker) multiple < jnt:page, jmix:mainResource
+ - relatedTerms (weakreference, picker) multiple < jahiacom:glossaryEntry
+ - linkKeywords (string) i18n multiple
+ - excludedLinks (weakreference, picker) multiple < jnt:page, jmix:mainResource
+ - editorialAuthor (string) i18n
+ - resourceCtaLabel (string) i18n
+ - resourceCtaVariant (string, choicelist[resourceBundle]) = 'primary' < 'primary', 'secondary'
+ - relatedCtaVariant (string, choicelist[resourceBundle]) = 'secondary' < 'primary', 'secondary'

@@ -82,6 +82,38 @@
     {
       "name": "comparison",
       "selectorType": "EditorialRichText"
+    },
+    {
+      "name": "resources",
+      "hide": true
+    },
+    {
+      "name": "relatedTerms",
+      "hide": true
+    },
+    {
+      "name": "linkKeywords",
+      "hide": true
+    },
+    {
+      "name": "excludedLinks",
+      "hide": true
+    },
+    {
+      "name": "editorialAuthor",
+      "hide": true
+    },
+    {
+      "name": "resourceCtaLabel",
+      "hide": true
+    },
+    {
+      "name": "resourceCtaVariant",
+      "hide": true
+    },
+    {
+      "name": "relatedCtaVariant",
+      "hide": true
     }
   ]
 }

@@ -24,6 +24,12 @@ export type ResourceCarouselProps = {
   "filteredContentTypes"?: Array<JCRNodeWrapper | null>;
   "manualThemes"?: Array<JCRNodeWrapper | null>;
   "manualContentTypes"?: Array<JCRNodeWrapper | null>;
+  "clusters"?: Array<JCRNodeWrapper | null>;
+  "filteredBlogTypes"?: Array<JCRNodeWrapper | null>;
+  "manualBlogTypes"?: Array<JCRNodeWrapper | null>;
+  "selectedItems"?: Array<JCRNodeWrapper | null>;
+  "selectedResources"?: Array<JCRNodeWrapper | null>;
+  "manualItems"?: Array<JCRNodeWrapper | null>;
   "selectedContent"?: Array<JCRNodeWrapper | null>;
   "completeFallback"?: boolean;
   "sourceRoot"?: JCRNodeWrapper;

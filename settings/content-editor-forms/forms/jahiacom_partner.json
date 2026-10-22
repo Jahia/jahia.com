@@ -43,7 +43,8 @@
             {
               "name": "partnerClassification",
               "mandatory": true,
-              "rank": 1
+              "rank": 1,
+              "selectorType": "UpgradeChoicelist"
             },
             {
               "name": "partnerSince",
@@ -51,7 +52,7 @@
             },
             {
               "name": "partnerLocationsData",
-              "selectorType": "PartnerLocationsPicker",
+              "selectorType": "UpgradePartnerLocationsPicker",
               "rank": 6
             },
             {
@@ -82,7 +83,7 @@
               "name": "expertiseBody",
               "declaringNodeType": "jahiacom:partner",
               "rank": 4,
-              "selectorType": "EditorialRichText"
+              "selectorType": "UpgradeEditorialRichText"
             }
           ]
         },
@@ -119,7 +120,7 @@
             {
               "name": "testimonialsData",
               "declaringNodeType": "jahiacom:partner",
-              "selectorType": "PartnerTestimonialsPicker",
+              "selectorType": "UpgradePartnerTestimonialsPicker",
               "rank": 1
             }
           ]

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" width="420" height="420" viewBox="0 0 420 420" fill="none">
+  <defs>
+    <filter id="softShadow" x="-60%" y="-60%" width="220%" height="220%">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#062C5A" flood-opacity="0.16"/>
+    </filter>
+    <filter id="tinyShadow" x="-80%" y="-80%" width="260%" height="260%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#00A1E3" flood-opacity="0.18"/>
+    </filter>
+    <radialGradient id="haloBlue" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00A1E3" stop-opacity="0.28"/>
+      <stop offset="45%" stop-color="#00A1E3" stop-opacity="0.12"/>
+      <stop offset="78%" stop-color="#00A1E3" stop-opacity="0.035"/>
+      <stop offset="100%" stop-color="#00A1E3" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloRose" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F3A9DE" stop-opacity="0.18"/>
+      <stop offset="62%" stop-color="#F3A9DE" stop-opacity="0.055"/>
+      <stop offset="100%" stop-color="#F3A9DE" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="starGlass" x1="120" y1="80" x2="305" y2="310" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#BDEBFF"/>
+      <stop offset="0.45" stop-color="#00A1E3"/>
+      <stop offset="1" stop-color="#E9FAFF"/>
+    </linearGradient>
+    <linearGradient id="starGlassLight" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#D8F4FF"/>
+      <stop offset="0.5" stop-color="#4FC3F7"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="420" height="420" fill="none"/>
+
+  <ellipse cx="205" cy="215" rx="170" ry="135" fill="url(#haloBlue)"/>
+  <ellipse cx="270" cy="245" rx="120" ry="95" fill="url(#haloRose)"/>
+
+  <g filter="url(#softShadow)">
+    <path d="M190 88 L226 164 L302 200 L226 236 L190 312 L154 236 L78 200 L154 164 Z" fill="url(#starGlass)"/>
+    <path d="M190 88 L226 164 L302 200 L226 236 L190 312 L154 236 L78 200 L154 164 Z" fill="white" opacity="0.12"/>
+    <path d="M128 185 C148 151 175 123 204 108" stroke="#FFFFFF" stroke-opacity="0.48" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <g filter="url(#tinyShadow)">
+    <path d="M315 72 L328 101 L357 114 L328 127 L315 156 L302 127 L273 114 L302 101 Z" fill="url(#starGlassLight)"/>
+    <path d="M332 260 L344 286 L370 298 L344 310 L332 336 L320 310 L294 298 L320 286 Z" fill="url(#starGlassLight)" opacity="0.92"/>
+  </g>
+</svg>

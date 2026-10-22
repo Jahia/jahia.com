@@ -24,6 +24,7 @@ import { eligibleBlogEntries, timestamp } from "./blogEntries.server.js";
 interface Props {
   "j:node"?: JCRNodeWrapper;
   "blogPageSize"?: string;
+  "featuredArticles"?: Array<JCRNodeWrapper | null>;
   "featuredArticle"?: JCRNodeWrapper;
   "featuredIncludeUpdatedArticles"?: boolean;
   "blogAdvancedFilter"?: JCRNodeWrapper;
@@ -79,7 +80,8 @@ jahiaComponent(
     {
       "j:node": folder,
       blogPageSize,
-      featuredArticle,
+      "featuredArticle": configuredFeatured,
+      featuredArticles,
       featuredIncludeUpdatedArticles,
       blogAdvancedFilter,
     }: Props,
@@ -104,6 +106,8 @@ jahiaComponent(
       );
     if (entries.length === 0) return null;
 
+    const featuredArticle =
+      configuredFeatured ?? featuredArticles?.find((node): node is JCRNodeWrapper => node !== null);
     const entriesById = new Map(entries.map((entry) => [entry.getIdentifier(), entry]));
     const configuredFeaturedEntry = featuredArticle
       ? entriesById.get(featuredArticle.getIdentifier())
@@ -143,7 +147,12 @@ jahiaComponent(
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
     const advancedRoots = blogAdvancedFilter
-      ? nodeReferences(blogAdvancedFilter, "filter1Categories")
+      ? nodeReferences(
+          blogAdvancedFilter,
+          blogAdvancedFilter.hasProperty("filter1Categories")
+            ? "filter1Categories"
+            : "filter1Category",
+        )
       : [];
     const advancedDescendants = advancedRoots.flatMap((root) =>
       useJCRQuery({

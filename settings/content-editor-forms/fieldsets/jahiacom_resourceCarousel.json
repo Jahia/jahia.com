@@ -1,6 +1,6 @@
 {
   "name": "jahiacom:resourceCarousel",
-  "priority": 2.0,
+  "priority": 2,
   "fields": [
     {
       "name": "itemCount",
@@ -52,6 +52,14 @@
           "displayValueKey": "jahiacom:carouselMode.manual"
         }
       ]
+    },
+    {
+      "name": "clusters",
+      "hide": true
+    },
+    {
+      "name": "manualItems",
+      "hide": true
     }
   ]
 }
