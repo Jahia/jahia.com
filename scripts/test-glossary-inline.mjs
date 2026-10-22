@@ -181,3 +181,24 @@ test("sanitizer preserves table semantics, sources and percentages", () => {
     assert.ok(result.includes(fragment));
   assert.equal(sanitizeHtml(result), result);
 });
+
+test("partner quotations retain editorial emphasis and secure external links", () => {
+  const html =
+    '<p>« Une <strong>réussite</strong> &amp; un <em>partenariat</em> durable. »<br><a href="https://www.jahia.com/" target="_blank">Source</a></p>';
+  const result = sanitizeHtml(html);
+  assert.match(result, /<strong>réussite<\/strong>/);
+  assert.match(result, /<em>partenariat<\/em>/);
+  assert.match(result, /rel="noopener noreferrer"/);
+  assert.equal(sanitizeHtml(result), result);
+});
+
+test("quotation sanitizer removes active content and presentation overrides", () => {
+  const result = sanitizeHtml(
+    '<p class="override" style="color:red" onmouseover="alert(1)">Citation</p><!--hidden--><form><input autofocus onfocus="alert(1)"></form><object data="x">bad</object><math><mtext>bad</mtext></math><a href="java&#10;script:alert(1)">Lien</a><a href="//evil.example">Lien</a>',
+  );
+  assert.doesNotMatch(
+    result,
+    /class=|style=|onmouseover|onfocus|autofocus|input|form|object|math|hidden|javascript:|evil.example/i,
+  );
+  assert.match(result, /Citation/);
+});

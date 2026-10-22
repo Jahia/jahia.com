@@ -40,7 +40,11 @@ void setCard(JCRSessionWrapper session, String activeSiteRoot, JCRNodeWrapper se
             ? (JCRNodeWrapper) section.getNode(name)
             : (JCRNodeWrapper) section.addNode(name, "jahiacom:card")
     card.setProperty("ctaType", "none")
-    if (item.region) card.setProperty("partnerRegionTarget", (String) item.region)
+    if (item.region) {
+        if (!card.isNodeType("jahiacommix:cardPartnerRegion")) card.addMixin("jahiacommix:cardPartnerRegion")
+        card.setProperty("cardPurpose", "partnerRegion")
+        card.setProperty("regionTarget", (String) item.region)
+    }
     JCRNodeWrapper icon = item.icon ? media(session, activeSiteRoot, (String) item.icon) : null
     for (String language : ["en", "fr"]) {
         JCRNodeWrapper value = translation(card, language)

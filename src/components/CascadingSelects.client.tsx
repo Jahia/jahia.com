@@ -111,10 +111,12 @@ export default function CascadingSelects({
   children,
   applyFiltersOnChange = false,
   stateId = "",
+  navigateOnChange = false,
 }: {
   children: ReactNode;
   applyFiltersOnChange?: boolean;
   stateId?: string;
+  navigateOnChange?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -134,6 +136,7 @@ export default function CascadingSelects({
       }}
       onChange={(event: FormEvent<HTMLDivElement>) => {
         updateCascadingSelects(event.currentTarget);
+        if (navigateOnChange) event.currentTarget.querySelector("form")?.requestSubmit();
         if (applyFiltersOnChange) applyClientFilters(event.currentTarget, stateId);
       }}
       onReset={(event) => {

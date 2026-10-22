@@ -1,7 +1,7 @@
 import { jahiaComponent } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
 import type { Props } from "./types.js";
-import { MixinCTA } from "../../mixins/CTA/server.jsx";
+import Buttons from "./Buttons.jsx";
 
 export const HeroWithoutImage = jahiaComponent(
   {
@@ -14,11 +14,7 @@ export const HeroWithoutImage = jahiaComponent(
         {title && <h1>{title}</h1>}
         <div className="_stack-8">
           {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
-          {cta.ctaType !== "none" && (
-            <p>
-              <MixinCTA cta={cta} location="hero_banner" name={currentNode.getName()} />
-            </p>
-          )}
+          <Buttons cta={cta} name={currentNode.getName()} />
         </div>
       </div>
     </header>

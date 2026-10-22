@@ -11,7 +11,14 @@ import {
 import classes from "./NavBar.module.css";
 import { CTA } from "../mixins/CTA/index.jsx";
 import SearchDialog, { type SearchState } from "./Search.client.jsx";
-import type { Entry, Group, Page, UtilityControls, UtilityKind } from "./NavBar.types.js";
+import type {
+  Entry,
+  Group,
+  NavbarButton,
+  Page,
+  UtilityControls,
+  UtilityEntry,
+} from "./NavBar.types.js";
 
 const tracking = (entry: Page) => ({
   "data-element-url": entry.href,
@@ -98,8 +105,7 @@ function MenuPanel({ group }: { group: Group }) {
   );
 }
 export default function NavBarClient({
-  primaryCTA,
-  secondaryCTA,
+  buttons = [],
   children,
   entries,
   utilityEntries = [],
@@ -109,11 +115,10 @@ export default function NavBarClient({
   language,
   search,
 }: {
-  primaryCTA?: { href: string; label: string } | false;
-  secondaryCTA?: { href: string; label: string } | false;
+  buttons?: NavbarButton[];
   children: ReactNode;
   entries: Entry[];
-  utilityEntries?: Page[];
+  utilityEntries?: UtilityEntry[];
   controls: UtilityControls;
   rss?: { href?: string; label: string; pendingLabel: string; image?: string } | false;
   langs: Array<{ language: string; name: string; href: string }>;
@@ -138,6 +143,11 @@ export default function NavBarClient({
     const element = nav.current;
     if (!element) return;
     const header = element.closest<HTMLElement>("[data-jahia-header]");
+    const updateOpacity = () => {
+      if (header) header.dataset.scrolled = String(window.scrollY > 0);
+    };
+    updateOpacity();
+    window.addEventListener("scroll", updateOpacity, { passive: true });
     let desktopMode: boolean | undefined;
     const updateHeight = () => {
       const menuButton = element.querySelector<HTMLElement>(`.${classes.menuButton}`);
@@ -156,6 +166,8 @@ export default function NavBarClient({
     updateHeight();
     return () => {
       observer.disconnect();
+      window.removeEventListener("scroll", updateOpacity);
+      if (header) delete header.dataset.scrolled;
       document.documentElement.style.removeProperty("--jahia-header-height");
     };
   }, []);
@@ -211,20 +223,15 @@ export default function NavBarClient({
           ?.focus();
     });
   }, []);
-  const utilityLinks = (
-    <>
-      {utilityEntries.map((entry) => (
-        <a
-          key={entry.href}
-          className={classes.utilityLink}
-          href={entry.href}
-          aria-current={entry.current ? "page" : undefined}
-          {...tracking(entry)}
-        >
-          {entry.title}
-        </a>
-      ))}
-    </>
+  const utilityLink = (entry: Page) => (
+    <a
+      className={classes.utilityLink}
+      href={entry.href}
+      aria-current={entry.current ? "page" : undefined}
+      {...tracking(entry)}
+    >
+      {entry.title}
+    </a>
   );
   const rssIcon =
     rss && rss.image ? (
@@ -306,26 +313,41 @@ export default function NavBarClient({
       )}
     </>
   );
-  const renderUtility = (kind: UtilityKind, mobile: boolean) => {
-    switch (kind) {
-      case "links":
-        return utilityLinks;
-      case "rss":
-        return rssControl;
-      case "search":
-        return controls.searchVisible ? searchButton(true) : null;
-      case "languages":
-        return mobile
-          ? controls.languagesVisible && langs.length > 1 && (
+  // Old instances without mixed items keep the existing tools after their links.
+  const orderedUtilities: UtilityEntry[] = utilityEntries.some((entry) => "kind" in entry)
+    ? utilityEntries
+    : [...utilityEntries, { kind: "rss" }, { kind: "search" }, { kind: "languages" }];
+  const utilities = (mobile = false) =>
+    orderedUtilities.map((entry) => {
+      let control: ReactNode;
+      if ("href" in entry) control = utilityLink(entry);
+      else if (entry.kind === "rss") control = rssControl;
+      else if (entry.kind === "search") control = controls.searchVisible && searchButton(true);
+      else
+        control = mobile
+          ? controls.languagesVisible &&
+            langs.length > 1 && (
               <div className={classes.mobileLanguages} aria-label={controls.languagesLabel}>
                 {languages}
               </div>
             )
           : desktopLanguages;
-    }
-  };
-  const utilities = (mobile = false) =>
-    controls.order.map((kind) => <Fragment key={kind}>{renderUtility(kind, mobile)}</Fragment>);
+      return <Fragment key={"href" in entry ? entry.href : entry.kind}>{control}</Fragment>;
+    });
+  function navbarButton(button: NavbarButton) {
+    return (
+      <CTA
+        key={button.id}
+        secondary={button.style === "secondary"}
+        icon={button.id === "contact"}
+        href={button.href}
+        location="header"
+        name={button.id === "contact" ? "nav-secondary" : "nav-primary"}
+      >
+        {button.label}
+      </CTA>
+    );
+  }
   return (
     <nav
       ref={nav}
@@ -344,13 +366,19 @@ export default function NavBarClient({
       <div
         className={classes.utilityBar}
         hidden={
-          !utilityEntries.length &&
+          !buttons.some((button) => button.placement === "upper") &&
+          !utilityEntries.some((entry) => "href" in entry) &&
           !rss &&
           !controls.searchVisible &&
           !(controls.languagesVisible && langs.length > 1)
         }
       >
-        <div className={classes.utilityInner}>{utilities()}</div>
+        <div className={classes.utilityInner}>
+          {utilities()}
+          <div className={classes.upperButtons} data-theme="night">
+            {buttons.filter((button) => button.placement === "upper").map(navbarButton)}
+          </div>
+        </div>
       </div>
       <div className={classes.mainBar}>
         <div className={classes.mainInner}>
@@ -401,18 +429,17 @@ export default function NavBarClient({
             {controls.searchVisible && !mobileOpen && (
               <div className={classes.mobileSearch}>{searchButton()}</div>
             )}
-            {secondaryCTA && (
-              <div className={classes.desktopContact}>
-                <CTA secondary icon href={secondaryCTA.href} location="header" name="nav-secondary">
-                  {secondaryCTA.label}
-                </CTA>
-              </div>
-            )}
-            {primaryCTA && (
-              <CTA href={primaryCTA.href} location="header" name="nav-primary">
-                {primaryCTA.label}
-              </CTA>
-            )}
+            {buttons
+              .filter((button) => button.placement === "main")
+              .map((button) =>
+                button.id === "contact" ? (
+                  <div key={button.id} className={classes.desktopContact}>
+                    {navbarButton(button)}
+                  </div>
+                ) : (
+                  navbarButton(button)
+                ),
+              )}
             <button
               type="button"
               className={classes.menuButton}
@@ -483,11 +510,9 @@ export default function NavBarClient({
           ),
         )}
         <div className={classes.mobileUtilities}>
-          {secondaryCTA && (
-            <CTA secondary icon href={secondaryCTA.href} location="header" name="nav-secondary">
-              {secondaryCTA.label}
-            </CTA>
-          )}
+          {buttons
+            .filter((button) => button.placement === "upper" || button.id === "contact")
+            .map(navbarButton)}
           {utilities(true)}
         </div>
       </div>

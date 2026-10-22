@@ -1,0 +1,9 @@
+[jahiacom:pressResourceCard] > jnt:content, mix:title, jahiacommix:component, jmix:editorialContent, jahiacommix:cta
+ - description (string, textarea) i18n
+ - formatLabel (string) i18n
+ - visualLabel (string) i18n
+ - image (weakreference, picker) < jmix:image
+ - document (weakreference, picker) i18n < jnt:file
+ - isDownload (boolean) = 'false'
+ - copyText (string, textarea) i18n
+ - copyLabel (string) i18n

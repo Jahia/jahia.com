@@ -4,10 +4,13 @@ import type { CTAProps } from "../../mixins/CTA/server.jsx";
 export type Props = {
   "jcr:title"?: string;
   "body"?: string;
+  "cardTheme"?: "day" | "cloudy" | "night";
+  "hideCtaIcon"?: boolean;
   "icon"?: JCRNodeWrapper;
-  "technologyCategories"?: string[];
-  "technologyPartnerType"?: "strategic" | "integration";
-  "glossaryMetric"?: "none" | "entries" | "letters" | "updated";
-  "glossaryFolder"?: JCRNodeWrapper;
-  "partnerRegionTarget"?: "europe" | "americas" | "apac";
+  "image"?: JCRNodeWrapper;
+  "background"?: string;
+  "cardPurpose"?: "standard" | "partnerRegion" | "glossaryStatistic";
+  "metric"?: "entries" | "letters" | "updated";
+  "entriesFolder"?: JCRNodeWrapper;
+  "regionTarget"?: "europe" | "americas" | "apac";
 } & CTAProps;

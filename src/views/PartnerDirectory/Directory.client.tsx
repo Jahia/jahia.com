@@ -61,7 +61,7 @@ export default function Directory({
   regionCounts: Record<Exclude<Region, "all">, number>;
   technologies: TechnologyOption[];
   levelCounts: Record<Exclude<PartnerLevel, "all">, number>;
-  filterItems: Array<{ level: Exclude<PartnerLevel, "all">; regions: Region[] }>;
+  filterItems: Array<{ level?: Exclude<PartnerLevel, "all">; regions: Region[] }>;
 }) {
   const { t } = useTranslation();
   const root = useRef<HTMLDivElement>(null);

@@ -35,42 +35,45 @@
  - secondaryCTALabel (string) i18n
  - utilityNavigationLinks (weakreference, picker) multiple < jnt:page, jnt:nodeLink, jnt:externalLink
 
+// Optional home-page controls; site-level CTA properties remain a compatibility fallback.
+[jahiacommix:homeNavbarButtons] mixin
+ - secondaryCTALink (weakreference, picker[type='editoriallink']) i18n < jnt:page, jnt:nodeLink, jnt:externalLink
+ - secondaryCTALabel (string) i18n
+ - secondaryCTAStyle (string, choicelist) < secondary, primary
+ - secondaryCTAPlacement (string, choicelist) < main, upper
+ - primaryCTALink (weakreference, picker[type='editoriallink']) i18n < jnt:page, jnt:nodeLink, jnt:externalLink
+ - primaryCTALabel (string) i18n
+ - primaryCTAStyle (string, choicelist) < primary, secondary
+ - primaryCTAPlacement (string, choicelist) < main, upper
+ - navbarCTAOrder (string, choicelist) < contactDemo, demoContact
+
 // Applied to the home page only; existing site-level links remain a runtime fallback.
 [jahiacommix:homeUtilityNavigation] mixin
+ // Ordered internal references and inline external destinations; legacy references remain compatible.
+ - utilityItemsData (string)
  - utilityNavigationLinks (weakreference, picker) multiple < jnt:page, jnt:nodeLink, jnt:externalLink
- - utilityLinksPosition (long) = 10 < '[0,1000]'
  - utilitySearchVisible (boolean) = true
  - utilitySearchLabel (string) i18n
- - utilitySearchPosition (long) = 30 < '[0,1000]'
  - utilityLanguagesVisible (boolean) = true
  - utilityLanguagesLabel (string) i18n
- - utilityLanguagesPosition (long) = 40 < '[0,1000]'
  - utilityRssVisible (boolean) = true
  - utilityRssLabel (string) i18n
  - utilityRssUrl (string)
  - utilityRssImage (weakreference, picker) < jmix:image
- - utilityRssPosition (long) = 20 < '[0,1000]'
 
 // Optional editorial presentation of existing navigation entries and dropdowns.
 [jahiacommix:navigationItem] mixin extends=jnt:page extends=jnt:nodeLink extends=jnt:externalLink
  - navLabel (string) i18n
  - navDescription (string, textarea) i18n
- - navIcon (string, choicelist[resourceBundle]) < 'cms', 'dxp', 'ai'
  - navIconImage (weakreference, picker) < jmix:image
  - navUtilityLabel (string) i18n
 
 [jahiacommix:navigationPanel] mixin extends=jnt:navMenuText
- - navIntroEyebrow (string) i18n
- - navIntroHeading (string) i18n
- - navIntroText (string, textarea) i18n
- - navIntroLink (weakreference, picker) < jnt:page, jnt:nodeLink, jnt:externalLink
- - navIntroLabel (string) i18n
  - navFeatureEyebrow (string) i18n
  - navFeatureHeading (string) i18n
  - navFeatureText (string, textarea) i18n
  - navFeatureLink (weakreference, picker) < jnt:page, jnt:nodeLink, jnt:externalLink
  - navFeatureLabel (string) i18n
- - navFooterText (string) i18n
  - navColumnOneLabel (string) i18n
  - navColumnOneLinks (weakreference, picker) multiple < jnt:page, jnt:nodeLink, jnt:externalLink
  - navColumnTwoLabel (string) i18n
@@ -91,10 +94,7 @@
 [jahiacommix:blogListingOptions] mixin extends=jnt:contentFolderReference itemtype=content
  - blogPageSize (string, choicelist[resourceBundle]) = '12' mandatory autocreated < '6', '12', '18', '24'
  - featuredArticle (weakreference, picker) < jahiacom:blogEntry
- - featuredArticles (weakreference, picker) multiple < jahiacom:blogEntry
  - featuredIncludeUpdatedArticles (boolean) = false
- - blogFilterClusters (weakreference, picker) multiple
- - blogFilterThemes (weakreference, category[autoSelectParent=false]) multiple
  - blogAdvancedFilter (weakreference, picker) < jahiacom:advancedListChildren
 
 // Miscellaneous gadgets

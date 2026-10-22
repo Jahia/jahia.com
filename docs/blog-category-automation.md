@@ -132,8 +132,9 @@ refresh are deduplicated by the source fields, preventing suggestion updates
 from triggering another loading/ready cycle.
 
 Opening a populated blog or glossary form analyses its current content without
-requiring a text edit. Empty SEO fields and empty/default-only classification
-fields can be filled in the draft. Existing editorial categories remain selected,
+requiring a text edit. On existing articles, this initial analysis only displays suggestions. Empty SEO
+fields and empty/default-only classification fields are filled only after a real
+editorial change, or when creating content. Existing editorial categories remain selected,
 with missing matches offered as suggestions. Existing SEO and manual edits remain
 protected. Saving and publishing are still explicit editorial actions. This fix
 does not require importing content or changing the content model.
@@ -142,8 +143,8 @@ does not require importing content or changing the content model.
 
 Blog HTML and OpenGraph titles end with ` - Jahia`, in both languages. Rendering
 uses the existing Meta Title, falling back to the article title, without a bulk
-content migration. The editor applies the same suffix to new and existing titles
-in the draft. Editorial wording is preserved; terminal brand separators and
+content migration. The editor applies the same suffix when creating an article or after a real
+editorial change; simply opening an existing article preserves its stored title. Editorial wording is preserved; terminal brand separators and
 duplicate suffixes are normalized. Saving and publishing remain explicit actions.
 
 Titles are never truncated automatically. Sixty characters is an audit threshold,

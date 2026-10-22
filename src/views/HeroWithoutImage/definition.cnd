@@ -1,2 +1,7 @@
-[jahiacom:heroWithoutImage] > jnt:content, jahiacommix:cta, jahiacommix:container, mix:title, jmix:editorialContent
+[jahiacom:heroWithoutImage] > jnt:content, jahiacommix:cta, jahiacommix:additionalHeroButton, jahiacommix:container, mix:title, jmix:editorialContent
  - subtitle (string, richtext) i18n
+
+[jahiacommix:additionalHeroButton] mixin
+ - additionalButtonLabel (string) i18n
+ - additionalButtonDestination (string) i18n
+ - additionalButtonVariant (string, choicelist[resourceBundle]) < 'primary', 'secondary'

@@ -3,19 +3,39 @@
   "priority": 2,
   "fields": [
     {
-      "name": "editorialAuthor",
-      "hide": true
+      "name": "resourceDisplayCount",
+      "valueConstraints": [
+        {
+          "value": {
+            "type": "String",
+            "value": "3"
+          },
+          "displayValue": "3"
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "6"
+          },
+          "displayValue": "6",
+          "propertyList": [
+            {
+              "name": "defaultProperty",
+              "value": "true"
+            }
+          ]
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "9"
+          },
+          "displayValue": "9"
+        }
+      ]
     },
     {
       "name": "indexPage",
-      "hide": true
-    },
-    {
-      "name": "resources",
-      "hide": true
-    },
-    {
-      "name": "relatedTerms",
       "hide": true
     },
     {
@@ -26,14 +46,6 @@
           "value": "true"
         }
       ]
-    },
-    {
-      "name": "linkKeywords",
-      "hide": true
-    },
-    {
-      "name": "excludedLinks",
-      "hide": true
     },
     {
       "name": "mergedInto",
@@ -56,16 +68,20 @@
       "hide": true
     },
     {
-      "name": "resourceCtaLabel",
-      "hide": true
+      "name": "body",
+      "selectorType": "EditorialRichText"
     },
     {
-      "name": "resourceCtaVariant",
-      "hide": true
+      "name": "example",
+      "selectorType": "EditorialRichText"
     },
     {
-      "name": "relatedCtaVariant",
-      "hide": true
+      "name": "faq",
+      "selectorType": "EditorialRichText"
+    },
+    {
+      "name": "comparison",
+      "selectorType": "EditorialRichText"
     }
   ]
 }

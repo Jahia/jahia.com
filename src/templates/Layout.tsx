@@ -23,6 +23,8 @@ import "./themes.css";
 import { blogMetaTitle } from "../utils/blogMetaTitle.js";
 import { glossaryMetadata } from "../contents/GlossaryEntry/metadata.server.js";
 
+import { blogListingSeo } from "../views/ContentFolderReference/blogSeo.server.js";
+
 interface Props {
   "jcr:title": string;
   "jcr:description"?: string;
@@ -64,6 +66,7 @@ export const Layout = ({
   } = props;
   const metadataTitle =
     pageType === "blog_post" ? blogMetaTitle(htmlTitle, title) : htmlTitle || title;
+  const blogListing = blogListingSeo();
   const glossary = glossaryMetadata(props, t("breadcrumb.home"));
   const socialImage = glossary?.image || openGraphImage;
 
@@ -73,6 +76,8 @@ export const Layout = ({
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{metadataTitle}</title>
+        {blogListing && <link rel="canonical" href={blogListing.canonical} />}
+        {blogListing?.filtered && <meta name="robots" content="noindex,follow" />}
         <meta property="og:title" content={metadataTitle} />
         {glossary && (
           <>

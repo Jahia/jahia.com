@@ -1,0 +1,13 @@
+{
+  "name": "jahiacom:pressResourceCard",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "copyLabel",
+      "descriptionKey": "jahiacom:jahiacom_pressResourceCard.copyLabel.ui.tooltip"
+    },
+    {
+      "name": "copyText"
+    }
+  ]
+}

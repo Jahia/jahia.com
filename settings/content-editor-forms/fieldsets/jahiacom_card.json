@@ -1,21 +1,58 @@
 {
   "name": "jahiacom:card",
-  "priority": 2.0,
+  "priority": 2,
   "fields": [
     {
-      "name": "technologyCategories"
-    },
-    {
-      "name": "technologyPartnerType",
-      "defaultValues": [
+      "name": "cardPurpose",
+      "valueConstraints": [
         {
-          "type": "String",
-          "value": "integration"
+          "value": {
+            "type": "String",
+            "value": "standard"
+          },
+          "propertyList": [
+            {
+              "name": "defaultProperty",
+              "value": "true"
+            }
+          ],
+          "displayValue": "Standard card",
+          "displayValueKey": "jahiacom:cardPurpose.standard"
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "partnerRegion"
+          },
+          "propertyList": [
+            {
+              "name": "addMixin",
+              "value": "jahiacommix:cardPartnerRegion"
+            }
+          ],
+          "displayValue": "Partner region",
+          "displayValueKey": "jahiacom:cardPurpose.partnerRegion"
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "glossaryStatistic"
+          },
+          "propertyList": [
+            {
+              "name": "addMixin",
+              "value": "jahiacommix:cardGlossaryStatistic"
+            }
+          ],
+          "displayValue": "Glossary statistic",
+          "displayValueKey": "jahiacom:cardPurpose.glossaryStatistic"
         }
-      ]
+      ],
+      "selectorOptionsMap": {}
     },
     {
-      "name": "partnerRegionTarget"
+      "name": "body",
+      "selectorType": "EditorialRichText"
     }
   ]
 }

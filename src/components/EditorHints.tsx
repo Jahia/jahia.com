@@ -5,10 +5,12 @@ export default function EditorHints({
   title,
   hints,
   children,
+  booleanLabels,
 }: {
   title?: string;
   hints: () => Record<string, unknown>;
   children?: ReactNode;
+  booleanLabels?: Record<"true" | "false", string>;
 }) {
   const { renderContext } = useServerContext();
   if (!renderContext.isEditMode()) return;
@@ -34,7 +36,13 @@ export default function EditorHints({
           <li key={key} className="_pack-1" style={{ color: value ? "inherit" : "tomato" }}>
             <span className={value ? "i-ri:check-line" : "i-ri:close-line"} />
             {key}:{" "}
-            {value === undefined ? <span style={{ opacity: 0.5 }}>undefined</span> : String(value)}
+            {value === undefined ? (
+              <span style={{ opacity: 0.5 }}>undefined</span>
+            ) : typeof value === "boolean" && booleanLabels ? (
+              booleanLabels[value ? "true" : "false"]
+            ) : (
+              String(value)
+            )}
           </li>
         ))}
       </ul>

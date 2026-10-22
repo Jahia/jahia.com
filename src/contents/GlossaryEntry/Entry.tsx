@@ -18,7 +18,6 @@ export interface EntryResource {
 export interface EntryViewProps {
   title: string;
   summary: string;
-  editorialAuthor?: string;
   editorialDateLabel?: string;
   body?: string;
   definitionTitle?: string;

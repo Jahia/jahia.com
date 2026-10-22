@@ -1,0 +1,28 @@
+.resource {
+  composes: card from "../Card/component.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3rem;
+}
+
+.header h3 {
+  min-width: 0;
+  margin: 0;
+}
+
+.visual {
+  flex-shrink: 0;
+  max-width: 6rem;
+}
+
+.actions {
+  margin-top: auto;
+}

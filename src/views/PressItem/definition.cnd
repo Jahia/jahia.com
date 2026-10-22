@@ -1,0 +1,10 @@
+[jahiacom:pressItem] > jnt:content, mix:title, jahiacommix:component, jmix:editorialContent, jmix:categorized, jahiacommix:cta
+ - description (string, textarea) i18n
+ - contentType (string, choicelist[resourceBundle]) < 'communique', 'presse', 'recompense', 'tribune', 'evenement'
+ - themeLabel (string) i18n
+ - date (date)
+ - link (weakreference, picker) < jnt:page
+ - dateLabel (string) i18n
+ - image (weakreference, picker) < jmix:image
+ - cardTheme (string, choicelist[resourceBundle]) < 'day', 'cloudy', 'night'
+ - background (string, choicelist[resourceBundle]) < 'plusses', 'stripes', 'matrix', 'bottom-grid', 'aura-top', 'aura-bottom'

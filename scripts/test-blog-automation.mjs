@@ -21,7 +21,7 @@ const loadSelection = () => {
   });
   return module.exports;
 };
-const { selectResources, articleResourceTopics } = loadSelection();
+const { selectResources, articleResourceTopics, toCard, cardPresentation } = loadSelection();
 const root = "/sites/systemsite/categories/topics/";
 const node = (id, type, props = {}, path = `/sites/test/${id}`) => ({
   getIdentifier: () => id,
@@ -825,4 +825,76 @@ test("initial title callback and late SEO section activation do not require a co
   newlyEnabled.notify("htmlTitle", "");
   await newlyEnabled.flush();
   assert.equal(newlyEnabled.context.formik.values["field:htmlTitle"], "SEO - Jahia");
+});
+
+test("deferred resource presentation preserves cards without loading unselected media or URLs", () => {
+  const image = node("cover", "jnt:file");
+  const resource = blog("deferred", [], { image: [image] });
+  let urlReads = 0;
+  let mediaReads = 0;
+  const getPath = resource.getPath;
+  const getProperty = resource.getProperty;
+  resource.getPath = () => {
+    urlReads++;
+    return getPath();
+  };
+  resource.getProperty = (name) => {
+    if (["image", "openGraphImage", "thumbnail", "cover"].includes(name)) mediaReads++;
+    return getProperty(name);
+  };
+  const deferred = toCard(resource, { includePresentation: false });
+  assert.equal(urlReads, 0);
+  assert.equal(mediaReads, 0);
+  const hydrated = { ...deferred, ...cardPresentation(resource) };
+  assert.equal(urlReads, 1);
+  assert.equal(mediaReads, 1);
+  assert.equal(hydrated.image, image);
+  assert.deepEqual(hydrated, { ...toCard(resource) });
+});
+
+test("deferred cards keep fallback images and missing-media behavior", () => {
+  const fallback = node("fallback", "jnt:file");
+  for (const extra of [{}, { thumbnail: [fallback] }]) {
+    const resource = blog("fallback", [], extra);
+    const deferred = toCard(resource, { includePresentation: false });
+    assert.deepEqual({ ...deferred, ...cardPresentation(resource) }, { ...toCard(resource) });
+  }
+});
+
+test("glossary metadata can omit unused taxonomy without reading blog references", () => {
+  const resource = blog("light", [topic("seo")], { blogType: [topic("cluster")] });
+  const complete = toCard(resource, { includePresentation: false });
+  const getProperty = resource.getProperty;
+  let taxonomyReads = 0;
+  resource.getProperty = (name) => {
+    if (["j:defaultCategory", "blogType"].includes(name)) taxonomyReads++;
+    return getProperty(name);
+  };
+  const light = toCard(resource, { includePresentation: false, includeTaxonomy: false });
+  assert.equal(taxonomyReads, 0);
+  assert.deepEqual({ ...light, taxonomyIds: complete.taxonomyIds }, { ...complete });
+  assert.deepEqual(Array.from(light.taxonomyIds), []);
+  const filtered = toCard(resource, { includePresentation: false, includeTaxonomy: true });
+  assert.deepEqual({ ...filtered }, { ...complete });
+  assert.ok(taxonomyReads > 0);
+});
+test("omitting taxonomy preserves page kind, publication and future-date guards", () => {
+  const category = node(
+    "webinar",
+    "jnt:category",
+    {},
+    "/sites/systemsite/categories/resourcestypes/webinar",
+  );
+  const page = node("resource", "jnt:page", {
+    "j:published": true,
+    "j:defaultCategory": [category],
+    "date": "2026-01-01",
+  });
+  const complete = toCard(page, { includePresentation: false });
+  const light = toCard(page, { includePresentation: false, includeTaxonomy: false });
+  assert.equal(light.kind, "webinar");
+  assert.deepEqual({ ...light, taxonomyIds: complete.taxonomyIds }, { ...complete });
+  for (const extra of [{ "j:published": false }, { date: "2099-01-01" }]) {
+    assert.equal(toCard(blog("hidden", [], extra), { includeTaxonomy: false }), null);
+  }
 });

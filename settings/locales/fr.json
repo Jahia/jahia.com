@@ -72,8 +72,6 @@
     "allCategories": "Toutes les catégories",
     "featured": "À la une",
     "allArticles": "Tous les articles",
-    "browseArticles": "Voir tous les articles",
-    "filterArticles": "Filtrer les articles",
     "readArticle": "Lire l’article",
     "updatedOn": "Mis à jour le",
     "featuredArticles": "Article à la une",
@@ -173,5 +171,46 @@
     "author": "Auteur",
     "editorialDate": "Date éditoriale",
     "backToGlossary": "Retour au glossaire"
+  },
+  "pressRoom": {
+    "year": "Année",
+    "reset": "Réinitialiser",
+    "sort": "Trier par",
+    "allYears": "Toutes les années",
+    "type": "Type de contenu",
+    "empty": "Aucune actualité ne correspond à vos critères. Vous pouvez réinitialiser les filtres.",
+    "allThemes": "Toutes les thématiques",
+    "theme": "Thématique",
+    "news": "Communiqués, parutions presse et récompenses",
+    "oldest": "Les plus anciens",
+    "recent": "Les plus récents",
+    "results_zero": "0 résultat",
+    "results_one": "{{count}} résultat",
+    "results_other": "{{count}} résultats",
+    "search": "Rechercher une actualité",
+    "types": {
+      "communique": "Communiqué",
+      "presse": "Parution presse",
+      "evenement": "Événement",
+      "tribune": "Prise de parole",
+      "recompense": "Récompense"
+    },
+    "pagination": "Pagination des actualités",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "choosePage": "Choisir une page",
+    "pagePosition": "Page {{page}} sur {{total}}",
+    "all": "Tout",
+    "copied": "Copié dans le presse-papiers.",
+    "copyFailed": "Copie impossible. Sélectionnez le texte pour le copier.",
+    "downloadKit": "Télécharger (ZIP)"
+  },
+  "sectionLayout": {
+    "rows": "Rangées complètes",
+    "complete": "Oui",
+    "incomplete": "À compléter",
+    "irregular-1-2": "Alternez une ligne pleine largeur et une ligne de deux contenus. Exemples : 1, 3, 4, 6 ou 7 contenus.",
+    "irregular-3-2": "Sur grand écran : deux contenus, puis trois par ligne. Pour équilibrer aussi la version tablette : 7, 10, 12 ou 15 contenus.",
+    "irregular-67-33": "Deux contenus par ligne, avec le plus large à gauche puis à droite. Utilisez un nombre pair de contenus."
   }
 }

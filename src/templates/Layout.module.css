@@ -1,15 +1,18 @@
 .stickyHeader {
-  --jahia-header-opacity: 75%;
+  --jahia-header-opacity: 100%;
 
   position: sticky;
   top: 0;
   z-index: 1000001;
-  backdrop-filter: blur(0.5rem);
+  border-bottom: 1px solid #000;
+  transition: border-color var(--jahia-timing);
 }
 
-.stickyHeader:focus-within,
-.stickyHeader:has(nav[data-open="true"]) {
-  --jahia-header-opacity: 100%;
+.stickyHeader[data-scrolled="true"] {
+  --jahia-header-opacity: 80%;
+
+  border-color: transparent;
+  backdrop-filter: blur(0.5rem);
 }
 
 .skipLink {

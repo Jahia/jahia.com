@@ -104,21 +104,7 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
       : mode === "manual"
         ? nodes(props.manualContentTypes)
         : [];
-  const legacyNodes =
-    mode === "filtered"
-      ? nodes(props.filteredBlogTypes ?? props.clusters)
-      : mode === "manual"
-        ? nodes(props.manualBlogTypes ?? props.clusters)
-        : [];
-  const manualNodes =
-    mode === "manual"
-      ? nodes(
-          props.selectedContent ??
-            props.selectedItems ??
-            props.selectedResources ??
-            props.manualItems,
-        )
-      : [];
+  const manualNodes = mode === "manual" ? nodes(props.selectedContent) : [];
   const article = mainNode || currentNode;
   const isBlogCarousel = article.isNodeType(RESOURCE_MODEL.blogNodeType);
   const items = selectResources({
@@ -129,7 +115,6 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
     mode,
     thematicIds: nodeIds(thematicNodes),
     contentTypeIds: nodeIds(contentTypeNodes),
-    legacyIds: nodeIds(legacyNodes),
     completeFallback: props.completeFallback !== false,
     minimumItems: props.minimumItems ?? (isBlogCarousel ? 1 : 6),
   });
@@ -141,7 +126,6 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
     ...manualNodes,
     ...thematicNodes,
     ...contentTypeNodes,
-    ...legacyNodes,
   ]) {
     server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
   }

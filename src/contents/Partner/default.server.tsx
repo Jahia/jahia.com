@@ -6,6 +6,7 @@ import { Image } from "../../components/Image.jsx";
 import { CTA } from "../../mixins/CTA/index.jsx";
 import classes from "./component.module.css";
 import {
+  classificationOf,
   configuredRegions,
   countryNames,
   htmlToText,
@@ -35,7 +36,8 @@ export const PartnerCard = ({
   const { t } = useTranslation();
   const fallbackRegion = legacyRegion(currentNode);
   const regions = configuredRegions(props, fallbackRegion);
-  const type = props.partnerType || "integrator";
+  const classification = classificationOf(props.partnerClassification);
+  const type = classification?.type;
   const url = buildNodeUrl(currentNode);
   const summary = props.shortDescription || htmlToText(props.description);
   const regionLinks = Object.fromEntries(
@@ -44,7 +46,7 @@ export const PartnerCard = ({
   const defaultRegionLink = regionLinks[regions[0]];
   const detailUrl = profileUrl || defaultRegionLink;
   const technologyTags = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
-  const partnership = props.strategicPartner ? "strategic" : "integration";
+  const partnership = classification?.partnership;
   const technologyMode = directoryMode === "technology" || type === "technology";
   const sideBySideIdentity = directoryMode === "solution" || directoryMode === "technology";
 
@@ -53,7 +55,7 @@ export const PartnerCard = ({
       className={classes.card}
       data-partner-card=""
       data-partner-type={type}
-      data-partner-level={props.certification}
+      data-partner-level={classification?.level}
       data-partner-regions={regions.join(",")}
       data-partner-technologies={technologyTags.map((tag) => tag.getName()).join(",")}
       data-partner-partnership={partnership}
@@ -69,15 +71,13 @@ export const PartnerCard = ({
         </div>
         {sideBySideIdentity && (
           <div className={classes.cardRank}>
-            <PartnerBadge props={props} locale={locale} technologyMode={technologyMode} />
+            <PartnerBadge props={props} locale={locale} />
           </div>
         )}
       </div>
       <div className={classes.cardHeading}>
         <h3>{props["jcr:title"]}</h3>
-        {!sideBySideIdentity && (
-          <PartnerBadge props={props} locale={locale} technologyMode={technologyMode} />
-        )}
+        {!sideBySideIdentity && <PartnerBadge props={props} locale={locale} />}
       </div>
       <div className={classes.cardMeta}>
         {technologyMode ? (

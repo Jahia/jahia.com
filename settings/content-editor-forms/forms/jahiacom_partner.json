@@ -41,20 +41,9 @@
           "rank": 2,
           "fields": [
             {
-              "name": "partnerType",
+              "name": "partnerClassification",
+              "mandatory": true,
               "rank": 1
-            },
-            {
-              "name": "certification",
-              "rank": 2
-            },
-            {
-              "name": "integrationPartner",
-              "rank": 3
-            },
-            {
-              "name": "strategicPartner",
-              "rank": 4
             },
             {
               "name": "partnerSince",
@@ -82,7 +71,8 @@
             },
             {
               "name": "description",
-              "rank": 2
+              "rank": 2,
+              "selectorType": "EditorialRichText"
             },
             {
               "name": "expertiseTitle",
@@ -91,7 +81,8 @@
             {
               "name": "expertiseBody",
               "declaringNodeType": "jahiacom:partner",
-              "rank": 4
+              "rank": 4,
+              "selectorType": "EditorialRichText"
             }
           ]
         },
@@ -102,7 +93,8 @@
           "fields": [
             {
               "name": "partnership",
-              "rank": 1
+              "rank": 1,
+              "selectorType": "EditorialRichText"
             },
             {
               "name": "partnershipImage",

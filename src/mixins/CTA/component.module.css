@@ -59,10 +59,10 @@
 
     color: var(--jahia-primary-color);
     background: transparent;
-    border: 1px solid var(--jahia-a11y-blue);
+    border-color: currentcolor;
 
     .line {
-      background: var(--jahia-a11y-blue);
+      background: currentcolor;
       opacity: 1;
     }
 

@@ -10,6 +10,7 @@ dist
 node_modules
 
 #Yarn
-.yarn
+.yarn/*
+!.yarn/patches/
 yarn-error.log
 

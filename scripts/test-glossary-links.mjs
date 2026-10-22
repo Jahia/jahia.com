@@ -1,4 +1,7 @@
 import { test } from "node:test";
+import { readFileSync } from "node:fs";
+import vm from "node:vm";
+import ts from "typescript";
 import assert from "node:assert/strict";
 import { rankLinks, rankLinksWithEvidence } from "../src/contents/GlossaryEntry/linkSelection.ts";
 const item = (id, title, extra = {}) => ({ id, title, ...extra });
@@ -323,4 +326,130 @@ test("educational preference only ranks relevant resources and can be disabled",
     rankLinksWithEvidence(...args, { preferEducational: true })[1].educational.reason,
     "educational-title",
   );
+});
+
+const loadNativeMatching = (Java) => {
+  const module = { exports: {} };
+  const source = readFileSync(
+    new URL("../src/contents/GlossaryEntry/linkSelection.ts", import.meta.url),
+    "utf8",
+  );
+  const compiled = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+  }).outputText;
+  vm.runInNewContext(compiled, { exports: module.exports, Java });
+  return module.exports.canonical;
+};
+test("native matching is lazy, retains only its pattern and leaves other Unicode blocks to JS", () => {
+  const inputs = [];
+  let compilations = 0;
+  const canonical = loadNativeMatching({
+    type: (name) => {
+      assert.equal(name, "java.util.regex.Pattern");
+      return {
+        compile: () => {
+          compilations++;
+          return {
+            matcher: (value) => {
+              inputs.push(value);
+              return {
+                replaceAll: (replacement) => value.replace(/[^\p{L}\p{N}]+/gu, replacement),
+              };
+            },
+          };
+        },
+      };
+    },
+  });
+  assert.equal(compilations, 0);
+  assert.equal(canonical("中文—𐐀"), "中文 𐐨");
+  assert.equal(canonical("a\ud800b"), "a b");
+  assert.equal(compilations, 0);
+  assert.equal(canonical("Été—CMS / ½²ß"), "ete cms ½²ß");
+  assert.equal(canonical("TEST A/B"), "a b test");
+  assert.equal(compilations, 1);
+  assert.deepEqual(inputs, ["ete—cms / ½²ß", "test a/b"]);
+});
+test("matching keeps exact JS behavior when native Java is absent or unavailable", () => {
+  for (const Java of [
+    undefined,
+    {
+      type: () => {
+        throw Error("Unavailable");
+      },
+    },
+  ]) {
+    const canonical = loadNativeMatching(Java);
+    assert.equal(canonical("Été—CMS / 中文१२٣"), "ete cms 中文१२٣");
+    assert.equal(canonical("a\ud800b"), "a b");
+    assert.equal(canonical("a\ud800\udc00b"), "a𐀀b");
+    assert.equal(canonical("Test A/B 中文"), "a b test 中文");
+  }
+});
+
+test("complete native normalization keeps the original result across editorial alphabets", () => {
+  let calls = 0;
+  const canonical = loadNativeMatching({
+    type: (name) => {
+      if (name === "java.lang.String")
+        return class {
+          constructor(value) {
+            this.value = value;
+          }
+          toLowerCase() {
+            calls++;
+            return this.value.toLowerCase();
+          }
+        };
+      if (name === "java.util.Locale") return { ROOT: {} };
+      if (name === "java.text.Normalizer$Form") return { NFD: "NFD" };
+      if (name === "java.text.Normalizer")
+        return { normalize: (value, form) => value.normalize(form) };
+      assert.equal(name, "java.util.regex.Pattern");
+      return {
+        compile: (pattern) => ({
+          matcher: (value) => ({
+            replaceAll: (replacement) =>
+              value.replace(
+                pattern.includes("0300") ? /[\u0300-\u036f]/g : /[^\p{L}\p{N}]+/gu,
+                replacement,
+              ),
+          }),
+        }),
+      };
+    },
+  });
+  const reference = loadNativeMatching(undefined);
+  assert.equal(calls, 0);
+  for (let code = 0; code <= 0xffff; code++) {
+    const text = "TEST A/B — ÉTÉ " + String.fromCharCode(code) + " CMS";
+    assert.equal(canonical(text), reference(text), "U+" + code.toString(16));
+  }
+  for (const text of [
+    "½²ßÀÉÖµ",
+    "e\u0301 A/B TESTING",
+    "\u0000\u000b\u0085\u00a0",
+    "中文—𐐀",
+    "a\ud800b",
+    "İΣΟΣ हिन्दी",
+    "Œuvre—CMS",
+  ])
+    assert.equal(canonical(text), reference(text));
+  assert(calls > 0);
+});
+
+test("complete native normalization does not resolve Java for unsupported input", () => {
+  let resolutions = 0;
+  const canonical = loadNativeMatching({
+    type: () => {
+      resolutions++;
+      throw Error("Unavailable");
+    },
+  });
+  assert.equal(canonical("中文𐐀"), "中文𐐨");
+  assert.equal(resolutions, 0);
+  assert.equal(canonical("Été"), "ete");
+  const afterFirst = resolutions;
+  assert.equal(canonical("CMS"), "cms");
+  assert.equal(resolutions, afterFirst, "Unavailable primitives are resolved only once");
 });
