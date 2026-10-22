@@ -6,6 +6,7 @@ import {
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { PartnerCard } from "../../contents/Partner/default.server.jsx";
+import { technologyCategories } from "../../contents/Partner/technologyCategories.js";
 import {
   configuredRegions,
   legacyRegion,
@@ -45,11 +46,6 @@ const stringProperties = (node: JCRNodeWrapper, name: string) =>
 const booleanProperty = (node: JCRNodeWrapper, name: string) =>
   node.hasProperty(name) ? node.getProperty(name).getBoolean() : undefined;
 
-const nodeProperties = (node: JCRNodeWrapper, name: string) =>
-  node.hasProperty(name)
-    ? Array.from(node.getProperty(name).getValues(), (value) => value.getNode())
-    : [];
-
 const partnerDescendants = (root: JCRNodeWrapper) => {
   const partners: JCRNodeWrapper[] = [];
   const visit = (node: JCRNodeWrapper) => {
@@ -80,7 +76,6 @@ const partnerProps = (node: JCRNodeWrapper): PartnerProps => ({
   "regions": stringProperties(node, "regions") as Region[] | undefined,
   "locationCountries": stringProperties(node, "locationCountries"),
   "partnerLocationsData": stringProperty(node, "partnerLocationsData"),
-  "tags": nodeProperties(node, "tags"),
 });
 
 jahiaComponent(
@@ -157,6 +152,13 @@ jahiaComponent(
 
       return {
         currentNode: primary,
+        technologies: Array.from(
+          new Map(
+            nodes
+              .flatMap(technologyCategories)
+              .map((category) => [category.getIdentifier(), category]),
+          ).values(),
+        ),
         props: {
           ...merged,
           regions,
@@ -195,11 +197,10 @@ jahiaComponent(
       string,
       { value: string; label: string; partnerships: Set<"strategic" | "integration"> }
     >();
-    for (const { props } of cards) {
+    for (const { props, technologies } of cards) {
       const partnership = props.strategicPartner ? "strategic" : "integration";
-      for (const tag of (props.tags || []).filter(
-        (value): value is JCRNodeWrapper => value !== null,
-      )) {
+      for (const tag of technologies) {
+        server.render.addCacheDependency({ path: tag.getPath() }, renderContext);
         const value = tag.getName();
         const existing = technologyOptions.get(value) || {
           value,
@@ -237,7 +238,7 @@ jahiaComponent(
           filterItems,
         }}
       >
-        {cards.map(({ currentNode: partner, props, regionUrls }) => (
+        {cards.map(({ currentNode: partner, props, regionUrls, technologies }) => (
           <PartnerCard
             key={partner.getIdentifier()}
             currentNode={partner}
@@ -245,6 +246,7 @@ jahiaComponent(
             locale={currentResource.getLocale()}
             regionUrls={regionUrls}
             directoryMode={mode}
+            technologies={technologies}
           />
         ))}
       </Island>

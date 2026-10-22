@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Image } from "../../components/Image.jsx";
 import { CTA } from "../../mixins/CTA/index.jsx";
 import classes from "./component.module.css";
+import { technologyCategories } from "./technologyCategories.js";
 import {
   configuredRegions,
   countryNames,
@@ -24,6 +25,7 @@ export const PartnerCard = ({
   regionUrls,
   directoryMode = "all",
   profileUrl,
+  technologies = [],
 }: {
   props: Props;
   currentNode: Parameters<typeof buildNodeUrl>[0];
@@ -31,6 +33,7 @@ export const PartnerCard = ({
   regionUrls?: Partial<Record<Region, string>>;
   directoryMode?: "all" | "solution" | "technology";
   profileUrl?: string;
+  technologies?: JCRNodeWrapper[];
 }) => {
   const { t } = useTranslation();
   const fallbackRegion = legacyRegion(currentNode);
@@ -43,7 +46,7 @@ export const PartnerCard = ({
   ) as Record<Region, string>;
   const defaultRegionLink = regionLinks[regions[0]];
   const detailUrl = profileUrl || defaultRegionLink;
-  const technologyTags = (props.tags || []).filter((tag): tag is JCRNodeWrapper => tag !== null);
+  const technologyTags = technologies;
   const partnership = props.strategicPartner ? "strategic" : "integration";
   const technologyMode = directoryMode === "technology" || type === "technology";
   const sideBySideIdentity = directoryMode === "solution" || directoryMode === "technology";
@@ -168,7 +171,12 @@ jahiaComponent(
     nodeType: "jahiacom:partner",
   },
   (props: Props, { currentNode, currentResource }) => (
-    <PartnerCard props={props} currentNode={currentNode} locale={currentResource.getLocale()} />
+    <PartnerCard
+      props={props}
+      currentNode={currentNode}
+      locale={currentResource.getLocale()}
+      technologies={technologyCategories(currentNode)}
+    />
   ),
 );
 
