@@ -1,0 +1,55 @@
+{
+  "name": "jahiacommix:advancedListChildrenFilters5",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "filter2Title",
+      "hide": true
+    },
+    {
+      "name": "filter2Category",
+      "hide": true
+    },
+    {
+      "name": "filter2Categories",
+      "hide": true
+    },
+    {
+      "name": "filter3Title",
+      "hide": true
+    },
+    {
+      "name": "filter3Category",
+      "hide": true
+    },
+    {
+      "name": "filter3Categories",
+      "hide": true
+    },
+    {
+      "name": "filter4Title",
+      "hide": true
+    },
+    {
+      "name": "filter4Category",
+      "hide": true
+    },
+    {
+      "name": "filter4Categories",
+      "hide": true
+    },
+    {
+      "name": "filter5Title",
+      "hide": true
+    },
+    {
+      "name": "filter5Category",
+      "hide": true
+    },
+    {
+      "name": "filter5Categories",
+      "hide": true
+    }
+  ],
+  "hide": true
+}

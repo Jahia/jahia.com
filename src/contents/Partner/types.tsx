@@ -1,4 +1,8 @@
-import { classificationOf, type PartnerClassification } from "./classification.js";
+import {
+  classificationOf,
+  type LegacyPartnerIdentity,
+  type PartnerClassification,
+} from "./classification.js";
 export { classificationOf } from "./classification.js";
 import clsx from "clsx";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
@@ -19,7 +23,16 @@ let Messages:
   | { get: (bundle: string, key: string, locale: Locale, defaultValue: string) => string }
   | undefined;
 
-export interface Props {
+export interface Props extends LegacyPartnerIdentity {
+  "countries"?: string[];
+  "regions"?: Region[];
+  "locationCountries"?: string[];
+  "expertiseText"?: string;
+  "expertise"?: string[];
+  "technologyDetails"?: string;
+  "quote"?: string;
+  "quoteAuthor"?: string;
+  "quoteAuthorTitle"?: string;
   "jcr:title": string;
   "partnerClassification"?: PartnerClassification;
   "description": string;
@@ -94,9 +107,16 @@ export const legacyRegion = (node: JCRNodeWrapper): Region => {
 };
 
 export const regionCountries = (
-  props: Pick<Props, "partnerLocationsData">,
+  props: Pick<Props, "partnerLocationsData" | "regions" | "locationCountries" | "countries">,
   region: Region,
 ): string[] => {
+  if (props.partnerLocationsData === undefined) {
+    const index = props.regions?.indexOf(region) ?? -1;
+    const country = index >= 0 ? props.locationCountries?.[index]?.trim() : undefined;
+    if (country) return [country];
+    if (index >= 0 && props.locationCountries !== undefined) return [];
+    return props.countries || [];
+  }
   return compositePartnerLocations(props.partnerLocationsData)
     .filter((location) => location.region === region)
     .map((location) => location.country || "")
@@ -104,7 +124,7 @@ export const regionCountries = (
 };
 
 export const configuredRegions = (
-  props: Pick<Props, "partnerLocationsData">,
+  props: Pick<Props, "partnerLocationsData" | "regions" | "locationCountries" | "countries">,
   fallbackRegion: Region = "europe",
 ): Region[] => {
   const compositeRegions = compositePartnerLocations(props.partnerLocationsData).map(
@@ -112,7 +132,9 @@ export const configuredRegions = (
   );
   if (compositeRegions.length) return [...new Set(compositeRegions)];
 
-  return [fallbackRegion];
+  return props.partnerLocationsData === undefined && props.regions?.length
+    ? [...new Set(props.regions)]
+    : [fallbackRegion];
 };
 
 export const countryNames = (countries: string[], locale: Locale) =>
@@ -169,8 +191,10 @@ const getMessage = (key: string, locale: Locale, defaultValue: string): string =
   }
 };
 
-const levels = (classification: PartnerClassification | undefined, locale: Locale) => {
-  const value = classificationOf(classification);
+const levels = (props: Props, locale: Locale) => {
+  const value = classificationOf(props);
+  if (props.partnerClassification === undefined && props.partnerLevel?.trim())
+    return <span className={classes.level}>{props.partnerLevel}</span>;
   if (!value) return null;
   if (value.partnership)
     return (
@@ -220,11 +244,10 @@ export const PartnerBadge = ({ props, locale }: { props: Props; locale: Locale }
   <span
     className={clsx(
       classes.small,
-      classificationOf(props.partnerClassification)?.partnership === "strategic" &&
-        classes.strategic,
+      classificationOf(props)?.partnership === "strategic" && classes.strategic,
     )}
     data-partner-badge=""
   >
-    {levels(props.partnerClassification, locale)}
+    {levels(props, locale)}
   </span>
 );

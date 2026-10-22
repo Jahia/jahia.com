@@ -1,3 +1,6 @@
+import cmsIcon from "../../static/icons/navigation/cms.png?no-inline";
+import dxpIcon from "../../static/icons/navigation/dxp.png?no-inline";
+import aiIcon from "../../static/icons/navigation/ai.svg?no-inline";
 import {
   buildModuleFileUrl,
   buildNodeUrl,
@@ -39,7 +42,16 @@ const itemContent = (node: JCRNodeWrapper) => {
     },
   );
   return {
-    icon: image?.href,
+    icon:
+      image?.href ||
+      (text(node, "navIcon") &&
+      Object.hasOwn({ cms: cmsIcon, dxp: dxpIcon, ai: aiIcon }, text(node, "navIcon")!)
+        ? buildModuleFileUrl(
+            { cms: cmsIcon, dxp: dxpIcon, ai: aiIcon }[
+              text(node, "navIcon") as "cms" | "dxp" | "ai"
+            ],
+          )
+        : undefined),
   };
 };
 
@@ -244,6 +256,25 @@ export default function NavBar({
             }
           })
       : [];
+  const legacyUtilityOrder = (): UtilityEntry[] =>
+    (
+      [
+        { kind: "links", property: "utilityLinksPosition", position: 10 },
+        { kind: "rss", property: "utilityRssPosition", position: 20 },
+        { kind: "search", property: "utilitySearchPosition", position: 30 },
+        { kind: "languages", property: "utilityLanguagesPosition", position: 40 },
+      ] as const
+    )
+      .map((row) => ({
+        ...row,
+        position: utilityRoot.hasProperty(row.property)
+          ? utilityRoot.getProperty(row.property).getLong()
+          : row.position,
+      }))
+      .sort((a, b) => a.position - b.position)
+      .flatMap((row): UtilityEntry[] =>
+        row.kind === "links" ? legacyUtilityEntries() : [{ kind: row.kind }],
+      );
   let utilityEntries: UtilityEntry[];
   try {
     const stored: unknown = root.hasProperty("utilityItemsData")
@@ -273,9 +304,9 @@ export default function NavBar({
             return [];
           }
         })
-      : legacyUtilityEntries();
+      : legacyUtilityOrder();
   } catch {
-    utilityEntries = legacyUtilityEntries();
+    utilityEntries = legacyUtilityOrder();
   }
 
   const buttonSource = root.isNodeType("jahiacommix:homeNavbarButtons") ? root : site;

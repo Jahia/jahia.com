@@ -1,13 +1,25 @@
 {
   "name": "jahiacom:advancedListChildren",
-  "priority": 2.0,
+  "priority": 2,
   "fields": [
+    {
+      "name": "filter1Categories",
+      "selectorType": "UpgradePicker"
+    },
     {
       "name": "parent",
       "hide": true
     },
     {
       "name": "nodeType",
+      "hide": true
+    },
+    {
+      "name": "filterCount",
+      "hide": true
+    },
+    {
+      "name": "filter1Category",
       "hide": true
     }
   ]

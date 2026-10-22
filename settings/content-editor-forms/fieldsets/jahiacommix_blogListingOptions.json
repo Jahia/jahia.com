@@ -1,0 +1,22 @@
+{
+  "name": "jahiacommix:blogListingOptions",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "featuredArticle",
+      "selectorType": "UpgradePicker"
+    },
+    {
+      "name": "featuredArticles",
+      "hide": true
+    },
+    {
+      "name": "blogFilterClusters",
+      "hide": true
+    },
+    {
+      "name": "blogFilterThemes",
+      "hide": true
+    }
+  ]
+}

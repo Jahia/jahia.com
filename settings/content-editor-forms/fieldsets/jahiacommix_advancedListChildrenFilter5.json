@@ -1,0 +1,19 @@
+{
+  "name": "jahiacommix:advancedListChildrenFilter5",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "filter5Title",
+      "hide": true
+    },
+    {
+      "name": "filter5Category",
+      "hide": true
+    },
+    {
+      "name": "filter5Categories",
+      "hide": true
+    }
+  ],
+  "hide": true
+}

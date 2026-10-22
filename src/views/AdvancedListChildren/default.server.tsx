@@ -16,6 +16,7 @@ interface Props {
   nodeType?: string;
   filterMode?: string;
   filter1Title?: string;
+  filter1Category?: JCRNodeWrapper;
   filter1Categories?: Array<JCRNodeWrapper | null>;
   emptyState?: string;
 }
@@ -59,9 +60,9 @@ jahiaComponent(
     const source = props.parent ?? pageAncestor(currentNode);
     if (!source) return null;
 
-    const roots = (props.filter1Categories || []).filter(
-      (node): node is JCRNodeWrapper => node !== null,
-    );
+    const roots = (
+      props.filter1Categories ?? (props.filter1Category ? [props.filter1Category] : [])
+    ).filter((node): node is JCRNodeWrapper => node !== null);
     const descendants = roots.flatMap((root) =>
       useJCRQuery({
         query: `SELECT * FROM [jnt:category]

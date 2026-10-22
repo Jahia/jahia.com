@@ -48,11 +48,32 @@
           "displayValueKey": "jahiacom:cardPurpose.glossaryStatistic"
         }
       ],
-      "selectorOptionsMap": {}
+      "selectorOptionsMap": {},
+      "selectorType": "UpgradeChoicelist"
     },
     {
       "name": "body",
       "selectorType": "EditorialRichText"
+    },
+    {
+      "name": "technologyCategories",
+      "hide": true
+    },
+    {
+      "name": "technologyPartnerType",
+      "hide": true
+    },
+    {
+      "name": "partnerRegionTarget",
+      "hide": true
+    },
+    {
+      "name": "glossaryMetric",
+      "hide": true
+    },
+    {
+      "name": "glossaryFolder",
+      "hide": true
     }
   ]
 }

@@ -9,6 +9,9 @@ export type Props = {
   "icon"?: JCRNodeWrapper;
   "image"?: JCRNodeWrapper;
   "background"?: string;
+  "partnerRegionTarget"?: "europe" | "americas" | "apac";
+  "glossaryMetric"?: "none" | "entries" | "letters" | "updated";
+  "glossaryFolder"?: JCRNodeWrapper;
   "cardPurpose"?: "standard" | "partnerRegion" | "glossaryStatistic";
   "metric"?: "entries" | "letters" | "updated";
   "entriesFolder"?: JCRNodeWrapper;

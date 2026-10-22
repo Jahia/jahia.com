@@ -4,10 +4,26 @@
   "fields": [
     {
       "name": "utilityItemsData",
-      "selectorType": "UtilityItemsPicker"
+      "selectorType": "UpgradeUtilityItemsPicker"
     },
     {
       "name": "utilityNavigationLinks",
+      "hide": true
+    },
+    {
+      "name": "utilityLinksPosition",
+      "hide": true
+    },
+    {
+      "name": "utilitySearchPosition",
+      "hide": true
+    },
+    {
+      "name": "utilityLanguagesPosition",
+      "hide": true
+    },
+    {
+      "name": "utilityRssPosition",
       "hide": true
     }
   ]

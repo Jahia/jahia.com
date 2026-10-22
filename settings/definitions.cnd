@@ -62,11 +62,19 @@
  - utilityRssImage (weakreference, picker) < jmix:image
 
 // Optional editorial presentation of existing navigation entries and dropdowns.
+ // Legacy fields: retain their storage definitions, not duplicate editor controls.
+ - utilityLinksPosition (long) = 10 < '[0,1000]'
+ - utilitySearchPosition (long) = 30 < '[0,1000]'
+ - utilityLanguagesPosition (long) = 40 < '[0,1000]'
+ - utilityRssPosition (long) = 20 < '[0,1000]'
+
 [jahiacommix:navigationItem] mixin extends=jnt:page extends=jnt:nodeLink extends=jnt:externalLink
  - navLabel (string) i18n
  - navDescription (string, textarea) i18n
  - navIconImage (weakreference, picker) < jmix:image
  - navUtilityLabel (string) i18n
+ // Legacy fields: retain their storage definitions, not duplicate editor controls.
+ - navIcon (string, choicelist[resourceBundle]) < 'cms', 'dxp', 'ai'
 
 [jahiacommix:navigationPanel] mixin extends=jnt:navMenuText
  - navFeatureEyebrow (string) i18n
@@ -78,6 +86,13 @@
  - navColumnOneLinks (weakreference, picker) multiple < jnt:page, jnt:nodeLink, jnt:externalLink
  - navColumnTwoLabel (string) i18n
  - navColumnTwoLinks (weakreference, picker) multiple < jnt:page, jnt:nodeLink, jnt:externalLink
+ // Legacy fields: retain their storage definitions, not duplicate editor controls.
+ - navIntroEyebrow (string) i18n
+ - navIntroHeading (string) i18n
+ - navIntroText (string, textarea) i18n
+ - navIntroLink (weakreference, picker) < jnt:page, jnt:nodeLink, jnt:externalLink
+ - navIntroLabel (string) i18n
+ - navFooterText (string) i18n
 
 [jahiacommix:analytics] mixin extends=jnt:virtualsite
  - gtmId (string)
@@ -98,6 +113,11 @@
  - blogAdvancedFilter (weakreference, picker) < jahiacom:advancedListChildren
 
 // Miscellaneous gadgets
+ // Legacy fields: retain their storage definitions, not duplicate editor controls.
+ - featuredArticles (weakreference, picker) multiple < jahiacom:blogEntry
+ - blogFilterClusters (weakreference, picker) multiple
+ - blogFilterThemes (weakreference, category[autoSelectParent=false]) multiple
+
 [jahiacommix:gadget] > jmix:droppableContent mixin
 
 // Custom stylesheet

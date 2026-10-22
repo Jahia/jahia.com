@@ -5,14 +5,23 @@
  - completeFallback (boolean) = true mandatory
  - sourceRoot (weakreference, picker) < jnt:page, jnt:contentFolder
  - hidden (boolean) = false mandatory
+ // Legacy fields: retain their storage definitions, not duplicate editor controls.
+ - clusters (weakreference, picker) multiple
+ - manualItems (weakreference, picker) multiple < jahiacom:blogEntry
 
 [jahiacommix:resourceCarouselFilteredSelection] > jmix:dynamicFieldset mixin
  extends = jahiacom:resourceCarousel
  - filteredThemes (weakreference, category[autoSelectParent=false]) multiple
  - filteredContentTypes (weakreference, category[autoSelectParent=false]) multiple
+ // Legacy fields: retain their storage definitions, not duplicate editor controls.
+ - filteredBlogTypes (weakreference, picker) multiple hidden
 
 [jahiacommix:resourceCarouselManualSelection] > jmix:dynamicFieldset mixin
  extends = jahiacom:resourceCarousel
  - selectedContent (weakreference, picker) multiple < jnt:page, jahiacom:blogEntry
  - manualThemes (weakreference, category[autoSelectParent=false]) multiple
  - manualContentTypes (weakreference, category[autoSelectParent=false]) multiple
+ // Legacy fields: retain their storage definitions, not duplicate editor controls.
+ - selectedItems (weakreference, picker) multiple < jmix:mainResource
+ - manualBlogTypes (weakreference, picker) multiple hidden
+ - selectedResources (weakreference, picker) multiple hidden < jahiacom:blogEntry
