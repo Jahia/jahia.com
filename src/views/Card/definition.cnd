@@ -1,4 +1,4 @@
-[jahiacom:card] > jnt:content, mix:title, jahiacommix:cta, jahiacommix:component, jmix:editorialContent
+[jahiacom:card] > jnt:content, mix:title, jahiacommix:cta, jahiacommix:component, jmix:editorialContent, jahiacommix:glassSurface
  - icon (weakreference, picker) i18n < jmix:image
  - image (weakreference, picker) i18n < jmix:image
  - cardTheme (string, choicelist[resourceBundle]) < 'day', 'cloudy', 'night'

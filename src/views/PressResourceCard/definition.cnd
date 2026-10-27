@@ -1,4 +1,4 @@
-[jahiacom:pressResourceCard] > jnt:content, mix:title, jahiacommix:component, jmix:editorialContent, jahiacommix:cta
+[jahiacom:pressResourceCard] > jnt:content, mix:title, jahiacommix:component, jmix:editorialContent, jahiacommix:cta, jahiacommix:glassSurface
  - description (string, textarea) i18n
  - formatLabel (string) i18n
  - visualLabel (string) i18n

@@ -2,4 +2,6 @@
  - subtitle (string, textarea) i18n
  - pageSize (long) = '6' < '[1,60]'
  - layout (string, choicelist[resourceBundle]) = 'cards' < 'cards', 'list', 'coverage'
+ - hiddenFilters (string, choicelist[resourceBundle]) multiple < 'type', 'query', 'theme', 'year', 'sort'
+ - filterTypes (string, choicelist[resourceBundle]) multiple < 'communique', 'presse', 'tribune', 'recompense', 'evenement'
  + * (jahiacom:pressItem)

@@ -9,6 +9,7 @@ export type Props = {
   "image"?: JCRNodeWrapper;
   "document"?: JCRNodeWrapper;
   "isDownload"?: boolean;
+  "glassSurface"?: boolean;
   "copyText"?: string;
   "copyLabel"?: string;
 } & CTAProps;

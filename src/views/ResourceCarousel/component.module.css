@@ -322,8 +322,30 @@
   grid-auto-columns: calc((100% - (var(--items-per-page) - 1) * 1.5rem) / var(--items-per-page));
 }
 
+/* Explicit card-carousel settings leave resource and quotation carousels unchanged. */
+.viewport[data-custom-layout] {
+  --items-per-page: var(--carousel-desktop);
+}
+
+.viewport[data-custom-layout] .track {
+  grid-auto-columns: calc(
+    (100% - (var(--items-per-page) - 1) * var(--carousel-gap)) / var(--items-per-page)
+  );
+  gap: var(--carousel-gap);
+}
+
+@media (width <= 68.75rem) {
+  .viewport[data-custom-layout] {
+    --items-per-page: var(--carousel-tablet);
+  }
+}
+
 @media (width <= 45rem) {
   .viewport[data-fit-items] {
+    --items-per-page: 1;
+  }
+
+  .viewport[data-custom-layout] {
     --items-per-page: 1;
   }
 }

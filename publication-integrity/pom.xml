@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.jahia.jahiacom</groupId>
+  <artifactId>jahiacom-publication-integrity</artifactId>
+  <version>${revision}</version>
+  <packaging>bundle</packaging>
+  <name>Jahia.com Publication Integrity</name>
+  <properties><revision>2.0.1</revision><maven.compiler.release>8</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
+  <repositories><repository><id>jahia-public</id><url>https://devtools.jahia.com/nexus/content/groups/public</url></repository></repositories>
+  <dependencies>
+    <dependency><groupId>org.jahia.server</groupId><artifactId>jahia-impl</artifactId><version>8.2.3.2</version><scope>provided</scope><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency>
+    <dependency><groupId>org.jahia.server</groupId><artifactId>jahia-api</artifactId><version>8.2.3.2</version><scope>provided</scope><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency>
+    <dependency><groupId>org.osgi</groupId><artifactId>org.osgi.service.component.annotations</artifactId><version>1.4.0</version><scope>provided</scope></dependency>
+    <dependency><groupId>javax.jcr</groupId><artifactId>jcr</artifactId><version>2.0</version><scope>provided</scope></dependency>
+    <dependency><groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>1.7.36</version><scope>provided</scope></dependency>
+    <dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.13.2</version><scope>test</scope></dependency>
+  </dependencies>
+  <build><plugins>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.0</version></plugin>
+    <plugin><groupId>org.apache.felix</groupId><artifactId>maven-bundle-plugin</artifactId><version>5.1.9</version><extensions>true</extensions><configuration><exportScr>true</exportScr><instructions>
+      <Bundle-SymbolicName>jahiacom-publication-integrity</Bundle-SymbolicName>
+      <Jahia-GroupId>${project.groupId}</Jahia-GroupId>
+      <Implementation-Title>${project.name}</Implementation-Title>
+      <Implementation-Version>${project.version}</Implementation-Version>
+      <Jahia-Module-Type>module</Jahia-Module-Type><Jahia-Depends>default</Jahia-Depends>
+      <Jahia-Required-Version>8.2.3.2</Jahia-Required-Version>
+      <_dsannotations>*</_dsannotations><Export-Package>!*</Export-Package>
+    </instructions></configuration></plugin>
+  </plugins></build>
+</project>

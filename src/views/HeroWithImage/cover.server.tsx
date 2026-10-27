@@ -2,7 +2,7 @@ import { jahiaComponent } from "@jahia/javascript-modules-library";
 import classes from "./component.module.css";
 import type { Props } from "./types.js";
 import clsx from "clsx";
-import { MixinCTA } from "../../mixins/CTA/server.jsx";
+import Buttons from "../HeroWithoutImage/Buttons.jsx";
 import { CreditedImage } from "../../components/CreditedImage.jsx";
 
 jahiaComponent(
@@ -26,11 +26,7 @@ jahiaComponent(
       <div className={clsx(classes.header, "_stack-4")}>
         {title && <h1>{title}</h1>}
         {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
-        {cta.ctaType !== "none" && (
-          <p>
-            <MixinCTA cta={cta} location="hero_banner" name={currentNode.getName()} />
-          </p>
-        )}
+        <Buttons cta={cta} name={currentNode.getName()} location="hero_banner" />
       </div>
     </header>
   ),

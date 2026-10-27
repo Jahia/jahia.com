@@ -24,6 +24,10 @@
 // Page building blocks
 [jahiacommix:component] > jmix:droppableContent, jmix:accessControllableContent mixin
 
+// Optional translucent surface; existing contents keep their current appearance.
+[jahiacommix:glassSurface] mixin
+ - glassSurface (boolean) = false
+
 // Content components
 [jahiacommix:content] > jmix:editorialContent, jmix:droppableContent mixin
 

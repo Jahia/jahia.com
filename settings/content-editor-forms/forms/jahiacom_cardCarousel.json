@@ -1,0 +1,44 @@
+{
+  "nodeType": "jahiacom:cardCarousel",
+  "priority": 3,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "carousel-settings",
+          "labelKey": "jahiacom:jahiacom_cardCarousel.form.settings",
+          "descriptionKey": "jahiacom:jahiacom_cardCarousel.form.help",
+          "rank": 2,
+          "fields": [
+            {
+              "name": "desktopCards",
+              "rank": 1,
+              "declaringNodeType": "jahiacom:cardCarousel"
+            },
+            {
+              "name": "tabletCards",
+              "rank": 2,
+              "declaringNodeType": "jahiacom:cardCarousel"
+            },
+            {
+              "name": "cardSpacing",
+              "rank": 3,
+              "declaringNodeType": "jahiacom:cardCarousel"
+            },
+            {
+              "name": "showArrows",
+              "rank": 4,
+              "declaringNodeType": "jahiacom:cardCarousel"
+            },
+            {
+              "name": "showPagination",
+              "rank": 5,
+              "declaringNodeType": "jahiacom:cardCarousel"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

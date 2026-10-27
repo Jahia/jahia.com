@@ -5,4 +5,6 @@ export type Props = ContainerProps & {
   "subtitle"?: string;
   "pageSize"?: number;
   "layout"?: "cards" | "list" | "coverage";
+  "hiddenFilters"?: Array<"type" | "query" | "theme" | "year" | "sort">;
+  "filterTypes"?: Array<"communique" | "presse" | "tribune" | "recompense" | "evenement">;
 };

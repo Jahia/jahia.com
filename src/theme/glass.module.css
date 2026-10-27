@@ -1,0 +1,11 @@
+/* Opt-in only: an opaque fallback also works without backdrop-filter. */
+article.surface[data-glass="true"] {
+  background-color: var(--jahia-container-background);
+  border-color: var(--jahia-border);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 25%);
+
+  @supports (backdrop-filter: blur(1rem)) {
+    background-color: color-mix(in srgb, var(--jahia-container-background) 85%, transparent);
+    backdrop-filter: blur(1rem);
+  }
+}

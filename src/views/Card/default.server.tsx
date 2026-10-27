@@ -36,6 +36,7 @@ export const Card = jahiaComponent(
       "entriesFolder": configuredFolder,
       cardTheme,
       hideCtaIcon,
+      glassSurface,
       compact = false,
       ...cta
     }: Props & { compact?: boolean },
@@ -171,6 +172,7 @@ export const Card = jahiaComponent(
       <article
         className={`${classes.card}${hasMedia ? ` ${classes.withMedia}` : ""}${compact ? ` ${classes.compact}` : ""}`}
         data-theme={hasMedia ? "day" : undefined}
+        data-glass={glassSurface || undefined}
       >
         {hasMedia && <CardMedia image={image} theme={cardTheme} background={background} />}
         {hasMedia ? <div className={classes.body}>{content}</div> : content}

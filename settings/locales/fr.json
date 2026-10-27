@@ -43,6 +43,8 @@
     "clear": "Effacer les filtres",
     "clearRegion": "Retirer le filtre de région {{region}}",
     "viewProfile": "Voir la fiche",
+    "unpublished": "Dépublié",
+    "unpublishedHint": "Masqué dans l’aperçu et sur le site public pour cette langue.",
     "viewPartners": "Voir les partenaires",
     "who": "Qui sont-ils",
     "whatTheyDo": "Ce qu’ils font",

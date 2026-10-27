@@ -15,6 +15,8 @@ jahiaComponent(
       layout = "cards",
       theme = "cloudy",
       background,
+      hiddenFilters,
+      filterTypes,
     }: Props,
     { currentNode, renderContext },
   ) => {
@@ -39,6 +41,8 @@ jahiaComponent(
               isEditMode: renderContext.isEditMode(),
               pageSize,
               layout,
+              hiddenFilters,
+              filterTypes,
             }}
           >
             <RenderChildren filter="jahiacom:pressItem" />

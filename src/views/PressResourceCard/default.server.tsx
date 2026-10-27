@@ -19,6 +19,7 @@ jahiaComponent(
       isDownload,
       copyText,
       copyLabel,
+      glassSurface,
       ...cta
     }: Props,
     { currentNode, renderContext },
@@ -37,7 +38,11 @@ jahiaComponent(
     const actionLabel =
       ("ctaLabel" in cta && cta.ctaLabel) || (isDownload ? t("pressRoom.downloadKit") : undefined);
     return (
-      <article id={currentNode.getName()} className={classes.resource}>
+      <article
+        id={currentNode.getName()}
+        className={classes.resource}
+        data-glass={glassSurface || undefined}
+      >
         <div className={classes.header}>
           <h3>{title}</h3>
           {(image || visualLabel) && (
@@ -56,7 +61,7 @@ jahiaComponent(
             {description && <p>{description}</p>}
           </div>
         )}
-        <div className={`${classes.actions} _stack-4`}>
+        <div className={classes.actions}>
           {href && actionLabel && (
             <p>
               <PressAction
@@ -64,7 +69,7 @@ jahiaComponent(
                 label={actionLabel}
                 name={currentNode.getName()}
                 secondary={!("ctaVariant" in cta && cta.ctaVariant === "primary")}
-                download={isDownload && !!document}
+                download={isDownload && (!!document || destination?.isNodeType("jnt:file"))}
               />
             </p>
           )}

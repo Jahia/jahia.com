@@ -6,6 +6,9 @@
     "dist",
     "src/**/*.cnd",
     "settings",
+    "org/jahia/modules/publicationintegrity/**/*.class",
+    "OSGI-INF",
+    "META-INF/MANIFEST.MF",
     "javascript",
     "static"
   ],
@@ -17,7 +20,7 @@
     "format": "prettier --write --list-different .",
     "lint": "eslint . && stylelint 'src/**/*.css'",
     "fix": "eslint . --fix && stylelint 'src/**/*.css' --fix && run format",
-    "package": "yarn pack --out dist/package.tgz",
+    "package": "node scripts/stage-publication-runtime.mjs && yarn pack --out dist/package.tgz && node scripts/stage-publication-runtime.mjs --check-package dist/package.tgz",
     "dev": "vite build --watch",
     "watch": "run dev",
     "watch:callback": "run build:lottie && run package && run deploy",
@@ -72,6 +75,7 @@
   },
   "jahia": {
     "module-dependencies": "default",
+    "required-version": "8.2.3.2",
     "module-type": "templatesSet",
     "server": "dist/server/index.js",
     "static-resources": "/dist/client,/dist/assets,/locales,/images,/icons,/javascript"

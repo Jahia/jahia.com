@@ -43,6 +43,8 @@
     "clear": "Clear filters",
     "clearRegion": "Remove the {{region}} region filter",
     "viewProfile": "View profile",
+    "unpublished": "Unpublished",
+    "unpublishedHint": "Hidden from preview and the public site in this language.",
     "viewPartners": "View partners",
     "who": "Who they are",
     "whatTheyDo": "What they do",
