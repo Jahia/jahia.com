@@ -366,6 +366,7 @@ export function rankLinksWithEvidence<T extends LinkCandidate>(
   concepts: string[] = [],
   resourceConcept = "",
   options: ResourceOptions = {},
+  includePassages = true,
 ): Array<{
   item: T;
   evidence: SelectionEvidence;
@@ -417,8 +418,8 @@ export function rankLinksWithEvidence<T extends LinkCandidate>(
           matches.push({
             reason,
             score,
-            phrases: [phrase],
-            passage: excerpt(text, phrase, canonicalize),
+            phrases: includePassages ? [phrase] : [],
+            passage: includePassages ? excerpt(text, phrase, canonicalize) : "",
           });
       };
       for (const phrase of phrases) {
@@ -447,13 +448,16 @@ export function rankLinksWithEvidence<T extends LinkCandidate>(
         const score = contextMatches.get(item.id) || 0;
         if (score) {
           const text = `${item.title} ${item.description || ""} ${item.content || ""}`;
-          const words = new Set(tokens(text));
-          const shared = tokens(context).filter((word) => words.has(word));
+          let shared: string[] = [];
+          if (includePassages) {
+            const words = new Set(tokens(text));
+            shared = tokens(context).filter((word) => words.has(word));
+          }
           matches.push({
             reason: "context",
             score,
             phrases: shared,
-            passage: excerpt(text, shared[0] || "", canonicalize),
+            passage: includePassages ? excerpt(text, shared[0] || "", canonicalize) : "",
           });
         }
       }
@@ -497,5 +501,6 @@ export function rankLinks<T extends LinkCandidate>(
     concepts,
     resourceConcept,
     options,
+    false,
   ).map((result) => result.item);
 }

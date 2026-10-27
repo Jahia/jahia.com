@@ -2,7 +2,6 @@ import { buildNodeUrl, jahiaComponent, server } from "@jahia/javascript-modules-
 import type { Props } from "./types.js";
 import { linkedEditorialContent } from "./inlineTerms.server.js";
 import Entry from "./Entry.jsx";
-import { automaticLinks } from "./automaticLinks.server.js";
 import { resolveGlossaryIndex } from "./indexPage.js";
 
 jahiaComponent(
@@ -23,7 +22,6 @@ jahiaComponent(
         }).format(new Date(editorialTimestamp))
       : undefined;
     const linked = linkedEditorialContent(props);
-    const automatic = automaticLinks({ ...props, "jcr:title": title }, []);
     return (
       <Entry
         {...linked}
@@ -32,8 +30,11 @@ jahiaComponent(
         summary={props.summary || ""}
         indexUrl={index ? buildNodeUrl(index) : undefined}
         isEditMode={renderContext.isEditMode()}
-        resources={automatic.resources}
-        relatedTerms={automatic.terms}
+        resourceEndpoint={
+          !renderContext.isEditMode() && props.autoLinks !== false && !props.mergedInto
+            ? buildNodeUrl(currentNode, { extension: ".suggestions.html" })
+            : undefined
+        }
       />
     );
   },

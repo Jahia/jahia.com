@@ -92,23 +92,8 @@
           "rank": 3,
           "fields": [
             {
-              "name": "autoLinks",
-              "rank": 1,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.autoLinksHelp"
-            },
-            {
-              "name": "resourceDisplayCount",
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.resourceDisplayCountHelp",
-              "rank": 2
-            },
-            {
-              "name": "preferEducational",
-              "rank": 4,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.preferEducationalHelp"
-            },
-            {
               "name": "autoTermLinks",
-              "rank": 3,
+              "rank": 1,
               "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.autoTermLinksHelp"
             }
           ],

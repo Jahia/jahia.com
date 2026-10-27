@@ -190,6 +190,7 @@ test("cache is bounded and comparison choices have separate result keys", () => 
 test("automatic links localize only selected terms in ranking order", () => {
   const urls = [];
   const profiles = [];
+  let selected = false;
   const makeNode = (id) => {
     const values = {
       summary: `Summary ${id}`,
@@ -207,7 +208,10 @@ test("automatic links localize only selected terms in ranking order", () => {
       hasI18N: () => true,
       hasNode: (name) => name.startsWith("j:translation_"),
       hasProperty: (name) => name === "j:published" || name in values,
-      getPropertyAsString: (name) => values[name] || "",
+      getPropertyAsString: (name) => {
+        assert.ok(!selected || !["summary", "body", "comparison"].includes(name));
+        return values[name] || "";
+      },
       getProperty: (name) => ({
         getBoolean: () => true,
         getValues: () => values[name].map((value) => ({ getString: () => value })),
@@ -261,6 +265,7 @@ test("automatic links localize only selected terms in ranking order", () => {
           glossaryMemo: () => undefined,
           resourceMetadata: () => undefined,
           editorialParts: () => undefined,
+          resourceTexts: () => undefined,
           memoProfile: (_memo, _node, _site, _lang, compute) => compute(),
         };
       if (name.endsWith("editorialText.js"))
@@ -270,6 +275,7 @@ test("automatic links localize only selected terms in ranking order", () => {
           mergeRelatedTranslations: (id, translations) => ({ ...translations[0], id }),
           selectRelatedTerms: (candidates) => {
             profiles.push(...candidates.map((candidate) => candidate.id));
+            selected = true;
             return [candidates[2], candidates[1]];
           },
         };
@@ -285,10 +291,6 @@ test("automatic links localize only selected terms in ranking order", () => {
       id,
       title: `Title ${id}`,
       url: `/sites/test/terms/${id}`,
-      summary: `Summary ${id}`,
-      description: `Summary ${id}`,
-      content: `Body ${id}`,
-      comparison: "",
       aliases: [`Alias ${id}`],
     })),
   );
@@ -371,6 +373,7 @@ test("editorial conversion keeps failures observable and supports a disabled cac
 test("automatic links reread editorial values and permissions before reusing pure conversion", () => {
   let readable = true,
     textReads = 0;
+  let preparedText;
   const conversions = [],
     options = [];
   const fields = { "jcr:title": "Article", "text": "<p>First text</p>" };
@@ -430,6 +433,10 @@ test("automatic links reread editorial values and permissions before reusing pur
           glossaryMemo: () => undefined,
           resourceMetadata: () => undefined,
           editorialParts: () => undefined,
+          resourceTexts: () =>
+            preparedText === undefined
+              ? undefined
+              : new Map([["/sites/test/resource", preparedText]]),
           memoProfile: (_memo, _node, _site, _lang, compute) => compute(),
         };
       if (name.endsWith("editorialText.js")) return { createBoundedTextReader };
@@ -486,6 +493,16 @@ test("automatic links reread editorial values and permissions before reusing pur
   run({ linkThemes: [{ getIdentifier: () => "topic", getPath: () => "/categories/topic" }] });
   assert.equal(options[0].includeTaxonomy, false);
   assert.equal(options.at(-1).includeTaxonomy, true);
+  preparedText = "Already prepared text";
+  const beforePrepared = textReads;
+  assert.equal(run().resources[0].content, preparedText);
+  assert.equal(textReads, beforePrepared);
+  readable = false;
+  assert.equal(run().resources.length, 0);
+  readable = true;
+  preparedText = undefined;
+  fields.text = "<p>Fresh fallback text</p>";
+  assert.match(run().resources[0].content, /Fresh fallback text/);
 });
 
 function memoHarness() {

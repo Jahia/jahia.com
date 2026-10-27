@@ -1,9 +1,23 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readRelatedLinks } from "./glossary-audit-links.mjs";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 const base =
   "http://localhost:8081/cms/render/default/fr/sites/mySite/contents/glossary/portal.html";
+
+test("remote HTTP audit targets are refused before credentials can be sent", () => {
+  for (const origin of ["http://example.org", "http://localhost.example.org", "http://192.0.2.1"]) {
+    const result = spawnSync(
+      process.execPath,
+      [fileURLToPath(new URL("./check-glossary-live.mjs", import.meta.url)), "--base-url", origin],
+      { encoding: "utf8", env: { PATH: process.env.PATH, JAHIA_AUTHORIZATION: "Basic test-only" } },
+    );
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /HTTPS is required outside localhost/);
+  }
+});
 
 test("counts related terms in the current combined CTA without counting resource or editorial links", () => {
   const html = `<article>

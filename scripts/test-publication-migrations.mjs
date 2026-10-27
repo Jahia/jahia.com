@@ -47,3 +47,16 @@ test("continuous repair is generic and never publishes drafts", async () => {
   assert.match(source, /TICK_BUDGET/);
   assert.match(source, /shutdownNow/);
 });
+
+test("glossary LIVE memo reads as guest and never mutates publication or content", async () => {
+  const source = await readFile(
+    new URL("../settings/glossary-memo.groovy", import.meta.url),
+    "utf8",
+  );
+  assert.match(source, /doExecute\('guest',null,'live'/);
+  assert.doesNotMatch(source, /doExecuteWithSystemSession|\.publish\(|\.unpublish\(/);
+  assert.doesNotMatch(source, /session\.save\(|node\.setProperty\(|node\.addNode\(/);
+  assert.match(source, /hasPermission\('jcr:read'\)/);
+  assert.match(source, /requested\.size\(\)>128/);
+  assert.match(source, /editorialCharacters\+size<=12000000/);
+});

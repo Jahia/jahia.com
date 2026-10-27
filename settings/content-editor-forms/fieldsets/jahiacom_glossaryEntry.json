@@ -4,35 +4,7 @@
   "fields": [
     {
       "name": "resourceDisplayCount",
-      "valueConstraints": [
-        {
-          "value": {
-            "type": "String",
-            "value": "3"
-          },
-          "displayValue": "3"
-        },
-        {
-          "value": {
-            "type": "String",
-            "value": "6"
-          },
-          "displayValue": "6",
-          "propertyList": [
-            {
-              "name": "defaultProperty",
-              "value": "true"
-            }
-          ]
-        },
-        {
-          "value": {
-            "type": "String",
-            "value": "9"
-          },
-          "displayValue": "9"
-        }
-      ]
+      "hide": true
     },
     {
       "name": "indexPage",
@@ -40,12 +12,7 @@
     },
     {
       "name": "autoLinks",
-      "defaultValues": [
-        {
-          "type": "Boolean",
-          "value": "true"
-        }
-      ]
+      "hide": true
     },
     {
       "name": "mergedInto",
@@ -113,6 +80,10 @@
     },
     {
       "name": "relatedCtaVariant",
+      "hide": true
+    },
+    {
+      "name": "preferEducational",
       "hide": true
     }
   ]

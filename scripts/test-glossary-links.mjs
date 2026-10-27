@@ -5,6 +5,52 @@ import ts from "typescript";
 import assert from "node:assert/strict";
 import { rankLinks, rankLinksWithEvidence } from "../src/contents/GlossaryEntry/linkSelection.ts";
 const item = (id, title, extra = {}) => ({ id, title, ...extra });
+
+test("render ranking preserves evidence scores and order without preparing audit excerpts", () => {
+  const pool = Array.from({ length: 30 }, (_, i) =>
+    item(String(i), i % 3 === 0 ? "Guide du portail web" : `Ressource ${i}`, {
+      description: i % 3 === 1 ? "Portail web en entreprise" : "Gestion de contenu",
+      content: "Le portail web organise les contenus et les services. ".repeat(50),
+      aliases: ["Web portal"],
+      taxonomyIds: [i % 2 ? "a" : "b"],
+    }),
+  );
+  for (const concept of ["", "web-portal"]) {
+    for (const themes of [[], ["a"]]) {
+      const args = [
+        pool,
+        ["portail web"],
+        themes,
+        ["0"],
+        24,
+        ["contenu"],
+        "services et contenus",
+        [],
+        concept,
+      ];
+      const evidence = rankLinksWithEvidence(...args, { preferEducational: true });
+      const compact = rankLinksWithEvidence(...args, { preferEducational: true }, false);
+      assert.deepEqual(
+        compact.map(({ item, score }) => ({ id: item.id, score })),
+        evidence.map(({ item, score }) => ({ id: item.id, score })),
+      );
+      assert.ok(evidence.some(({ evidence }) => evidence.passage.length > 0));
+      assert.deepEqual(
+        rankLinks(...args, { preferEducational: true }),
+        evidence.map((r) => r.item),
+      );
+      for (const limit of [3, 6, 9]) {
+        const limited = [...args];
+        limited[4] = limit;
+        assert.deepEqual(
+          rankLinks(...limited, { preferEducational: true }),
+          evidence.slice(0, limit).map((r) => r.item),
+        );
+      }
+    }
+  }
+});
+
 test("whole expressions match accents and punctuation without substring noise", () => {
   assert.deepEqual(
     rankLinks(

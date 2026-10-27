@@ -1,4 +1,4 @@
-# Press room and publication integrity delivery
+# Press room, glossary and publication integrity delivery
 
 ## Release and installation
 
@@ -6,7 +6,7 @@ This change delivers one self-contained `package.tgz`, requiring Jahia 8.2.3.2 o
 The publication service runs inside jahiacom; no companion JAR or server command is needed.
 Activate the uploaded module through the usual JavaScript module workflow.
 
-The feature-branch artifact still uses the current package version, 2.0.1. The two minor
+The feature-branch artifact still uses the current package version, 2.0.1. The three minor
 Chachalog entries should produce one 2.1.0 release from that baseline. After the feature PR
 is merged, review and merge the generated release PR separately, then use the official
 release archive for preproduction. Neither PR should be merged without approval.
@@ -24,6 +24,10 @@ release archive for preproduction. Neither PR should be merged without approval.
 - Cards and press-resource cards gain an optional Glass surface, disabled by default.
 - Press-news filters can be hidden individually, with configurable type options. Hiding
   every filter removes the form and its frame; pagination continues to work.
+- Glossary entry forms are simplified without removing stored content properties. Resource
+  and related-term suggestions load after the article through a per-user alternate template.
+  The browser accepts only same-origin links; shared memoization is guest LIVE only, checks
+  read permissions again, has bounded storage and invalidates on content/ACL changes.
 
 No existing property constraint is narrowed or removed. The legacy `secondaryCTAUrl`
 property remains unchanged for compatibility; the CND lint warning on that existing field
@@ -54,9 +58,12 @@ validated. No automatic content conversion is included in this module.
 4. Check the press Hero actions, experts ordering/controls, filter choices/reset/pagination
    and download/copy actions in FR/EN on desktop and mobile.
 5. Confirm existing non-press Heroes/cards and resource carousels retain their behavior.
+6. Check glossary article rendering, authored/automatic term links, deferred suggestions,
+   retry/empty states, FR/EN and mobile. Verify anonymous requests cannot receive restricted
+   content and that unpublishing a suggested resource removes it from later suggestions.
 
-The localhost address change is instance data only and is not shipped. Glossary experiments,
-navigation changes and the production-404 investigation are excluded from this PR.
+The localhost address change is instance data only and is not shipped. Navigation changes
+and the production-404 investigation are excluded from this PR.
 
 ## Rollback limits
 

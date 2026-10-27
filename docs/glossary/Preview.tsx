@@ -64,11 +64,7 @@ export default function Preview({ pathname = "/glossary/" }: { pathname?: string
         {isIndex ? (
           <Glossary {...data} />
         ) : entry ? (
-          <Entry
-            {...entry}
-            indexUrl="/glossary/"
-            relatedTerms={data.entries.filter((term) => entry.relatedIds.includes(term.id))}
-          />
+          <Entry {...entry} indexUrl="/glossary/" />
         ) : (
           <section className={theme.container}>
             <h1>Page not found</h1>

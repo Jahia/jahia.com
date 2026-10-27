@@ -12,10 +12,16 @@ import { htmlToText } from "../Partner/types.js";
 import { selectRelatedTerms, mergeRelatedTranslations } from "./relatedTerms.js";
 import { resolveGlossaryIndex } from "./indexPage.js";
 import { rankLinks, usefulExpression } from "./linkSelection.js";
-import { glossaryMemo, memoProfile, resourceMetadata, editorialParts } from "./memo.server.js";
+import {
+  glossaryMemo,
+  memoProfile,
+  resourceMetadata,
+  editorialParts,
+  resourceTexts,
+} from "./memo.server.js";
 import type { Props } from "./types.js";
 import { createBoundedTextReader } from "./editorialText.js";
-import type { EntryResource } from "./Entry.jsx";
+import type { EntryResource } from "./deferredSuggestions.js";
 import type { GlossaryItem } from "../../views/Glossary/model.js";
 
 // Cache only a pure conversion of the exact value just read through JCR.
@@ -25,7 +31,8 @@ const editorialTextValue = createBoundedTextReader(htmlToText);
 export function automaticLinks(
   props: Props,
   selectedIds: string[],
-): { resources: EntryResource[]; terms: GlossaryItem[] } {
+  resourceLimit = 24,
+): { resources: EntryResource[]; terms: Omit<GlossaryItem, "summary">[] } {
   if (props.autoLinks === false) return { resources: [], terms: [] };
   const { currentNode, currentResource, renderContext } = useServerContext();
   const site = renderContext.getSite();
@@ -134,8 +141,8 @@ export function automaticLinks(
   };
   const memo = glossaryMemo();
   const resourceNodes = new Map<string, JCRNodeWrapper>();
-  const collectResources = (metadata?: JCRNodeWrapper[]) =>
-    (
+  const collectResources = (metadata?: JCRNodeWrapper[]) => {
+    const candidates = (
       metadata ||
       [...query(RESOURCE_MODEL.blogNodeType), ...query(RESOURCE_MODEL.pageNodeType)].filter(visible)
     )
@@ -156,19 +163,33 @@ export function automaticLinks(
         // Older native pages may have no pageType. Relevance is determined by their
         // actual title/description; do not discard valid feature pages for missing metadata.
         return {
-          ...card,
-          content: editorialText(current),
-          kind:
-            card.kind === "blog"
-              ? "article"
-              : card.kind === "customerCase"
-                ? "customerStory"
-                : pageType === "solution_page"
-                  ? "solution"
-                  : card.kind,
+          current,
+          card: {
+            ...card,
+            kind:
+              card.kind === "blog"
+                ? "article"
+                : card.kind === "customerCase"
+                  ? "customerStory"
+                  : pageType === "solution_page"
+                    ? "solution"
+                    : card.kind,
+          },
         };
       })
       .filter((item): item is NonNullable<typeof item> => item !== null);
+    const prepared = resourceTexts(
+      memo,
+      sitePath,
+      language,
+      candidates.map(({ current }) => current.getPath()),
+      (parts) => parts.map(editorialTextValue).join(" "),
+    );
+    return candidates.map(({ current, card }) => ({
+      ...card,
+      content: prepared?.get(current.getPath()) ?? editorialText(current),
+    }));
+  };
   let resourceCandidates;
   try {
     const metadata = resourceMetadata(memo, sitePath, language, themes.length > 0);
@@ -263,10 +284,6 @@ export function automaticLinks(
     id: node.getIdentifier(),
     title: node.getDisplayableName(),
     url: buildNodeUrl(node),
-    summary: node.getPropertyAsString("summary") || "",
-    description: node.getPropertyAsString("summary") || "",
-    content: editorialTextValue(node.getPropertyAsString("body") || ""),
-    comparison: editorialTextValue(node.getPropertyAsString("comparison") || ""),
     aliases: node.hasProperty("aliases")
       ? Array.from(node.getProperty("aliases").getValues(), (v) => v.getString())
       : [],
@@ -282,7 +299,7 @@ export function automaticLinks(
       expressions,
       themes,
       excluded,
-      24,
+      resourceLimit,
       relatedExpressions,
       context,
       [],
