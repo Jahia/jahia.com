@@ -1,0 +1,14 @@
+{
+  "glossary-memo.groovy": "e26868f6dda61062984d1387bd92c219e0e4e80654dd1f3e3fb2fce0950df361",
+  "patches/1.1.10-01-remove-obsolete-partner-locations.started.groovy": "1df4ef92a12ad95e6b7f85be8bbe7cf656e09ef4f6e10fd53ee5f0dd308ede26",
+  "patches/1.1.3-01-add-blog-resource-carousels.started.groovy": "708a46d321d2520af33956fcfcf2e962e10d8c110c1c891e81ed7f7e6a8711d3",
+  "patches/1.1.4-01-migrate-resource-carousel-filters.started.groovy": "6455d789b1a18e3b5e129a7e77fda8ba426cbd109601bd483fc66781c0dca7ad",
+  "patches/1.1.6-01-migrate-resource-carousel-manual-selection.started.groovy": "1c6159400d9c543d079f243883989c00ee0cc0e443ffb2269d2751ed3528536f",
+  "patches/1.3.6-01-restore-content-categories.started.groovy": "745fa78248eb249e4d8518240689f5e22d4307e5117673c70c062520924ccced",
+  "patches/1.4.0-01-build-partner-directories.started.groovy": "b4ad773a61c0b45bb7cb93eead605d1b7b7ee1041736c94a712f500292bc83e1",
+  "patches/1.4.0-03-merge-partner-content-fr.started.groovy": "ca3979320d9feda31173f35e15fc3177c8bb578ebd258866aa0cf6de9c7ff34c",
+  "patches/1.4.0-04-normalize-partner-regions.started.groovy": "f3f635aaa6e0792fe4c375f969ac879c28cb4ccf23a1f3a6f414960a03575c42",
+  "patches/1.4.0-05-merge-partner-content-en-and-remove-duplicates.started.groovy": "04d36e346b900c0bc7b71f99dcae7d2b645936aa0e1ad9356efa68d74b0ecb8e",
+  "patches/1.4.0-06-complete-joined-english-partner-sections.started.groovy": "1dccd7a42ab4cf6783d02ba7cbb56369482d86a549b24d8f189b8fcfb3169bfc",
+  "patches/1.4.6-01-migrate-technology-partner-metadata.started.groovy": "1457163cbf95607d31f993daeb7a2117ccd57bdcf31ec5f0b47f06adf83ec67c"
+}

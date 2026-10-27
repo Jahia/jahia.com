@@ -1,0 +1,28 @@
+.item {
+  display: flex;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.item > * {
+  width: 100%;
+}
+
+/* Keep each card editable in Page Builder, with the chosen responsive sizing. */
+.editorGrid {
+  display: grid;
+  grid-template-columns: repeat(var(--carousel-desktop), minmax(0, 1fr));
+  gap: var(--carousel-gap);
+}
+
+@media (width <= 68.75rem) {
+  .editorGrid {
+    grid-template-columns: repeat(var(--carousel-tablet), minmax(0, 1fr));
+  }
+}
+
+@media (width <= 45rem) {
+  .editorGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

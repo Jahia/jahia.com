@@ -1,19 +1,10 @@
-import { useTranslation } from "react-i18next";
 import { Island } from "@jahia/javascript-modules-library";
-import Carousel from "../../views/ResourceCarousel/Carousel.client.jsx";
-import type { GlossaryItem } from "../../views/Glossary/model.js";
+import DeferredSuggestions from "./DeferredSuggestions.client.jsx";
+import { useTranslation } from "react-i18next";
 import { CTA } from "../../mixins/CTA/index.jsx";
 import { splitDefinition } from "./inlineTerms.js";
 import { sanitizeHtml } from "./sanitizeHtml.js";
 import classes from "./component.module.css";
-
-export interface EntryResource {
-  id: string;
-  title: string;
-  url: string;
-  kind: string;
-  description?: string;
-}
 
 export interface EntryViewProps {
   title: string;
@@ -27,10 +18,8 @@ export interface EntryViewProps {
   comparisonTitle?: string;
   comparison?: string;
   indexUrl?: string;
-  resources: EntryResource[];
-  resourceDisplayCount?: "3" | "6" | "9";
-  relatedTerms: GlossaryItem[];
   isEditMode?: boolean;
+  resourceEndpoint?: string;
 }
 
 export default function Entry({
@@ -45,15 +34,10 @@ export default function Entry({
   example,
   exampleTitle,
   faq,
-  resources,
-  resourceDisplayCount,
-  relatedTerms,
   isEditMode,
+  resourceEndpoint,
 }: EntryViewProps) {
   const { t } = useTranslation();
-  // The server ranks direct matches before related matches, regardless of resource kind.
-  const cta = resources[0];
-  const visibleCount = resourceDisplayCount === "3" ? 3 : resourceDisplayCount === "9" ? 9 : 6;
   const definition = splitDefinition(body || "");
   return (
     <article className={classes.entry} data-theme="day">
@@ -126,72 +110,8 @@ export default function Entry({
           </div>
         </div>
         <div className={classes.followUp}>
-          {resources.length > 0 ? (
-            <section className={classes.resources} aria-labelledby="resources">
-              <div className={classes.sectionHeading}>
-                <h2 id="resources" tabIndex={-1}>
-                  {t("glossary.resourcesTitle", {
-                    term: title,
-                    interpolation: { escapeValue: false },
-                  })}
-                </h2>
-              </div>
-              <Island
-                component={Carousel}
-                props={{
-                  itemCount: Math.min(resources.length, visibleCount),
-                  labelledBy: "resources",
-                  fitItems: true,
-                  showArrows: false,
-                }}
-              >
-                {resources.slice(0, visibleCount).map((resource) => (
-                  <article key={resource.id} className={classes.resourceItem} data-carousel-item="">
-                    <div className={classes.resourceCard}>
-                      <span className={classes.resourceKind}>
-                        {t(`glossary.kinds.${resource.kind}`)}
-                      </span>
-                      <p className={classes.resourceTitle}>{resource.title}</p>
-                      <CTA
-                        secondary
-                        href={resource.url}
-                        location="glossary"
-                        name="resource-detail"
-                        aria-label={`${t("glossary.readResource")} : ${resource.title}`}
-                      >
-                        {t("glossary.readResource")}
-                      </CTA>
-                    </div>
-                  </article>
-                ))}
-              </Island>
-            </section>
-          ) : isEditMode ? (
-            <p className={classes.editorNote}>{t("glossary.resourcesMissing")}</p>
-          ) : null}
-          {(cta || relatedTerms.length > 0) && (
-            <section className={classes.cta} data-theme="night" aria-labelledby="topic-cta">
-              <h2 id="topic-cta">{t("glossary.explore")}</h2>
-              {cta && (
-                <>
-                  <p>{cta.title}</p>
-                  <CTA href={cta.url} location="glossary" name="topic-resource">
-                    {t("glossary.readResource")}
-                  </CTA>
-                </>
-              )}
-              {relatedTerms.length > 0 && (
-                <ul className={classes.relatedList}>
-                  {relatedTerms.map((term) => (
-                    <li key={term.id}>
-                      <CTA href={term.url} location="glossary" name="related-term">
-                        {term.title}
-                      </CTA>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
+          {resourceEndpoint && (
+            <Island component={DeferredSuggestions} props={{ endpoint: resourceEndpoint }} />
           )}
           <footer className={classes.editorialFooter}>
             <div>

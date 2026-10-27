@@ -13,34 +13,30 @@
 }
 
 .filters {
-  padding: clamp(1rem, 2vw, 1.5rem);
-  margin-bottom: 1.5rem;
-  background: color-mix(in srgb, var(--jahia-primary-color) 5%, var(--jahia-background));
-  border: 1px solid var(--jahia-border);
+  composes: filters from "../PartnerDirectory/component.module.css";
 }
 
-.filters label {
-  display: block;
+.controls label {
   flex: 1 1 12rem;
-  min-width: 0;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
-.filters input[type="search"],
-.filters select {
-  display: block;
+.filters input[type="search"] {
   width: 100%;
-  min-width: 0;
-  min-height: 2.875rem;
-  padding: 0.75rem;
-  margin-top: 0.375rem;
-  color: #001932;
-  background: white;
-  border: 1px solid #727d87;
+  height: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  font-family: monospace;
+  color: var(--jahia-primary-color);
+  background: transparent;
+  border: 1px solid currentcolor;
   border-radius: 0.25rem;
+  backdrop-filter: blur(1rem);
+}
+
+/* Keep the shared outline controls readable in both Day and Night themes. */
+.filters :is(select, button:not([aria-pressed="true"])) {
+  color: var(--jahia-primary-color);
+  border-color: currentcolor;
 }
 
 .controls {
@@ -48,19 +44,11 @@
   flex-wrap: wrap;
   gap: 1rem;
   align-items: end;
-  margin-top: 1rem;
+  width: 100%;
 }
 
-.reset[type="reset"] {
-  min-height: 2.875rem;
-  padding: 0.75rem;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.875rem;
-  color: #037cc2;
-  text-transform: uppercase;
-  background: white;
-  border: 1px solid #037cc2;
-  border-radius: 0.25rem;
+.reset {
+  composes: clear from "../PartnerDirectory/component.module.css";
 }
 
 .grid {
@@ -233,27 +221,8 @@
 }
 
 .filterBar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.filterBar button {
-  min-height: 2.75rem;
-  padding: 0.625rem 1rem;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.75rem;
-  color: var(--jahia-a11y-blue);
-  text-transform: uppercase;
-  cursor: pointer;
-  background: white;
-  border: 1px solid var(--jahia-a11y-blue);
-  border-radius: 0.25rem;
-}
-
-.filterBar button[aria-pressed="true"] {
-  color: white;
-  background: var(--jahia-a11y-blue);
+  composes: levelButtons from "../PartnerDirectory/component.module.css";
+  width: 100%;
 }
 
 .listingHeader {

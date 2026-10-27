@@ -6,6 +6,9 @@ interface MemoService {
   prepareResourceMetadata(site: string, language: string, taxonomy: boolean): string;
   editorialParts(site: string, language: string, path: string): string;
   profileMemo(key: string, generation: number, value: string | null): string | null;
+  termCatalogMemo(key: string, generation: number, value: string | null): string | null;
+  prepareResourceTexts(site: string, language: string, paths: string): string;
+  cacheResourceTexts(site: string, language: string, generation: number, values: string): void;
 }
 interface ResourceMetadata {
   id: string;
@@ -58,6 +61,47 @@ export function glossaryMemo() {
   }
 }
 type Memo = ReturnType<typeof glossaryMemo>;
+
+/** Shared guest LIVE vocabulary, not linked article HTML or retained JCR nodes. */
+export function memoTermCatalog<T>(
+  memo: Memo,
+  folder: JCRNodeWrapper,
+  language: string,
+  compute: (depend: (node: JCRNodeWrapper) => void) => T,
+): T {
+  const { renderContext } = useServerContext();
+  const paths = new Set<string>([folder.getPath()]);
+  const depend = (node: JCRNodeWrapper) => paths.add(node.getPath());
+  const attach = () => {
+    for (const path of paths) server.render.addCacheDependency({ path }, renderContext);
+  };
+  if (memo) {
+    try {
+      const key = JSON.stringify([renderContext.getSite().getPath(), language, folder.getPath()]);
+      const cached = memo.service.termCatalogMemo(key, Number(memo.generation), null);
+      if (cached !== null && memo.valid()) {
+        const data = JSON.parse(String(cached)) as { terms: T; paths: string[] };
+        for (const path of data.paths) paths.add(path);
+        attach();
+        return data.terms;
+      }
+      const terms = compute(depend);
+      if (memo.valid())
+        memo.service.termCatalogMemo(
+          key,
+          Number(memo.generation),
+          JSON.stringify({ terms, paths: [...paths] }),
+        );
+      attach();
+      return terms;
+    } catch {
+      // Runtime service failure must keep the existing direct JCR rendering path.
+    }
+  }
+  const terms = compute(depend);
+  attach();
+  return terms;
+}
 
 export function memoProfile<T>(
   memo: Memo,
@@ -165,6 +209,60 @@ export function editorialParts(memo: Memo, site: string, language: string, path:
     for (const dependency of data.paths)
       server.render.addCacheDependency({ path: dependency }, renderContext);
     return data.parts;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Share prepared plain text across glossary entries, after fresh guest access checks.
+ * Batches bound bridge payloads without truncating the eligible resource pool.
+ */
+export function resourceTexts(
+  memo: Memo,
+  site: string,
+  language: string,
+  paths: string[],
+  prepare: (parts: string[]) => string,
+): Map<string, string> | undefined {
+  if (!memo || !memo.valid()) return undefined;
+  const { renderContext } = useServerContext();
+  const texts = new Map<string, string>();
+  try {
+    for (let offset = 0; offset < paths.length; offset += 128) {
+      const batch = paths.slice(offset, offset + 128);
+      const rows = JSON.parse(
+        String(memo.service.prepareResourceTexts(site, language, JSON.stringify(batch))),
+      ) as { path: string; paths: string[]; parts?: string[]; text?: string; token?: string }[];
+      if (!Array.isArray(rows) || rows.length !== batch.length) return undefined;
+      const pending = [];
+      for (const row of rows) {
+        if (
+          !batch.includes(row.path) ||
+          !Array.isArray(row.paths) ||
+          row.paths.some((path) => typeof path !== "string")
+        )
+          return undefined;
+        for (const path of row.paths) server.render.addCacheDependency({ path }, renderContext);
+        let text = row.text;
+        if (typeof text !== "string") {
+          if (!Array.isArray(row.parts) || row.parts.some((part) => typeof part !== "string"))
+            return undefined;
+          text = prepare(row.parts);
+          if (typeof row.token === "string")
+            pending.push({ path: row.path, token: row.token, text });
+        }
+        texts.set(row.path, text);
+      }
+      if (!memo.valid() || batch.some((path) => !texts.has(path))) return undefined;
+      if (pending.length)
+        memo.service.cacheResourceTexts(
+          site,
+          language,
+          Number(memo.generation),
+          JSON.stringify(pending),
+        );
+    }
+    return memo.valid() ? texts : undefined;
   } catch {
     return undefined;
   }

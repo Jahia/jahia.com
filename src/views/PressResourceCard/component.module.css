@@ -24,5 +24,13 @@
 }
 
 .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
   margin-top: auto;
+}
+
+.actions > * {
+  margin: 0;
 }

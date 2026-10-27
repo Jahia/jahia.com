@@ -16,6 +16,7 @@ import {
   type Region,
 } from "../../contents/Partner/types.js";
 import Directory from "./Directory.client.jsx";
+import { isExplicitlyUnpublished, visibleInDirectory } from "./visibility.server.js";
 
 interface Props {
   sourceRoot?: JCRNodeWrapper;
@@ -105,14 +106,23 @@ jahiaComponent(
       `,
     });
     const allPartners = configuredRoot ? partnerDescendants(configuredRoot) : queriedPartners;
+    const locale = currentResource.getLocale();
     const partners = allPartners.filter((partner) => {
+      if (!visibleInDirectory(partner, locale, renderContext.isEditMode())) return false;
       const type = classificationOf(partnerIdentity(partner))?.type;
       if (mode === "solution") return type === "integrator";
       if (mode === "technology") return type === "technology";
       return true;
     });
+    server.render.addCacheDependency({ path: rootPath }, renderContext);
     for (const dependency of allPartners) {
       server.render.addCacheDependency({ path: dependency.getPath() }, renderContext);
+      if (dependency.hasI18N(locale, false)) {
+        server.render.addCacheDependency(
+          { path: dependency.getI18N(locale, false).getPath() },
+          renderContext,
+        );
+      }
     }
 
     const groups = new Map<string, JCRNodeWrapper[]>();
@@ -146,6 +156,9 @@ jahiaComponent(
 
       return {
         currentNode: primary,
+        editorUnpublished:
+          renderContext.isEditMode() &&
+          nodes.every((node) => isExplicitlyUnpublished(node, locale)),
         props: {
           ...merged,
           regions,
@@ -227,7 +240,7 @@ jahiaComponent(
           filterItems,
         }}
       >
-        {cards.map(({ currentNode: partner, props, regionUrls }) => (
+        {cards.map(({ currentNode: partner, props, regionUrls, editorUnpublished }) => (
           <PartnerCard
             key={partner.getIdentifier()}
             currentNode={partner}
@@ -235,6 +248,7 @@ jahiaComponent(
             locale={currentResource.getLocale()}
             regionUrls={regionUrls}
             directoryMode={mode}
+            editorUnpublished={editorUnpublished}
           />
         ))}
       </Island>

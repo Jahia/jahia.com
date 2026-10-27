@@ -6,6 +6,7 @@ export type Props = {
   "body"?: string;
   "cardTheme"?: "day" | "cloudy" | "night";
   "hideCtaIcon"?: boolean;
+  "glassSurface"?: boolean;
   "icon"?: JCRNodeWrapper;
   "image"?: JCRNodeWrapper;
   "background"?: string;

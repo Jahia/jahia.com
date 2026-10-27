@@ -1,7 +1,7 @@
 import { jahiaComponent } from "@jahia/javascript-modules-library";
 import clsx from "clsx";
 import { CreditedImage } from "../../components/CreditedImage.jsx";
-import { MixinCTA } from "../../mixins/CTA/server.jsx";
+import Buttons from "../HeroWithoutImage/Buttons.jsx";
 import classes from "./component.module.css";
 import type { Props } from "./types.js";
 
@@ -24,11 +24,7 @@ jahiaComponent(
         <div className={clsx(classes.title, "_stack-8")}>
           {title && <h1>{title}</h1>}
           {subtitle && <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />}
-          {cta.ctaType !== "none" && (
-            <p className={classes.actions}>
-              <MixinCTA cta={cta} location="hero_banner" name={currentNode.getName()} />
-            </p>
-          )}
+          <Buttons cta={cta} name={currentNode.getName()} location="hero_banner" />
         </div>
         {image && (
           // Despite being mandatory, the image can be missing in some cases (e.g. new translation)

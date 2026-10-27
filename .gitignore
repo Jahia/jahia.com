@@ -8,6 +8,10 @@
 # Node
 dist
 node_modules
+publication-integrity/target/
+/org/jahia/modules/publicationintegrity/
+/OSGI-INF/
+/META-INF/MANIFEST.MF
 
 #Yarn
 .yarn/*

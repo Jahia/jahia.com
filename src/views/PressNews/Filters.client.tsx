@@ -2,6 +2,10 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import classes from "./component.module.css";
 import listingClasses from "../ContentFolderReference/styles.module.css";
+import type { Props } from "./types.js";
+
+const defaultFilters = ["type", "query", "theme", "year", "sort"] as const;
+const defaultTypes = ["communique", "presse", "tribune", "recompense", "evenement"];
 
 export default function Filters({
   id,
@@ -10,6 +14,8 @@ export default function Filters({
   pageSize = 6,
   layout = "cards",
   heading,
+  hiddenFilters,
+  filterTypes,
 }: {
   id: string;
   children?: ReactNode;
@@ -17,14 +23,17 @@ export default function Filters({
   pageSize?: number;
   layout?: "cards" | "list" | "coverage";
   heading?: string;
+  hiddenFilters?: Props["hiddenFilters"];
+  filterTypes?: Props["filterTypes"];
 }) {
   const { t } = useTranslation();
   const root = useRef<HTMLDivElement>(null);
+  const enabled = (name: (typeof defaultFilters)[number]) => !(hiddenFilters ?? []).includes(name);
+  const hasConfiguredFilters = layout !== "coverage" && defaultFilters.some(enabled);
   useEffect(() => {
     if (isEditMode || !root.current) return;
     const element = root.current;
-    const form = element.querySelector<HTMLFormElement>("form")!;
-    form.hidden = layout === "coverage";
+    const form = element.querySelector<HTMLFormElement>("form");
     const grid = element.querySelector<HTMLElement>("[data-press-grid]")!;
     const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-press-card]"));
     const pagination = element.querySelector<HTMLElement>("[data-press-pagination]")!;
@@ -40,8 +49,11 @@ export default function Filters({
         return card.dataset.topic ? [card.dataset.topic] : [];
       }
     };
-    const field = (name: string) =>
-      form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement;
+    const field = (name: string): Pick<HTMLInputElement, "value" | "disabled"> =>
+      (form?.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null) ?? {
+        value: name === "sort" ? "recent" : "",
+        disabled: true,
+      };
     const key = `jahia-press:${location.pathname}:${id}`;
     const normalize = (value: string) =>
       value
@@ -49,6 +61,7 @@ export default function Filters({
         .replace(/[\u0300-\u036f]/g, "")
         .toLocaleLowerCase();
     for (const name of ["theme", "year"]) {
+      if (!form) break;
       const select = field(name) as HTMLSelectElement;
       while (select.options.length > 1) select.remove(1);
       const values = [
@@ -61,11 +74,18 @@ export default function Filters({
       if (name === "year") values.reverse();
       values.forEach((value) => select.add(new Option(value, value)));
       if (name === "year") {
-        const hidden = values.length <= 1;
+        const hidden = values.length <= 1 || (hiddenFilters ?? []).includes(name);
         select.closest("label")!.hidden = hidden;
         select.disabled = hidden;
         if (hidden) select.value = "";
       }
+    }
+    if (form) {
+      const hasVisibleControls = defaultFilters
+        .filter((name) => name !== "type")
+        .some((name) => !field(name).disabled);
+      form.hidden = field("type").disabled && !hasVisibleControls;
+      form.querySelector<HTMLElement>("[data-press-controls]")!.hidden = !hasVisibleControls;
     }
     let scroll = 0;
     try {
@@ -82,7 +102,11 @@ export default function Filters({
           if (
             typeof saved[name] === "string" &&
             (!(control instanceof HTMLSelectElement) ||
-              Array.from(control.options).some((option) => option.value === saved[name]))
+              Array.from(control.options).some((option) => option.value === saved[name])) &&
+            (name !== "type" ||
+              ["", ...(filterTypes?.length ? filterTypes : defaultTypes)].includes(
+                String(saved[name]),
+              ))
           )
             control.value = saved[name];
         }
@@ -97,7 +121,7 @@ export default function Filters({
         sessionStorage.setItem(
           key,
           JSON.stringify({
-            ...Object.fromEntries(new FormData(form)),
+            ...Object.fromEntries(form ? new FormData(form) : []),
             page: currentPage,
             scroll: window.scrollY,
           }),
@@ -107,7 +131,7 @@ export default function Filters({
       }
     };
     const apply = () => {
-      form.querySelectorAll<HTMLButtonElement>("[data-press-tab]").forEach((button) => {
+      form?.querySelectorAll<HTMLButtonElement>("[data-press-tab]").forEach((button) => {
         button.setAttribute(
           "aria-pressed",
           String(button.dataset.pressTab === field("type").value),
@@ -189,9 +213,9 @@ export default function Filters({
         )
         ?.focus({ preventScroll: true });
     };
-    form.addEventListener("input", change);
-    form.addEventListener("submit", submit);
-    form.addEventListener("reset", reset);
+    form?.addEventListener("input", change);
+    form?.addEventListener("submit", submit);
+    form?.addEventListener("reset", reset);
     element.addEventListener("click", save);
     window.addEventListener("pagehide", save);
     window.addEventListener("pageshow", pageShow);
@@ -202,25 +226,30 @@ export default function Filters({
       document.fonts.ready.then(() => requestAnimationFrame(() => window.scrollTo(0, scroll)));
     return () => {
       clearTimeout(resetTimer);
-      form.removeEventListener("input", change);
-      form.removeEventListener("submit", submit);
-      form.removeEventListener("reset", reset);
+      form?.removeEventListener("input", change);
+      form?.removeEventListener("submit", submit);
+      form?.removeEventListener("reset", reset);
       element.removeEventListener("click", save);
       window.removeEventListener("pagehide", save);
       window.removeEventListener("pageshow", pageShow);
       pagination.removeEventListener("click", navigate);
       pageSelect.removeEventListener("change", navigate);
     };
-  }, [id, isEditMode, pageSize, layout, t]);
+  }, [id, isEditMode, pageSize, layout, hiddenFilters, filterTypes, t]);
   return (
     <div ref={root}>
       <div className={classes.listingHeader}>
         {heading && <h2 id={`${id}-news`}>{heading}</h2>}
-        {!isEditMode && (
+        {!isEditMode && hasConfiguredFilters && (
           <form className={classes.filters} hidden>
-            <input type="hidden" name="type" defaultValue="" />
-            <div className={classes.filterBar} role="group" aria-label={t("pressRoom.type")}>
-              {["", "communique", "presse", "tribune", "recompense", "evenement"].map((type) => (
+            <input type="hidden" name="type" defaultValue="" disabled={!enabled("type")} />
+            <div
+              className={classes.filterBar}
+              role="group"
+              aria-label={t("pressRoom.type")}
+              hidden={!enabled("type")}
+            >
+              {["", ...(filterTypes?.length ? filterTypes : defaultTypes)].map((type) => (
                 <button
                   key={type}
                   type="button"
@@ -237,31 +266,35 @@ export default function Filters({
                 </button>
               ))}
             </div>
-            <div className={classes.controls}>
-              <label htmlFor={`${id}-query`}>
+            <div className={classes.controls} data-press-controls="">
+              <label htmlFor={`${id}-query`} hidden={!enabled("query")}>
                 {t("pressRoom.search")}
-                <input id={`${id}-query`} name="query" type="search" />
+                <input id={`${id}-query`} name="query" type="search" disabled={!enabled("query")} />
               </label>
-              <label htmlFor={`${id}-theme`}>
+              <label htmlFor={`${id}-theme`} hidden={!enabled("theme")}>
                 {t("pressRoom.theme")}
-                <select id={`${id}-theme`} name="theme">
+                <select id={`${id}-theme`} name="theme" disabled={!enabled("theme")}>
                   <option value="">{t("pressRoom.allThemes")}</option>
                 </select>
               </label>
-              <label htmlFor={`${id}-year`}>
+              <label htmlFor={`${id}-year`} hidden={!enabled("year")}>
                 {t("pressRoom.year")}
-                <select id={`${id}-year`} name="year">
+                <select id={`${id}-year`} name="year" disabled={!enabled("year")}>
                   <option value="">{t("pressRoom.allYears")}</option>
                 </select>
               </label>
-              <label htmlFor={`${id}-sort`}>
+              <label htmlFor={`${id}-sort`} hidden={!enabled("sort")}>
                 {t("pressRoom.sort")}
-                <select id={`${id}-sort`} name="sort">
+                <select id={`${id}-sort`} name="sort" disabled={!enabled("sort")}>
                   <option value="recent">{t("pressRoom.recent")}</option>
                   <option value="oldest">{t("pressRoom.oldest")}</option>
                 </select>
               </label>
-              <button className={classes.reset} type="reset">
+              <button
+                className={classes.reset}
+                type="reset"
+                hidden={defaultFilters.every((name) => (hiddenFilters ?? []).includes(name))}
+              >
                 {t("pressRoom.reset")}
               </button>
             </div>

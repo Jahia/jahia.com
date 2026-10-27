@@ -6,6 +6,9 @@
     "dist",
     "src/**/*.cnd",
     "settings",
+    "org/jahia/modules/publicationintegrity/**/*.class",
+    "OSGI-INF",
+    "META-INF/MANIFEST.MF",
     "javascript",
     "static"
   ],
@@ -17,11 +20,11 @@
     "format": "prettier --write --list-different .",
     "lint": "eslint . && stylelint 'src/**/*.css'",
     "fix": "eslint . --fix && stylelint 'src/**/*.css' --fix && run format",
-    "package": "yarn pack --out dist/package.tgz",
+    "package": "node scripts/stage-publication-runtime.mjs && yarn pack --out dist/package.tgz && node scripts/stage-publication-runtime.mjs --check-package dist/package.tgz",
     "dev": "vite build --watch",
     "watch": "run dev",
     "watch:callback": "run build:lottie && run package && run deploy",
-    "test:glossary": "node --test scripts/test-glossary-links.mjs scripts/test-glossary-related.mjs scripts/test-glossary-inline.mjs scripts/test-glossary-audit.mjs scripts/test-glossary-metadata.mjs",
+    "test:glossary": "node --test scripts/test-glossary-inline.mjs scripts/test-glossary-audit.mjs scripts/test-glossary-metadata.mjs scripts/test-glossary-page.mjs scripts/test-glossary-links.mjs scripts/test-glossary-related.mjs scripts/test-glossary-deferred.mjs scripts/test-glossary-catalog.mjs scripts/test-glossary-resource-texts.mjs",
     "check:glossary": "node scripts/check-glossary-live.mjs",
     "test:navigation": "node --test scripts/test-navigation-references.mjs",
     "test:security": "node --test scripts/test-braces-security.mjs"
@@ -72,6 +75,7 @@
   },
   "jahia": {
     "module-dependencies": "default",
+    "required-version": "8.2.3.2",
     "module-type": "templatesSet",
     "server": "dist/server/index.js",
     "static-resources": "/dist/client,/dist/assets,/locales,/images,/icons,/javascript"

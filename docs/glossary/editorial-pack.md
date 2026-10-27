@@ -34,8 +34,7 @@ Set the approved 1200 × 630 glossary image once on the hub to share it across
 entries. Without an assigned image, no image URL is invented. Both Open Graph and
 Twitter use the resolved image; Content Editor hints show the inherited image.
 
-No content-model migration, content import, deployment, or change to automatic
-related-term/resource selection is included. `yarn test:glossary` includes the
+No content-model migration, content import or deployment is included. `yarn test:glossary` includes the
 structured-data and server-adapter tests; these do not replace an HTTP rendering
 check in Jahia after a separately authorized deployment.
 
@@ -44,12 +43,12 @@ Local integration of the editorial pack reviewed on 1 October 2026. Installing t
 ## Editorial fields
 
 - `indexLabel` (translated, optional): label displayed and alphabetically sorted in the hub. Falls back to the entry title.
-- `editorialAuthor` (translated, optional): author displayed at the bottom of the entry.
 - `editorialDate` (translated, optional): manually selected editorial revision date. Publishing or changing technical settings does not replace it.
 - `autoTermLinks` (shared, default true): enables links on exact mentions of glossary titles, index labels and aliases. English technical titles can also match in French text; the destination stays in French.
-- `mergedInto` (shared weak reference, hidden): migration marker for a retired entry. It removes the entry from the hub and related-term selection and redirects its former page to the surviving entry.
+- `mergedInto` (shared weak reference, hidden): migration marker for a retired entry. It removes the entry from the hub and redirects its former page to the surviving entry.
 
-The first paragraph of `body` appears below the H1. `definitionTitle` introduces the remaining paragraphs. Empty practical examples remain hidden. Three, six or nine matching resources appear initially (default six); the existing disclosure exposes the rest. Related terms share the final “Explore related concepts” section. Author, editorial date and a link to the glossary follow it.
+The first paragraph of `body` appears below the H1. `definitionTitle` introduces the remaining paragraphs. Empty practical examples remain hidden. The editorial date and return-to-glossary link follow the article. Resource
+recommendations and related-term lists are no longer calculated or displayed.
 
 ## Automatic mentions
 
@@ -100,44 +99,19 @@ Local verification includes all 132 rendered translations and UUID/content compa
 ## Checks
 
 ```sh
-node --test scripts/test-glossary-inline.mjs scripts/test-glossary-links.mjs scripts/test-glossary-related.mjs
+yarn test:glossary
 yarn lint
 yarn build
 git diff --check
 ```
 
-## Resource selection and form controls
+## Deferred automatic suggestions
 
-`linkSelection.ts` defines bilingual vocabulary profiles for Absolute Area, Content
-Reference, content properties, Visibility Condition, jExperience events and jExperience
-properties. These profiles contain expressions, not resource identifiers or URLs.
-Required groups must match within a nearby passage (250 characters before / 350 after
-the anchor). These six profiles disable generic context and related-term fallbacks.
-Other entries retain the existing ranking. Direct matches precede concept matches.
-Readability, language, theme filters, exclusions and the 24-resource cap still apply.
-No minimum resource count is imposed.
-
-Stored `conceptTerms`, `conceptScope` and `conceptSignals` override the built-in profile
-when the subject group is nonempty. The six Docker profiles were initialized from their
-primary built-in rule without overwriting custom values. These fields and `linkThemes`
-are now hidden, with values and behavior retained for compatibility.
-
-`preferEducational` favors relevant guides and explanations within the same relevance
-tier. It never makes an unrelated candidate eligible. `resourceDisplayCount` controls
-3, 6 or 9 initially visible cards (default 6); the disclosure reveals the remaining ones.
-The final CTA uses the first ranked resource and automatic related terms. The rejected
-manual CTA destination customization has been removed. Section 4 remains Author and date.
-Section 3 exposes the optional translated resource button label and two shared
-Primary/Secondary selectors using the existing CTA component. Absent styles preserve
-the filled resource button and outline related terms. No custom CTA CSS is added.
-
-`rankLinksWithEvidence` supplies both ranking and diagnostics. Run
-`scripts/report-glossary-concepts.mjs <corpus.json> <config.json> <output-directory>`
-with a published-content snapshot and matching configuration. The read-only report
-compares actual Docker live links with selection evidence, writes HTML/JSON outside
-the repository and fails for unexplained links. It covers the six configured concepts
-in FR/EN; normalized evidence passages are not verbatim quotations. Regenerate after
-content/configuration changes. This is an audit snapshot, not a live dashboard.
+Resource recommendations and related terms share a single automatic selection in a
+separate request, triggered near the bottom of the article. The initial render keeps
+only editorial content and in-text links. Existing ranking settings remain stored and
+compatible; no migration or content transfer is needed. The independent autoTermLinks
+option controls only links inside editorial text. Suggestions require JavaScript.
 
 Web portal's detailed Eurostat list was restored in FR/EN on Docker, retaining the
 Belgium 2025 scope and independent-usage interpretation. This editorial change is not

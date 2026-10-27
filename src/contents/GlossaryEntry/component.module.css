@@ -330,3 +330,8 @@
     padding-top: 0.25rem;
   }
 }
+
+/* Reserve the existing carousel footprint while resources load. */
+.deferredResources {
+  min-block-size: 43rem;
+}

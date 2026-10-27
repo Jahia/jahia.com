@@ -9,6 +9,22 @@
   border-radius: 0;
 }
 
+.unpublishedBadge {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  align-self: flex-start;
+  padding: 0.4rem 0.65rem;
+  margin-bottom: 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #723b00;
+  background: #fff4cc;
+  border: 1px solid #bf7500;
+  border-radius: 0.25rem;
+}
+
 .cardLink {
   position: absolute;
   inset: 0;

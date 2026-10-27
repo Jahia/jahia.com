@@ -26,6 +26,8 @@ if (
   throw Error("Invalid audit parameters");
 if (origin.username || origin.password)
   throw Error("Pass credentials through environment variables, not the URL");
+if (origin.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname))
+  throw Error("HTTPS is required outside localhost before sending credentials");
 const authorization =
   process.env.JAHIA_AUTHORIZATION ||
   (process.env.JAHIA_USER ? "Basic " + Buffer.from(process.env.JAHIA_USER).toString("base64") : "");
@@ -40,7 +42,7 @@ const request = (url, options = {}) =>
     signal: AbortSignal.timeout(60000),
   });
 const folder = `/sites/${site}/contents/glossary`;
-const query = `{jcr${workspace === "live" ? "(workspace:LIVE)" : ""}{nodeByPath(path:${JSON.stringify(folder)}){children{nodes{uuid name path properties(names:["autoLinks","j:published","j:invalidLanguages"],language:"en"){name value values}}}}}}`;
+const query = `{jcr${workspace === "live" ? "(workspace:LIVE)" : ""}{nodeByPath(path:${JSON.stringify(folder)}){children{nodes{uuid name path properties(names:["mergedInto","j:published","j:invalidLanguages","autoLinks"],language:"en"){name value values}}}}}}`;
 const response = await request(new URL("/modules/graphql", origin), {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -57,12 +59,12 @@ const props = (node) =>
 const eligible = all.filter(
   (n) =>
     props(n)["j:published"] === "true" &&
+    !props(n).mergedInto &&
     !["fr", "en"].some((l) => (props(n)["j:invalidLanguages"] || []).includes(l)),
 );
 if (!eligible.length)
   throw Error("No eligible glossary entries; audit cannot pass on an empty inventory");
 const nodes = limit ? eligible.slice(0, limit) : eligible;
-const allowedPaths = new Set(eligible.map((n) => n.path + ".html"));
 const jobs = nodes.flatMap((node) => ["fr", "en"].map((language) => ({ node, language })));
 const pages = [],
   failures = [];
@@ -82,21 +84,18 @@ await Promise.all(
         const targets = links.map((link) => link.pathname.replace(/^.*?\/sites\//, "/sites/"));
         const issues = [];
         if (r.status !== 200 || !html.includes('id="definition"')) issues.push("render-error");
-        const automatic = props(node).autoLinks !== "false";
-        const minimum = Math.min(4, Math.max(0, eligible.length - 1));
-        if (automatic && (targets.length < minimum || targets.length > 6))
-          issues.push("count-out-of-range");
-        if (!automatic && targets.length) issues.push("automatic-disabled-but-links-visible");
-        if (new Set(targets).size !== targets.length) issues.push("duplicate-links");
-        if (targets.includes(node.path + ".html")) issues.push("self-link");
+        if (targets.length) issues.push("synchronous-related-terms-visible");
         if (
-          links.some((link) => link.origin !== origin.origin) ||
-          targets.some((path) => !allowedPaths.has(path))
+          /aria-labelledby=["'](?:topic-cta)["']|data-element-name=["'](?:resource-detail|topic-resource)["']/.test(
+            html,
+          )
         )
-          issues.push("ineligible-target");
-        if (links.some((link) => !link.pathname.includes(`/render/${workspace}/${language}/`)))
-          issues.push("wrong-language-or-workspace");
+          issues.push("synchronous-resource-block-visible");
+        const deferred = html.includes('data-deferred-resources="waiting"');
+        if (props(node).autoLinks !== "false" && !deferred)
+          issues.push("missing-deferred-suggestions");
         const page = {
+          deferred,
           name: node.name,
           path: node.path,
           language,
@@ -130,15 +129,6 @@ for (const node of nodes) {
   if (pair.length !== 2 || JSON.stringify(pair[0].targets) !== JSON.stringify(pair[1].targets))
     failures.push({ name: node.name, issues: ["fr-en-mismatch"] });
 }
-// Every selected target has its own audited page during a full run.
-const badTargets = new Set(
-  pages
-    .filter((p) => p.status !== 200 || p.issues.includes("render-error"))
-    .map((p) => p.path + ".html"),
-);
-for (const page of pages)
-  if (page.targets.some((path) => badTargets.has(path)))
-    failures.push({ name: page.name, language: page.language, issues: ["target-render-error"] });
 const times = pages.map((p) => p.ms).sort((a, b) => a - b);
 const percentile = (p) => times[Math.min(times.length - 1, Math.floor(times.length * p))] || 0;
 const timing = { medianMs: percentile(0.5), p95Ms: percentile(0.95), maxMs: times.at(-1) || 0 };

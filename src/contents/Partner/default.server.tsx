@@ -25,6 +25,7 @@ export const PartnerCard = ({
   regionUrls,
   directoryMode = "all",
   profileUrl,
+  editorUnpublished = false,
 }: {
   props: Props;
   currentNode: Parameters<typeof buildNodeUrl>[0];
@@ -32,6 +33,7 @@ export const PartnerCard = ({
   regionUrls?: Partial<Record<Region, string>>;
   directoryMode?: "all" | "solution" | "technology";
   profileUrl?: string;
+  editorUnpublished?: boolean;
 }) => {
   const { t } = useTranslation();
   const fallbackRegion = legacyRegion(currentNode);
@@ -60,6 +62,12 @@ export const PartnerCard = ({
       data-partner-technologies={technologyTags.map((tag) => tag.getName()).join(",")}
       data-partner-partnership={partnership}
     >
+      {editorUnpublished && (
+        <span className={classes.unpublishedBadge} title={t("partner.unpublishedHint")}>
+          <span className="i-ri:eye-off-line" aria-hidden="true" />
+          {t("partner.unpublished")}
+        </span>
+      )}
       <a className={classes.cardLink} href={detailUrl} tabIndex={-1} aria-hidden="true" />
       <div className={clsx(sideBySideIdentity && classes.cardIdentity)}>
         <div className={classes.cardLogo}>

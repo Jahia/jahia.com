@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type CSSProperties,
+} from "react";
 import { useTranslation } from "react-i18next";
 import classes from "./component.module.css";
 
@@ -33,6 +40,7 @@ export default function Carousel({
   showArrows = true,
   showPagination = true,
   labelledBy,
+  layout,
 }: {
   children?: ReactNode;
   itemCount: number;
@@ -40,6 +48,7 @@ export default function Carousel({
   showArrows?: boolean;
   showPagination?: boolean;
   labelledBy?: string;
+  layout?: { desktop: number; tablet: number; gap: string };
 }) {
   const { t } = useTranslation();
   const viewport = useRef<HTMLDivElement>(null);
@@ -137,7 +146,20 @@ export default function Carousel({
       <div
         ref={viewport}
         data-fit-items={fitItems ? Math.max(1, Math.min(itemCount, 3)) : undefined}
-        tabIndex={showArrows ? undefined : 0}
+        data-custom-layout={layout ? "" : undefined}
+        style={
+          layout
+            ? ({
+                "--carousel-desktop": Math.max(1, Math.min(itemCount, layout.desktop)),
+                "--carousel-tablet": Math.max(
+                  1,
+                  Math.min(itemCount, layout.tablet, layout.desktop),
+                ),
+                "--carousel-gap": layout.gap,
+              } as CSSProperties)
+            : undefined
+        }
+        tabIndex={layout || !showArrows ? 0 : undefined}
         className={classes.viewport}
         onPointerDown={releaseTarget}
         onTouchStart={releaseTarget}

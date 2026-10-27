@@ -1,4 +1,6 @@
 .card {
+  composes: surface from "../../theme/glass.module.css";
+
   @apply _stack-2;
 
   composes: item from "../../theme/theme.module.css";
