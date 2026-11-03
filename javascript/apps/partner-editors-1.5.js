@@ -26,9 +26,9 @@
           external: "Lien externe",
         },
         carouselMode: {
-          automatic: "Laisser Jahia choisir",
-          filtered: "Choisir par catégories",
-          manual: "Choisir mes ressources",
+          automatic: "Automatique — thèmes de l’article ou ressources récentes",
+          filtered: "Par catégories — thématiques et types de contenu",
+          manual: "Manuel — articles et pages de ressources",
         },
       },
       true,
@@ -57,9 +57,9 @@
           external: "External link",
         },
         carouselMode: {
-          automatic: "Let Jahia choose",
-          filtered: "Choose by categories",
-          manual: "Choose my resources",
+          automatic: "Automatic — article topics or latest resources",
+          filtered: "By categories — themes and content types",
+          manual: "Manual — blog pages and resources",
         },
       },
       true,
@@ -1990,6 +1990,7 @@
     },
   });
   registry.add("selectorType", "FooterLinksPicker", {
+    dataType: ["WeakReference"],
     supportMultiple: true,
     cmp: function (props) {
       var nativePicker = registry.get("selectorType", "Picker");
@@ -1997,7 +1998,15 @@
       var companion = field.footerLabelsField;
       if (!companion || !props.form) {
         var fallback = nativePicker.resolver(field.selectorOptions, field);
-        return h(fallback.cmp, props);
+        // The native Picker reads its resolved configuration from inputContext.
+        // Passing the custom selector here loses the editoriallink configuration,
+        // especially on a new column before the label companion is available.
+        return h(
+          fallback.cmp,
+          Object.assign({}, props, {
+            inputContext: Object.assign({}, props.inputContext, { selectorType: fallback }),
+          }),
+        );
       }
       var french = isFrench(props.editorContext);
       var disabled = Boolean(

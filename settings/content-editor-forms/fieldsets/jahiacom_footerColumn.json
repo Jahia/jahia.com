@@ -5,7 +5,8 @@
     {
       "name": "links",
       "mandatory": true,
-      "selectorType": "FooterLinksPicker"
+      "selectorType": "FooterLinksPicker",
+      "selectorOptions": [{ "name": "type", "value": "editoriallink" }]
     },
     {
       "name": "selectedLinkLabels"
