@@ -41,8 +41,8 @@ jobs:
       - run: yarn test
       - run: yarn lint
       - run: yarn build
+      - run: cp dist/package.tgz dist/jahia-card-carousel.tgz
       - uses: actions/upload-artifact@v7
         with:
-          name: jahia-card-carousel
-          path: modules/jahia-card-carousel/dist/package.tgz
+          path: modules/jahia-card-carousel/dist/jahia-card-carousel.tgz
           archive: false
