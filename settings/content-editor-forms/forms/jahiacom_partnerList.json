@@ -1,0 +1,28 @@
+{
+  "nodeType": "jahiacom:partnerList",
+  "priority": 3,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "partner-order",
+          "labelKey": "jahiacom:jahiacom_partnerList.form.order",
+          "rank": 3,
+          "fields": [
+            {
+              "name": "partnerSort",
+              "selectorType": "UpgradeChoicelist",
+              "declaringNodeType": "jahiacom:partnerList",
+              "descriptionKey": "jahiacom:jahiacom_partnerList.partnerSort.help"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "listOrdering",
+      "hide": true
+    }
+  ]
+}

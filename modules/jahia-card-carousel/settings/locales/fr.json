@@ -1,0 +1,11 @@
+{
+  "cardCarousel": {
+    "defaultTitle": "Carrousel de cartes",
+    "previous": "Page précédente",
+    "next": "Page suivante",
+    "pagination": "Pagination",
+    "pageStatus": "Page {{page}} sur {{total}}",
+    "goToPage": "Aller à la page {{page}}",
+    "readMore": "En savoir plus"
+  }
+}

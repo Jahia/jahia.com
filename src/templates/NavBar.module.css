@@ -328,10 +328,20 @@ span.rssIcon {
 
 .mobileLanguages a,
 .languageMenu a {
-  display: block;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
   min-height: 2.75rem;
   padding: 0.5rem;
   color: var(--jahia-navy-blue);
+}
+
+.languageFlag {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.125rem;
+  object-fit: contain;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--jahia-navy-blue) 15%, transparent);
 }
 
 .languageControl {

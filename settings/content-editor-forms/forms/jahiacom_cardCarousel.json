@@ -6,6 +6,29 @@
       "name": "content",
       "fieldSets": [
         {
+          "name": "carousel-introduction",
+          "labelKey": "jahiacom:jahiacom_cardCarousel.form.intro",
+          "descriptionKey": "jahiacom:jahiacom_cardCarousel.form.introHelp",
+          "rank": 1,
+          "fields": [
+            {
+              "name": "jcr:title",
+              "declaringNodeType": "mix:title",
+              "rank": 1
+            },
+            {
+              "name": "eyebrow",
+              "declaringNodeType": "jahiacom:cardCarousel",
+              "rank": 2
+            },
+            {
+              "name": "subtitle",
+              "declaringNodeType": "jahiacom:cardCarousel",
+              "rank": 3
+            }
+          ]
+        },
+        {
           "name": "carousel-settings",
           "labelKey": "jahiacom:jahiacom_cardCarousel.form.settings",
           "descriptionKey": "jahiacom:jahiacom_cardCarousel.form.help",
@@ -25,7 +48,15 @@
               "name": "cardSpacing",
               "rank": 3,
               "declaringNodeType": "jahiacom:cardCarousel"
-            },
+            }
+          ]
+        },
+        {
+          "name": "carousel-navigation",
+          "labelKey": "jahiacom:jahiacom_cardCarousel.form.navigation",
+          "descriptionKey": "jahiacom:jahiacom_cardCarousel.form.navigationHelp",
+          "rank": 3,
+          "fields": [
             {
               "name": "showArrows",
               "rank": 4,

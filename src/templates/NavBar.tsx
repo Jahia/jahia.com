@@ -14,6 +14,8 @@ import {
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import type { JCRSiteNode } from "org.jahia.services.content.decorator";
 import jahia from "../../static/logos/jahia.svg?no-inline";
+import frenchFlag from "../../static/icons/navigation/languages/fr.svg?no-inline";
+import englishFlag from "../../static/icons/navigation/languages/en-uk-us.svg?no-inline";
 import NavBarClient from "./NavBar.client.jsx";
 import type {
   Entry,
@@ -407,6 +409,12 @@ export default function NavBar({
       language,
       name: capitalize(locale.getDisplayLanguage(locale)),
       href: buildNodeUrl(current, { language }),
+      flag:
+        language === "fr"
+          ? buildModuleFileUrl(frenchFlag)
+          : language === "en"
+            ? buildModuleFileUrl(englishFlag)
+            : undefined,
     }));
   const rawSearch = renderContext.getRequest().getParameter("search") || "";
   const requestedSearch = rawSearch.trim().length > 0;

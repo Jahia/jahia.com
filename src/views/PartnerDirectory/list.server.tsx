@@ -17,25 +17,20 @@ import {
 } from "../../contents/Partner/types.js";
 import Directory from "./Directory.client.jsx";
 import { isExplicitlyUnpublished, visibleInDirectory } from "./visibility.server.js";
+import {
+  comparePartners,
+  defaultPartnerSort,
+  regionPriority,
+  type PartnerSort,
+} from "./sorting.js";
 
 interface Props {
   sourceRoot?: JCRNodeWrapper;
   directoryMode?: "all" | "solution" | "technology";
+  partnerSort?: PartnerSort;
 }
 
 type DirectoryMode = NonNullable<Props["directoryMode"]>;
-
-const regionPriority: Record<Region, number> = {
-  europe: 0,
-  americas: 1,
-  apac: 2,
-};
-
-const normalizedTitle = (title: string) =>
-  title
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLocaleLowerCase();
 
 const stringProperty = (node: JCRNodeWrapper, name: string) =>
   node.hasProperty(name) ? node.getProperty(name).getString() : undefined;
@@ -80,7 +75,7 @@ jahiaComponent(
     nodeType: "jahiacom:partnerList",
   },
   (
-    { sourceRoot, directoryMode = "all" }: Props,
+    { sourceRoot, directoryMode = "all", partnerSort = defaultPartnerSort(directoryMode) }: Props,
     { currentNode, currentResource, renderContext },
   ) => {
     const mode: DirectoryMode = directoryMode;
@@ -174,16 +169,7 @@ jahiaComponent(
       };
     });
 
-    cards.sort((left, right) => {
-      const leftRegion = left.props.regions?.[0] || "apac";
-      const rightRegion = right.props.regions?.[0] || "apac";
-      const regionDifference = regionPriority[leftRegion] - regionPriority[rightRegion];
-      if (regionDifference !== 0) return regionDifference;
-
-      const leftTitle = normalizedTitle(left.props["jcr:title"]);
-      const rightTitle = normalizedTitle(right.props["jcr:title"]);
-      return leftTitle < rightTitle ? -1 : leftTitle > rightTitle ? 1 : 0;
-    });
+    cards.sort((left, right) => comparePartners(left.props, right.props, partnerSort));
 
     const integratorCount = cards.filter(
       ({ props }) => classificationOf(props)?.type === "integrator",
