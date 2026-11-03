@@ -216,5 +216,14 @@
     "irregular-1-2": "Alternate one full-width item and a row of two items. Examples: 1, 3, 4, 6 or 7 items.",
     "irregular-3-2": "On wide screens: two items, then three per row. To also complete tablet rows, use 7, 10, 12 or 15 items.",
     "irregular-67-33": "Two items per row, alternating the wider item on the left and right. Use an even number of items."
+  },
+  "cardCarousel": {
+    "defaultTitle": "Card carousel",
+    "previous": "Previous page",
+    "next": "Next page",
+    "pagination": "Pagination",
+    "pageStatus": "Page {{page}} of {{total}}",
+    "goToPage": "Go to page {{page}}",
+    "readMore": "Read more"
   }
 }

@@ -18,3 +18,7 @@ publication-integrity/target/
 !.yarn/patches/
 yarn-error.log
 
+# Local credentials and Yarn install state from development checkouts
+.env
+**/.yarn/install-state.gz
+

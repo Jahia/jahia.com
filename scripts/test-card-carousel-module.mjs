@@ -13,9 +13,15 @@ const loadTs = async (path) => {
     .outputText.replace('from "xss"', `from ${JSON.stringify(import.meta.resolve("xss"))}`);
   return import(`data:text/javascript;base64,${Buffer.from(output).toString("base64")}`);
 };
-const { safeUrl, sanitizeRichText } = await loadTs("../src/security.ts");
-const { carouselLayout } = await loadTs("../src/components/Carousel/layout.ts");
-const { paginationMetrics } = await loadTs("../src/components/Carousel/pagination.ts");
+const { safeUrl, sanitizeRichText } = await loadTs(
+  "../src/views/StandaloneCardCarousel/security.ts",
+);
+const { carouselLayout } = await loadTs(
+  "../src/views/StandaloneCardCarousel/components/Carousel/layout.ts",
+);
+const { paginationMetrics } = await loadTs(
+  "../src/views/StandaloneCardCarousel/components/Carousel/pagination.ts",
+);
 
 test("pagination reaches the last partial page and ignores nested slides", () => {
   const original = globalThis.getComputedStyle;

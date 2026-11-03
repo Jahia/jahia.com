@@ -7,8 +7,8 @@
       "fieldSets": [
         {
           "name": "carousel-introduction",
-          "labelKey": "jahia-card-carousel:jahiacardcarousel_carousel.form.intro",
-          "descriptionKey": "jahia-card-carousel:jahiacardcarousel_carousel.form.introHelp",
+          "labelKey": "jahiacom:jahiacardcarousel_carousel.form.intro",
+          "descriptionKey": "jahiacom:jahiacardcarousel_carousel.form.introHelp",
           "rank": 1,
           "fields": [
             {
@@ -30,8 +30,8 @@
         },
         {
           "name": "carousel-settings",
-          "labelKey": "jahia-card-carousel:jahiacardcarousel_carousel.form.settings",
-          "descriptionKey": "jahia-card-carousel:jahiacardcarousel_carousel.form.help",
+          "labelKey": "jahiacom:jahiacardcarousel_carousel.form.settings",
+          "descriptionKey": "jahiacom:jahiacardcarousel_carousel.form.help",
           "rank": 2,
           "fields": [
             {
@@ -53,8 +53,8 @@
         },
         {
           "name": "carousel-navigation",
-          "labelKey": "jahia-card-carousel:jahiacardcarousel_carousel.form.navigation",
-          "descriptionKey": "jahia-card-carousel:jahiacardcarousel_carousel.form.navigationHelp",
+          "labelKey": "jahiacom:jahiacardcarousel_carousel.form.navigation",
+          "descriptionKey": "jahiacom:jahiacardcarousel_carousel.form.navigationHelp",
           "rank": 3,
           "fields": [
             {

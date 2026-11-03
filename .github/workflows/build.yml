@@ -24,25 +24,3 @@ jobs:
         with:
           path: dist/package.tgz
           archive: false
-
-  build-card-carousel:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: modules/jahia-card-carousel
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
-        with:
-          node-version-file: modules/jahia-card-carousel/.node-version
-      - run: corepack enable
-      - run: yarn install --immutable
-      - run: yarn prettier --check .
-      - run: yarn test
-      - run: yarn lint
-      - run: yarn build
-      - run: cp dist/package.tgz dist/jahia-card-carousel.tgz
-      - uses: actions/upload-artifact@v7
-        with:
-          path: modules/jahia-card-carousel/dist/jahia-card-carousel.tgz
-          archive: false
