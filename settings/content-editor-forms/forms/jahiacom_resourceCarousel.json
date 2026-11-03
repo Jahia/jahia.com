@@ -1,0 +1,71 @@
+{
+  "nodeType": "jahiacom:resourceCarousel",
+  "priority": 3,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "resources-introduction",
+          "labelKey": "jahiacom:jahiacom_resourceCarousel.form.intro",
+          "descriptionKey": "jahiacom:jahiacom_resourceCarousel.form.introHelp",
+          "rank": 1,
+          "fields": [
+            {
+              "name": "jcr:title",
+              "declaringNodeType": "mix:title",
+              "rank": 1
+            },
+            {
+              "name": "subtitle",
+              "declaringNodeType": "jahiacom:resourceCarousel",
+              "rank": 2
+            }
+          ]
+        },
+        {
+          "name": "resources-selection",
+          "labelKey": "jahiacom:jahiacom_resourceCarousel.form.selection",
+          "descriptionKey": "jahiacom:jahiacom_resourceCarousel.form.selectionHelp",
+          "rank": 2,
+          "fields": [
+            {
+              "name": "selectionMode",
+              "declaringNodeType": "jahiacom:resourceCarousel",
+              "rank": 1
+            },
+            {
+              "name": "itemCount",
+              "declaringNodeType": "jahiacom:resourceCarousel",
+              "rank": 2,
+              "selectorType": "CarouselItemCount"
+            }
+          ]
+        },
+        {
+          "name": "resources-options",
+          "labelKey": "jahiacom:jahiacom_resourceCarousel.form.options",
+          "descriptionKey": "jahiacom:jahiacom_resourceCarousel.form.optionsHelp",
+          "rank": 5,
+          "fields": [
+            {
+              "name": "completeFallback",
+              "declaringNodeType": "jahiacom:resourceCarousel",
+              "rank": 1
+            },
+            {
+              "name": "sourceRoot",
+              "declaringNodeType": "jahiacom:resourceCarousel",
+              "rank": 2
+            },
+            {
+              "name": "hidden",
+              "declaringNodeType": "jahiacom:resourceCarousel",
+              "rank": 3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[jahiacardcarousel:carousel] > jnt:content, mix:title, jahiacardcarouselmix:component orderable
+ - eyebrow (string) i18n
+ - subtitle (string, richtext) i18n
+ - desktopCards (string, choicelist[resourceBundle]) = '3' < '1', '2', '3', '4', '5', '6', '7', '8'
+ - tabletCards (string, choicelist[resourceBundle]) = '2' < '1', '2'
+ - cardSpacing (string, choicelist[resourceBundle]) = 'normal' < 'compact', 'normal', 'large'
+ - showArrows (boolean) = true
+ - showPagination (boolean) = true
+ - theme (string, choicelist[resourceBundle]) = 'day' < 'day', 'cloudy', 'night'
+ + * (jmix:droppableContent)

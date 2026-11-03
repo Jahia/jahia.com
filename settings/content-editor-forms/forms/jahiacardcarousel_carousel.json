@@ -1,0 +1,75 @@
+{
+  "nodeType": "jahiacardcarousel:carousel",
+  "priority": 3,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "carousel-introduction",
+          "labelKey": "jahiacom:jahiacardcarousel_carousel.form.intro",
+          "descriptionKey": "jahiacom:jahiacardcarousel_carousel.form.introHelp",
+          "rank": 1,
+          "fields": [
+            {
+              "name": "jcr:title",
+              "declaringNodeType": "mix:title",
+              "rank": 1
+            },
+            {
+              "name": "eyebrow",
+              "declaringNodeType": "jahiacardcarousel:carousel",
+              "rank": 2
+            },
+            {
+              "name": "subtitle",
+              "declaringNodeType": "jahiacardcarousel:carousel",
+              "rank": 3
+            }
+          ]
+        },
+        {
+          "name": "carousel-settings",
+          "labelKey": "jahiacom:jahiacardcarousel_carousel.form.settings",
+          "descriptionKey": "jahiacom:jahiacardcarousel_carousel.form.help",
+          "rank": 2,
+          "fields": [
+            {
+              "name": "desktopCards",
+              "rank": 1,
+              "declaringNodeType": "jahiacardcarousel:carousel"
+            },
+            {
+              "name": "tabletCards",
+              "rank": 2,
+              "declaringNodeType": "jahiacardcarousel:carousel"
+            },
+            {
+              "name": "cardSpacing",
+              "rank": 3,
+              "declaringNodeType": "jahiacardcarousel:carousel"
+            }
+          ]
+        },
+        {
+          "name": "carousel-navigation",
+          "labelKey": "jahiacom:jahiacardcarousel_carousel.form.navigation",
+          "descriptionKey": "jahiacom:jahiacardcarousel_carousel.form.navigationHelp",
+          "rank": 3,
+          "fields": [
+            {
+              "name": "showArrows",
+              "rank": 4,
+              "declaringNodeType": "jahiacardcarousel:carousel"
+            },
+            {
+              "name": "showPagination",
+              "rank": 5,
+              "declaringNodeType": "jahiacardcarousel:carousel"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

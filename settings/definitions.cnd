@@ -6,6 +6,8 @@
 <jmix = 'http://www.jahia.org/jahia/mix/1.0'>
 <jahiacom = 'https://example.com/jahiacom/1.0'>
 <jahiacommix = 'https://example.com/jahiacommix/1.0'>
+<jahiacardcarousel = 'https://example.com/jahia-card-carousel/nt/1.0'>
+<jahiacardcarouselmix = 'https://example.com/jahia-card-carousel/mix/1.0'>
 
 // Defining the content types is similar to defining a data model: once deployed, you cannot change the type of a property.
 // If you need to do changes during the development phase, it is possible to remove the definitions from the tools:
@@ -131,3 +133,6 @@
 // Add custom CSS to full-page resources
 [jahiacommix:customCss] mixin extends=jnt:page extends=jmix:mainResource itemtype=layout
  - stylesheets (weakreference, picker) multiple < jahiacom:stylesheet
+
+// Reusable card carousel, delivered in the same jahiacom package.
+[jahiacardcarouselmix:component] > jmix:droppableContent, jmix:accessControllableContent mixin

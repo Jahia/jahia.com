@@ -1,0 +1,5 @@
+[jahiacardcarousel:card] > jnt:content, mix:title, jahiacardcarouselmix:component
+ - image (weakreference, picker) i18n < jmix:image
+ - body (string, richtext) i18n
+ - label (string) i18n
+ - j:linkType (string, choicelist[linkTypeInitializer]) = 'none' autocreated

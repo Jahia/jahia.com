@@ -3,3 +3,4 @@
 [jahiacom:partnerList] > jnt:contentList, jahiacommix:component
  - sourceRoot (weakreference, picker) < jnt:contentFolder, jnt:page
  - directoryMode (string, choicelist[resourceBundle]) = 'all' < all, solution, technology
+ - partnerSort (string, choicelist[resourceBundle]) = 'regionAlphabetical' < 'levelAlphabetical', 'regionAlphabetical', 'partnershipAlphabetical'

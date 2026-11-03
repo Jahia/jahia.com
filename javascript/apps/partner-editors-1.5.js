@@ -26,9 +26,9 @@
           external: "Lien externe",
         },
         carouselMode: {
-          automatic: "Automatique — thèmes de l’article ou ressources récentes",
-          filtered: "Par catégories — thématiques et types de contenu",
-          manual: "Manuel — articles et pages de ressources",
+          automatic: "Laisser Jahia choisir",
+          filtered: "Choisir par catégories",
+          manual: "Choisir mes ressources",
         },
       },
       true,
@@ -57,9 +57,9 @@
           external: "External link",
         },
         carouselMode: {
-          automatic: "Automatic — article topics or latest resources",
-          filtered: "By categories — themes and content types",
-          manual: "Manual — blog pages and resources",
+          automatic: "Let Jahia choose",
+          filtered: "Choose by categories",
+          manual: "Choose my resources",
         },
       },
       true,
@@ -2261,6 +2261,12 @@
       type = node.primaryNodeType && node.primaryNodeType.name;
     function set(name, v) {
       if (!stored(name) && v !== undefined) result[name] = v;
+    }
+    if (type === "jahiacom:partnerList") {
+      set(
+        "partnerSort",
+        scalar("directoryMode") === "technology" ? "partnershipAlphabetical" : "regionAlphabetical",
+      );
     }
     if (type === "jahiacom:partner") {
       var tech =

@@ -1,0 +1,199 @@
+.section {
+  --carousel-accent: #006eab;
+  --carousel-text: #10283f;
+  --carousel-card-background: #fff;
+  --carousel-border: #ccd6e0;
+
+  box-sizing: border-box;
+  padding: 2rem;
+  color: var(--carousel-text);
+  background: #fff;
+}
+
+.section[data-theme="cloudy"] {
+  background: #f2f6fa;
+}
+
+.section[data-theme="night"] {
+  --carousel-accent: #80d0ff;
+  --carousel-text: #fff;
+  --carousel-card-background: #142b40;
+  --carousel-border: #6c8296;
+
+  background: #061b2c;
+}
+
+.header {
+  max-width: 51.25rem;
+  margin-bottom: 1.875rem;
+  line-height: 1.6;
+}
+
+.header h2 {
+  margin-block: 0.5rem 1rem;
+  font-size: clamp(2rem, 4.5vw, 3.625rem);
+  line-height: 1.1;
+}
+
+.eyebrow {
+  color: var(--carousel-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.carousel {
+  position: relative;
+}
+
+.viewport {
+  --items-per-page: var(--carousel-desktop, 3);
+
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.track {
+  display: grid;
+  grid-auto-columns: calc(
+    (100% - (var(--items-per-page) - 1) * var(--carousel-gap, 1.5rem)) / var(--items-per-page)
+  );
+  grid-auto-flow: column;
+  gap: var(--carousel-gap, 1.5rem);
+  padding-block: 0.25rem 1rem;
+}
+
+.item {
+  display: flex;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.item > * {
+  width: 100%;
+}
+
+.editorGrid {
+  display: grid;
+  grid-template-columns: repeat(var(--carousel-desktop), minmax(0, 1fr));
+  gap: var(--carousel-gap);
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.875rem;
+  height: 2.875rem;
+  padding: 0;
+  font-size: 1.375rem;
+  color: #fff;
+  cursor: pointer;
+  background: #10283f;
+  border: 1px solid #6c8296;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.previous {
+  left: -1.4375rem;
+}
+
+.next {
+  right: -1.4375rem;
+}
+
+.arrow:disabled {
+  cursor: default;
+  opacity: 0.25;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+}
+
+.pagination button {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 1.75rem;
+  height: 2.75rem;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.pagination button::before {
+  width: 100%;
+  height: 0.3125rem;
+  content: "";
+  background: var(--carousel-text);
+  border-radius: 999px;
+}
+
+.pagination button[aria-current]::before {
+  background: var(--carousel-accent);
+}
+
+.pagination button:focus-visible,
+.arrow:focus-visible,
+.viewport:focus-visible {
+  outline: 2px solid var(--carousel-accent);
+  outline-offset: 2px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
+}
+
+@media (width <= 68.75rem) {
+  .viewport {
+    --items-per-page: var(--carousel-tablet, 2);
+  }
+
+  .editorGrid {
+    grid-template-columns: repeat(var(--carousel-tablet), minmax(0, 1fr));
+  }
+}
+
+@media (width <= 45rem) {
+  .section {
+    padding: 1.25rem;
+  }
+
+  .viewport {
+    --items-per-page: 1;
+  }
+
+  .editorGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .arrow {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    scroll-behavior: auto;
+  }
+}

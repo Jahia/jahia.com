@@ -20,6 +20,9 @@ import type {
   UtilityEntry,
 } from "./NavBar.types.js";
 
+const LanguageFlag = ({ src }: { src?: string }) =>
+  src ? <img className={classes.languageFlag} src={src} alt="" width={24} height={18} /> : null;
+
 const tracking = (entry: Page) => ({
   "data-element-url": entry.href,
   "data-element-type": "link",
@@ -121,7 +124,7 @@ export default function NavBarClient({
   utilityEntries?: UtilityEntry[];
   controls: UtilityControls;
   rss?: { href?: string; label: string; pendingLabel: string; image?: string } | false;
-  langs: Array<{ language: string; name: string; href: string }>;
+  langs: Array<{ language: string; name: string; href: string; flag?: string }>;
   language: string;
   search: SearchState;
 }) {
@@ -275,7 +278,8 @@ export default function NavBarClient({
       {utility && controls.searchLabel}
     </button>
   );
-  const languages = langs.map(({ name, href, language: code }) => (
+  const currentFlag = langs.find((entry) => entry.language === language)?.flag;
+  const languages = langs.map(({ name, href, language: code, flag }) => (
     <a
       key={code}
       href={href}
@@ -283,6 +287,7 @@ export default function NavBarClient({
       lang={code}
       aria-current={code === language ? "true" : undefined}
     >
+      <LanguageFlag src={flag} />
       {name}
     </a>
   ));
@@ -302,7 +307,11 @@ export default function NavBarClient({
               setSubmenu(null);
             }}
           >
-            <span className="i-ri:global-line" aria-hidden="true" />
+            {currentFlag ? (
+              <LanguageFlag src={currentFlag} />
+            ) : (
+              <span className="i-ri:global-line" aria-hidden="true" />
+            )}
             {language.toUpperCase()}
             <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
           </button>

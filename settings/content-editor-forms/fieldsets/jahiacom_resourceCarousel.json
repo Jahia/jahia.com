@@ -14,7 +14,7 @@
             "type": "String",
             "value": "automatic"
           },
-          "displayValue": "Automatic â€” article topics on blogs, latest resources elsewhere",
+          "displayValue": "Let Jahia choose",
           "propertyList": [
             {
               "name": "defaultProperty",
@@ -28,7 +28,7 @@
             "type": "String",
             "value": "filtered"
           },
-          "displayValue": "By categories â€” themes and content types",
+          "displayValue": "Choose by categories",
           "propertyList": [
             {
               "name": "addMixin",
@@ -42,7 +42,7 @@
             "type": "String",
             "value": "manual"
           },
-          "displayValue": "Manual â€” blog pages and resources",
+          "displayValue": "Choose my resources",
           "propertyList": [
             {
               "name": "addMixin",
