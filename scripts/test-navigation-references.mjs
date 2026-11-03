@@ -284,8 +284,14 @@ test("an explicitly empty Home selection does not restore the legacy site links"
   assert.equal(harness().nav(site, []).utilityEntries[0].title, "legacy");
   const home = { isNodeType: (type) => type === "jahiacommix:homeUtilityNavigation" };
   const entries = Array.from(harness().nav(site, [], home).utilityEntries);
-  assert.deepEqual(entries.map(row => row.kind), ["rss", "search", "languages"]);
-  assert.equal(entries.some(row => row.title === "legacy"), false);
+  assert.deepEqual(
+    entries.map((row) => row.kind),
+    ["rss", "search", "languages"],
+  );
+  assert.equal(
+    entries.some((row) => row.title === "legacy"),
+    false,
+  );
 });
 
 test("Home visibility controls remain independent from the ordered link list", () => {
@@ -375,14 +381,16 @@ test("upper navigation mixes pages and external links in editorial order with sa
   };
   const entries = harness().nav(node("site"), [], home).utilityEntries;
   assert.deepEqual(
-    Array.from(entries, row => row.kind ? {kind:row.kind} : { title:row.title, href:row.href }),
+    Array.from(entries, (row) =>
+      row.kind ? { kind: row.kind } : { title: row.title, href: row.href },
+    ),
     [
       { title: "contact", href: "/contact.html" },
       { title: "Academy", href: "https://academy.example.com/training" },
       { title: "documentation", href: "/documentation.html" },
-      {kind:"rss"},
-      {kind:"search"},
-      {kind:"languages"},
+      { kind: "rss" },
+      { kind: "search" },
+      { kind: "languages" },
     ],
   );
 });
@@ -696,7 +704,14 @@ function footerEditorRegistry() {
   };
   for (const kind of ["Text", "Checkbox", "Picker"]) {
     const selector = { cmp: (props) => ({ type: "Native" + kind, props }) };
-    if (kind === "Picker") selector.resolver = () => selector;
+    if (kind === "Picker")
+      selector.resolver = (options) => ({
+        cmp: selector.cmp,
+        key: "Picker",
+        pickerConfig: {
+          key: options?.find((option) => option.name === "type")?.value || "default",
+        },
+      });
     registry.add("selectorType", kind, selector);
   }
   runInNewContext(readFileSync(resolve("javascript/apps/partner-editors-1.5.js"), "utf8"), {
@@ -711,6 +726,48 @@ function footerEditorRegistry() {
   });
   return registry;
 }
+
+test("new footer columns pass the resolved editorial link picker context and preserve selection callbacks", () => {
+  const registry = footerEditorRegistry();
+  const custom = registry.get("selectorType", "FooterLinksPicker");
+  const definition = JSON.parse(
+    readFileSync(
+      resolve("settings/content-editor-forms/fieldsets/jahiacom_footerColumn.json"),
+      "utf8",
+    ),
+  );
+  const field = { ...definition.fields[0], multiple: true };
+  const changes = [];
+  const onChange = (value) => changes.push(value);
+  const onBlur = () => {};
+  for (const extra of [
+    {},
+    { form: { values: {} } },
+    { field: { ...field, footerLabelsField: {} } },
+  ]) {
+    const tree = custom.cmp({
+      field,
+      inputContext: { selectorType: custom, displayActions: true },
+      editorContext: { site: "mySite" },
+      value: [],
+      onChange,
+      onBlur,
+      ...extra,
+    });
+    assert.equal(tree.props.inputContext.selectorType.key, "Picker");
+    assert.equal(tree.props.inputContext.selectorType.pickerConfig.key, "editoriallink");
+    assert.equal(tree.props.inputContext.displayActions, true);
+    assert.equal(tree.props.field.multiple, true);
+    assert.equal(tree.props.onBlur, onBlur);
+    tree.props.onChange(["selected-page"]);
+  }
+  assert.deepEqual(changes, [["selected-page"], ["selected-page"], ["selected-page"]]);
+  assert.equal(
+    custom.pickerConfig,
+    undefined,
+    "native configuration must not mutate the custom selector registry",
+  );
+});
 
 test("footer inline labels preserve references on open, follow UUIDs and respect permissions", () => {
   const registry = footerEditorRegistry();
