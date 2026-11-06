@@ -76,25 +76,38 @@
               "rank": 6,
               "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.exampleHelp",
               "selectorType": "EditorialRichText"
-            },
-            {
-              "name": "faq",
-              "rank": 7,
-              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.faqHelp",
-              "selectorType": "EditorialRichText"
             }
           ],
           "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.explanationHelp"
         },
         {
+          "name": "glossary-faq",
+          "labelKey": "jahiacom:jahiacom_glossaryEntry.form.faqSection",
+          "rank": 3,
+          "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.faqSectionHelp",
+          "fields": [
+            {
+              "name": "faqData",
+              "rank": 1,
+              "selectorType": "GlossaryFaqEditor",
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.faqDataHelp"
+            }
+          ]
+        },
+        {
           "name": "glossary-further",
           "labelKey": "jahiacom:jahiacom_glossaryEntry.form.further",
-          "rank": 3,
+          "rank": 4,
           "fields": [
             {
               "name": "autoTermLinks",
               "rank": 1,
               "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.autoTermLinksHelp"
+            },
+            {
+              "name": "resources",
+              "rank": 2,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.resourcesHelp"
             }
           ],
           "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.furtherHelp"
@@ -102,7 +115,7 @@
         {
           "name": "glossary-editorial",
           "labelKey": "jahiacom:jahiacom_glossaryEntry.form.editorial",
-          "rank": 4,
+          "rank": 5,
           "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.editorialHelp",
           "fields": [
             {

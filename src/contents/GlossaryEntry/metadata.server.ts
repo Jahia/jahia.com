@@ -6,6 +6,7 @@ import {
   useServerContext,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { selectedFaqItems } from "./faqItems.server.js";
 import { resolveGlossaryIndex } from "./indexPage.js";
 import { entrySchemas, hubSchemas, mergeSchemas } from "./structuredData.js";
 import { glossaryEntries } from "../../views/Glossary/entries.server.js";
@@ -114,6 +115,7 @@ export function glossaryMetadata(
       indexUrl,
       language,
       title: props["jcr:title"],
+      indexLabel: read(mainNode, "indexLabel"),
       htmlTitle: props.htmlTitle,
       summary: read(mainNode, "summary") || "",
       slug: mainNode.getName(),
@@ -123,6 +125,7 @@ export function glossaryMetadata(
       editorialDate: read(mainNode, "editorialDate"),
       modified: translatedNode ? read(translatedNode, "jcr:lastModified") : undefined,
       faq: read(mainNode, "faq"),
+      faqItems: selectedFaqItems(mainNode),
       breadcrumbs:
         index && indexUrl
           ? [

@@ -169,6 +169,33 @@ test("broken internal menu reference and URL failure preserve valid siblings", (
   );
 });
 
+test("section landing pages use native references and keep the existing submenu", () => {
+  const group = node("Product", {
+    isNodeType: (type) => type === "jnt:navMenuText",
+    children: [node("cms")],
+    hasProperty: (name) => name === "navLandingPage",
+    getProperty: () => ({ getValue: () => ({ getNode: () => node("overview") }) }),
+  });
+  const entry = harness().nav(node("site"), [group]).entries[0];
+  assert.equal(entry.panel.landing.href, "/overview.html");
+  assert.equal(entry.panel.landing.title, "Product");
+  assert.equal(entry.children[0].href, "/cms.html");
+});
+
+for (const target of [unavailable, () => node("private", { hasPermission: () => false })]) {
+  test("an unavailable section landing page preserves its menu destinations", () => {
+    const group = node("Product", {
+      isNodeType: (type) => type === "jnt:navMenuText",
+      children: [node("cms")],
+      hasProperty: (name) => name === "navLandingPage",
+      getProperty: () => ({ getValue: () => ({ getNode: target }) }),
+    });
+    const entry = harness().nav(node("site"), [group]).entries[0];
+    assert.equal(entry.panel.landing, undefined);
+    assert.equal(entry.children[0].href, "/cms.html");
+  });
+}
+
 test("navigation uses the single image field and broken images preserve their menu entries", () => {
   const entry = (name, image) =>
     node(name, {

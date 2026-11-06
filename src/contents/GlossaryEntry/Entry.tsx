@@ -1,4 +1,10 @@
+import Accordion from "../../views/Accordion/Accordion.client.jsx";
+import Collapsible from "../../views/Card/Collapsible.jsx";
 import { Island } from "@jahia/javascript-modules-library";
+import type { FaqItem } from "./faqItems.js";
+import { faqBlocks } from "./faqBlocks.js";
+import ManualResources from "./ManualResources.jsx";
+import type { EntryResource } from "./deferredSuggestions.js";
 import DeferredSuggestions from "./DeferredSuggestions.client.jsx";
 import { useTranslation } from "react-i18next";
 import { CTA } from "../../mixins/CTA/index.jsx";
@@ -15,11 +21,13 @@ export interface EntryViewProps {
   exampleTitle?: string;
   example?: string;
   faq?: string;
+  faqItems?: FaqItem[];
   comparisonTitle?: string;
   comparison?: string;
   indexUrl?: string;
   isEditMode?: boolean;
   resourceEndpoint?: string;
+  resources?: EntryResource[];
 }
 
 export default function Entry({
@@ -34,11 +42,14 @@ export default function Entry({
   example,
   exampleTitle,
   faq,
+  faqItems = [],
   isEditMode,
   resourceEndpoint,
+  resources = [],
 }: EntryViewProps) {
   const { t } = useTranslation();
   const definition = splitDefinition(body || "");
+  const blocks = faqItems.length ? faqItems : faqBlocks(sanitizeHtml(faq || ""));
   return (
     <article className={classes.entry} data-theme="day">
       <div className={classes.inner}>
@@ -96,21 +107,41 @@ export default function Entry({
                 </div>
               </section>
             )}
-            {faq && (
+            {blocks.length > 0 && (
               <section className={classes.faq} aria-labelledby="faq">
                 <h2 id="faq" tabIndex={-1}>
                   {t("glossary.faq")}
                 </h2>
-                <div
-                  className="_richtext"
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(faq) }}
-                />
+                <Island component={Accordion}>
+                  {blocks.map((block) =>
+                    block.question ? (
+                      <Collapsible
+                        key={block.key}
+                        id={`glossary-faq-${block.key}`}
+                        title={block.question}
+                        expanded={isEditMode}
+                      >
+                        <div
+                          className="_richtext"
+                          dangerouslySetInnerHTML={{ __html: sanitizeHtml(block.html) }}
+                        />
+                      </Collapsible>
+                    ) : (
+                      <div
+                        key={block.key}
+                        className="_richtext"
+                        dangerouslySetInnerHTML={{ __html: block.html }}
+                      />
+                    ),
+                  )}
+                </Island>
               </section>
             )}
           </div>
         </div>
         <div className={classes.followUp}>
-          {resourceEndpoint && (
+          <ManualResources resources={resources} />
+          {resources.length === 0 && resourceEndpoint && (
             <Island component={DeferredSuggestions} props={{ endpoint: resourceEndpoint }} />
           )}
           <footer className={classes.editorialFooter}>

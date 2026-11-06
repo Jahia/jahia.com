@@ -207,7 +207,10 @@
     "all": "Tout",
     "copied": "Copié dans le presse-papiers.",
     "copyFailed": "Copie impossible. Sélectionnez le texte pour le copier.",
-    "downloadKit": "Télécharger (ZIP)"
+    "downloadKit": "Télécharger (ZIP)",
+    "downloadRelease": "Télécharger le communiqué",
+    "readOpinion": "Lire la tribune",
+    "readArticle": "Lire l’article"
   },
   "sectionLayout": {
     "rows": "Rangées complètes",

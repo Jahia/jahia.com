@@ -17,6 +17,7 @@ export type NavigationItemFields = {
   navUtilityLabel?: string;
 };
 export type NavigationPanelFields = {
+  navLandingPage?: JCRNodeWrapper;
   navFeatureEyebrow?: string;
   navFeatureHeading?: string;
   navFeatureText?: string;
@@ -34,6 +35,7 @@ export type Page = {
   icon?: string;
 };
 export type NavigationPanel = {
+  landing?: Page;
   feature?: { eyebrow?: string; heading: string; text?: string; link: Page };
   columns?: Group[];
 };

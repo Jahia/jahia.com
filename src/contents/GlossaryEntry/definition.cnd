@@ -7,6 +7,8 @@
  - exampleTitle (string) i18n
  - example (string, richtext) i18n
  - faq (string, richtext) i18n
+ // Structured inline FAQ per language; historical rich text remains compatible.
+ - faqData (string) i18n
  - comparisonTitle (string) i18n
  - comparison (string, richtext) i18n
  - autoLinks (boolean) = false

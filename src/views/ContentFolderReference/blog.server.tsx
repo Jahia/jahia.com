@@ -85,7 +85,7 @@ jahiaComponent(
       featuredIncludeUpdatedArticles,
       blogAdvancedFilter,
     }: Props,
-    { renderContext, currentNode },
+    { renderContext },
   ) => {
     const { t } = useTranslation();
     if (folder)
@@ -269,7 +269,7 @@ jahiaComponent(
     for (const node of filterDependencies.values())
       server.render.addCacheDependency({ path: node.getPath() }, renderContext);
 
-    const articlesId = `blog-articles-${currentNode.getIdentifier()}`;
+    const articlesId = "blog-articles";
     return (
       <section
         className={classes.blogListing}
@@ -337,7 +337,7 @@ jahiaComponent(
             component={BlogGrid}
             props={{
               page: pagination.page,
-              pageUrls: pageUrls.map((url) => url + "#" + articlesId),
+              pageUrls: pageUrls.map((url, index) => (index === 0 ? url : url + "#" + articlesId)),
               gridClassName: classes.grid,
               paginationClassName: classes.pagination,
               paginationLabel: t("blogListing.pagination"),

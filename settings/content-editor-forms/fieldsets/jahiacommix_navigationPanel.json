@@ -3,6 +3,9 @@
   "priority": 2,
   "fields": [
     {
+      "name": "navLandingPage"
+    },
+    {
       "name": "navIntroEyebrow",
       "hide": true
     },

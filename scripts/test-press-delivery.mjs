@@ -78,6 +78,28 @@ test("coverage and edit modes do not render an interactive filter form", () => {
 });
 
 const node = { getIdentifier: () => "experts", getName: () => "experts" };
+test("a press document remains downloadable when the generic CTA mode is none", () => {
+  const document = { getPath: () => "/sites/test/files/release.pdf" };
+  const { view } = load("../src/views/PressItem/default.server.tsx", {
+    "@jahia/javascript-modules-library": {
+      buildNodeUrl: () => "/files/release.pdf",
+      server: { render: { addCacheDependency() {} } },
+    },
+    "./PressCard.jsx": { default: "PressCard", pressCategoryLabel: (value) => value },
+  });
+  const tree = view(
+    { "jcr:title": "Release", "pressDocument": document, "ctaType": "none" },
+    {
+      currentNode: { getName: () => "release", getPropertyAsString: () => null },
+      currentResource: { getLocale: () => ({ getLanguage: () => "en" }) },
+      renderContext: {},
+    },
+  );
+  assert.equal(tree.props.actionHref, "/files/release.pdf");
+  assert.equal(tree.props.actionDownload, true);
+  assert.equal(tree.props.actionLabel, "pressRoom.downloadRelease");
+});
+
 test("the experts carousel retains 8-card layout and personalized controls", () => {
   const { view } = load("../src/views/CardCarousel/default.server.tsx", {
     "@jahia/javascript-modules-library": {

@@ -1,4 +1,5 @@
 import { parseFragment, type DefaultTreeAdapterMap } from "parse5";
+import { richTextPlainText, type FaqItem } from "./faqItems.js";
 import { sanitizeHtml } from "./sanitizeHtml.js";
 
 type Node = DefaultTreeAdapterMap["childNode"];
@@ -55,6 +56,7 @@ export function entrySchemas(input: {
   indexUrl?: string;
   title: string;
   htmlTitle?: string;
+  indexLabel?: string;
   summary: string;
   aliases?: string[];
   slug: string;
@@ -62,16 +64,22 @@ export function entrySchemas(input: {
   editorialDate?: string;
   modified?: string;
   faq?: string;
+  faqItems?: FaqItem[];
   breadcrumbs: BreadcrumbItem[];
 }) {
   const { url, indexUrl, language } = input;
-  const questions = faqQuestions(input.faq || "");
+  const questions = input.faqItems?.length
+    ? input.faqItems.map(({ question, html }) => ({
+        name: question,
+        answer: richTextPlainText(html),
+      }))
+    : faqQuestions(input.faq || "");
   return [
     {
       "@context": "https://schema.org",
       "@type": "DefinedTerm",
       "@id": `${url}#term`,
-      "name": input.title,
+      "name": input.indexLabel?.trim() || input.title,
       "description": input.summary,
       "url": url,
       "termCode": input.slug,

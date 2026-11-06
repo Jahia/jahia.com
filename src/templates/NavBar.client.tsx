@@ -3,14 +3,18 @@ import {
   useCallback,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
   type MouseEvent,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import classes from "./NavBar.module.css";
+import { createHoverIntent } from "./hoverIntent.js";
 import { CTA } from "../mixins/CTA/index.jsx";
 import SearchDialog, { type SearchState } from "./Search.client.jsx";
+
 import type {
   Entry,
   Group,
@@ -58,13 +62,23 @@ function MenuLinks({ entries }: { entries: Entry[] }) {
 }
 function MenuPanel({ group }: { group: Group }) {
   const feature = group.panel?.feature;
-  const columns = group.panel?.columns;
+  const landing = group.panel?.landing;
+  const visibleColumns = group.panel?.columns
+    ?.map((column) => ({
+      ...column,
+      children: column.children.filter(
+        (entry) => !("href" in entry) || entry.href !== landing?.href,
+      ),
+    }))
+    .filter((column) => column.children.length);
+  const columns = visibleColumns?.length ? visibleColumns : undefined;
   // Keep existing menu destinations accessible even when optional columns are configured.
   const selected = new Set(
     columns?.flatMap((column) =>
       column.children.flatMap((entry) => ("href" in entry ? [entry.href] : [])),
     ),
   );
+  if (landing) selected.add(landing.href);
   const unselectedEntries = (entries: Entry[]): Entry[] =>
     entries.flatMap((entry): Entry[] => {
       if ("href" in entry) return selected.has(entry.href) ? [] : [entry];
@@ -78,7 +92,7 @@ function MenuPanel({ group }: { group: Group }) {
           ? { ...column, children: [...column.children, ...remaining] }
           : column,
       )
-    : group.children;
+    : remaining;
   return (
     <div className={classes.panelInner}>
       <div className={classes.panelLayout} data-feature={!!feature}>
@@ -109,7 +123,7 @@ function MenuPanel({ group }: { group: Group }) {
 }
 export default function NavBarClient({
   buttons = [],
-  children,
+  logo,
   entries,
   utilityEntries = [],
   controls,
@@ -119,7 +133,7 @@ export default function NavBarClient({
   search,
 }: {
   buttons?: NavbarButton[];
-  children: ReactNode;
+  logo: { href: string; src: string; current: boolean };
   entries: Entry[];
   utilityEntries?: UtilityEntry[];
   controls: UtilityControls;
@@ -130,14 +144,40 @@ export default function NavBarClient({
 }) {
   const id = useId();
   const nav = useRef<HTMLElement>(null);
-  const trigger = useRef<HTMLButtonElement | null>(null);
+  const trigger = useRef<HTMLElement | null>(null);
   const searchTrigger = useRef<HTMLElement | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [submenu, setSubmenu] = useState<number | null>(null);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(search.requested);
   const fr = language === "fr";
+  const hoverIntent = useMemo(
+    () =>
+      createHoverIntent((index) => {
+        setSubmenu(index);
+        if (index !== null) setLanguageOpen(false);
+      }),
+    [],
+  );
+  useEffect(() => () => hoverIntent.cancel(), [hoverIntent]);
+  const hoverMenu = (event: ReactPointerEvent<HTMLDivElement>, index: number | null) => {
+    if (
+      event.pointerType !== "mouse" ||
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    )
+      return;
+    const menuButton = nav.current?.querySelector<HTMLElement>(`.${classes.menuButton}`);
+    if (!menuButton || getComputedStyle(menuButton).display !== "none") return;
+    hoverIntent.cancel();
+    const panel = event.currentTarget.querySelector<HTMLElement>(`.${classes.desktopMenu}`);
+    // A keyboard user keeps the focused menu until focus moves out or Escape is pressed.
+    if (index === null && panel?.contains(document.activeElement)) return;
+    if (index !== null)
+      trigger.current = event.currentTarget.querySelector<HTMLElement>("a, button");
+    hoverIntent.schedule(index, submenu !== null && submenu !== index);
+  };
   const close = () => {
+    hoverIntent.cancel();
     setMobileOpen(false);
     setSubmenu(null);
     setLanguageOpen(false);
@@ -179,6 +219,7 @@ export default function NavBarClient({
       if (event.target instanceof Node && !nav.current?.contains(event.target)) close();
     };
     const keyboard = (event: KeyboardEvent) => {
+      if (event.key === "Escape") hoverIntent.cancel();
       if (
         controls.searchVisible &&
         (event.ctrlKey || event.metaKey) &&
@@ -391,7 +432,19 @@ export default function NavBarClient({
       </div>
       <div className={classes.mainBar}>
         <div className={classes.mainInner}>
-          <div className={classes.logo}>{children}</div>
+          <div className={classes.logo}>
+            <a
+              href={logo.href}
+              aria-current={logo.current ? "page" : undefined}
+              data-element-url={logo.href}
+              data-element-type="image"
+              data-element-text="Jahia Logo"
+              data-element-location="header"
+              data-element-name="nav/logo"
+            >
+              <img src={logo.src} alt="Jahia" width="70" height="32" />
+            </a>
+          </div>
           <div className={classes.desktopBar}>
             {entries.map((entry, index) =>
               "href" in entry ? (
@@ -406,22 +459,59 @@ export default function NavBarClient({
                   {entry.title}
                 </a>
               ) : (
-                <div key={entry.title}>
-                  <button
-                    type="button"
-                    className={`${classes.barLink} ${classes.highlight}`}
-                    data-variant="secondary"
-                    aria-expanded={submenu === index}
-                    aria-controls={`${id}-desktop-${index}`}
-                    onClick={(event) => {
-                      trigger.current = event.currentTarget;
-                      setSubmenu(submenu === index ? null : index);
-                      setLanguageOpen(false);
-                    }}
-                  >
-                    {entry.title}
-                    <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
-                  </button>
+                <div
+                  key={entry.title}
+                  className={classes.group}
+                  onPointerEnter={(event) => hoverMenu(event, index)}
+                  onPointerLeave={(event) => hoverMenu(event, null)}
+                  onPointerDown={() => hoverIntent.cancel()}
+                >
+                  {entry.panel?.landing ? (
+                    <a
+                      className={`${classes.barLink} ${classes.highlight}`}
+                      data-variant="secondary"
+                      href={entry.panel.landing.href}
+                      aria-current={entry.panel.landing.current ? "page" : undefined}
+                      aria-expanded={submenu === index}
+                      aria-controls={`${id}-desktop-${index}`}
+                      {...tracking(entry.panel.landing)}
+                      onClick={() => hoverIntent.cancel()}
+                      onKeyDown={(event) => {
+                        if (event.key !== "ArrowDown") return;
+                        event.preventDefault();
+                        hoverIntent.cancel();
+                        trigger.current = event.currentTarget;
+                        setSubmenu(index);
+                        setLanguageOpen(false);
+                        requestAnimationFrame(() =>
+                          document
+                            .getElementById(`${id}-desktop-${index}`)
+                            ?.querySelector<HTMLAnchorElement>("a")
+                            ?.focus(),
+                        );
+                      }}
+                    >
+                      {entry.title}
+                      <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      className={`${classes.barLink} ${classes.highlight}`}
+                      data-variant="secondary"
+                      aria-expanded={submenu === index}
+                      aria-controls={`${id}-desktop-${index}`}
+                      onClick={(event) => {
+                        trigger.current = event.currentTarget;
+                        hoverIntent.cancel();
+                        setSubmenu(submenu === index ? null : index);
+                        setLanguageOpen(false);
+                      }}
+                    >
+                      {entry.title}
+                      <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
+                    </button>
+                  )}
                   <div
                     id={`${id}-desktop-${index}`}
                     className={classes.desktopMenu}
@@ -492,22 +582,44 @@ export default function NavBarClient({
             </a>
           ) : (
             <div key={entry.title}>
-              <button
-                type="button"
-                className={`${classes.submenuLabel} ${classes.highlight}`}
-                data-variant="secondary"
-                aria-expanded={submenu === index}
-                aria-controls={`${id}-mobile-${index}`}
-                onClick={() => setSubmenu(submenu === index ? null : index)}
-              >
-                {entry.title}
-                <span
-                  className={
-                    submenu === index ? "i-ri:arrow-up-wide-line" : "i-ri:arrow-down-wide-line"
+              <div className={classes.mobileGroup}>
+                {entry.panel?.landing && (
+                  <a
+                    className={`${classes.mobileLink} ${classes.highlight}`}
+                    data-variant="secondary"
+                    href={entry.panel.landing.href}
+                    aria-current={entry.panel.landing.current ? "page" : undefined}
+                    {...tracking(entry.panel.landing)}
+                  >
+                    {entry.title}
+                  </a>
+                )}
+                <button
+                  type="button"
+                  className={`${classes.submenuLabel} ${classes.highlight} ${entry.panel?.landing ? classes.mobileGroupToggle : ""}`}
+                  aria-label={
+                    entry.panel?.landing
+                      ? `${fr ? "Sous-menu" : "Submenu"} ${entry.title}`
+                      : undefined
                   }
-                  aria-hidden="true"
-                />
-              </button>
+                  data-variant="secondary"
+                  aria-expanded={submenu === index}
+                  aria-controls={`${id}-mobile-${index}`}
+                  onClick={(event) => {
+                    trigger.current = event.currentTarget;
+                    hoverIntent.cancel();
+                    setSubmenu(submenu === index ? null : index);
+                  }}
+                >
+                  {!entry.panel?.landing && entry.title}
+                  <span
+                    className={
+                      submenu === index ? "i-ri:arrow-up-wide-line" : "i-ri:arrow-down-wide-line"
+                    }
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
               <div
                 id={`${id}-mobile-${index}`}
                 className={classes.mobileSubmenu}

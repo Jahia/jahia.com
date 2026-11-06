@@ -22,3 +22,5 @@ yarn-error.log
 .env
 **/.yarn/install-state.gz
 
+# Private backups produced by the opt-in glossary FAQ migration
+glossary-faq-backup-*/

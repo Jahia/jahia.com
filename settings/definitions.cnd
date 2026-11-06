@@ -83,6 +83,7 @@
  - navIcon (string, choicelist[resourceBundle]) < 'cms', 'dxp', 'ai'
 
 [jahiacommix:navigationPanel] mixin extends=jnt:navMenuText
+ - navLandingPage (weakreference, picker[type='page']) < jnt:page
  - navFeatureEyebrow (string) i18n
  - navFeatureHeading (string) i18n
  - navFeatureText (string, textarea) i18n

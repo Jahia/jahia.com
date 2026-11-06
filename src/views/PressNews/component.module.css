@@ -89,6 +89,24 @@
   padding: 0;
 }
 
+.releaseSource {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.releaseBody .releaseAction {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: auto;
+}
+
+.fileFormat {
+  font-size: 0.75rem;
+}
+
 .grid[data-layout="cards"] .releaseBody {
   padding: 1.5rem;
 }

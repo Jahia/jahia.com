@@ -1,5 +1,8 @@
 [jahiacom:pressItem] > jnt:content, mix:title, jahiacommix:component, jmix:editorialContent, jmix:categorized, jahiacommix:cta
  - description (string, textarea) i18n
+ - pressDocument (weakreference, picker) i18n < jnt:file
+ - mediaName (string) i18n
+ - authorName (string) i18n
  - contentType (string, choicelist[resourceBundle]) < 'communique', 'presse', 'recompense', 'tribune', 'evenement'
  - themeLabel (string) i18n
  - date (date)
