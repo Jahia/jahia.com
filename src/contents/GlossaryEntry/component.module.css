@@ -104,9 +104,10 @@
 
 .example {
   padding: 1.5rem;
-  background: var(--jahia-neutral-100);
-  border: 1px solid var(--jahia-neutral-300);
-  border-radius: 0;
+  background: #e3f7ff;
+  border: 0;
+  border-left: 4px solid #00a1e3;
+  border-radius: 8px;
 }
 
 .example a {
@@ -151,7 +152,7 @@
   border-radius: 0;
 }
 
-.resourceTitle {
+.entry .resourceTitle {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
@@ -334,4 +335,9 @@
 /* Reserve the existing carousel footprint while resources load. */
 .deferredResources {
   min-block-size: 43rem;
+}
+
+.entry .faq h3 {
+  margin: 0;
+  font-size: 1rem;
 }

@@ -70,6 +70,11 @@
   scroll-margin-top: calc(var(--jahia-header-height, 4rem) + 1rem);
 }
 
+/* This heading receives anchor focus, but is not an interactive control. */
+.articlesHeading:focus {
+  outline: none;
+}
+
 .filterForm {
   display: flex;
   flex-wrap: wrap;

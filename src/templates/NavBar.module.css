@@ -124,6 +124,24 @@
   color: inherit;
 }
 
+.group,
+.mobileGroup {
+  display: flex;
+  align-items: center;
+}
+
+.mobileGroup > a {
+  flex: 1;
+  min-width: 0;
+}
+
+.mobileGroup .mobileGroupToggle {
+  flex-shrink: 0;
+  justify-content: center;
+  width: 2.75rem;
+  min-width: 2.75rem;
+}
+
 .utilityLink {
   min-height: 2rem;
   font: inherit;

@@ -1,6 +1,7 @@
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 
 export interface Props {
+  "resources"?: Array<JCRNodeWrapper | null>;
   "resourceDisplayCount"?: "3" | "6" | "9";
   "conceptTerms"?: string[];
   "conceptScope"?: string[];
@@ -21,6 +22,7 @@ export interface Props {
   "exampleTitle"?: string;
   "example"?: string;
   "faq"?: string;
+  "faqData"?: string;
   "comparisonTitle"?: string;
   "comparison"?: string;
 }

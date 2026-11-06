@@ -207,7 +207,10 @@
     "all": "All",
     "copied": "Copied to clipboard.",
     "copyFailed": "Unable to copy. Select the text to copy it.",
-    "downloadKit": "Download (ZIP)"
+    "downloadKit": "Download (ZIP)",
+    "downloadRelease": "Download the press release",
+    "readOpinion": "Read the opinion piece",
+    "readArticle": "Read the article"
   },
   "sectionLayout": {
     "rows": "Complete rows",

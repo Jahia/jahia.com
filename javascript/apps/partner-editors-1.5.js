@@ -2566,3 +2566,220 @@
     },
   });
 })();
+
+// Glossary FAQ: structured authoring in the entry form, without heading conventions.
+(function () {
+  "use strict";
+  var registry = window.jahia.uiExtender.registry;
+  var ELEMENT = Symbol.for("react.element");
+  function h(type, props, key) {
+    return {
+      $$typeof: ELEMENT,
+      type: type,
+      key: key == null ? null : String(key),
+      ref: null,
+      props: props || {},
+      _owner: null,
+      _store: {},
+    };
+  }
+  registry.add("selectorType", "GlossaryFaqEditor", {
+    supportMultiple: false,
+    cmp: function (props) {
+      var french =
+        String(
+          (props.editorContext && props.editorContext.uilang) ||
+            window.jahia.reduxStore.getState().uilang ||
+            "en",
+        ).indexOf("fr") === 0;
+      var labels = french
+        ? {
+            question: "Question",
+            answer: "Réponse",
+            add: "Ajouter une question",
+            up: "Monter",
+            down: "Descendre",
+            remove: "Retirer la question",
+            invalid:
+              "La FAQ enregistrée est illisible. Aucune donnée ne sera remplacée. Contactez un administrateur.",
+          }
+        : {
+            question: "Question",
+            answer: "Answer",
+            add: "Add a question",
+            up: "Move up",
+            down: "Move down",
+            remove: "Remove question",
+            invalid:
+              "The saved FAQ cannot be read. No data will be replaced. Contact an administrator.",
+          };
+      var rows = [],
+        invalid = false;
+      try {
+        rows = JSON.parse(props.value || "[]");
+        if (
+          !Array.isArray(rows) ||
+          rows.some(function (r) {
+            return !r || typeof r.question !== "string" || typeof r.answer !== "string";
+          })
+        )
+          invalid = true;
+      } catch {
+        invalid = true;
+      }
+      if (invalid) return h("p", { role: "alert", children: labels.invalid });
+      var disabled = Boolean(props.readOnly || props.disabled);
+      function save(next) {
+        if (!disabled && props.onChange) props.onChange(JSON.stringify(next));
+      }
+      function update(index, key, value) {
+        var next = rows.slice();
+        next[index] = Object.assign({}, rows[index]);
+        next[index][key] = value;
+        save(next);
+      }
+      function move(index, delta) {
+        var next = rows.slice();
+        var row = next.splice(index, 1)[0];
+        next.splice(index + delta, 0, row);
+        save(next);
+      }
+      function button(label, onClick, blocked, key) {
+        return h(
+          "button",
+          {
+            type: "button",
+            disabled: disabled || blocked,
+            onClick: onClick,
+            style: { padding: "8px 12px", cursor: "pointer" },
+            children: label,
+          },
+          key,
+        );
+      }
+      return h("div", {
+        style: { display: "grid", gap: 20 },
+        children: rows
+          .map(function (row, index) {
+            var id = row.id || "existing-" + index;
+            var questionId = props.field.name + "-" + id + "-question";
+            return h(
+              "fieldset",
+              {
+                disabled: disabled,
+                style: { border: "1px solid #d9e1e8", borderRadius: 4, padding: 16, minWidth: 0 },
+                children: [
+                  h("legend", { children: labels.question + " " + (index + 1) }, "legend"),
+                  h(
+                    "label",
+                    {
+                      htmlFor: questionId,
+                      style: { display: "block", marginBottom: 6 },
+                      children: labels.question,
+                    },
+                    "question-label",
+                  ),
+                  h(
+                    "input",
+                    {
+                      id: questionId,
+                      type: "text",
+                      value: row.question,
+                      disabled: disabled,
+                      style: {
+                        width: "100%",
+                        boxSizing: "border-box",
+                        padding: 10,
+                        marginBottom: 16,
+                      },
+                      onChange: function (e) {
+                        update(index, "question", e.target.value);
+                      },
+                    },
+                    "question",
+                  ),
+                  h("div", { style: { marginBottom: 6 }, children: labels.answer }, "answer-label"),
+                  h(
+                    registry.get("selectorType", "EditorialRichText").cmp,
+                    Object.assign({}, props, {
+                      id: props.field.name + "-" + id + "-answer",
+                      value: row.answer,
+                      field: Object.assign({}, props.field, {
+                        name: props.field.name + "-" + id + "-answer",
+                        displayName: labels.answer,
+                        multiple: false,
+                        selectorType: "RichText",
+                        selectorOptions: [],
+                      }),
+                      onChange: function (value) {
+                        update(index, "answer", value || "");
+                      },
+                    }),
+                    "answer",
+                  ),
+                  h(
+                    "div",
+                    {
+                      style: { display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 },
+                      children: [
+                        button(
+                          labels.up,
+                          function () {
+                            move(index, -1);
+                          },
+                          index === 0,
+                          "up",
+                        ),
+                        button(
+                          labels.down,
+                          function () {
+                            move(index, 1);
+                          },
+                          index === rows.length - 1,
+                          "down",
+                        ),
+                        button(
+                          labels.remove,
+                          function () {
+                            save(
+                              rows.filter(function (_, i) {
+                                return i !== index;
+                              }),
+                            );
+                          },
+                          false,
+                          "remove",
+                        ),
+                      ],
+                    },
+                    "actions",
+                  ),
+                ],
+              },
+              id,
+            );
+          })
+          .concat(
+            button(
+              labels.add,
+              function () {
+                save(
+                  rows.concat({
+                    id:
+                      "faq-" +
+                      Date.now().toString(36) +
+                      "-" +
+                      Math.random().toString(36).slice(2, 8),
+                    question: "",
+                    answer: "",
+                  }),
+                );
+              },
+              false,
+              "add",
+            ),
+          ),
+      });
+    },
+  });
+})();

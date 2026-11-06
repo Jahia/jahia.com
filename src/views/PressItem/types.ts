@@ -4,6 +4,9 @@ import type { CTAProps } from "../../mixins/CTA/server.jsx";
 export type Props = {
   "jcr:title"?: string;
   "description"?: string;
+  "pressDocument"?: JCRNodeWrapper;
+  "mediaName"?: string;
+  "authorName"?: string;
   "contentType"?: "communique" | "presse" | "recompense" | "tribune" | "evenement";
   "themeLabel"?: string;
   "date"?: string;

@@ -44,7 +44,8 @@
     },
     {
       "name": "faq",
-      "selectorType": "EditorialRichText"
+      "selectorType": "EditorialRichText",
+      "hide": true
     },
     {
       "name": "comparison",
@@ -52,7 +53,7 @@
     },
     {
       "name": "resources",
-      "hide": true
+      "hide": false
     },
     {
       "name": "relatedTerms",

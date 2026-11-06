@@ -5,21 +5,25 @@ export default function Accordion({ children }: { children?: ReactNode }) {
     <section
       className="_stack-0"
       onClick={(event) => {
-        const button = (event.target as HTMLElement | undefined)?.closest?.("button");
-        if (!button) return; // Ignore clicks outside of buttons
-
+        const button = (event.target as HTMLElement | undefined)?.closest?.(
+          "button[data-accordion-toggle]",
+        );
+        if (!button) return;
         const card = button.closest("article");
         if (!card) return;
-
-        if (card.getAttribute("aria-expanded") === "true") {
-          // If the card is expanded, collapse it
-          card.setAttribute("aria-expanded", "false");
-        } else {
-          // If the card is collapsed, collapse others and expand this one
-          const openCards = event.currentTarget.querySelectorAll("article[aria-expanded='true']");
-          for (const openCard of openCards) openCard.setAttribute("aria-expanded", "false");
-          card.setAttribute("aria-expanded", "true");
-        }
+        const expand = card.getAttribute("aria-expanded") !== "true";
+        const setExpanded = (item: Element, expanded: boolean) => {
+          item.setAttribute("aria-expanded", String(expanded));
+          item
+            .querySelector("button[data-accordion-toggle]")
+            ?.setAttribute("aria-expanded", String(expanded));
+          item.querySelector("[id$='-answer']")?.setAttribute("aria-hidden", String(!expanded));
+        };
+        for (const openCard of event.currentTarget.querySelectorAll(
+          "article[aria-expanded='true']",
+        ))
+          setExpanded(openCard, false);
+        setExpanded(card, expand);
       }}
     >
       {children}

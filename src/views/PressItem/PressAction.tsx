@@ -8,12 +8,14 @@ export default function PressAction({
   name,
   secondary = true,
   download,
+  external,
 }: {
   href?: string;
   label: string;
   name: string;
   secondary?: boolean;
   download?: boolean;
+  external?: boolean;
 }) {
   const safeHref = navigationUrl(href);
   return safeHref ? (
@@ -23,6 +25,9 @@ export default function PressAction({
       location="press_room"
       name={name}
       download={download}
+      icon={download ? "i-ri:download-2-line" : external ? "i-ri:external-link-line" : undefined}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
     >
       {label}
     </CTA>

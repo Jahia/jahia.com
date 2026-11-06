@@ -193,7 +193,7 @@ export default function NavBar({
   };
   const panelLink = (
     node: JCRNodeWrapper,
-    property: "navFeatureLink",
+    property: "navFeatureLink" | "navLandingPage",
     label: string | undefined,
   ) => {
     try {
@@ -205,6 +205,7 @@ export default function NavBar({
     }
   };
   const panel = (node: JCRNodeWrapper): NavigationPanel => {
+    const landing = panelLink(node, "navLandingPage", node.getDisplayableName());
     const featureLink = panelLink(node, "navFeatureLink", text(node, "navFeatureLabel"));
     const columns = (["One", "Two"] as const).flatMap((column) => {
       const property = `navColumn${column}Links` as const;
@@ -225,6 +226,7 @@ export default function NavBar({
       return children.length ? [{ title, children }] : [];
     });
     return {
+      landing,
       feature: featureLink
         ? {
             eyebrow: text(node, "navFeatureEyebrow"),
@@ -464,22 +466,13 @@ export default function NavBar({
           langs,
           language,
           search,
+          logo: {
+            href: buildNodeUrl(root),
+            src: buildModuleFileUrl(jahia),
+            current: current.getIdentifier() === root.getIdentifier(),
+          },
         }}
-      >
-        {root && (
-          <a
-            href={buildNodeUrl(root)}
-            aria-current={current.getIdentifier() === root.getIdentifier() ? "page" : undefined}
-            data-element-url={buildNodeUrl(root)}
-            data-element-type="image"
-            data-element-text="Jahia Logo"
-            data-element-location="header"
-            data-element-name={`nav/logo`}
-          >
-            <img src={buildModuleFileUrl(jahia)} alt="Jahia" width="70" height="32" />
-          </a>
-        )}
-      </Island>
+      ></Island>
       <span hidden data-jahia-search-payload={searchPayload} />
       {langs.length > 1 && (
         <div

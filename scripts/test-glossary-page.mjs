@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import ts from "typescript";
 import { splitDefinition } from "../src/contents/GlossaryEntry/inlineTerms.ts";
+import { faqBlocks } from "../src/contents/GlossaryEntry/faqBlocks.ts";
 import { sanitizeHtml } from "../src/contents/GlossaryEntry/sanitizeHtml.ts";
 
 const jsx = (type, props) => ({ type, props });
@@ -50,8 +51,15 @@ for (const language of ["fr", "en"])
             CTA: ({ href, children }) => jsx("a", { href, children }),
           },
           "@jahia/javascript-modules-library": {
-            Island: ({ props }) => jsx("div", { "data-deferred-url": props.endpoint }),
+            Island: ({ props, children }) =>
+              props ? jsx("div", { "data-deferred-url": props.endpoint }) : children,
           },
+          "../../views/Accordion/Accordion.client.jsx": { default: () => null },
+          "../../views/Card/Collapsible.jsx": {
+            default: ({ title, children }) => jsx("article", { children: [title, children] }),
+          },
+          "./faqBlocks.js": { faqBlocks },
+          "./ManualResources.jsx": { default: () => null },
           "./DeferredSuggestions.client.jsx": { default: () => null },
           "./inlineTerms.js": { splitDefinition },
           "./sanitizeHtml.js": { sanitizeHtml },
@@ -72,6 +80,8 @@ for (const language of ["fr", "en"])
                 : `/${language}/glossary`,
             server: { render: { addCacheDependency: (value) => dependencies.push(value.path) } },
           },
+          "./faqItems.server.js": { selectedFaqItems: () => [] },
+          "./manualResources.server.js": { manualResources: () => [] },
           "./inlineTerms.server.js": {
             linkedEditorialContent: (props) => {
               linkedCalls++;
