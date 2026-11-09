@@ -24,8 +24,15 @@ import type {
   UtilityEntry,
 } from "./NavBar.types.js";
 
-const LanguageFlag = ({ src }: { src?: string }) =>
-  src ? <img className={classes.languageFlag} src={src} alt="" width={24} height={18} /> : null;
+const flagStyles = new Map([
+  ["fr", classes.frenchFlag],
+  ["en", classes.englishFlag],
+]);
+
+const LanguageFlag = ({ language }: { language: string }) => {
+  const flag = flagStyles.get(language);
+  return flag ? <span className={`${classes.languageFlag} ${flag}`} aria-hidden="true" /> : null;
+};
 
 const tracking = (entry: Page) => ({
   "data-element-url": entry.href,
@@ -138,7 +145,7 @@ export default function NavBarClient({
   utilityEntries?: UtilityEntry[];
   controls: UtilityControls;
   rss?: { href?: string; label: string; pendingLabel: string; image?: string } | false;
-  langs: Array<{ language: string; name: string; href: string; flag?: string }>;
+  langs: Array<{ language: string; name: string; href: string }>;
   language: string;
   search: SearchState;
 }) {
@@ -319,8 +326,9 @@ export default function NavBarClient({
       {utility && controls.searchLabel}
     </button>
   );
-  const currentFlag = langs.find((entry) => entry.language === language)?.flag;
-  const languages = langs.map(({ name, href, language: code, flag }) => (
+  const currentFlag =
+    flagStyles.has(language) && langs.some((entry) => entry.language === language);
+  const languages = langs.map(({ name, href, language: code }) => (
     <a
       key={code}
       href={href}
@@ -328,7 +336,7 @@ export default function NavBarClient({
       lang={code}
       aria-current={code === language ? "true" : undefined}
     >
-      <LanguageFlag src={flag} />
+      <LanguageFlag language={code} />
       {name}
     </a>
   ));
@@ -349,7 +357,7 @@ export default function NavBarClient({
             }}
           >
             {currentFlag ? (
-              <LanguageFlag src={currentFlag} />
+              <LanguageFlag language={language} />
             ) : (
               <span className="i-ri:global-line" aria-hidden="true" />
             )}

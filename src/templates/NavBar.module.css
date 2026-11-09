@@ -358,8 +358,19 @@ span.rssIcon {
   flex-shrink: 0;
   width: 1.5rem;
   height: 1.125rem;
-  object-fit: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--jahia-navy-blue) 15%, transparent);
+}
+
+/* Keep these decorative icons outside the Live image rewrite. */
+.frenchFlag {
+  background-image: url("../../static/icons/navigation/languages/fr.svg");
+}
+
+.englishFlag {
+  background-image: url("../../static/icons/navigation/languages/en-uk-us.svg");
 }
 
 .languageControl {
