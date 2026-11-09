@@ -6,7 +6,7 @@ import {
 } from "@jahia/javascript-modules-library";
 import Accordion from "./Accordion.client.jsx";
 
-jahiaComponent(
+const renderAccordion = jahiaComponent(
   { componentType: "view", nodeType: "jahiacom:accordion" },
   (_, { currentNode, renderContext }) => {
     // In edit mode, render all nodes through Jahia rendering chain to make them editable
@@ -50,4 +50,9 @@ jahiaComponent(
       </>
     );
   },
+);
+
+jahiaComponent(
+  { componentType: "view", nodeType: "jahiacom:accordion", name: "classic" },
+  renderAccordion,
 );
