@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.3.2
+
+* Serve the French and English navbar flags through the module stylesheet so Live image rewriting does not send them to Cloudimage.
+
 ## 2.3.1
 
 * Hide blog filter parameters from the address bar after results load in published and preview views. Keep the active filters when paging, reloading or returning through browser history, and preserve the page number and article anchor.
