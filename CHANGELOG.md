@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.3.3
+
+* Add selectable chevron and classic FAQ views, and an inset image view for banners such as the G2 badges on the homepage.
+
 ## 2.3.2
 
 * Serve the French and English navbar flags through the module stylesheet so Live image rewriting does not send them to Cloudimage.
