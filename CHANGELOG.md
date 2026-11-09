@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.3.1
+
+* Hide blog filter parameters from the address bar after results load in published and preview views. Keep the active filters when paging, reloading or returning through browser history, and preserve the page number and article anchor.
+
 ## 2.3.0
 
 * Add structured Question/Answer editing and shared FAQ accordions to glossary entries, with manual resource carousels, a blue practical-information callout and index-label DefinedTerm metadata. Provide an opt-in, backed-up migration for legacy FAQ content without publishing drafts or duplicating FAQPage schemas.
