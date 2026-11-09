@@ -10,6 +10,7 @@ import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
 import CascadingSelects from "../../components/CascadingSelects.client.jsx";
 import BlogGrid from "./BlogGrid.client.jsx";
+import BlogFilterUrl from "./BlogFilterUrl.client.jsx";
 import classes from "./styles.module.css";
 import { contentCategories } from "../../utils/contentCategories.js";
 
@@ -270,6 +271,8 @@ jahiaComponent(
       server.render.addCacheDependency({ path: node.getPath() }, renderContext);
 
     const articlesId = "blog-articles";
+    const hideFilterParameters = advancedFilters.length > 0;
+    const resetUrl = blogPageUrl(baseUrl, 1) + (hideFilterParameters ? "?filter1=" : "");
     return (
       <section
         className={classes.blogListing}
@@ -287,6 +290,7 @@ jahiaComponent(
         <h2 id={articlesId} tabIndex={-1} className={classes.articlesHeading}>
           {t("blogListing.allArticles")}
         </h2>
+        {hideFilterParameters && <Island component={BlogFilterUrl} />}
         {advancedFilters.length > 0 && (
           <Island component={CascadingSelects} props={{ navigateOnChange: true }}>
             <form className={classes.filterForm} method="get" action={baseUrl + "#" + articlesId}>
@@ -327,7 +331,7 @@ jahiaComponent(
               ))}
               <div className={classes.filterActions}>
                 <button type="submit">{t("blogListing.applyFilters")}</button>
-                <a href={baseUrl + "#" + articlesId}>{t("blogListing.resetFilters")}</a>
+                <a href={resetUrl + "#" + articlesId}>{t("blogListing.resetFilters")}</a>
               </div>
             </form>
           </Island>
