@@ -9,6 +9,7 @@
  - faq (string, richtext) i18n
  // Structured inline FAQ per language; historical rich text remains compatible.
  - faqData (string) i18n
+ - faqView (string, choicelist[resourceBundle]) = 'cards' < 'cards', 'classic'
  - comparisonTitle (string) i18n
  - comparison (string, richtext) i18n
  - autoLinks (boolean) = false

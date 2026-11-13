@@ -91,6 +91,11 @@
               "rank": 1,
               "selectorType": "GlossaryFaqEditor",
               "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.faqDataHelp"
+            },
+            {
+              "name": "faqView",
+              "rank": 2,
+              "descriptionKey": "jahiacom:jahiacom_glossaryEntry.form.faqViewHelp"
             }
           ]
         },

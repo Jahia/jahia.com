@@ -84,6 +84,7 @@
 
 [jahiacommix:navigationPanel] mixin extends=jnt:navMenuText
  - navLandingPage (weakreference, picker[type='page']) < jnt:page
+ - navLandingLinkDisabled (boolean) = false
  - navFeatureEyebrow (string) i18n
  - navFeatureHeading (string) i18n
  - navFeatureText (string, textarea) i18n

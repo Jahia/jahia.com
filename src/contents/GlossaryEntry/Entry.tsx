@@ -1,11 +1,13 @@
 import Accordion from "../../views/Accordion/Accordion.client.jsx";
+import faqClasses from "../../views/Accordion/cards.module.css";
 import Collapsible from "../../views/Card/Collapsible.jsx";
+import FaqCard from "../../views/Card/FaqCard.jsx";
 import { Island } from "@jahia/javascript-modules-library";
 import type { FaqItem } from "./faqItems.js";
+import type { Props } from "./types.js";
 import { faqBlocks } from "./faqBlocks.js";
 import ManualResources from "./ManualResources.jsx";
 import type { EntryResource } from "./deferredSuggestions.js";
-import DeferredSuggestions from "./DeferredSuggestions.client.jsx";
 import { useTranslation } from "react-i18next";
 import { CTA } from "../../mixins/CTA/index.jsx";
 import { splitDefinition } from "./inlineTerms.js";
@@ -22,11 +24,11 @@ export interface EntryViewProps {
   example?: string;
   faq?: string;
   faqItems?: FaqItem[];
+  faqView?: Props["faqView"];
   comparisonTitle?: string;
   comparison?: string;
   indexUrl?: string;
   isEditMode?: boolean;
-  resourceEndpoint?: string;
   resources?: EntryResource[];
 }
 
@@ -43,13 +45,38 @@ export default function Entry({
   exampleTitle,
   faq,
   faqItems = [],
+  faqView,
   isEditMode,
-  resourceEndpoint,
   resources = [],
 }: EntryViewProps) {
   const { t } = useTranslation();
   const definition = splitDefinition(body || "");
   const blocks = faqItems.length ? faqItems : faqBlocks(sanitizeHtml(faq || ""));
+  const classicFaq = faqView === "classic";
+  const questions = blocks.map((block) => {
+    const answer = (
+      <div
+        key={block.key}
+        className="_richtext"
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(block.html) }}
+      />
+    );
+    if (!block.question) return answer;
+    return classicFaq ? (
+      <Collapsible
+        key={block.key}
+        id={`glossary-faq-${block.key}`}
+        title={block.question}
+        expanded={isEditMode}
+      >
+        {answer}
+      </Collapsible>
+    ) : (
+      <FaqCard key={block.key} title={block.question} expanded={isEditMode}>
+        {answer}
+      </FaqCard>
+    );
+  });
   return (
     <article className={classes.entry} data-theme="day">
       <div className={classes.inner}>
@@ -112,38 +139,17 @@ export default function Entry({
                 <h2 id="faq" tabIndex={-1}>
                   {t("glossary.faq")}
                 </h2>
-                <Island component={Accordion}>
-                  {blocks.map((block) =>
-                    block.question ? (
-                      <Collapsible
-                        key={block.key}
-                        id={`glossary-faq-${block.key}`}
-                        title={block.question}
-                        expanded={isEditMode}
-                      >
-                        <div
-                          className="_richtext"
-                          dangerouslySetInnerHTML={{ __html: sanitizeHtml(block.html) }}
-                        />
-                      </Collapsible>
-                    ) : (
-                      <div
-                        key={block.key}
-                        className="_richtext"
-                        dangerouslySetInnerHTML={{ __html: block.html }}
-                      />
-                    ),
-                  )}
-                </Island>
+                {classicFaq ? (
+                  <Island component={Accordion}>{questions}</Island>
+                ) : (
+                  <div className={faqClasses.cards}>{questions}</div>
+                )}
               </section>
             )}
           </div>
         </div>
         <div className={classes.followUp}>
           <ManualResources resources={resources} />
-          {resources.length === 0 && resourceEndpoint && (
-            <Island component={DeferredSuggestions} props={{ endpoint: resourceEndpoint }} />
-          )}
           <footer className={classes.editorialFooter}>
             <div>
               {editorialDateLabel && (

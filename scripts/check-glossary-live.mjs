@@ -42,7 +42,7 @@ const request = (url, options = {}) =>
     signal: AbortSignal.timeout(60000),
   });
 const folder = `/sites/${site}/contents/glossary`;
-const query = `{jcr${workspace === "live" ? "(workspace:LIVE)" : ""}{nodeByPath(path:${JSON.stringify(folder)}){children{nodes{uuid name path properties(names:["mergedInto","j:published","j:invalidLanguages","autoLinks"],language:"en"){name value values}}}}}}`;
+const query = `{jcr${workspace === "live" ? "(workspace:LIVE)" : ""}{nodeByPath(path:${JSON.stringify(folder)}){children{nodes{uuid name path properties(names:["mergedInto","j:published","j:invalidLanguages","resources"],language:"en"){name value values}}}}}}`;
 const response = await request(new URL("/modules/graphql", origin), {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -85,15 +85,10 @@ await Promise.all(
         const issues = [];
         if (r.status !== 200 || !html.includes('id="definition"')) issues.push("render-error");
         if (targets.length) issues.push("synchronous-related-terms-visible");
-        if (
-          /aria-labelledby=["'](?:topic-cta)["']|data-element-name=["'](?:resource-detail|topic-resource)["']/.test(
-            html,
-          )
-        )
-          issues.push("synchronous-resource-block-visible");
-        const deferred = html.includes('data-deferred-resources="waiting"');
-        if (props(node).autoLinks !== "false" && !deferred)
-          issues.push("missing-deferred-suggestions");
+        const manual = /\bdata-glossary-manual-resources(?:=|\s|>)/.test(html);
+        if (manual && !props(node).resources?.length) issues.push("unexpected-manual-resources");
+        const deferred = /data-deferred-resources=|\.suggestions\.html/.test(html);
+        if (deferred) issues.push("automatic-suggestions-visible");
         const page = {
           deferred,
           name: node.name,

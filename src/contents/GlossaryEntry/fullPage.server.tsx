@@ -34,20 +34,13 @@ jahiaComponent(
       <Entry
         {...linked}
         faqItems={selectedFaqItems(currentNode)}
+        faqView={props.faqView}
         editorialDateLabel={editorialDateLabel}
         title={title || currentNode.getDisplayableName()}
         summary={props.summary || ""}
         indexUrl={index ? buildNodeUrl(index) : undefined}
         isEditMode={renderContext.isEditMode()}
         resources={selected}
-        resourceEndpoint={
-          !renderContext.isEditMode() &&
-          !props.resources?.length &&
-          props.autoLinks === true &&
-          !props.mergedInto
-            ? buildNodeUrl(currentNode, { extension: ".suggestions.html" })
-            : undefined
-        }
       />
     );
   },
