@@ -39,8 +39,23 @@ const load = (file, imports) => {
 
 for (const language of ["fr", "en"])
   for (const editMode of [false, true])
-    for (const automatic of [false, true]) {
-      test(`${language}, edit=${editMode}, automatic=${automatic}: initial render keeps editorial links without selecting suggestions`, () => {
+    for (const [automatic, manual] of [
+      [false, false],
+      [true, false],
+      [true, true],
+    ]) {
+      test(`${language}, edit=${editMode}, legacy autoLinks=${automatic}, manual=${manual}: only selected resources render`, () => {
+        const resource = {
+          id: "selected",
+          title: "Selected article",
+          url: "/article",
+          kind: "blog",
+        };
+        const reference = { getIdentifier: () => resource.id };
+        const FaqCard = load("../src/views/Card/FaqCard.tsx", {
+          "react/jsx-runtime": { jsx, jsxs: jsx },
+          "../Accordion/cards.module.css": { default: {} },
+        }).default;
         const Entry = load("../src/contents/GlossaryEntry/Entry.tsx", {
           "react/jsx-runtime": { jsx, jsxs: jsx },
           "react-i18next": {
@@ -55,12 +70,18 @@ for (const language of ["fr", "en"])
               props ? jsx("div", { "data-deferred-url": props.endpoint }) : children,
           },
           "../../views/Accordion/Accordion.client.jsx": { default: () => null },
+          "../../views/Accordion/cards.module.css": { default: {} },
+          "../../views/Card/FaqCard.jsx": { default: FaqCard },
           "../../views/Card/Collapsible.jsx": {
             default: ({ title, children }) => jsx("article", { children: [title, children] }),
           },
           "./faqBlocks.js": { faqBlocks },
-          "./ManualResources.jsx": { default: () => null },
-          "./DeferredSuggestions.client.jsx": { default: () => null },
+          "./ManualResources.jsx": {
+            default: ({ resources }) =>
+              resources.length
+                ? jsx("section", { id: "resources", children: resources[0].title })
+                : null,
+          },
           "./inlineTerms.js": { splitDefinition },
           "./sanitizeHtml.js": { sanitizeHtml },
           "./component.module.css": { default: {} },
@@ -81,7 +102,12 @@ for (const language of ["fr", "en"])
             server: { render: { addCacheDependency: (value) => dependencies.push(value.path) } },
           },
           "./faqItems.server.js": { selectedFaqItems: () => [] },
-          "./manualResources.server.js": { manualResources: () => [] },
+          "./manualResources.server.js": {
+            manualResources: (nodes) => {
+              assert.equal(nodes?.[0], manual ? reference : undefined);
+              return manual ? [resource] : [];
+            },
+          },
           "./inlineTerms.server.js": {
             linkedEditorialContent: (props) => {
               linkedCalls++;
@@ -100,27 +126,31 @@ for (const language of ["fr", "en"])
             },
           },
         });
-        const nodes = renderedNodes(
-          render(
-            {
-              "jcr:title": "Term",
-              "summary": "Existing summary",
-              "body": "<p>Existing introduction</p><p>Definition text</p>",
-              "comparison": "<table><tbody><tr><td>Comparison</td></tr></tbody></table>",
-              "example": "<p>Example</p>",
-              "faq": "<h3>Question?</h3><p>Answer</p>",
-              // Stored options must never move selection back into the initial render.
-              "autoLinks": automatic,
-              "resourceDisplayCount": "9",
-              "preferEducational": true,
-            },
-            {
-              currentNode: { hasProperty: () => false, getDisplayableName: () => "Term" },
-              currentResource: { getLocale: () => ({ getLanguage: () => language }) },
-              renderContext: { isEditMode: () => editMode },
-            },
-          ),
-        );
+        const renderEntry = (faqView) =>
+          renderedNodes(
+            render(
+              {
+                "jcr:title": "Term",
+                "summary": "Existing summary",
+                "body": "<p>Existing introduction</p><p>Definition text</p>",
+                "comparison": "<table><tbody><tr><td>Comparison</td></tr></tbody></table>",
+                "example": "<p>Example</p>",
+                "faq": "<h3>Question?</h3><p>Answer</p>",
+                "faqView": faqView,
+                // Stored options must never move selection back into the initial render.
+                "autoLinks": automatic,
+                "resources": manual ? [reference] : undefined,
+                "resourceDisplayCount": "9",
+                "preferEducational": true,
+              },
+              {
+                currentNode: { hasProperty: () => false, getDisplayableName: () => "Term" },
+                currentResource: { getLocale: () => ({ getLanguage: () => language }) },
+                renderContext: { isEditMode: () => editMode },
+              },
+            ),
+          );
+        const nodes = renderEntry();
         const html = nodes
           .map((node) =>
             typeof node === "string"
@@ -133,9 +163,7 @@ for (const language of ["fr", "en"])
         const islands = nodes.filter(
           (node) => typeof node === "object" && node.props?.["data-deferred-url"],
         );
-        assert.equal(islands.length, !editMode && automatic ? 1 : 0);
-        if (islands.length)
-          assert.equal(islands[0].props["data-deferred-url"], `/${language}/term.suggestions.html`);
+        assert.equal(islands.length, 0);
         assert.equal(linkedCalls, 1);
         assert.deepEqual(dependencies, ["/sites/test/index"]);
         for (const text of [
@@ -151,9 +179,71 @@ for (const language of ["fr", "en"])
         assert.ok(html.includes(`href="/${language}/linked-term"`));
         assert.ok(html.includes('data-glossary-mention="true"'));
         assert.ok(html.includes(`href="/${language}/glossary"`));
-        assert.doesNotMatch(
-          html,
-          /topic-cta|resource-detail|related-term|data-carousel-item|id="resources"/,
+        assert.equal(html.includes('id="resources"'), manual);
+        assert.equal(html.includes(resource.title), manual);
+        assert.doesNotMatch(html, /topic-cta|related-term|\.suggestions\.html/);
+        assert.equal(nodes.find((node) => node.type === "details")?.props.open, editMode);
+        const classic = renderEntry("classic");
+        assert.ok(classic.includes("Question?"));
+        assert.ok(
+          classic.some((node) => node.props?.dangerouslySetInnerHTML?.__html === "<p>Answer</p>"),
         );
+        assert.ok(!classic.some((node) => node.type === "details"));
       });
     }
+
+for (const editMode of [false, true]) {
+  test(`site FAQ defaults to chevron cards and keeps an explicit classic view, edit=${editMode}`, () => {
+    const views = new Map();
+    const lib = {
+      jahiaComponent: (options, view) => {
+        const name = options.name || "default";
+        assert.ok(!views.has(name), `Duplicate FAQ view: ${name}`);
+        views.set(name, view);
+        return view;
+      },
+      getChildNodes: () => [
+        {
+          getName: () => "question",
+          getDisplayableName: () => "Existing question",
+          getPropertyAsString: (name) =>
+            name === "body" ? "<p>Existing answer</p>" : "Existing question",
+        },
+      ],
+      RenderChildren: ({ view }) => jsx("items", { view }),
+      Island: ({ children }) => children,
+    };
+    const imports = {
+      "react/jsx-runtime": { jsx, jsxs: jsx, Fragment: "fragment" },
+      "@jahia/javascript-modules-library": lib,
+      "../../contents/GlossaryEntry/faqItems.js": {
+        richTextPlainText: (html) => html.replace(/<[^>]*>/g, ""),
+      },
+      "./cards.module.css": { default: {} },
+      "./Accordion.client.jsx": { default: ({ children }) => children },
+    };
+    const cards = load("../src/views/Accordion/cards.server.tsx", imports);
+    load("../src/views/Accordion/default.server.tsx", { ...imports, "./cards.server.jsx": cards });
+    load("../src/views/Accordion/classic.server.tsx", imports);
+    assert.equal(views.get("default"), views.get("cards"));
+    assert.notEqual(views.get("default"), views.get("classic"));
+    const context = { currentNode: {}, renderContext: { isEditMode: () => editMode } };
+    for (const [view, childView] of [
+      ["default", "hidden.faqCard"],
+      ["cards", "hidden.faqCard"],
+      ["classic", "hidden.collapsible"],
+    ]) {
+      const nodes = renderedNodes(views.get(view)({}, context));
+      assert.equal(nodes.find((n) => n.type === "items")?.props.view, childView);
+      const schemas = nodes.filter((n) => n.type === "script");
+      assert.equal(schemas.length, editMode ? 0 : 1);
+      if (!editMode) {
+        const schema = JSON.parse(
+          schemas[0].props.dangerouslySetInnerHTML?.__html || schemas[0].props.children,
+        );
+        assert.equal(schema.mainEntity[0].name, "Existing question");
+        assert.equal(schema.mainEntity[0].acceptedAnswer.text, "Existing answer");
+      }
+    }
+  });
+}

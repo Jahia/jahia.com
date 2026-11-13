@@ -203,7 +203,12 @@ export default function NavBar({
     }
   };
   const panel = (node: JCRNodeWrapper): NavigationPanel => {
-    const landing = panelLink(node, "navLandingPage", node.getDisplayableName());
+    const landingDisabled =
+      node.hasProperty("navLandingLinkDisabled") &&
+      node.getProperty("navLandingLinkDisabled").getBoolean();
+    const landing = landingDisabled
+      ? undefined
+      : panelLink(node, "navLandingPage", node.getDisplayableName());
     const featureLink = panelLink(node, "navFeatureLink", text(node, "navFeatureLabel"));
     const columns = (["One", "Two"] as const).flatMap((column) => {
       const property = `navColumn${column}Links` as const;

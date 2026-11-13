@@ -6,6 +6,9 @@
       "name": "navLandingPage"
     },
     {
+      "name": "navLandingLinkDisabled"
+    },
+    {
       "name": "navIntroEyebrow",
       "hide": true
     },

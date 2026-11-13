@@ -212,6 +212,7 @@ function fixture(language) {
 test("server adapter uses native default vanity, translation date and inherited editable image in FR/EN", () => {
   for (const language of ["fr", "en"]) {
     const { entry, index } = fixture(language);
+    entry.props.indexLabel = language === "fr" ? "Portail web" : "Web portal";
     const image = node("image", "jnt:file");
     index.props.openGraphImage = image;
     const result = glossaryMetadata({ "jcr:title": "Portal", "htmlTitle": "SEO title" }, "Home");
@@ -220,6 +221,7 @@ test("server adapter uses native default vanity, translation date and inherited 
     assert.equal(result.locale, language === "fr" ? "fr_FR" : "en_US");
     assert.equal(result.image, image);
     assert.equal(result.jsonLd.length, 4);
+    assert.equal(JSON.parse(result.jsonLd[0]).name, entry.props.indexLabel);
     assert.equal(JSON.parse(result.jsonLd[1]).dateModified, "2026-10-16T10:00:00.000Z");
     assert.ok(dependencies.some((path) => path.endsWith("vanityUrlMapping/default")));
     const override = node("override", "jnt:file");

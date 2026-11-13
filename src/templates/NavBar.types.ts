@@ -18,6 +18,7 @@ export type NavigationItemFields = {
 };
 export type NavigationPanelFields = {
   navLandingPage?: JCRNodeWrapper;
+  navLandingLinkDisabled?: boolean;
   navFeatureEyebrow?: string;
   navFeatureHeading?: string;
   navFeatureText?: string;

@@ -337,7 +337,7 @@
   min-block-size: 43rem;
 }
 
-.entry .faq h3 {
+.entry .faq h3:has(> [data-accordion-toggle]) {
   margin: 0;
   font-size: 1rem;
 }

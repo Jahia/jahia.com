@@ -23,6 +23,7 @@ export interface Props {
   "example"?: string;
   "faq"?: string;
   "faqData"?: string;
+  "faqView"?: "cards" | "classic";
   "comparisonTitle"?: string;
   "comparison"?: string;
 }

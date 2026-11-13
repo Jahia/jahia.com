@@ -182,6 +182,38 @@ test("section landing pages use native references and keep the existing submenu"
   assert.equal(entry.children[0].href, "/cms.html");
 });
 
+for (const disabled of [false, true]) {
+  test(`category link disabled=${disabled} preserves the submenu and other category links`, () => {
+    let landingReads = 0;
+    const category = (name, disabled) =>
+      node(name, {
+        isNodeType: (type) => type === "jnt:navMenuText",
+        children: [node(`${name}-child`)],
+        hasProperty: (name) => ["navLandingPage", "navLandingLinkDisabled"].includes(name),
+        getProperty: (property) =>
+          property === "navLandingLinkDisabled"
+            ? { getBoolean: () => disabled }
+            : {
+                getValue: () => ({
+                  getNode: () => {
+                    landingReads++;
+                    return node(`${name}-overview`);
+                  },
+                }),
+              },
+      });
+    const [product, solutions] = harness().nav(node("site"), [
+      category("Product", disabled),
+      category("Solutions", false),
+    ]).entries;
+    assert.equal(product.panel.landing?.href, disabled ? undefined : "/Product-overview.html");
+    assert.equal(product.children[0].href, "/Product-child.html");
+    assert.equal(solutions.panel.landing.href, "/Solutions-overview.html");
+    assert.equal(solutions.children[0].href, "/Solutions-child.html");
+    assert.equal(landingReads, disabled ? 1 : 2);
+  });
+}
+
 for (const target of [unavailable, () => node("private", { hasPermission: () => false })]) {
   test("an unavailable section landing page preserves its menu destinations", () => {
     const group = node("Product", {

@@ -2,7 +2,7 @@ import { getChildNodes, jahiaComponent, RenderChildren } from "@jahia/javascript
 import { richTextPlainText } from "../../contents/GlossaryEntry/faqItems.js";
 import classes from "./cards.module.css";
 
-jahiaComponent(
+export const renderFaqCards = jahiaComponent(
   {
     componentType: "view",
     nodeType: "jahiacom:accordion",
