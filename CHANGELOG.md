@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.3.4
+
+* Show only manually selected resources on glossary entries, including legacy published entries with automatic selection enabled. Add an editable switch for navigation category links. Use chevron FAQ cards by default across the site, preserve the classic accordion as an explicit option, and keep FAQ width stable when answers open.
+
 ## 2.3.3
 
 * Add selectable chevron and classic FAQ views, and an inset image view for banners such as the G2 badges on the homepage.
