@@ -29,7 +29,7 @@
     "test:navigation": "node --test scripts/test-navigation-references.mjs scripts/test-navbar-hover.mjs",
     "test:security": "node --test scripts/test-braces-security.mjs",
     "test:press": "node --test scripts/test-press-delivery.mjs",
-    "test:breadcrumb": "node --test scripts/test-breadcrumb-extension.mjs"
+    "test:breadcrumb": "node --test scripts/test-breadcrumb-extension.mjs scripts/test-breadcrumb-registration.mjs"
   },
   "dependencies": {
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",

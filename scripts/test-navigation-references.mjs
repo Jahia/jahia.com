@@ -529,7 +529,7 @@ function inlineSettingsHarness({ readOnly = false } = {}) {
     if (kind === "Picker") selector.resolver = () => selector;
     registry.add("selectorType", kind, selector);
   }
-  runInNewContext(readFileSync(resolve("javascript/apps/partner-editors-1.5.js"), "utf8"), {
+  runInNewContext(readFileSync(resolve("javascript/apps/partner-editors-2.4.1.js"), "utf8"), {
     window: {
       jahia: {
         uiExtender: { registry },
@@ -773,7 +773,7 @@ function footerEditorRegistry() {
       });
     registry.add("selectorType", kind, selector);
   }
-  runInNewContext(readFileSync(resolve("javascript/apps/partner-editors-1.5.js"), "utf8"), {
+  runInNewContext(readFileSync(resolve("javascript/apps/partner-editors-2.4.1.js"), "utf8"), {
     window: {
       jahia: {
         uiExtender: { registry },
