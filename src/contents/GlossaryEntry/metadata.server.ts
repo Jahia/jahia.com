@@ -11,6 +11,8 @@ import { resolveGlossaryIndex } from "./indexPage.js";
 import { entrySchemas, hubSchemas, mergeSchemas } from "./structuredData.js";
 import { glossaryEntries } from "../../views/Glossary/entries.server.js";
 
+import { breadcrumbItems, readBreadcrumbSettings } from "../../templates/breadcrumbModel.js";
+
 interface VanityService {
   getVanityUrlForWorkspaceAndLocale(
     node: JCRNodeWrapper,
@@ -85,7 +87,6 @@ export function glossaryMetadata(
   depend(renderContext.getSite());
   depend(mainNode);
   const url = publicUrl(mainNode);
-  const homeUrl = publicUrl(home);
   const read = (node: JCRNodeWrapper, key: string) =>
     node.hasProperty(key) ? node.getPropertyAsString(key) : undefined;
   const reference = (node: JCRNodeWrapper, key: string) => {
@@ -103,6 +104,45 @@ export function glossaryMetadata(
   let image = props.openGraphImage;
   if (!image && index) image = reference(index, "openGraphImage");
   if (image) depend(image);
+  const breadcrumbSettings = readBreadcrumbSettings(renderContext.getSite(), depend);
+  const breadcrumbs = breadcrumbItems(mainNode, home, {
+    settings: breadcrumbSettings,
+    language,
+    homeLabel,
+    title: props["jcr:title"],
+    index: isEntry ? index : undefined,
+    cache: depend,
+    url: publicUrl,
+    available: (node) => {
+      try {
+        depend(node);
+        if (!node.hasPermission("jcr:read") || !node.hasI18N(currentResource.getLocale()))
+          return false;
+        const translation = "j:translation_" + language;
+        if (node.hasNode(translation)) depend(node.getNode(translation));
+        return (
+          !node.hasProperty("j:invalidLanguages") ||
+          !Array.from(node.getProperty("j:invalidLanguages").getValues()).some(
+            (value) => value.getString() === language,
+          )
+        );
+      } catch {
+        return false;
+      }
+    },
+    resolve: (id) => {
+      try {
+        const target = home.getSession().getNodeByIdentifier(id);
+        return target.getPath().startsWith(renderContext.getSite().getPath() + "/")
+          ? target
+          : undefined;
+      } catch {
+        return undefined;
+      }
+    },
+  })
+    .filter((item, position, items) => position === items.length - 1 || item.href)
+    .map((item) => ({ name: item.label, ...(item.href ? { url: item.href } : {}) }));
   let generated: unknown[];
   if (isEntry) {
     const translation = `j:translation_${language}`;
@@ -126,14 +166,7 @@ export function glossaryMetadata(
       modified: translatedNode ? read(translatedNode, "jcr:lastModified") : undefined,
       faq: read(mainNode, "faq"),
       faqItems: selectedFaqItems(mainNode),
-      breadcrumbs:
-        index && indexUrl
-          ? [
-              { name: homeLabel, url: homeUrl },
-              { name: index.getDisplayableName(), url: indexUrl },
-              { name: props["jcr:title"] },
-            ]
-          : [],
+      breadcrumbs,
     });
   } else {
     depend(hub!);
@@ -147,7 +180,7 @@ export function glossaryMetadata(
         title: read(node, "indexLabel") || read(node, "jcr:title") || node.getName(),
         url: publicUrl(node),
       })),
-      breadcrumbs: [{ name: homeLabel, url: homeUrl }, { name: props["jcr:title"] }],
+      breadcrumbs,
     });
   }
   return {

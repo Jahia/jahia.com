@@ -1,0 +1,3 @@
+// Independent, publishable site settings managed by the Breadcrumb extension.
+[jahiacom:breadcrumbSettings] > jnt:content, mix:title, jmix:siteComponent, jmix:hiddenType
+ - configuration (string)
