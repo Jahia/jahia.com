@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.4.1
+
+* Show the Breadcrumb extension to users who can access jContent, without requiring write access on the site root to display the menu. Preserve server-side editing and publication permissions. Load the editor integrations through a new script URL to avoid retaining the previous cached bootstrap.
+
 ## 2.4.0
 
 * Add an independent Breadcrumb extension with translated labels, a native site page picker and targeted draft/publication. Let editors explicitly choose or remove one parent page per top-level section, without automatic associations. Extend breadcrumbs across the site hierarchy, skip structural groups and keep glossary structured data aligned. Preserve navbar behavior and existing content.
