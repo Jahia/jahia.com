@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.4.0
+
+* Add an independent Breadcrumb extension with translated labels, a native site page picker and targeted draft/publication. Let editors explicitly choose or remove one parent page per top-level section, without automatic associations. Extend breadcrumbs across the site hierarchy, skip structural groups and keep glossary structured data aligned. Preserve navbar behavior and existing content.
+
 ## 2.3.4
 
 * Show only manually selected resources on glossary entries, including legacy published entries with automatic selection enabled. Add an editable switch for navigation category links. Use chevron FAQ cards by default across the site, preserve the classic accordion as an explicit option, and keep FAQ width stable when answers open.
