@@ -1,0 +1,25 @@
+.jahiacomBreadcrumbManager {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.jahiacomBreadcrumbManager .breadcrumbSettingsContent {
+  flex: 1;
+  padding: 24px 32px;
+  overflow: auto;
+}
+
+.jahiacomBreadcrumbManager .breadcrumbSettingsBody {
+  display: grid;
+  gap: 24px;
+  max-width: 960px;
+}
+
+/* Keep text readable on Moonstone's standard button hover background. */
+/* stylelint-disable-next-line selector-class-pattern -- Native Moonstone button class. */
+.jahiacomBreadcrumbManager .moonstone-button:hover:not(:disabled, :active) {
+  /* stylelint-disable-next-line custom-property-pattern -- Native Moonstone contrast tokens. */
+  color: var(--moon-color-accent_dark_contrast, var(--moon-color-gray_dark));
+}

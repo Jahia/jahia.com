@@ -11,12 +11,7 @@ import { resolveGlossaryIndex } from "../contents/GlossaryEntry/indexPage.js";
 import classes from "./Breadcrumb.module.css";
 import ResourceUrl from "../components/ResourceUrl.client.jsx";
 
-type BreadcrumbItem = {
-  id: string;
-  label: string;
-  node?: JCRNodeWrapper;
-  href?: string;
-};
+import { breadcrumbItems, readBreadcrumbSettings } from "./breadcrumbModel.js";
 
 const RESOURCE_LIBRARY_PATH =
   /\/(?:livres-blancs-videos-autres|whitepapers-videos-(?:and-)?others?)$/i;
@@ -48,13 +43,12 @@ const findResourceLibrary = (
 export default function Breadcrumb({
   pageType,
   title,
-  glossaryHub,
 }: {
   pageType?: string;
   title: string;
   glossaryHub?: boolean;
 }) {
-  const { mainNode, renderContext } = useServerContext();
+  const { mainNode, renderContext, currentResource } = useServerContext();
   const { t } = useTranslation();
   const home = renderContext.getSite().getHome();
   const resourceLibrary = findResourceLibrary(mainNode, home);
@@ -66,50 +60,50 @@ export default function Breadcrumb({
     `,
   });
 
-  let items: BreadcrumbItem[] = [];
-
-  if (mainNode.isNodeType("jahiacom:glossaryEntry")) {
-    const index = resolveGlossaryIndex(mainNode, (node) =>
-      server.render.addCacheDependency({ path: node.getPath() }, renderContext),
-    );
-    if (index && index.hasPermission("jcr:read")) {
-      server.render.addCacheDependency({ path: index.getPath() }, renderContext);
-      items = [
-        { id: home.getIdentifier(), label: t("breadcrumb.home"), node: home },
-        { id: index.getIdentifier(), label: index.getDisplayableName(), node: index },
-        { id: mainNode.getIdentifier(), label: title },
-      ];
+  const cache = (node: JCRNodeWrapper) =>
+    server.render.addCacheDependency({ path: node.getPath() }, renderContext);
+  const settings = readBreadcrumbSettings(renderContext.getSite(), cache);
+  const locale = currentResource.getLocale(),
+    language = locale.getLanguage();
+  const available = (node: JCRNodeWrapper) => {
+    try {
+      cache(node);
+      if (!node.hasPermission("jcr:read") || !node.hasI18N(locale)) return false;
+      const translation = "j:translation_" + language;
+      if (node.hasNode(translation)) cache(node.getNode(translation));
+      return (
+        !node.hasProperty("j:invalidLanguages") ||
+        !Array.from(node.getProperty("j:invalidLanguages").getValues()).some(
+          (value) => value.getString() === language,
+        )
+      );
+    } catch {
+      return false;
     }
-  } else if (glossaryHub) {
-    items = [
-      { id: home.getIdentifier(), label: t("breadcrumb.home"), node: home },
-      { id: mainNode.getIdentifier(), label: title },
-    ];
-  } else if (pageType === "blog_post") {
-    items = [
-      { id: home.getIdentifier(), label: t("breadcrumb.home"), node: home },
-      {
-        id: blogPages[0]?.getIdentifier() || "blog",
-        label: t("breadcrumb.blog"),
-        node: blogPages[0],
-      },
-      { id: mainNode.getIdentifier(), label: title },
-    ];
-  } else if (pageType === "resource_library" || resourceLibrary) {
-    items = [
-      { id: home.getIdentifier(), label: t("breadcrumb.home"), node: home },
-      ...(resourceLibrary && resourceLibrary.getIdentifier() !== mainNode.getIdentifier()
-        ? [
-            {
-              id: resourceLibrary.getIdentifier(),
-              label: resourceLibrary.getDisplayableName(),
-              node: resourceLibrary,
-            },
-          ]
-        : []),
-      { id: mainNode.getIdentifier(), label: title },
-    ];
-  }
+  };
+  let index: JCRNodeWrapper | undefined;
+  if (mainNode.isNodeType("jahiacom:glossaryEntry")) index = resolveGlossaryIndex(mainNode, cache);
+  else if (pageType === "blog_post") index = blogPages.find(available);
+  const items = breadcrumbItems(mainNode, home, {
+    settings,
+    language,
+    title,
+    homeLabel: t("breadcrumb.home"),
+    index,
+    cache,
+    available,
+    url: (node) => buildNodeUrl(node),
+    resolve: (id) => {
+      try {
+        const node = home.getSession().getNodeByIdentifier(id);
+        return node.getPath().startsWith(renderContext.getSite().getPath() + "/")
+          ? node
+          : undefined;
+      } catch {
+        return undefined;
+      }
+    },
+  });
 
   if (items.length < 2) return null;
 
@@ -128,11 +122,7 @@ export default function Breadcrumb({
 
           return (
             <li key={item.id} aria-current={current ? "page" : undefined}>
-              {!current && item.node ? (
-                <a href={item.href || buildNodeUrl(item.node)}>{item.label}</a>
-              ) : (
-                item.label
-              )}
+              {!current && item.href ? <a href={item.href}>{item.label}</a> : item.label}
             </li>
           );
         })}

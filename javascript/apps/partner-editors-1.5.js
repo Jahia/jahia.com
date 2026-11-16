@@ -2783,3 +2783,68 @@
     },
   });
 })();
+
+// Independent native jContent extension: no dependency on the navigation editor.
+(function () {
+  const jahia = window.jahia,
+    registry = jahia?.uiExtender?.registry;
+  if (!registry || !jahia.i18n) return;
+  const element = (type, props = {}) => ({
+    $$typeof: Symbol.for("react.element"),
+    type,
+    key: null,
+    ref: null,
+    props,
+    _owner: null,
+    _store: {},
+  });
+  function Loader(props) {
+    this.props = props;
+    this.state = { component: null, error: null };
+  }
+  Loader.prototype.isReactComponent = {};
+  Loader.prototype.componentDidMount = function () {
+    this.active = true;
+    import(
+      (window.contextJsParameters.contextPath || "") +
+        "/modules/jahiacom/javascript/breadcrumb/manager.js"
+    )
+      .then((module) => {
+        if (this.active)
+          this.updater.enqueueSetState(
+            this,
+            { component: module.BreadcrumbManager },
+            null,
+            "setState",
+          );
+      })
+      .catch((error) => {
+        if (this.active)
+          this.updater.enqueueSetState(this, { error: error.message }, null, "setState");
+      });
+  };
+  Loader.prototype.componentWillUnmount = function () {
+    this.active = false;
+  };
+  Loader.prototype.render = function () {
+    return this.state.component
+      ? element(this.state.component)
+      : this.state.error
+        ? element(jahia.moonstone.Typography, {
+            component: "p",
+            role: "alert",
+            children: this.state.error,
+          })
+        : element(jahia.moonstone.Loader, { size: "big" });
+  };
+  jahia.i18n.addResourceBundle("fr", "jahiacom-breadcrumb", { title: "Fil d’Ariane" }, true, true);
+  jahia.i18n.addResourceBundle("en", "jahiacom-breadcrumb", { title: "Breadcrumb" }, true, true);
+  registry.add("adminRoute", "jahiacom-breadcrumb", {
+    targets: ["jcontent:85"],
+    label: "jahiacom-breadcrumb:title",
+    isSelectable: true,
+    requiredPermission: "jcr:modifyProperties",
+    requireModuleInstalledOnSite: "jahiacom",
+    render: () => element(Loader),
+  });
+})();
