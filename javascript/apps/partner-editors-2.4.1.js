@@ -2843,7 +2843,8 @@
     targets: ["jcontent:85"],
     label: "jahiacom-breadcrumb:title",
     isSelectable: true,
-    requiredPermission: "jcr:modifyProperties",
+    // This controls visibility, while GraphQL enforces edit and publication rights.
+    requiredPermission: "jContentAccess",
     requireModuleInstalledOnSite: "jahiacom",
     render: () => element(Loader),
   });
