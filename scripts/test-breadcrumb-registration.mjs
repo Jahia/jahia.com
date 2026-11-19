@@ -39,7 +39,7 @@ test("the deployed app manifest loads a new bootstrap URL containing the indepen
   assert.equal(typeof route.render, "function");
   assert.equal(route.isSelectable, true);
   assert.ok(registered.has("selectorType/FooterLinksPicker"));
-  assert.ok(!registered.has("adminRoute/jahiacom-navigation"));
+  assert.ok(registered.has("adminRoute/jahiacom-navigation"));
 });
 
 test("an editor can see Breadcrumb without write access to the site root", () => {

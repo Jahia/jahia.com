@@ -1,0 +1,226 @@
+.jahiacomNavigationManager {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.jahiacomNavigationManager .navigationWorkspace {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.jahiacomNavigationManager .navigationContext,
+.jahiacomNavigationManager .navigationControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  padding: 16px 32px;
+}
+
+.jahiacomNavigationManager .navigationContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  padding: 16px 32px 32px;
+  container-type: inline-size;
+  overflow: hidden;
+}
+
+.jahiacomNavigationManager .navigationEditorLayout {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 0;
+  overflow: auto;
+}
+
+.jahiacomNavigationManager .navigationSettingsPane {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.jahiacomNavigationManager .navigationContent section,
+.jahiacomNavigationManager .navigationPresentation {
+  display: grid;
+  gap: 20px;
+}
+
+.jahiacomNavigationManager .navigationControls {
+  padding: 0;
+}
+
+.jahiacomNavigationManager .navigationTable {
+  overflow-x: auto;
+}
+
+.jahiacomNavigationManager .navigationSourceRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 220px;
+}
+
+.jahiacomNavigationManager .navigationSourceRow p {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.jahiacomNavigationManager .navigationColumns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.jahiacomNavigationManager .navigationColumn {
+  min-width: 0;
+  padding: 20px;
+  /* stylelint-disable-next-line custom-property-pattern -- Native Moonstone token. */
+  border: 1px solid var(--moon-color-gray_light);
+}
+
+.jahiacomNavigationManager .navigationBranchList {
+  display: grid;
+  gap: 24px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.jahiacomNavigationManager .navigationBranch {
+  display: grid;
+  gap: 20px;
+  padding-top: 16px;
+  /* stylelint-disable-next-line custom-property-pattern -- Native Moonstone token. */
+  border-top: 1px solid var(--moon-color-gray_light);
+}
+
+.jahiacomNavigationManager .navigationColumnPage {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.jahiacomNavigationManager .navigationPageHeading {
+  display: flex;
+  gap: 12px;
+  align-items: start;
+}
+
+.jahiacomNavigationManager .navigationPageHeading > :first-child {
+  flex: 0 0 auto;
+}
+
+.jahiacomNavigationManager .navigationPageHeading > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.jahiacomNavigationManager .navigationIconPreview,
+.jahiacomNavigationManager .navigationIconActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.jahiacomNavigationManager .navigationIconPreview img {
+  object-fit: contain;
+}
+
+.jahiacomNavigationManager .navigationInlineEditor {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  padding: 16px 0;
+}
+
+.jahiacomNavigationManager .navigationOrderActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.jahiacomNavigationManager .navigationPreview {
+  flex-shrink: 0;
+  align-content: start;
+  min-width: 0;
+  padding: 20px;
+  /* stylelint-disable-next-line custom-property-pattern -- Native Moonstone token. */
+  border: 1px solid var(--moon-color-gray_light);
+}
+
+.jahiacomNavigationManager .navigationPreview:fullscreen {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  overflow: auto;
+  /* stylelint-disable-next-line custom-property-pattern -- Native Moonstone token. */
+  background: var(--moon-color-white, white);
+}
+
+.jahiacomNavigationManager .navigationPreview:fullscreen > * {
+  flex-shrink: 0;
+}
+
+@container (min-width: 960px) {
+  .jahiacomNavigationManager .navigationEditorLayout[data-preview="true"] {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: minmax(380px, 0.85fr) minmax(0, 1.15fr);
+    overflow: hidden;
+  }
+
+  .jahiacomNavigationManager .navigationEditorLayout[data-preview="true"] > .navigationSettingsPane,
+  .jahiacomNavigationManager .navigationEditorLayout[data-preview="true"] > .navigationPreview {
+    min-height: 0;
+    overflow: auto;
+  }
+}
+
+.jahiacomNavigationManager .navigationPreviewViewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.jahiacomNavigationManager .navigationPreviewViewport iframe {
+  display: block;
+  max-width: none;
+  border: 0;
+  transform-origin: top left;
+}
+
+/* Keep text readable when Moonstone's standard button hover uses its bright accent. */
+/* stylelint-disable-next-line selector-class-pattern -- Native Moonstone button class. */
+.jahiacomNavigationManager .moonstone-button:hover:not(:disabled, :active) {
+  /* stylelint-disable-next-line custom-property-pattern -- Native Moonstone contrast tokens. */
+  color: var(--moon-color-accent_dark_contrast, var(--moon-color-gray_dark));
+}
+
+.jahiacomNavigationManager .navigationBranchControls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+  gap: 12px;
+}
+
+@media (width < 900px) {
+  .jahiacomNavigationManager .navigationContext,
+  .jahiacomNavigationManager .navigationControls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.jahiacomNavigationManager .navigationUpperItem {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--moon-color-gray_light); /* stylelint-disable-line custom-property-pattern -- Native Moonstone token. */
+}

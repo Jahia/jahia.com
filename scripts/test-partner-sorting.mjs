@@ -147,7 +147,7 @@ test("partner form offers one sort control and removes only its generic ordering
 
 test("old lists display their effective default without projecting over a saved choice", () => {
   const source = readFileSync(
-    new URL("../javascript/apps/partner-editors-2.4.1.js", import.meta.url),
+    new URL("../javascript/apps/partner-editors-2.4.1-navbar.js", import.meta.url),
     "utf8",
   );
   const start = source.indexOf("function upgradeValues(");

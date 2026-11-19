@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { emptySection } from "../javascript/navigation/model.js";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { createRequire } from "node:module";
@@ -32,6 +33,7 @@ const node = (name, extra = {}) => ({
   getPath: () => `/sites/test/${name}`,
   isNodeType: (type) => type === "jnt:page",
   hasI18N: () => true,
+  getSession: () => ({ getWorkspace: () => ({ getName: () => "live" }) }),
   hasPermission: () => true,
   ...extra,
 });
@@ -91,7 +93,13 @@ function harness() {
         if (id.endsWith("NavBar.client.jsx")) return { default: () => null };
         if (id.startsWith(".")) {
           const path = resolve(dirname(file), id).replace(/\.jsx?$/, "");
-          return load(existsSync(`${path}.tsx`) ? `${path}.tsx` : `${path}.ts`);
+          return load(
+            existsSync(`${path}.tsx`)
+              ? `${path}.tsx`
+              : existsSync(`${path}.ts`)
+                ? `${path}.ts`
+                : `${path}.js`,
+          );
         }
         return require(id);
       },
@@ -246,6 +254,51 @@ test("navigation uses the single image field and broken images preserve their me
     Array.from(props.entries, (entry) => entry.href),
     ["/custom.html", "/deleted.html", "/bad-url.html"],
   );
+});
+
+test("central image icons enforce image type and ACL without removing valid menu links", () => {
+  const section = {
+    ...emptySection(),
+    icons: {
+      allowed: { kind: "image", id: "allowed-image" },
+      denied: { kind: "image", id: "private-image" },
+      wrong: { kind: "image", id: "page" },
+      missing: { kind: "image", id: "missing" },
+    },
+  };
+  const configuration = node("configuration", {
+    isNodeType: (type) => type === "jahiacom:navigationSettings",
+    hasProperty: (name) => name === "configuration",
+    getPropertyAsString: () =>
+      JSON.stringify({ version: 1, mode: "automatic", sections: { section } }),
+  });
+  const site = node("site", { hasNode: () => true, getNode: () => configuration });
+  const image = (name, allowed = true) =>
+    node(name, { isNodeType: (type) => type === "jmix:image", hasPermission: () => allowed });
+  const images = {
+    "allowed-image": image("allowed-image"),
+    "private-image": image("private-image", false),
+    "page": node("page"),
+  };
+  const group = node("section", {
+    isNodeType: (type) => type === "jnt:navMenuText",
+    children: ["allowed", "denied", "wrong", "missing"].map((name) => node(name)),
+  });
+  const props = harness().nav(site, [group], {
+    getSession: () => ({
+      getWorkspace: () => ({ getName: () => "live" }),
+      getNodeByIdentifier: (id) => {
+        if (!images[id]) return unavailable();
+        return images[id];
+      },
+    }),
+  });
+  assert.equal(props.entries[0].children[0].icon, "/allowed-image.html");
+  assert.deepEqual(
+    Array.from(props.entries[0].children.slice(1), (entry) => entry.icon),
+    [undefined, undefined, undefined],
+  );
+  assert.equal(props.entries[0].children.length, 4);
 });
 
 for (const [view, property] of [
@@ -476,6 +529,7 @@ test("inline upper links preserve order, localized labels and internal permissio
     hasProperty: (key) => key === "utilityItemsData",
     getPropertyAsString: () => JSON.stringify(rows),
     getSession: () => ({
+      getWorkspace: () => ({ getName: () => "live" }),
       getNodeByIdentifier: (id) => {
         if (!targets[id]) throw new Error("missing");
         return targets[id];
@@ -529,16 +583,19 @@ function inlineSettingsHarness({ readOnly = false } = {}) {
     if (kind === "Picker") selector.resolver = () => selector;
     registry.add("selectorType", kind, selector);
   }
-  runInNewContext(readFileSync(resolve("javascript/apps/partner-editors-2.4.1.js"), "utf8"), {
-    window: {
-      jahia: {
-        uiExtender: { registry },
-        moonstone: { Button: "Button", Field: "Field", Typography: "Typography" },
-        jcontent: { ContentEditorContext: { Consumer: "EditorContextConsumer" } },
+  runInNewContext(
+    readFileSync(resolve("javascript/apps/partner-editors-2.4.1-navbar.js"), "utf8"),
+    {
+      window: {
+        jahia: {
+          uiExtender: { registry },
+          moonstone: { Button: "Button", Field: "Field", Typography: "Typography" },
+          jcontent: { ContentEditorContext: { Consumer: "EditorContextConsumer" } },
+        },
       },
+      document: { documentElement: { lang: "fr" } },
     },
-    document: { documentElement: { lang: "fr" } },
-  });
+  );
   const names = [
     "utilitySearchVisible",
     "utilitySearchLabel",
@@ -773,16 +830,19 @@ function footerEditorRegistry() {
       });
     registry.add("selectorType", kind, selector);
   }
-  runInNewContext(readFileSync(resolve("javascript/apps/partner-editors-2.4.1.js"), "utf8"), {
-    window: {
-      jahia: {
-        uiExtender: { registry },
-        moonstone: { Button: "Button", Field: "Field", Typography: "Typography" },
-        jcontent: { ContentEditorContext: { Consumer: "EditorContextConsumer" } },
+  runInNewContext(
+    readFileSync(resolve("javascript/apps/partner-editors-2.4.1-navbar.js"), "utf8"),
+    {
+      window: {
+        jahia: {
+          uiExtender: { registry },
+          moonstone: { Button: "Button", Field: "Field", Typography: "Typography" },
+          jcontent: { ContentEditorContext: { Consumer: "EditorContextConsumer" } },
+        },
       },
+      document: { documentElement: { lang: "fr" } },
     },
-    document: { documentElement: { lang: "fr" } },
-  });
+  );
   return registry;
 }
 

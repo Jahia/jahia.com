@@ -1,0 +1,16 @@
+// Opt-in navigation: absence of the setting preserves the existing renderer and selection.
+[jahiacommix:automaticNavigationSettings] mixin extends=jnt:virtualsite
+ - navbarMode (string, choicelist[resourceBundle]) = 'legacy' < 'legacy', 'automatic'
+
+[jahiacommix:automaticNavigationItem] mixin extends=jnt:page extends=jnt:navMenuText extends=jnt:nodeLink extends=jnt:externalLink
+ - navExcluded (boolean) = false
+ - navExpandChildren (boolean) = true
+ - navAutoLabel (string) i18n
+ - navOtherLinksLabel (string) i18n
+ - navDiscoverVisible (boolean) = true
+ - navDiscoverLabel (string) i18n
+ - navDiscoverPage (weakreference, picker[type='page']) < jnt:page
+
+// A single publishable configuration, managed from jContent > Extensions.
+[jahiacom:navigationSettings] > jnt:content, mix:title, jmix:siteComponent, jmix:hiddenType
+ - configuration (string)

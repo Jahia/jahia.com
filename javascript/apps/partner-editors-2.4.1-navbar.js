@@ -2849,3 +2849,86 @@
     render: () => element(Loader),
   });
 })();
+
+// Site-scoped navigation editor in jContent > Extensions.
+(function () {
+  "use strict";
+  var jahia = window.jahia;
+  if (!jahia?.i18n || !jahia.uiExtender?.registry) return;
+  var registry = jahia.uiExtender.registry;
+  function element(type, props) {
+    return {
+      $$typeof: Symbol.for("react.element"),
+      type: type,
+      key: null,
+      ref: null,
+      props: props || {},
+      _owner: null,
+      _store: {},
+    };
+  }
+  function NavigationSettingsLoader(props) {
+    this.props = props;
+    this.state = { component: null, error: null };
+  }
+  NavigationSettingsLoader.prototype.isReactComponent = {};
+  NavigationSettingsLoader.prototype.componentDidMount = function () {
+    var self = this;
+    self.active = true;
+    import(
+      (window.contextJsParameters.contextPath || "") +
+        "/modules/jahiacom/javascript/navigation/manager.js?editor=tabs-1"
+    )
+      .then(function (module) {
+        if (self.active)
+          self.updater.enqueueSetState(
+            self,
+            { component: module.NavigationManager },
+            null,
+            "setState",
+          );
+      })
+      .catch(function (error) {
+        if (self.active)
+          self.updater.enqueueSetState(self, { error: error.message }, null, "setState");
+      });
+  };
+  NavigationSettingsLoader.prototype.componentWillUnmount = function () {
+    this.active = false;
+  };
+  NavigationSettingsLoader.prototype.render = function () {
+    return this.state.component
+      ? element(this.state.component)
+      : this.state.error
+        ? element(jahia.moonstone.Typography, {
+            component: "p",
+            role: "alert",
+            children: this.state.error,
+          })
+        : element(jahia.moonstone.Loader, { size: "big" });
+  };
+  jahia.i18n.addResourceBundle(
+    "fr",
+    "jahiacom-navigation",
+    { title: "Navigation du site" },
+    true,
+    true,
+  );
+  jahia.i18n.addResourceBundle(
+    "en",
+    "jahiacom-navigation",
+    { title: "Site navigation" },
+    true,
+    true,
+  );
+  registry.add("adminRoute", "jahiacom-navigation", {
+    targets: ["jcontent:80"],
+    label: "jahiacom-navigation:title",
+    isSelectable: true,
+    requiredPermission: "jContentAccess",
+    requireModuleInstalledOnSite: "jahiacom",
+    render: function () {
+      return element(NavigationSettingsLoader);
+    },
+  });
+})();

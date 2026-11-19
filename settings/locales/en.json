@@ -228,5 +228,8 @@
     "pageStatus": "Page {{page}} of {{total}}",
     "goToPage": "Go to page {{page}}",
     "readMore": "Read more"
+  },
+  "navigation": {
+    "discover": "Discover {{title}}"
   }
 }

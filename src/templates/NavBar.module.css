@@ -304,6 +304,24 @@ span.rssIcon {
   object-fit: contain;
 }
 
+.entryLabel {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.entryLabel > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.mobileLink .entryLabel,
+.submenuLabel .entryLabel {
+  align-items: flex-start;
+}
+
 .mobileMenu {
   padding: 0.5rem;
 }
@@ -385,6 +403,95 @@ span.rssIcon {
   padding: 0.5rem;
 }
 
+.automaticPanel {
+  padding: 0.5rem;
+  font-weight: 500;
+}
+
+.discoverLink {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  min-height: 2.75rem;
+  margin: 0 0.75rem 0.5rem;
+  font-weight: 500;
+  color: var(--jahia-a11y-blue);
+}
+
+.automaticLinks {
+  display: grid;
+  gap: 0;
+  align-content: start;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.automaticLinks > li {
+  min-width: 0;
+}
+
+.automaticLinks > li[data-depth="1"] {
+  padding-inline-start: 1.25rem;
+}
+
+.automaticLinks > li[data-branch-start="true"] {
+  margin-block-start: 0.5rem;
+}
+
+.automaticLinks a {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  line-height: 1.5;
+  color: var(--jahia-navy-blue);
+  overflow-wrap: anywhere;
+  border-radius: 0.25rem;
+}
+
+.automaticLinks a > span {
+  min-width: 0;
+}
+
+.automaticLinks a:hover {
+  color: var(--jahia-a11y-blue);
+  background: var(--jahia-neutral-100);
+}
+
+.automaticColumns {
+  display: grid;
+  gap: 0.25rem 1.25rem;
+  min-width: 0;
+  padding: 0.25rem;
+}
+
+@container (width >= 75rem) {
+  .automaticColumns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .automaticColumns[data-count="1"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .automaticColumns[data-count="3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .automaticColumns[data-count="4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .nav[data-automatic="true"] .desktopBar {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+}
+
 .nav a:focus-visible,
 .nav button:focus-visible {
   outline: 2px solid var(--jahia-a11y-blue);
@@ -464,6 +571,11 @@ span.rssIcon {
     border-radius: 0 0 0.5rem 0.5rem;
   }
 
+  .desktopMenu[data-columns="3"],
+  .desktopMenu[data-columns="4"] {
+    width: min(72rem, calc(100% - 3rem));
+  }
+
   .panelLayout {
     gap: 0;
   }
@@ -510,4 +622,18 @@ span.rssIcon {
 
 .upperButtons:empty {
   display: none;
+}
+
+.automaticLinks > li[data-parent="true"] > a {
+  font-weight: 700;
+}
+
+.automaticLinks > li[data-weight="bold"] > a,
+.entryLabel[data-weight="bold"] {
+  font-weight: 700;
+}
+
+.automaticLinks > li[data-weight="normal"] > a,
+.entryLabel[data-weight="normal"] {
+  font-weight: 500;
 }

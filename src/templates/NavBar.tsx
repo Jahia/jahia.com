@@ -1,3 +1,4 @@
+import { projectUpperBar } from "../../javascript/navigation/upperBar.js";
 import cmsIcon from "../../static/icons/navigation/cms.png?no-inline";
 import dxpIcon from "../../static/icons/navigation/dxp.png?no-inline";
 import aiIcon from "../../static/icons/navigation/ai.svg?no-inline";
@@ -28,6 +29,9 @@ import type {
 } from "./NavBar.types.js";
 import { navigationUrl } from "./navigationUrl.js";
 import { referenceLink } from "./referenceLink.js";
+import { useTranslation } from "react-i18next";
+import { automaticNavigation } from "./automaticNavigation.js";
+import { safeSettings } from "../../javascript/navigation/model.js";
 
 const text = (
   node: JCRNodeWrapper,
@@ -163,6 +167,34 @@ export default function NavBar({
   language: string;
 }) {
   const { renderContext } = useServerContext();
+  const { t } = useTranslation();
+  server.render.addCacheDependency({ path: site.getPath() }, renderContext);
+  const configurationNode = site.hasNode("navigation-settings")
+    ? site.getNode("navigation-settings")
+    : undefined;
+  const configuration = configurationNode?.isNodeType("jahiacom:navigationSettings")
+    ? configurationNode
+    : undefined;
+  if (configuration)
+    server.render.addCacheDependency({ path: configuration.getPath() }, renderContext);
+  const settings = safeSettings(
+    configuration?.hasProperty("configuration")
+      ? configuration.getPropertyAsString("configuration")
+      : undefined,
+  );
+  const automatic = settings
+    ? settings.mode === "automatic"
+    : site.hasProperty("navbarMode") && site.getPropertyAsString("navbarMode") === "automatic";
+  const locale = getSiteLocales()[language];
+  const translated = (node: JCRNodeWrapper) => !locale || node.hasI18N(locale);
+  const resolveNavigationNode = (id: string): JCRNodeWrapper | undefined => {
+    try {
+      const node = root.getSession().getNodeByIdentifier(id);
+      return node.getPath().startsWith(`${site.getPath()}/`) ? node : undefined;
+    } catch {
+      return undefined;
+    }
+  };
   const referencePage = (reference: JCRNodeWrapper, label?: string): Page | undefined => {
     try {
       if (!reference || !reference.hasPermission("jcr:read")) return;
@@ -171,6 +203,7 @@ export default function NavBar({
         ? reference.hasProperty("j:node") && reference.getProperty("j:node").getValue().getNode()
         : reference;
       if (!target || !target.hasPermission("jcr:read")) return;
+      if (automatic && !translated(target)) return;
       server.render.addCacheDependency({ path: target.getPath() }, renderContext);
       const href = navigationUrl(
         reference.isNodeType("jnt:externalLink")
@@ -209,6 +242,7 @@ export default function NavBar({
     const landing = landingDisabled
       ? undefined
       : panelLink(node, "navLandingPage", node.getDisplayableName());
+
     const featureLink = panelLink(node, "navFeatureLink", text(node, "navFeatureLabel"));
     const columns = (["One", "Two"] as const).flatMap((column) => {
       const property = `navColumn${column}Links` as const;
@@ -399,6 +433,45 @@ export default function NavBar({
           image: rssImage?.href,
         }
       : undefined;
+  const upper = settings?.upperBar
+    ? (projectUpperBar(
+        settings.upperBar,
+        language,
+        (id: string, label?: string) => {
+          const node = resolveNavigationNode(id);
+          if (
+            !node ||
+            !translated(node) ||
+            !(
+              node.isNodeType("jnt:page") ||
+              node.isNodeType("jnt:nodeLink") ||
+              node.isNodeType("jnt:externalLink")
+            )
+          )
+            return;
+          if (
+            node.hasProperty("j:invalidLanguages") &&
+            node
+              .getProperty("j:invalidLanguages")
+              .getValues()
+              .some((value) => value.getString() === language)
+          )
+            return;
+          return referencePage(node, label || text(node, "navUtilityLabel"));
+        },
+        (id: string) => {
+          const image = resolveNavigationNode(id);
+          if (!image || !image.isNodeType("jmix:image") || !image.hasPermission("jcr:read")) return;
+          server.render.addCacheDependency({ path: image.getPath() }, renderContext);
+          return buildNodeUrl(image);
+        },
+      ) as {
+        utilityEntries: UtilityEntry[];
+        controls: UtilityControls;
+        buttons: NavbarButton[];
+        rss: typeof rss;
+      })
+    : undefined;
   const invalidLanguages = new Set(
     current.hasProperty("j:invalidLanguages")
       ? current
@@ -451,18 +524,97 @@ export default function NavBar({
         component={NavBarClient}
         props={{
           // Menu CTAs
-          buttons,
+          buttons: upper ? upper.buttons : buttons,
           // This can quickly get out of hand, if there are too many pages in the menu we need
           // to rethink the implementation
-          entries: getEntries(root, current.getIdentifier(), panel, (node) =>
-            server.render.addCacheDependency({ path: node.getPath() }, renderContext),
-          ),
-          utilityEntries,
-          controls,
-          rss,
+          automatic,
+          editorPreviewSite:
+            root.getSession().getWorkspace().getName() === "default"
+              ? site.getSiteKey()
+              : undefined,
+          entries: automatic
+            ? automaticNavigation(root, {
+                language,
+                translated,
+                children: (node) =>
+                  getChildNodes(
+                    node,
+                    -1,
+                    0,
+                    (child) =>
+                      child.isNodeType("jnt:page") ||
+                      child.isNodeType("jnt:navMenuText") ||
+                      child.isNodeType("jnt:nodeLink") ||
+                      child.isNodeType("jnt:externalLink"),
+                  ),
+                page: (node, label) => {
+                  const page = referencePage(node, label);
+                  return page ? { ...page, ...itemContent(node) } : undefined;
+                },
+                settings,
+                icon: (choice) => {
+                  if (!choice) return;
+                  if (choice.kind === "preset")
+                    return buildModuleFileUrl(
+                      { cms: cmsIcon, dxp: dxpIcon, ai: aiIcon }[choice.name],
+                    );
+                  try {
+                    const image = root.getSession().getNodeByIdentifier(choice.id);
+                    if (!image.hasPermission("jcr:read") || !image.isNodeType("jmix:image")) return;
+                    server.render.addCacheDependency({ path: image.getPath() }, renderContext);
+                    return navigationUrl(buildNodeUrl(image));
+                  } catch {
+                    // Missing, unpublished or inaccessible images remove only the optional icon.
+                    return;
+                  }
+                },
+                resolve: resolveNavigationNode,
+                presentation: (node, section) => {
+                  const native = panel(node);
+                  if (!section?.feature) return native;
+                  const feature = section.feature;
+                  let link: Page | undefined;
+                  if (feature.visible && feature.target) {
+                    try {
+                      const target = resolveNavigationNode(feature.target);
+                      if (target) link = referencePage(target, feature.label[language]);
+                    } catch {
+                      /* Optional reference. */
+                    }
+                  }
+                  return {
+                    ...native,
+                    feature: link
+                      ? {
+                          eyebrow: feature.eyebrow[language],
+                          heading: feature.heading[language] || link.title,
+                          text: feature.text[language],
+                          link,
+                        }
+                      : undefined,
+                  };
+                },
+                cache: (node) => {
+                  server.render.addCacheDependency({ path: node.getPath() }, renderContext);
+                  const translation = `j:translation_${language}`;
+                  if (node.hasNode(translation))
+                    server.render.addCacheDependency(
+                      { path: node.getNode(translation).getPath() },
+                      renderContext,
+                    );
+                },
+                discoverLabel: (title) => t("navigation.discover", { title }),
+              })
+            : getEntries(root, current.getIdentifier(), panel, (node) =>
+                server.render.addCacheDependency({ path: node.getPath() }, renderContext),
+              ),
+          utilityEntries: upper ? upper.utilityEntries : utilityEntries,
+          controls: upper ? upper.controls : controls,
+          rss: upper ? upper.rss : rss,
           langs,
           language,
           search,
+
           logo: {
             href: buildNodeUrl(root),
             src: buildModuleFileUrl(jahia),
