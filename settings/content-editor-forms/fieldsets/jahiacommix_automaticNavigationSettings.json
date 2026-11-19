@@ -1,0 +1,5 @@
+{
+  "name": "jahiacommix:automaticNavigationSettings",
+  "priority": 2,
+  "fields": [{ "name": "navbarMode", "hide": true }]
+}

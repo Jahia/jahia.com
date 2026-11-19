@@ -1,3 +1,4 @@
+import type { UpperBarPreview } from "./navigationEditorPreview.js";
 import {
   Fragment,
   useCallback,
@@ -7,11 +8,13 @@ import {
   useRef,
   useState,
   type MouseEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import classes from "./NavBar.module.css";
 import { createHoverIntent } from "./hoverIntent.js";
+import { automaticNavigationColumns } from "./automaticNavigationColumns.js";
 import { CTA } from "../mixins/CTA/index.jsx";
 import SearchDialog, { type SearchState } from "./Search.client.jsx";
 
@@ -33,6 +36,15 @@ const LanguageFlag = ({ language }: { language: string }) => {
   const flag = flagStyles.get(language);
   return flag ? <span className={`${classes.languageFlag} ${flag}`} aria-hidden="true" /> : null;
 };
+
+const NavigationLabel = ({ entry, showIcon }: { entry: Entry; showIcon: boolean }) => (
+  <span className={classes.entryLabel} data-weight={entry.weight}>
+    {showIcon && entry.icon && (
+      <img className={classes.itemIcon} src={entry.icon} alt="" width={24} height={24} />
+    )}
+    <span>{entry.title}</span>
+  </span>
+);
 
 const tracking = (entry: Page) => ({
   "data-element-url": entry.href,
@@ -68,6 +80,7 @@ function MenuLinks({ entries }: { entries: Entry[] }) {
   );
 }
 function MenuPanel({ group }: { group: Group }) {
+  if (group.panel?.automatic) return <AutomaticPanel group={group} />;
   const feature = group.panel?.feature;
   const landing = group.panel?.landing;
   const visibleColumns = group.panel?.columns
@@ -128,17 +141,102 @@ function MenuPanel({ group }: { group: Group }) {
     </div>
   );
 }
+function AutomaticLinks({ entries }: { entries: Page[] }) {
+  return (
+    <ul className={classes.automaticLinks}>
+      {entries.map((entry, index) => (
+        <li
+          key={entry.id || entry.href}
+          data-depth={entry.depth || 0}
+          data-weight={entry.weight}
+          data-parent={(entries[index + 1]?.depth || 0) > (entry.depth || 0) || undefined}
+          data-branch-start={
+            (index > 0 && entry.branchId !== entries[index - 1].branchId) || undefined
+          }
+        >
+          <a
+            href={entry.href}
+            aria-current={entry.current ? "page" : undefined}
+            {...tracking(entry)}
+          >
+            {entry.icon && (
+              <img className={classes.itemIcon} src={entry.icon} alt="" width={24} height={24} />
+            )}
+            <span>{entry.title}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+function AutomaticPanel({ group }: { group: Group }) {
+  const landing = group.panel?.landing;
+  const feature = group.panel?.feature;
+  const columns = automaticNavigationColumns(
+    group.children,
+    group.panel?.branchColumns,
+    group.panel?.treeColumns,
+    group.panel?.branchOrder,
+    group.panel?.childOrder,
+  );
+  return (
+    <div className={classes.automaticPanel} data-layout="classic">
+      {landing && (
+        <a
+          className={classes.discoverLink}
+          href={landing.href}
+          aria-current={landing.current ? "page" : undefined}
+          {...tracking(landing)}
+        >
+          {landing.title}
+        </a>
+      )}
+      <div className={classes.panelLayout} data-feature={!!feature}>
+        <div className={classes.automaticColumns} data-count={columns.length}>
+          {columns.map((column, index) => (
+            <AutomaticLinks key={`column-slot-${index + 1}`} entries={column} />
+          ))}
+        </div>
+        {feature && (
+          <div className={classes.panelFeature}>
+            {feature.eyebrow && <p className={classes.eyebrow}>{feature.eyebrow}</p>}
+            <p className={classes.panelHeading}>{feature.heading}</p>
+            {feature.text && <p className={classes.panelText}>{feature.text}</p>}
+            <div className={classes.panelAction} data-theme="night">
+              <CTA
+                secondary
+                href={feature.link.href}
+                location="header"
+                name="nav-feature"
+                aria-label={`${feature.link.title} : ${feature.heading}`}
+              >
+                {feature.link.title}
+              </CTA>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+const destinationOf = (group: Group) =>
+  group.panel?.automatic ? undefined : group.destination || group.panel?.landing;
 export default function NavBarClient({
-  buttons = [],
+  automatic: initialAutomatic = false,
+  buttons: initialButtons = [],
   logo,
-  entries,
-  utilityEntries = [],
-  controls,
-  rss,
+  entries: initialEntries,
+  editorPreviewSite,
+  utilityEntries: initialUtilityEntries = [],
+  controls: initialControls,
+  rss: initialRss,
+
   langs,
   language,
   search,
 }: {
+  automatic?: boolean;
+  editorPreviewSite?: string;
   buttons?: NavbarButton[];
   logo: { href: string; src: string; current: boolean };
   entries: Entry[];
@@ -149,15 +247,29 @@ export default function NavBarClient({
   language: string;
   search: SearchState;
 }) {
+  const [editorPreview, setEditorPreview] = useState<{
+    entries: Entry[];
+    upper?: UpperBarPreview;
+  } | null>(null);
+  const entries = editorPreview?.entries || initialEntries;
+  const buttons = editorPreview?.upper?.buttons || initialButtons;
+  const utilityEntries = editorPreview?.upper?.utilityEntries || initialUtilityEntries;
+  const controls = editorPreview?.upper?.controls || initialControls;
+  const rss = editorPreview?.upper ? editorPreview.upper.rss : initialRss;
+  const automatic = editorPreview ? true : initialAutomatic;
   const id = useId();
   const nav = useRef<HTMLElement>(null);
   const trigger = useRef<HTMLElement | null>(null);
+  const mobileMenuTrigger = useRef<HTMLButtonElement>(null);
+  const pendingSubmenuFocus = useRef<{ index: number; panel: HTMLElement } | null>(null);
+
   const searchTrigger = useRef<HTMLElement | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [submenu, setSubmenu] = useState<number | null>(null);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(search.requested);
   const fr = language === "fr";
+
   const hoverIntent = useMemo(
     () =>
       createHoverIntent((index) => {
@@ -183,12 +295,115 @@ export default function NavBarClient({
       trigger.current = event.currentTarget.querySelector<HTMLElement>("a, button");
     hoverIntent.schedule(index, submenu !== null && submenu !== index);
   };
+  const enterSubmenu = (event: ReactKeyboardEvent<HTMLElement>, index: number) => {
+    if (event.key !== "ArrowDown") return;
+    event.preventDefault();
+    hoverIntent.cancel();
+    trigger.current = event.currentTarget;
+    const panel = event.currentTarget.parentElement?.querySelector<HTMLElement>(
+      `.${classes.desktopMenu}`,
+    );
+    if (panel) {
+      if (!panel.hidden) panel.querySelector<HTMLElement>("a, button")?.focus();
+      else pendingSubmenuFocus.current = { index, panel };
+    }
+    setSubmenu(index);
+    setLanguageOpen(false);
+  };
+  useEffect(() => {
+    const pending = pendingSubmenuFocus.current;
+    if (pending && pending.index === submenu) {
+      pendingSubmenuFocus.current = null;
+      pending.panel.querySelector<HTMLElement>("a, button")?.focus();
+    }
+  }, [submenu]);
   const close = () => {
+    pendingSubmenuFocus.current = null;
+
     hoverIntent.cancel();
     setMobileOpen(false);
     setSubmenu(null);
     setLanguageOpen(false);
   };
+  useEffect(() => {
+    const token = new URL(location.href).searchParams.get("navigationPreview");
+    if (!editorPreviewSite || window.parent === window || !token || !/^[\w-]{16,100}$/.test(token))
+      return;
+    try {
+      if (
+        window.parent.location.origin !== location.origin ||
+        !window.parent.location.pathname.endsWith("/apps/jahiacom-navigation")
+      )
+        return;
+    } catch {
+      return;
+    }
+    const send = (type: string, error?: string) =>
+      window.parent.postMessage({ type, token, error }, location.origin);
+    let active = true;
+    const receive = async (event: MessageEvent) => {
+      if (
+        event.source !== window.parent ||
+        event.origin !== location.origin ||
+        event.data?.type !== "jahiacom-navigation-preview" ||
+        event.data.token !== token ||
+        event.data.site !== editorPreviewSite ||
+        event.data.language !== language
+      )
+        return;
+      try {
+        const { navigationEditorPreview, upperBarEditorPreview } =
+          await import("./navigationEditorPreview.js");
+        if (!active) return;
+        const draft = navigationEditorPreview(
+          event.data.sections,
+          event.data.settings,
+          editorPreviewSite,
+          language === "fr" ? "fr" : "en",
+          event.data.context || "",
+          event.data.imageUrls || {},
+          event.data.references || [],
+        );
+        const upper = upperBarEditorPreview(
+          event.data.sections,
+          event.data.settings,
+          editorPreviewSite,
+          language === "fr" ? "fr" : "en",
+          event.data.context || "",
+          event.data.imageUrls || {},
+          event.data.references || [],
+        );
+        setEditorPreview({ entries: draft, upper });
+        const index = draft.findIndex(
+          (entry) => entry.id === event.data.selected && !("href" in entry),
+        );
+        setSubmenu(index < 0 ? null : index);
+        setMobileOpen(innerWidth < 1200);
+        send("jahiacom-navigation-preview-applied");
+      } catch {
+        send("jahiacom-navigation-preview-error");
+      }
+    };
+    const style = document.createElement("style");
+    style.textContent =
+      "body > :not([data-jahia-header]){display:none} [data-jahia-header]{position:relative;top:auto} [data-jahia-header] > :not(:has(nav[data-automatic])):not(nav[data-automatic]){display:none}";
+    document.head.append(style);
+    const preventNavigation = (event: Event) => {
+      if (event.target instanceof Element && event.target.closest("a")) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    };
+    document.addEventListener("click", preventNavigation, true);
+    window.addEventListener("message", receive);
+    send("jahiacom-navigation-preview-ready");
+    return () => {
+      active = false;
+      style.remove();
+      window.removeEventListener("message", receive);
+      document.removeEventListener("click", preventNavigation, true);
+    };
+  }, [editorPreviewSite, language]);
   useEffect(() => {
     const element = nav.current;
     if (!element) return;
@@ -243,8 +458,9 @@ export default function NavBarClient({
         (mobileOpen || submenu !== null || languageOpen)
       ) {
         event.preventDefault();
+        const returnFocus = mobileOpen ? mobileMenuTrigger.current : trigger.current;
         close();
-        trigger.current?.focus();
+        returnFocus?.focus();
       }
     };
     document.addEventListener("pointerdown", outside);
@@ -337,6 +553,7 @@ export default function NavBarClient({
       aria-current={code === language ? "true" : undefined}
     >
       <LanguageFlag language={code} />
+
       {name}
     </a>
   ));
@@ -347,7 +564,7 @@ export default function NavBarClient({
           <button
             type="button"
             className={classes.utilityLink}
-            aria-label={controls.languagesLabel}
+            aria-label={`${language.toUpperCase()} · ${controls.languagesLabel}`}
             aria-expanded={languageOpen}
             aria-controls={`${id}-languages`}
             onClick={(event) => {
@@ -410,6 +627,7 @@ export default function NavBarClient({
     <nav
       ref={nav}
       className={classes.nav}
+      data-automatic={automatic}
       data-theme="day"
       aria-label={fr ? "Navigation principale" : "Main navigation"}
       data-open={mobileOpen || submenu !== null || languageOpen}
@@ -464,7 +682,7 @@ export default function NavBarClient({
                   aria-current={entry.current ? "page" : undefined}
                   {...tracking(entry)}
                 >
-                  {entry.title}
+                  <NavigationLabel entry={entry} showIcon={automatic} />
                 </a>
               ) : (
                 <div
@@ -474,7 +692,25 @@ export default function NavBarClient({
                   onPointerLeave={(event) => hoverMenu(event, null)}
                   onPointerDown={() => hoverIntent.cancel()}
                 >
-                  {entry.panel?.landing ? (
+                  {entry.panel?.automatic ? (
+                    <button
+                      type="button"
+                      className={`${classes.barLink} ${classes.highlight}`}
+                      data-variant="secondary"
+                      aria-expanded={submenu === index}
+                      aria-controls={`${id}-desktop-${index}`}
+                      onKeyDown={(event) => enterSubmenu(event, index)}
+                      onClick={(event) => {
+                        trigger.current = event.currentTarget;
+                        hoverIntent.cancel();
+                        setSubmenu(submenu === index ? null : index);
+                        setLanguageOpen(false);
+                      }}
+                    >
+                      <NavigationLabel entry={entry} showIcon={automatic} />
+                      <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
+                    </button>
+                  ) : entry.panel?.landing ? (
                     <a
                       className={`${classes.barLink} ${classes.highlight}`}
                       data-variant="secondary"
@@ -484,22 +720,10 @@ export default function NavBarClient({
                       aria-controls={`${id}-desktop-${index}`}
                       {...tracking(entry.panel.landing)}
                       onClick={() => hoverIntent.cancel()}
-                      onKeyDown={(event) => {
-                        if (event.key !== "ArrowDown") return;
-                        event.preventDefault();
-                        hoverIntent.cancel();
-                        trigger.current = event.currentTarget;
-                        setSubmenu(index);
-                        setLanguageOpen(false);
-                        requestAnimationFrame(() =>
-                          document
-                            .getElementById(`${id}-desktop-${index}`)
-                            ?.querySelector<HTMLAnchorElement>("a")
-                            ?.focus(),
-                        );
-                      }}
+                      onKeyDown={(event) => enterSubmenu(event, index)}
                     >
-                      {entry.title}
+                      <NavigationLabel entry={entry} showIcon={automatic} />
+
                       <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
                     </a>
                   ) : (
@@ -509,6 +733,7 @@ export default function NavBarClient({
                       data-variant="secondary"
                       aria-expanded={submenu === index}
                       aria-controls={`${id}-desktop-${index}`}
+                      onKeyDown={(event) => enterSubmenu(event, index)}
                       onClick={(event) => {
                         trigger.current = event.currentTarget;
                         hoverIntent.cancel();
@@ -516,13 +741,15 @@ export default function NavBarClient({
                         setLanguageOpen(false);
                       }}
                     >
-                      {entry.title}
+                      <NavigationLabel entry={entry} showIcon={automatic} />
+
                       <span className="i-ri:arrow-down-wide-line" aria-hidden="true" />
                     </button>
                   )}
                   <div
                     id={`${id}-desktop-${index}`}
                     className={classes.desktopMenu}
+                    data-columns={entry.panel?.automatic ? entry.panel.treeColumns : undefined}
                     hidden={submenu !== index}
                     data-theme="day"
                   >
@@ -550,6 +777,7 @@ export default function NavBarClient({
             <button
               type="button"
               className={classes.menuButton}
+              ref={mobileMenuTrigger}
               aria-label={
                 fr
                   ? mobileOpen
@@ -586,27 +814,27 @@ export default function NavBarClient({
               aria-current={entry.current ? "page" : undefined}
               {...tracking(entry)}
             >
-              {entry.title}
+              <NavigationLabel entry={entry} showIcon={automatic} />
             </a>
           ) : (
             <div key={entry.title}>
               <div className={classes.mobileGroup}>
-                {entry.panel?.landing && (
+                {destinationOf(entry) && (
                   <a
                     className={`${classes.mobileLink} ${classes.highlight}`}
                     data-variant="secondary"
-                    href={entry.panel.landing.href}
-                    aria-current={entry.panel.landing.current ? "page" : undefined}
-                    {...tracking(entry.panel.landing)}
+                    href={destinationOf(entry)!.href}
+                    aria-current={destinationOf(entry)!.current ? "page" : undefined}
+                    {...tracking(destinationOf(entry)!)}
                   >
-                    {entry.title}
+                    <NavigationLabel entry={entry} showIcon={automatic} />
                   </a>
                 )}
                 <button
                   type="button"
-                  className={`${classes.submenuLabel} ${classes.highlight} ${entry.panel?.landing ? classes.mobileGroupToggle : ""}`}
+                  className={`${classes.submenuLabel} ${classes.highlight} ${destinationOf(entry) ? classes.mobileGroupToggle : ""}`}
                   aria-label={
-                    entry.panel?.landing
+                    destinationOf(entry)
                       ? `${fr ? "Sous-menu" : "Submenu"} ${entry.title}`
                       : undefined
                   }
@@ -619,7 +847,8 @@ export default function NavBarClient({
                     setSubmenu(submenu === index ? null : index);
                   }}
                 >
-                  {!entry.panel?.landing && entry.title}
+                  {!destinationOf(entry) && <NavigationLabel entry={entry} showIcon={automatic} />}
+
                   <span
                     className={
                       submenu === index ? "i-ri:arrow-up-wide-line" : "i-ri:arrow-down-wide-line"

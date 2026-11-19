@@ -19,6 +19,7 @@ export type NavigationItemFields = {
 export type NavigationPanelFields = {
   navLandingPage?: JCRNodeWrapper;
   navLandingLinkDisabled?: boolean;
+
   navFeatureEyebrow?: string;
   navFeatureHeading?: string;
   navFeatureText?: string;
@@ -30,18 +31,49 @@ export type NavigationPanelFields = {
   navColumnTwoLinks?: JCRNodeWrapper[];
 };
 export type Page = {
+  weight?: "bold" | "normal";
+  id?: string;
+  branchId?: string;
+  depth?: number;
   title: string;
   href: string;
   current: boolean;
   icon?: string;
 };
 export type NavigationPanel = {
+  treeColumns?: number;
+  branchColumns?: Record<string, number>;
+  branchOrder?: Record<string, string[]>;
+  childOrder?: Record<string, string[]>;
+  automatic?: boolean;
+
   landing?: Page;
   feature?: { eyebrow?: string; heading: string; text?: string; link: Page };
   columns?: Group[];
 };
-export type Group = { title: string; children: Entry[]; panel?: NavigationPanel };
+export type Group = {
+  weight?: "bold" | "normal";
+  icon?: string;
+  id?: string;
+  branchId?: string;
+  depth?: number;
+  title: string;
+  children: Entry[];
+  destination?: Page;
+  panel?: NavigationPanel;
+};
 export type Entry = Group | Page;
+
+export type AutomaticNavigationSettings = { navbarMode?: "legacy" | "automatic" };
+export type AutomaticNavigationFields = {
+  navExcluded?: boolean;
+  navExpandChildren?: boolean;
+  navAutoLabel?: string;
+  navOtherLinksLabel?: string;
+  navDiscoverVisible?: boolean;
+  navDiscoverLabel?: string;
+  navDiscoverPage?: JCRNodeWrapper;
+};
 
 export type HomeNavbarButtonFields = {
   primaryCTALink?: JCRNodeWrapper;

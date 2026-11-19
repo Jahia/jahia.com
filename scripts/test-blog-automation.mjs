@@ -141,7 +141,10 @@ function editorHarness({ categories = [], query, initial = {} } = {}) {
     get: (type, key) => (key === "Category" ? nativeCategory : entries.get(`${type}/${key}`)),
   };
   vm.runInNewContext(
-    readFileSync(new URL("../javascript/apps/partner-editors-2.4.1.js", import.meta.url), "utf8"),
+    readFileSync(
+      new URL("../javascript/apps/partner-editors-2.4.1-navbar.js", import.meta.url),
+      "utf8",
+    ),
     {
       window: {
         jahia: { uiExtender: { registry }, moonstone: { Button: "button", Typography: "span" } },

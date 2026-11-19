@@ -1,0 +1,13 @@
+{
+  "name": "jahiacommix:automaticNavigationItem",
+  "priority": 2,
+  "fields": [
+    { "name": "navExcluded", "hide": true },
+    { "name": "navExpandChildren", "hide": true },
+    { "name": "navAutoLabel", "hide": true },
+    { "name": "navOtherLinksLabel", "hide": true },
+    { "name": "navDiscoverVisible", "hide": true },
+    { "name": "navDiscoverLabel", "hide": true },
+    { "name": "navDiscoverPage", "hide": true }
+  ]
+}
