@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.5.0
+
+* Add an optional automatic navbar and a centralized Navigation du site extension in jContent. Manage page visibility, labels, icons, bold text, branch columns and sibling order, upper-bar links and editorial cards, with an integrated draft preview and publication limited to the navigation configuration. Preserve the previous navbar, existing content hierarchy and the independent Breadcrumb extension.
+
 ## 2.4.1
 
 * Show the Breadcrumb extension to users who can access jContent, without requiring write access on the site root to display the menu. Preserve server-side editing and publication permissions. Load the editor integrations through a new script URL to avoid retaining the previous cached bootstrap.
