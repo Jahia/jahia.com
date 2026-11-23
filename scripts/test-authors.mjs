@@ -14,7 +14,7 @@ registerHooks({
 });
 import { socialUrl } from "../src/views/Authors/socialLinks.ts";
 import { readBiography } from "../src/views/Authors/biography.ts";
-import { isAuthorSourceFolder } from "../src/views/Authors/folder.server.ts";
+import { findAuthorFolder, isAuthorSourceFolder } from "../src/views/Authors/folder.server.ts";
 
 test("directory and counters accept a regular content folder from the current site", () => {
   const site = "/sites/demo";
@@ -31,6 +31,32 @@ test("directory and counters accept a regular content folder from the current si
   );
   assert.equal(isAuthorSourceFolder({ ...folder, hasPermission: () => false }, site), false);
   assert.equal(isAuthorSourceFolder({ ...folder, isNodeType: () => false }, site), false);
+});
+
+test("author profiles work under the unmarked Authors folder, including in a subfolder", () => {
+  const site = "/sites/demo";
+  const siteNode = { getPath: () => site };
+  const folder = (path, parent, readable = true, marked = false) => ({
+    getPath: () => path,
+    getName: () => path.split("/").at(-1),
+    getParent: () => parent,
+    isNodeType: (type) =>
+      type === "jnt:contentFolder" || (marked && type === "jahiacommix:authorFolder"),
+    hasPermission: () => readable,
+  });
+  const find = (parent) =>
+    findAuthorFolder(
+      { getPath: () => parent.getPath() + "/delphine", getParent: () => parent },
+      () => {},
+    );
+  const authorsPath = site + "/contents/Blog/Authors";
+  const authors = folder(authorsPath, siteNode);
+  assert.equal(find(folder(authorsPath + "/team", authors)), authors);
+  assert.equal(find(folder(authorsPath, siteNode, false)), undefined);
+  assert.equal(find(folder(site + "/home/authors", siteNode)), undefined);
+  assert.equal(find(folder(site + "/contents/Blog/Entries", siteNode)), undefined);
+  const marked = folder(site + "/contents/contributors", siteNode, true, true);
+  assert.equal(find(marked), marked);
 });
 
 test("biography excerpts decode entities and keep existing social links separate", () => {
@@ -88,6 +114,10 @@ test("directory and publications queries stay scoped and escape editorial paths"
   assert.match(directoryQuery("/sites/demo/contents/O'Brien"), /O''Brien/);
   assert.match(directoryQuery("/sites/demo/contents/authors"), /showInDirectory/);
   assert.ok(publicationQuery("/sites/demo", "author-id").includes("n.[author] = 'author-id'"));
+  assert.match(
+    publicationQuery("/sites/demo", ["author-one", "O'Brien"]),
+    /AND \(n\.\[author\] = 'author-one' OR n\.\[author\] = 'O''Brien'\)/,
+  );
   for (const value of ["-1", "1.5", "99999", "abc"]) assert.equal(directoryPageNumber(value), 0);
   assert.equal(directoryPageNumber("2"), 2);
 });

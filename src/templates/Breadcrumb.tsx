@@ -52,6 +52,8 @@ export default function Breadcrumb({
   const { mainNode, renderContext, currentResource } = useServerContext();
   const { t } = useTranslation();
   const home = renderContext.getSite().getHome();
+  const resourcesPath = home.getPath() + "/resources";
+  const isBlog = pageType === "blog_post" || mainNode.getPath() === resourcesPath + "/blog";
   const resourceLibrary = findResourceLibrary(mainNode, home);
   const blogPages = useJCRQuery({
     query: `
@@ -92,6 +94,7 @@ export default function Breadcrumb({
     title,
     homeLabel: t("breadcrumb.home"),
     index,
+    omitAncestorPath: isBlog ? resourcesPath : undefined,
     cache,
     available,
     url: (node) => buildNodeUrl(node),

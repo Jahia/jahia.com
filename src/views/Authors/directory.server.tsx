@@ -12,6 +12,11 @@ import section from "../Section/component.module.css";
 import { AuthorCard } from "./AuthorCard.jsx";
 import { useAuthorReader } from "./data.server.js";
 import { directoryPageNumber } from "./queries.js";
+import {
+  readAuthorTopicSelection,
+  suggestAuthorTopics,
+  usePublishedTopicsByAuthor,
+} from "./topics.server.js";
 import classes from "./component.module.css";
 
 interface Props extends ContainerProps {
@@ -35,7 +40,7 @@ export function AuthorDirectory({
 }: Props) {
   const { currentNode, mainNode, renderContext } = useServerContext();
   const { t } = useTranslation();
-  const { available, authors: readAuthors } = useAuthorReader();
+  const { available, authors: readAuthors, cache } = useAuthorReader();
   const automaticSource = configured.some(Boolean) ? undefined : sourceFolder;
   const page =
     automaticSource && presentation === "grid"
@@ -60,13 +65,25 @@ export function AuthorDirectory({
       seen.add(author.getIdentifier());
       return true;
     });
-  if (!selected.length && !renderContext.isEditMode() && presentation === "carousel") return null;
   const headingId = "authors-" + currentNode.getIdentifier();
-  const cards = selected.map((author) => (
-    <div key={author.getIdentifier()} data-carousel-item="">
-      <AuthorCard author={author} />
-    </div>
-  ));
+  const sitePath = renderContext.getSite().getPath();
+  const selections = selected.map((author) => ({
+    author,
+    id: author.getIdentifier(),
+    topics: readAuthorTopicSelection(author, sitePath, cache),
+  }));
+  const counts = usePublishedTopicsByAuthor(
+    selections.filter(({ topics }) => !topics.length).map(({ id }) => id),
+  );
+  if (!selected.length && !renderContext.isEditMode() && presentation === "carousel") return null;
+  const cards = selections.map(({ author, id, topics }) => {
+    const cardTopics = topics.length ? topics : suggestAuthorTopics(counts.get(id) ?? [], sitePath);
+    return (
+      <div key={id} data-carousel-item="">
+        <AuthorCard author={author} topics={cardTopics.slice(0, 3)} />
+      </div>
+    );
+  });
   return (
     <section
       className={classes.directory}

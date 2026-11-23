@@ -12,6 +12,7 @@ type Options = {
   url: (node: JCRNodeWrapper) => string;
   cache: (node: JCRNodeWrapper) => void;
   index?: JCRNodeWrapper;
+  omitAncestorPath?: string;
 };
 export function readBreadcrumbSettings(site: JCRNodeWrapper, cache: Options["cache"]) {
   cache(site);
@@ -103,6 +104,7 @@ export function breadcrumbItems(
   let currentAlias: string | undefined;
   for (const ancestor of ancestors) {
     options.cache(ancestor);
+    if (ancestor.getPath() === options.omitAncestorPath) continue;
     if (!options.available(ancestor)) continue;
     if (ancestor.getIdentifier() === current.getIdentifier()) continue;
     let target: JCRNodeWrapper | undefined;

@@ -6,7 +6,13 @@ import { cardIntroduction, readBiography } from "./biography.js";
 import { reference, stringProperty, useAuthorReader } from "./data.server.js";
 import classes from "./component.module.css";
 
-export function AuthorCard({ author }: { author: JCRNodeWrapper }) {
+export function AuthorCard({
+  author,
+  topics,
+}: {
+  author: JCRNodeWrapper;
+  topics: ReadonlyArray<{ id: string; label: string }>;
+}) {
   const { t } = useTranslation();
   const { available, profileUrl } = useAuthorReader();
   if (!available(author)) return null;
@@ -27,6 +33,13 @@ export function AuthorCard({ author }: { author: JCRNodeWrapper }) {
       {role && <p className={classes.role}>{role}</p>}
       {(description || (hasBiography && biography)) && (
         <p className={classes.description}>{cardIntroduction(description || biography)}</p>
+      )}
+      {topics.length > 0 && (
+        <ul className={classes.cardTopics} aria-label={t("authors.topics")} role="list">
+          {topics.map(({ id, label }) => (
+            <li key={id}>{label}</li>
+          ))}
+        </ul>
       )}
       {url && (
         <div className={classes.profileLink}>
