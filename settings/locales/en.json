@@ -231,5 +231,23 @@
   },
   "navigation": {
     "discover": "Discover {{title}}"
+  },
+  "authors": {
+    "viewProfile": "View profile",
+    "professionalEmail": "Work email",
+    "profileEyebrow": "Jahia author",
+    "biography": "Biography",
+    "topics": "Areas of expertise",
+    "updated": "Profile updated on",
+    "publications": "Latest publications",
+    "otherAuthors": "Other authors",
+    "allAuthors": "View all authors",
+    "pagination": "Author directory pages",
+    "previous": "Previous",
+    "next": "Next",
+    "featuredPublications": "Selected publications",
+    "articleCount_one": "{{count}} article",
+    "articleCount_other": "{{count}} articles",
+    "viewTopic": "View {{author}}’s articles about {{topic}}"
   }
 }

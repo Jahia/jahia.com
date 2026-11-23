@@ -1,0 +1,110 @@
+.authorTagEditor {
+  color: #293e51;
+}
+
+.authorTagEditor .authorTagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.authorTagEditor .authorTag {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  max-width: 100%;
+  padding: 2px 4px 2px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #204860;
+  background: #edf5fa;
+  border: 1px solid #d9e7f0;
+  border-radius: 20px;
+}
+
+.authorTagEditor .authorTag > span {
+  overflow-wrap: anywhere;
+}
+
+.authorTagEditor .authorTagRemove {
+  display: inline-flex;
+  flex: 0 0 28px;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font: inherit;
+  font-size: 20px;
+  line-height: 1;
+  color: #536c7c;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+}
+
+.authorTagEditor .authorTagRemove:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.authorTagEditor .authorTagSelect {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 12px;
+  margin-top: 12px;
+  font: inherit;
+  font-size: 14px;
+  color: #3d556c;
+  background-color: #fff;
+  border: 1px solid #cbd5df;
+  border-radius: 6px;
+}
+
+.authorTagEditor .authorTagSelect:disabled {
+  background-color: #f4f6f8;
+}
+
+.authorTagEditor .authorTagAssistant {
+  padding: 14px 16px;
+  margin-top: 16px;
+  background: #f6f8fa;
+  border: 1px solid #e6ebf0;
+  border-radius: 8px;
+}
+
+.authorTagEditor .authorTagSuggestionList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.authorTagEditor .authorTagSuggestionList button {
+  min-height: 32px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: #24546f;
+  background: #fff;
+  border: 1px solid #cfdde7;
+  border-radius: 18px;
+}
+
+.authorTagEditor .authorTagRemove:focus-visible,
+.authorTagEditor .authorTagSelect:focus-visible,
+.authorTagEditor .authorTagSuggestionList button:focus-visible {
+  outline: 2px solid #037cc2;
+  outline-offset: 2px;
+}
+
+.authorTagEditor .authorTagRemove:hover:not(:disabled) {
+  color: #003e63;
+  background: #d7e8f3;
+}
+
+.authorTagEditor .authorTagSuggestionList button:hover:not(:disabled) {
+  background: #edf5fa;
+  border-color: #85b4cf;
+}

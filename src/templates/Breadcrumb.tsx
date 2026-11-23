@@ -8,6 +8,7 @@ import {
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
 import { resolveGlossaryIndex } from "../contents/GlossaryEntry/indexPage.js";
+import { authorDirectoryPage } from "../views/Authors/folder.server.js";
 import classes from "./Breadcrumb.module.css";
 import ResourceUrl from "../components/ResourceUrl.client.jsx";
 
@@ -83,6 +84,7 @@ export default function Breadcrumb({
   };
   let index: JCRNodeWrapper | undefined;
   if (mainNode.isNodeType("jahiacom:glossaryEntry")) index = resolveGlossaryIndex(mainNode, cache);
+  else if (mainNode.isNodeType("jahiacom:blogAuthor")) index = authorDirectoryPage(mainNode, cache);
   else if (pageType === "blog_post") index = blogPages.find(available);
   const items = breadcrumbItems(mainNode, home, {
     settings,

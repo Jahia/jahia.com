@@ -34,6 +34,7 @@
   --jahia-testimony-color: var(--jahia-neutral-600);
   --jahia-testimony-background: var(--jahia-light-violet);
   --jahia-primary-color: var(--jahia-a11y-blue); /* Accessible primary color */
+  --jahia-list-marker-color: var(--jahia-primary-color);
 
   /* Accent parameters */
   --jahia-cut: 2rem;
@@ -59,6 +60,11 @@
   --jahia-testimony-color: var(--jahia-neutral-600);
   --jahia-testimony-background: var(--jahia-neutral-200);
   --jahia-primary-color: var(--jahia-a11y-blue);
+  --jahia-list-marker-color: color-mix(
+    in srgb,
+    var(--jahia-primary-color) 90%,
+    var(--jahia-navy-blue)
+  );
 }
 
 [data-theme="night"] {
@@ -72,4 +78,5 @@
   --jahia-testimony-color: var(--jahia-light-violet);
   --jahia-testimony-background: var(--jahia-navy-blue);
   --jahia-primary-color: var(--jahia-blue);
+  --jahia-list-marker-color: var(--jahia-primary-color);
 }

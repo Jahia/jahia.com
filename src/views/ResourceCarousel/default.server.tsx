@@ -5,6 +5,7 @@ import {
   useServerContext,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Image } from "../../components/Image.jsx";
 import { MixinCTA } from "../../mixins/CTA/server.jsx";
@@ -25,7 +26,7 @@ const nodes = (value?: Array<JCRNodeWrapper | null>) =>
 const nodeIds = (value?: Array<JCRNodeWrapper | null>) =>
   nodes(value).map((node) => node.getIdentifier());
 
-const Card = ({
+export const Card = ({
   item,
   typeLabel,
   locale,
@@ -65,7 +66,16 @@ const Card = ({
   </article>
 );
 
-export function ResourceCarousel(props: ResourceCarouselProps) {
+interface Presentation {
+  className?: string;
+  renderHeading?: (title: string, id: string, subtitle?: string) => ReactNode;
+  renderItem?: (item: ResourceCardData, fallback: ReactNode) => ReactNode;
+}
+
+export function ResourceCarousel({
+  presentation,
+  ...props
+}: ResourceCarouselProps & { presentation?: Presentation }) {
   const { currentNode, mainNode, currentResource, renderContext } = useServerContext();
   const { t } = useTranslation();
   const title = props["jcr:title"] || t("resourceCarousel.defaultTitle");
@@ -161,26 +171,33 @@ export function ResourceCarousel(props: ResourceCarouselProps) {
 
   return (
     <section
-      className={classes.section}
+      className={presentation?.className || classes.section}
       aria-labelledby={id}
       data-theme={props.theme}
       data-bg={props.background}
     >
       <div className={classes.inner}>
-        <header className={classes.header}>
-          <p className={classes.eyebrow}>{t("resourceCarousel.eyebrow")}</p>
-          <h2 id={id}>{title}</h2>
-          {props.subtitle && <p className={classes.subtitle}>{props.subtitle}</p>}
-        </header>
+        {presentation?.renderHeading ? (
+          presentation.renderHeading(title, id, props.subtitle)
+        ) : (
+          <header className={classes.header}>
+            <p className={classes.eyebrow}>{t("resourceCarousel.eyebrow")}</p>
+            <h2 id={id}>{title}</h2>
+            {props.subtitle && <p className={classes.subtitle}>{props.subtitle}</p>}
+          </header>
+        )}
         <Island component={Carousel} props={{ itemCount: items.length, labelledBy: id }}>
-          {items.map((item) => (
-            <Card
-              key={item.id}
-              item={item}
-              typeLabel={item.typeLabel || t(`resourceCarousel.types.${item.kind}`)}
-              locale={locale}
-            />
-          ))}
+          {items.map((item) => {
+            const fallback = (
+              <Card
+                key={item.id}
+                item={item}
+                typeLabel={item.typeLabel || t(`resourceCarousel.types.${item.kind}`)}
+                locale={locale}
+              />
+            );
+            return presentation?.renderItem ? presentation.renderItem(item, fallback) : fallback;
+          })}
         </Island>
         {props.ctaType && props.ctaType !== "none" && (
           <div className={classes.ctaRow}>

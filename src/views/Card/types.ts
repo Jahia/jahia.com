@@ -16,5 +16,7 @@ export type Props = {
   "cardPurpose"?: "standard" | "partnerRegion" | "glossaryStatistic";
   "metric"?: "entries" | "letters" | "updated";
   "entriesFolder"?: JCRNodeWrapper;
+  "authorMetric"?: "authors" | "articles" | "topics";
+  "authorSourceFolder"?: JCRNodeWrapper;
   "regionTarget"?: "europe" | "americas" | "apac";
 } & CTAProps;

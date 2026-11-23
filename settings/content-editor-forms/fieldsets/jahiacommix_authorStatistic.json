@@ -1,0 +1,12 @@
+{
+  "name": "jahiacommix:authorStatistic",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "authorMetric"
+    },
+    {
+      "name": "authorSourceFolder"
+    }
+  ]
+}

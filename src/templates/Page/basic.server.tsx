@@ -7,7 +7,7 @@ jahiaComponent(
     nodeType: "jnt:page",
     name: "basic",
     displayName: "Basic page",
-    properties: { "cache.requestParameters": "search,blogPage,filter1,filter2" },
+    properties: { "cache.requestParameters": "search,blogPage,filter1,filter2,authorsPage" },
   },
   (props: { pageType: string }) => (
     <Layout props={props as never} pageType={props.pageType}>

@@ -320,6 +320,7 @@
 
 .article footer {
   grid-area: author;
+  scroll-margin-block-start: max(8rem, calc(var(--jahia-header-height, 4rem) + 1rem));
 }
 
 .resourceCarousel {

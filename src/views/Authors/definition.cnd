@@ -1,0 +1,14 @@
+[jahiacom:authorDirectory] > jnt:content, mix:title, jahiacommix:container, jmix:editorialContent
+ - subtitle (string, textarea) i18n
+ - authors (weakreference, picker[type='editorial', nodetypes='jahiacom:blogAuthor']) multiple < 'jahiacom:blogAuthor'
+ - presentation (string, choicelist[resourceBundle]) = 'grid' autocreated < 'grid', 'carousel'
+ - sourceFolder (weakreference, picker) < 'jnt:contentFolder'
+
+[jahiacom:authorProfile] > jnt:content, jahiacommix:container, jmix:editorialContent
+ - author (weakreference, picker[type='editorial', nodetypes='jahiacom:blogAuthor']) mandatory < 'jahiacom:blogAuthor'
+ - biographyTitle (string) i18n
+
+// Optional automatic figures on existing cards; no changes to stored card fields.
+[jahiacommix:authorStatistic] mixin
+ - authorMetric (string, choicelist[resourceBundle]) < 'authors', 'articles', 'topics'
+ - authorSourceFolder (weakreference, picker) < 'jnt:contentFolder'

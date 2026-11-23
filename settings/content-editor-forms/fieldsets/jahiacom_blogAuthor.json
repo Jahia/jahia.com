@@ -1,0 +1,68 @@
+{
+  "name": "jahiacom:blogAuthor",
+  "priority": 2,
+  "fields": [
+    {
+      "name": "name"
+    },
+    {
+      "name": "image"
+    },
+    {
+      "name": "jobTitle"
+    },
+    {
+      "name": "shortDescription"
+    },
+    {
+      "name": "text"
+    },
+    {
+      "name": "expertiseTopics",
+      "selectorType": "AuthorTopicSuggestions"
+    },
+    {
+      "name": "linkedInUrl"
+    },
+    {
+      "name": "linkedInButtonVariant"
+    },
+    {
+      "name": "redditUrl"
+    },
+    {
+      "name": "redditButtonVariant"
+    },
+    {
+      "name": "githubUrl"
+    },
+    {
+      "name": "githubButtonVariant"
+    },
+    {
+      "name": "professionalEmail"
+    },
+    {
+      "name": "professionalEmailButtonVariant"
+    },
+    {
+      "name": "profileUpdated"
+    },
+    {
+      "name": "publicationsTitle"
+    },
+    {
+      "name": "featuredPublications"
+    },
+    {
+      "name": "hidePublications"
+    },
+    {
+      "name": "showInDirectory"
+    },
+    {
+      "name": "profilePage",
+      "hide": true
+    }
+  ]
+}

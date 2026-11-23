@@ -13,6 +13,7 @@ import { navigationUrl } from "../../templates/navigationUrl.js";
 import { glossaryUpdatedLabel, nodeModifiedAt } from "../Glossary/updatedDate.js";
 import { termLetter } from "../Glossary/model.js";
 import { htmlToText } from "../../contents/Partner/types.js";
+import { useAuthorStatistics } from "../Authors/statistics.server.js";
 import CardMedia from "../../components/CardMedia.jsx";
 
 export const Card = jahiaComponent(
@@ -35,6 +36,8 @@ export const Card = jahiaComponent(
       "metric": configuredMetric,
       "entriesFolder": configuredFolder,
       cardTheme,
+      authorMetric,
+      authorSourceFolder,
       hideCtaIcon,
       glassSurface,
       compact = false,
@@ -104,6 +107,10 @@ export const Card = jahiaComponent(
               : undefined,
         )
       : undefined;
+    if (authorMetric && authorSourceFolder) {
+      const totals = useAuthorStatistics(authorSourceFolder);
+      metricValue = totals?.[authorMetric];
+    }
     const hasMedia = Boolean(image || cardTheme || background);
     const content = (
       <>
@@ -119,7 +126,11 @@ export const Card = jahiaComponent(
         )}
         {metricValue !== undefined ? (
           <>
-            <h3>{metricValue}</h3>
+            {authorMetric ? (
+              <p className={classes.statisticValue}>{metricValue}</p>
+            ) : (
+              <h3>{metricValue}</h3>
+            )}
             {title && <p>{title}</p>}
           </>
         ) : title ? (
@@ -171,6 +182,7 @@ export const Card = jahiaComponent(
     return (
       <article
         className={`${classes.card}${hasMedia ? ` ${classes.withMedia}` : ""}${compact ? ` ${classes.compact}` : ""}`}
+        data-author-statistic={authorMetric || undefined}
         data-theme={hasMedia ? "day" : undefined}
         data-glass={glassSurface || undefined}
       >
