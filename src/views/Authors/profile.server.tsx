@@ -8,7 +8,7 @@ import { reference, stringProperty, useAuthorReader } from "./data.server.js";
 import { professionalEmailLink, socialUrl } from "./socialLinks.js";
 import { readBiography, profileBiography } from "./biography.js";
 import { authorBlogPage } from "./blog.server.js";
-import { usePublishedAuthorTopics } from "./topics.server.js";
+import { readAuthorTopicSelection, usePublishedAuthorTopics } from "./topics.server.js";
 import classes from "./component.module.css";
 
 interface Props extends ContainerProps {
@@ -45,24 +45,7 @@ export function AuthorProfile({
   );
   const github = socialUrl(stringProperty(author, "githubUrl"), "github");
   const email = professionalEmailLink(stringProperty(author, "professionalEmail"));
-  const topics: JCRNodeWrapper[] = [];
-  if (author.hasProperty("expertiseTopics"))
-    for (const value of author.getProperty("expertiseTopics").getValues()) {
-      try {
-        const node = value.getNode();
-        if (
-          node?.isNodeType("jnt:category") &&
-          node.hasPermission("jcr:read") &&
-          (node.getPath().startsWith("/sites/systemsite/categories/") ||
-            node.getPath().startsWith(renderContext.getSite().getPath() + "/"))
-        ) {
-          cache(node);
-          topics.push(node);
-        }
-      } catch {
-        /* Deleted optional category. */
-      }
-    }
+  const topics = readAuthorTopicSelection(author, renderContext.getSite().getPath(), cache);
   const { topics: countedTopics, suggestions } = usePublishedAuthorTopics(author, topics);
   const blog = authorBlogPage(author, cache);
   const updated = Date.parse(stringProperty(author, "profileUpdated"));

@@ -19,6 +19,8 @@ export function findAuthorFolder(author: JCRNodeWrapper, depend: (node: JCRNodeW
     depend(current);
     if (current.isNodeType("jahiacommix:authorFolder") && current.hasPermission("jcr:read"))
       return current;
+    if (current.getName().toLowerCase() === "authors" && isAuthorSourceFolder(current, sitePath))
+      return current;
     current = current.getParent() as JCRNodeWrapper;
   }
   return undefined;

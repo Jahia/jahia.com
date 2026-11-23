@@ -135,6 +135,28 @@ test("a section mother can be any page in its site, but never another site", () 
   target.getPath = () => "/sites/other/home/contact";
   assert.equal(breadcrumbItems(page, f.home, f.options)[1].href, undefined);
 });
+test("the blog can omit Resources while an article keeps its link to Blog", () => {
+  const f = fixture();
+  const resources = f.make("resources", f.home, "jnt:navMenuText");
+  const blog = f.make("blog", resources);
+  const entry = f.make("post", undefined, "jahiacom:blogEntry");
+  const options = { ...f.options, omitAncestorPath: resources.getPath(), title: "Blog" };
+  assert.deepEqual(
+    breadcrumbItems(blog, f.home, options).map((item) => item.label),
+    ["Accueil", "Blog"],
+  );
+  const items = breadcrumbItems(entry, f.home, { ...options, index: blog, title: "Article" });
+  assert.deepEqual(
+    items.map((item) => item.label),
+    ["Accueil", "blog", "Article"],
+  );
+  assert.equal(items[1].node, blog);
+  assert.deepEqual(
+    breadcrumbItems(blog, f.home, f.options).map((item) => item.id),
+    ["home", "resources", "blog"],
+  );
+});
+
 test("entries outside Home use the existing editorial index hierarchy", () => {
   const f = fixture(),
     group = f.make("resources", f.home, "jnt:navMenuText"),
