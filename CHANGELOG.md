@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.6.0
+
+* Add author profiles and a directory sourced from Jahia author content, including editable counters, published article topics, profile metadata and a link from the article byline to its author bio. Preserve numeric markers in ordered rich-text lists.
+
 ## 2.5.0
 
 * Add an optional automatic navbar and a centralized Navigation du site extension in jContent. Manage page visibility, labels, icons, bold text, branch columns and sibling order, upper-bar links and editorial cards, with an integrated draft preview and publication limited to the navigation configuration. Preserve the previous navbar, existing content hierarchy and the independent Breadcrumb extension.
