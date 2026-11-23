@@ -1,0 +1,11 @@
+# Activation de l’annuaire et des fiches auteurs
+
+Le module fournit les vues et les champs. La page d’annuaire, les fiches, les contenus éditoriaux et leurs références restent gérés dans Jahia.
+
+1. Sur une copie de la cible, vérifier la mise à niveau depuis le module 2.5.0. La définition de `jahiacom:blogAuthor` ajoute des propriétés et le supertype `jmix:mainResource` pour rendre les profils directement accessibles. Contrôler la version active du module, le rendu d’une ancienne signature et la conservation des UUID et des références Auteur. Si Jahia signale une incompatibilité CND, arrêter la mise à niveau et traiter la migration avant tout déploiement.
+2. Inventorier les auteurs existants, leur emplacement, leurs traductions publiées et les articles qui les référencent. Choisir un dossier Authors sous Dossiers de contenu et lui appliquer le mixin `jahiacommix:authorFolder`. Si des fiches doivent être regroupées, déplacer les fiches existantes pour conserver leurs identifiants. Vérifier la résolution des anciennes adresses si elles sont déjà diffusées.
+3. Créer ou réutiliser la page Annuaire sous le Blog. Y ajouter le hero sans image avec la vue Pages auteurs, un composant Annuaire des auteurs lié au dossier Authors et, si nécessaire, un carrousel de ressources avec la vue Pages auteurs. Relier le dossier à cette page avec son champ Page de l’annuaire.
+4. Pour les chiffres, ajouter une section de trois cartes et appliquer le mixin `jahiacommix:authorStatistic` à chacune. Sélectionner le dossier Authors et choisir respectivement Auteurs de l’annuaire, Articles de blog publiés et Thématiques couvertes. Saisir les libellés dans les cartes.
+5. Valider en aperçu l’annuaire et une fiche déjà liée à un article. Vérifier le fil d’Ariane, la signature qui mène à la bio, le lien de profil et les compteurs. Tester une liste numérotée et une liste à puces dans les thèmes clair et sombre. Après autorisation de publication, vérifier les mêmes parcours en visiteur, par langue.
+
+Les compteurs utilisent les auteurs visibles et les articles de blog publiés. La sélection manuelle des publications sur une fiche accepte aussi des contenus presse et des pages. Les profils sociaux et coordonnées sont renseignés par l’équipe éditoriale.

@@ -104,7 +104,7 @@ jahiaComponent(
             </div>
 
             <p style={{ fontSize: ".875rem" }} className="_row-3">
-              {author && <span>{author.getDisplayableName()}</span>}
+              {author && <a href="#blog-author-bio">{author.getPropertyAsString("name")}</a>}
               <BlogDate
                 date={date}
                 lastModified={lastModified}
@@ -136,7 +136,7 @@ jahiaComponent(
         {body && <div className="_richtext" dangerouslySetInnerHTML={{ __html: body }} />}
 
         {author && (
-          <footer style={{ containerType: "inline-size" }}>
+          <footer id="blog-author-bio" tabIndex={-1} style={{ containerType: "inline-size" }}>
             <Render node={author} />
           </footer>
         )}

@@ -2932,3 +2932,59 @@
     },
   });
 })();
+
+// Author topics: native Category selector plus suggestions from the same public-profile calculation.
+(function () {
+  const registry = window.jahia?.uiExtender?.registry;
+  if (!registry) return;
+  const element = (type, props = {}) => ({
+    $$typeof: Symbol.for("react.element"),
+    type,
+    key: null,
+    ref: null,
+    props,
+    _owner: null,
+    _store: {},
+  });
+  function AuthorTopicsLoader(props) {
+    this.props = props;
+    this.state = { component: null, error: false };
+  }
+  AuthorTopicsLoader.prototype.isReactComponent = {};
+  AuthorTopicsLoader.prototype.componentDidMount = function () {
+    this.active = true;
+    import(
+      (window.contextJsParameters.contextPath || "") +
+        "/modules/jahiacom/javascript/authors/editor.js?v=3"
+    )
+      .then((module) => {
+        if (this.active)
+          this.updater.enqueueSetState(
+            this,
+            { component: module.AuthorTopicSuggestions },
+            null,
+            "setState",
+          );
+      })
+      .catch(() => {
+        if (this.active) this.updater.enqueueSetState(this, { error: true }, null, "setState");
+      });
+  };
+  AuthorTopicsLoader.prototype.componentWillUnmount = function () {
+    this.active = false;
+  };
+  AuthorTopicsLoader.prototype.render = function () {
+    return this.state.component
+      ? element(this.state.component, this.props)
+      : element(window.jahia.moonstone.Typography, {
+          role: "status",
+          children: this.state.error
+            ? "Filtres indisponibles. Rechargez Jahia."
+            : "Chargement des filtres du blog…",
+        });
+  };
+  registry.add("selectorType", "AuthorTopicSuggestions", {
+    cmp: AuthorTopicsLoader,
+    supportMultiple: true,
+  });
+})();

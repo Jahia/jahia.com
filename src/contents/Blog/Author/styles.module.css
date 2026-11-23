@@ -42,3 +42,10 @@
     transform: translateX(50%);
   }
 }
+
+.profileLink {
+  font-weight: 600;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}

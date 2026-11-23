@@ -142,3 +142,10 @@
     border-radius: 2px;
   }
 }
+
+/* Align optional author figures with the existing authors introduction. */
+.authorStatistics {
+  --jahia-width: 78rem;
+
+  padding: 0 clamp(1.25rem, 6.667vw, 6rem) 4rem;
+}

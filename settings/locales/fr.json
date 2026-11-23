@@ -231,5 +231,23 @@
   },
   "navigation": {
     "discover": "Découvrir {{title}}"
+  },
+  "authors": {
+    "viewProfile": "Voir le profil",
+    "professionalEmail": "E-mail professionnel",
+    "profileEyebrow": "Auteur Jahia",
+    "biography": "Biographie",
+    "topics": "Ses sujets de prédilection",
+    "updated": "Profil mis à jour le",
+    "publications": "Ses dernières publications",
+    "otherAuthors": "Nos autres auteurs",
+    "allAuthors": "Voir tous les auteurs",
+    "pagination": "Pages de l’annuaire",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "featuredPublications": "Une sélection de ses publications",
+    "articleCount_one": "{{count}} article",
+    "articleCount_other": "{{count}} articles",
+    "viewTopic": "Voir les articles de {{author}} sur {{topic}}"
   }
 }

@@ -54,10 +54,14 @@ jahiaComponent(
   ) => {
     const { t } = useTranslation();
     const layoutCheck = layoutChecks[columns];
+    const children = getChildNodes(currentNode, -1);
+    const authorStatistics =
+      children.length > 0 &&
+      children.every((node) => node.isNodeType("jahiacommix:authorStatistic"));
     return (
       <section
         id={currentNode.getName()}
-        className={classes.container}
+        className={clsx(classes.container, authorStatistics && classes.authorStatistics)}
         data-theme={theme}
         data-bg={background}
       >

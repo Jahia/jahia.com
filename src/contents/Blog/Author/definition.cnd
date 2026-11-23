@@ -1,4 +1,24 @@
-[jahiacom:blogAuthor] > jnt:content, jahiacommix:content
+[jahiacom:blogAuthor] > jnt:content, jahiacommix:content, jmix:mainResource
  - name (string) mandatory primary
  - image (weakreference) < 'jmix:image'
  - text (string, richtext) i18n
+ - jobTitle (string) i18n
+ - shortDescription (string, textarea) i18n
+ - linkedInUrl (string)
+ - linkedInButtonVariant (string, choicelist[resourceBundle]) = 'primary' < 'primary', 'secondary'
+ - redditUrl (string)
+ - redditButtonVariant (string, choicelist[resourceBundle]) = 'secondary' < 'primary', 'secondary'
+ - githubUrl (string)
+ - githubButtonVariant (string, choicelist[resourceBundle]) = 'secondary' < 'primary', 'secondary'
+ - professionalEmail (string)
+ - professionalEmailButtonVariant (string, choicelist[resourceBundle]) = 'secondary' < 'primary', 'secondary'
+ - profilePage (weakreference, picker[type='page']) < 'jnt:page'
+ - showInDirectory (boolean) = true
+ - expertiseTopics (weakreference, category[autoSelectParent=false]) multiple < 'jnt:category'
+ - profileUpdated (date)
+ - hidePublications (boolean) = false
+ - publicationsTitle (string) i18n
+ - featuredPublications (weakreference, picker) multiple < 'jahiacom:blogEntry', 'jahiacom:pressItem', 'jnt:page'
+
+[jahiacommix:authorFolder] mixin
+ - authorDirectoryPage (weakreference, picker[type='page']) < 'jnt:page'
