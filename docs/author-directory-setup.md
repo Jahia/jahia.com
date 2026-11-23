@@ -9,3 +9,5 @@ Le module fournit les vues et les champs. La page d’annuaire, les fiches, les 
 5. Valider en aperçu l’annuaire et une fiche déjà liée à un article. Vérifier le fil d’Ariane, la signature qui mène à la bio, le lien de profil et les compteurs. Tester une liste numérotée et une liste à puces dans les thèmes clair et sombre. Après autorisation de publication, vérifier les mêmes parcours en visiteur, par langue.
 
 Les compteurs utilisent les auteurs visibles et les articles de blog publiés. La sélection manuelle des publications sur une fiche accepte aussi des contenus presse et des pages. Les profils sociaux et coordonnées sont renseignés par l’équipe éditoriale.
+
+Dans l’annuaire, une sélection dans « Auteurs affichés » fixe la liste et son ordre. Laisser ce champ vide pour alimenter la liste automatiquement depuis le dossier source. Le dossier doit se trouver sous Dossiers de contenu du site. Les compteurs utilisent la version publiée du dossier, y compris en aperçu. Le mixin du dossier sert aux fiches en page entière et à leur lien de retour vers l’annuaire.

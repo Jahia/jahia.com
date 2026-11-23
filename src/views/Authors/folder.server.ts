@@ -1,5 +1,13 @@
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 
+export function isAuthorSourceFolder(folder: JCRNodeWrapper, sitePath: string) {
+  return (
+    folder.getPath().startsWith(sitePath + "/contents/") &&
+    folder.isNodeType("jnt:contentFolder") &&
+    folder.hasPermission("jcr:read")
+  );
+}
+
 export function findAuthorFolder(author: JCRNodeWrapper, depend: (node: JCRNodeWrapper) => void) {
   const sitePath = author.getPath().match(/^\/sites\/[^/]+/)?.[0];
   let current = author.getParent() as JCRNodeWrapper;

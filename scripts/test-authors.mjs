@@ -14,6 +14,24 @@ registerHooks({
 });
 import { socialUrl } from "../src/views/Authors/socialLinks.ts";
 import { readBiography } from "../src/views/Authors/biography.ts";
+import { isAuthorSourceFolder } from "../src/views/Authors/folder.server.ts";
+
+test("directory and counters accept a regular content folder from the current site", () => {
+  const site = "/sites/demo";
+  const folder = {
+    getPath: () => site + "/contents/blog/authors",
+    isNodeType: (type) => type === "jnt:contentFolder",
+    hasPermission: (permission) => permission === "jcr:read",
+  };
+  assert.equal(isAuthorSourceFolder(folder, site), true);
+  assert.equal(isAuthorSourceFolder(folder, "/sites/other"), false);
+  assert.equal(
+    isAuthorSourceFolder({ ...folder, getPath: () => site + "/home/authors" }, site),
+    false,
+  );
+  assert.equal(isAuthorSourceFolder({ ...folder, hasPermission: () => false }, site), false);
+  assert.equal(isAuthorSourceFolder({ ...folder, isNodeType: () => false }, site), false);
+});
 
 test("biography excerpts decode entities and keep existing social links separate", () => {
   const html =
