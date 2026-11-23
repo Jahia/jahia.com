@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.6.1
+
+* Honor the explicit author selection and allow the directory and publication counters to use a regular content folder from the current site.
+
 ## 2.6.0
 
 * Add author profiles and a directory sourced from Jahia author content, including editable counters, published article topics, profile metadata and a link from the article byline to its author bio. Preserve numeric markers in ordered rich-text lists.
