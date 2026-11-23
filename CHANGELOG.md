@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.6.2
+
+* Restore author profile links and show expertise topics on directory cards. Shorten the breadcrumb on the blog index and articles.
+
 ## 2.6.1
 
 * Honor the explicit author selection and allow the directory and publication counters to use a regular content folder from the current site.
