@@ -1,6 +1,7 @@
 import { getNodesByJCRQuery, server, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { contentCategories } from "../../utils/contentCategories.js";
+import { isAuthorSourceFolder } from "./folder.server.js";
 import { directoryQuery, sqlLiteral } from "./queries.js";
 import { summarizeAuthorStatistics, type AuthorStatistics } from "./statistics.js";
 
@@ -18,12 +19,7 @@ export function useAuthorStatistics(source: JCRNodeWrapper): AuthorStatistics | 
       doInJCR(session) {
         if (!session.nodeExists(source.getPath())) return null;
         const folder = session.getNode(source.getPath()) as JCRNodeWrapper;
-        if (
-          !folder.getPath().startsWith(sitePath + "/contents/") ||
-          !folder.isNodeType("jahiacommix:authorFolder") ||
-          !folder.hasPermission("jcr:read")
-        )
-          return null;
+        if (!isAuthorSourceFolder(folder, sitePath)) return null;
         const available = (node: JCRNodeWrapper) =>
           node.hasPermission("jcr:read") &&
           node.hasI18N(locale) &&

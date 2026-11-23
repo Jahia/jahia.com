@@ -5,7 +5,7 @@ import {
   useServerContext,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
-import { findAuthorFolder } from "./folder.server.js";
+import { findAuthorFolder, isAuthorSourceFolder } from "./folder.server.js";
 import { directoryQuery } from "./queries.js";
 
 export const stringProperty = (node: JCRNodeWrapper, name: string) =>
@@ -70,8 +70,11 @@ export function useAuthorReader() {
     return buildNodeUrl(page);
   };
   const authors = (folder: JCRNodeWrapper, limit = 30, offset = 0, exclude?: string) => {
-    if (!available(folder) || !folder.isNodeType("jahiacommix:authorFolder")) return [];
-    cache(folder);
+    if (!siteRoot || !available(folder) || !isAuthorSourceFolder(folder, siteRoot)) return [];
+    server.render.addCacheDependency(
+      { flushOnPathMatchingRegexp: "\\Q" + folder.getPath() + "\\E/.*" },
+      renderContext,
+    );
     return getNodesByJCRQuery(
       folder.getSession(),
       directoryQuery(folder.getPath(), exclude),

@@ -36,18 +36,19 @@ export function AuthorDirectory({
   const { currentNode, mainNode, renderContext } = useServerContext();
   const { t } = useTranslation();
   const { available, authors: readAuthors } = useAuthorReader();
+  const automaticSource = configured.some(Boolean) ? undefined : sourceFolder;
   const page =
-    sourceFolder && presentation === "grid"
+    automaticSource && presentation === "grid"
       ? directoryPageNumber(renderContext.getRequest().getParameter("authorsPage"))
       : 0;
   const limit = presentation === "grid" ? 30 : 6;
-  const candidates = sourceFolder
-    ? readAuthors(sourceFolder, limit + 1, page * limit, excludedAuthor)
+  const candidates = automaticSource
+    ? readAuthors(automaticSource, limit + 1, page * limit, excludedAuthor)
     : configured;
   const hasNext = candidates.length > limit;
   const seen = new Set<string>();
   const selected = candidates
-    .slice(0, sourceFolder ? limit : 60)
+    .slice(0, automaticSource ? limit : 60)
     .filter((author): author is JCRNodeWrapper => {
       if (
         !available(author) ||
@@ -91,7 +92,7 @@ export function AuthorDirectory({
           <div className={classes.grid}>{cards}</div>
         )}
       </div>
-      {sourceFolder && presentation === "grid" && (page > 0 || hasNext) && (
+      {automaticSource && presentation === "grid" && (page > 0 || hasNext) && (
         <nav className={classes.paging} aria-label={t("authors.pagination")}>
           {page > 0 && (
             <a href={buildNodeUrl(mainNode, { parameters: { authorsPage: String(page - 1) } })}>
