@@ -1,5 +1,10 @@
 # Jahia.com Template Set Changelog
 
+## 2.6.3
+
+* Restore breadcrumbs on author profiles and omit Resources in the blog and author directory.
+  Let editors hide profile link chevrons for each author directory.
+
 ## 2.6.2
 
 * Restore author profile links and show expertise topics on directory cards. Shorten the breadcrumb on the blog index and articles.
