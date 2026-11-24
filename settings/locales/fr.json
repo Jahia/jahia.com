@@ -233,6 +233,10 @@
     "discover": "Découvrir {{title}}"
   },
   "authors": {
+    "contact": "Contact",
+    "hubspotPreview": "Le formulaire HubSpot est visible dans l’aperçu de la page.",
+    "hubspotInvalid": "Copiez de nouveau le code d’intégration standard depuis HubSpot.",
+    "hubspotUnavailable": "Le formulaire de contact est temporairement indisponible.",
     "viewProfile": "Voir le profil",
     "professionalEmail": "E-mail professionnel",
     "profileEyebrow": "Auteur Jahia",

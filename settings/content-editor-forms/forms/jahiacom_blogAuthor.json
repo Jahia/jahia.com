@@ -1,0 +1,194 @@
+{
+  "nodeType": "jahiacom:blogAuthor",
+  "priority": 3,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "jahiacom-form-identity",
+          "labelKey": "jahiacom:jahiacom.form.group.identity",
+          "rank": 1,
+          "fields": [
+            {
+              "name": "name",
+              "rank": 1,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            },
+            {
+              "name": "jobTitle",
+              "rank": 2,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            },
+            {
+              "name": "image",
+              "rank": 3,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            }
+          ]
+        },
+        {
+          "name": "jahiacom-form-text",
+          "labelKey": "jahiacom:jahiacom.form.group.text",
+          "rank": 2,
+          "fields": [
+            {
+              "name": "shortDescription",
+              "rank": 1,
+              "declaringNodeType": "jahiacom:blogAuthor",
+              "labelKey": "jahiacom:jahiacom.editor.jahiacom.blogAuthor.shortDescription.label"
+            },
+            {
+              "name": "text",
+              "rank": 2,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            }
+          ]
+        },
+        {
+          "name": "jahiacom-form-expertise",
+          "labelKey": "jahiacom:jahiacom.form.group.expertise",
+          "rank": 3,
+          "fields": [
+            {
+              "name": "expertiseTopics",
+              "rank": 1,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            },
+            {
+              "name": "featuredPublications",
+              "rank": 4,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            }
+          ]
+        },
+        {
+          "name": "jahiacom-form-contact",
+          "labelKey": "jahiacom:jahiacom.form.group.contact",
+          "rank": 4,
+          "fields": [
+            {
+              "name": "linkedInUrl",
+              "rank": 1,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            },
+            {
+              "name": "redditUrl",
+              "rank": 3,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            },
+            {
+              "name": "githubUrl",
+              "rank": 5,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            },
+            {
+              "name": "professionalEmail",
+              "rank": 7,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            }
+          ]
+        },
+        {
+          "name": "jahiacom-form-contact-form",
+          "labelKey": "jahiacom:jahiacom.form.group.contactForm",
+          "rank": 4.5,
+          "fields": [
+            {
+              "name": "contactIntroduction",
+              "rank": 1,
+              "declaringNodeType": "jahiacom:blogAuthor",
+              "selectorOptionsMap": {
+                "ckeditor.extraAllowedContent": "div[data-region,data-form-id,data-portal-id](hs-form-frame);script[charset,type,src,defer]"
+              }
+            },
+            {
+              "name": "hubspotContactEmbed",
+              "rank": 2,
+              "declaringNodeType": "jahiacom:blogAuthor",
+              "hide": true
+            }
+          ]
+        },
+        {
+          "name": "jahiacom-form-authorDisplay",
+          "labelKey": "jahiacom:jahiacom.form.group.authorDisplay",
+          "rank": 5,
+          "fields": [
+            {
+              "name": "showInDirectory",
+              "rank": 1,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "jahiacom-settings",
+      "labelKey": "jahiacom:jahiacom.editor.settings",
+      "requiredPermission": "viewContentTab",
+      "rank": 1.5,
+      "expanded": false,
+      "fieldSets": [
+        {
+          "name": "jahiacom-settings-publications",
+          "labelKey": "jahiacom:jahiacom.form.group.publications",
+          "rank": 1,
+          "fields": [
+            {
+              "name": "publicationsTitle",
+              "rank": 1,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            },
+            {
+              "name": "hidePublications",
+              "rank": 2,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            }
+          ]
+        },
+        {
+          "name": "jahiacom-settings-buttons",
+          "labelKey": "jahiacom:jahiacom.form.group.buttons",
+          "rank": 2,
+          "fields": [
+            {
+              "name": "linkedInButtonVariant",
+              "rank": 1,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            },
+            {
+              "name": "redditButtonVariant",
+              "rank": 2,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            },
+            {
+              "name": "githubButtonVariant",
+              "rank": 3,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            },
+            {
+              "name": "professionalEmailButtonVariant",
+              "rank": 4,
+              "declaringNodeType": "jahiacom:blogAuthor"
+            }
+          ]
+        },
+        {
+          "name": "jahiacom-settings-authorDisplay",
+          "labelKey": "jahiacom:jahiacom.form.group.authorDisplay",
+          "rank": 3,
+          "fields": [
+            {
+              "name": "profileUpdated",
+              "rank": 1,
+              "declaringNodeType": "jahiacom:blogAuthor",
+              "labelKey": "jahiacom:jahiacom.editor.jahiacom.blogAuthor.profileUpdated.label"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

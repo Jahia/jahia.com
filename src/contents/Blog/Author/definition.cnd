@@ -12,6 +12,8 @@
  - githubButtonVariant (string, choicelist[resourceBundle]) = 'secondary' < 'primary', 'secondary'
  - professionalEmail (string)
  - professionalEmailButtonVariant (string, choicelist[resourceBundle]) = 'secondary' < 'primary', 'secondary'
+ - contactIntroduction (string, richtext) i18n
+ - hubspotContactEmbed (string, textarea) i18n
  - profilePage (weakreference, picker[type='page']) < 'jnt:page'
  - showInDirectory (boolean) = true
  - expertiseTopics (weakreference, category[autoSelectParent=false]) multiple < 'jnt:category'

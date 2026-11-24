@@ -233,6 +233,10 @@
     "discover": "Discover {{title}}"
   },
   "authors": {
+    "contact": "Contact",
+    "hubspotPreview": "The HubSpot form is visible in the page preview.",
+    "hubspotInvalid": "Copy the standard embed code again from HubSpot.",
+    "hubspotUnavailable": "The contact form is temporarily unavailable.",
     "viewProfile": "View profile",
     "professionalEmail": "Work email",
     "profileEyebrow": "Jahia author",
