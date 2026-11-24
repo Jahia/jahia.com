@@ -2,6 +2,7 @@
  - subtitle (string, textarea) i18n
  - authors (weakreference, picker[type='editorial', nodetypes='jahiacom:blogAuthor']) multiple < 'jahiacom:blogAuthor'
  - presentation (string, choicelist[resourceBundle]) = 'grid' autocreated < 'grid', 'carousel'
+ - showProfileChevron (boolean) = true
  - sourceFolder (weakreference, picker) < 'jnt:contentFolder'
 
 [jahiacom:authorProfile] > jnt:content, jahiacommix:container, jmix:editorialContent

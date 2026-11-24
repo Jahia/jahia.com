@@ -53,7 +53,11 @@ export default function Breadcrumb({
   const { t } = useTranslation();
   const home = renderContext.getSite().getHome();
   const resourcesPath = home.getPath() + "/resources";
-  const isBlog = pageType === "blog_post" || mainNode.getPath() === resourcesPath + "/blog";
+  const blogPath = resourcesPath + "/blog";
+  const mainPath = mainNode.getPath();
+  const isAuthor = mainNode.isNodeType("jahiacom:blogAuthor");
+  const isBlog =
+    pageType === "blog_post" || mainPath === blogPath || mainPath.startsWith(blogPath + "/");
   const resourceLibrary = findResourceLibrary(mainNode, home);
   const blogPages = useJCRQuery({
     query: `
@@ -71,7 +75,10 @@ export default function Breadcrumb({
   const available = (node: JCRNodeWrapper) => {
     try {
       cache(node);
-      if (!node.hasPermission("jcr:read") || !node.hasI18N(locale)) return false;
+      // The rendered author can use shared fields without a translation node.
+      const isCurrentAuthor = isAuthor && node === mainNode;
+      if (!node.hasPermission("jcr:read") || (!isCurrentAuthor && !node.hasI18N(locale)))
+        return false;
       const translation = "j:translation_" + language;
       if (node.hasNode(translation)) cache(node.getNode(translation));
       return (
@@ -86,15 +93,17 @@ export default function Breadcrumb({
   };
   let index: JCRNodeWrapper | undefined;
   if (mainNode.isNodeType("jahiacom:glossaryEntry")) index = resolveGlossaryIndex(mainNode, cache);
-  else if (mainNode.isNodeType("jahiacom:blogAuthor")) index = authorDirectoryPage(mainNode, cache);
-  else if (pageType === "blog_post") index = blogPages.find(available);
+  else if (isAuthor) {
+    const directory = authorDirectoryPage(mainNode, cache);
+    index = directory && available(directory) ? directory : (blogPages.find(available) ?? home);
+  } else if (pageType === "blog_post") index = blogPages.find(available);
   const items = breadcrumbItems(mainNode, home, {
     settings,
     language,
     title,
     homeLabel: t("breadcrumb.home"),
     index,
-    omitAncestorPath: isBlog ? resourcesPath : undefined,
+    omitAncestorPath: isBlog || isAuthor ? resourcesPath : undefined,
     cache,
     available,
     url: (node) => buildNodeUrl(node),
