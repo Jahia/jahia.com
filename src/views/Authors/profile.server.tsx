@@ -9,6 +9,7 @@ import { professionalEmailLink, socialUrl } from "./socialLinks.js";
 import { readBiography, profileBiography } from "./biography.js";
 import { authorBlogPage } from "./blog.server.js";
 import { readAuthorTopicSelection, usePublishedAuthorTopics } from "./topics.server.js";
+import { AuthorContact } from "./contact.server.jsx";
 import classes from "./component.module.css";
 
 interface Props extends ContainerProps {
@@ -167,6 +168,10 @@ export function AuthorProfile({
           </div>
         </section>
       )}
+      <AuthorContact
+        content={stringProperty(author, "contactIntroduction")}
+        editMode={renderContext.isEditMode()}
+      />
     </>
   );
 }
