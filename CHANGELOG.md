@@ -1,5 +1,10 @@
 # Jahia.com Template Set Changelog
 
+## 2.6.4
+
+* Add a rich-text contact section to author profiles, with support for standard HubSpot form embed codes.
+  Group author profile fields and put secondary options under Settings in Content Editor.
+
 ## 2.6.3
 
 * Restore breadcrumbs on author profiles and omit Resources in the blog and author directory.
