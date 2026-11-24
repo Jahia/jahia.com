@@ -25,6 +25,7 @@ interface Props extends ContainerProps {
   "authors"?: Array<JCRNodeWrapper | null>;
   "sourceFolder"?: JCRNodeWrapper;
   "presentation"?: "grid" | "carousel";
+  "showProfileChevron"?: boolean;
   "excludedAuthor"?: string;
 }
 
@@ -34,6 +35,7 @@ export function AuthorDirectory({
   "authors": configured = [],
   sourceFolder,
   presentation = "grid",
+  showProfileChevron = true,
   excludedAuthor,
   theme = "cloudy",
   background,
@@ -80,7 +82,11 @@ export function AuthorDirectory({
     const cardTopics = topics.length ? topics : suggestAuthorTopics(counts.get(id) ?? [], sitePath);
     return (
       <div key={id} data-carousel-item="">
-        <AuthorCard author={author} topics={cardTopics.slice(0, 3)} />
+        <AuthorCard
+          author={author}
+          topics={cardTopics.slice(0, 3)}
+          showProfileChevron={showProfileChevron}
+        />
       </div>
     );
   });

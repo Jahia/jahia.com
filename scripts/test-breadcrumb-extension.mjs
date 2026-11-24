@@ -157,6 +157,33 @@ test("the blog can omit Resources while an article keeps its link to Blog", () =
   );
 });
 
+test("author trails omit Resources with the directory, Blog or Home as their index", () => {
+  const f = fixture();
+  const resources = f.make("resources", f.home, "jnt:navMenuText");
+  const blog = f.make("blog", resources);
+  const directory = f.make("authors", blog);
+  const author = f.make("author", undefined, "jahiacom:blogAuthor");
+  author.getPath = () => "/sites/test/contents/authors/author";
+  const options = { ...f.options, omitAncestorPath: resources.getPath(), title: "Jahia Team" };
+  for (const [index, labels] of [
+    [directory, ["Accueil", "blog", "authors", "Jahia Team"]],
+    [blog, ["Accueil", "blog", "Jahia Team"]],
+    [f.home, ["Accueil", "Jahia Team"]],
+  ]) {
+    const items = breadcrumbItems(author, f.home, { ...options, index });
+    assert.deepEqual(
+      items.map((item) => item.label),
+      labels,
+    );
+    assert.equal(items.at(-1).href, undefined);
+    assert.ok(items.slice(0, -1).every((item) => item.href));
+  }
+  assert.deepEqual(
+    breadcrumbItems(directory, f.home, { ...options, title: "Auteurs" }).map((item) => item.label),
+    ["Accueil", "blog", "Auteurs"],
+  );
+});
+
 test("entries outside Home use the existing editorial index hierarchy", () => {
   const f = fixture(),
     group = f.make("resources", f.home, "jnt:navMenuText"),

@@ -9,9 +9,11 @@ import classes from "./component.module.css";
 export function AuthorCard({
   author,
   topics,
+  showProfileChevron,
 }: {
   author: JCRNodeWrapper;
   topics: ReadonlyArray<{ id: string; label: string }>;
+  showProfileChevron: boolean;
 }) {
   const { t } = useTranslation();
   const { available, profileUrl } = useAuthorReader();
@@ -47,7 +49,7 @@ export function AuthorCard({
             href={url}
             aria-label={`${t("authors.viewProfile")} — ${name}`}
             secondary
-            icon
+            icon={showProfileChevron}
             location="author_directory"
             name={author.getName()}
           >
