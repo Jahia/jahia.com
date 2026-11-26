@@ -1,9 +1,15 @@
-import { getChildNodes, jahiaComponent, RenderChildren } from "@jahia/javascript-modules-library";
+import {
+  getChildNodes,
+  jahiaComponent,
+  Render,
+  RenderChildren,
+} from "@jahia/javascript-modules-library";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import EditorHints from "../../components/EditorHints.jsx";
 import { MixinCTA, type CTAProps } from "../../mixins/CTA/server.jsx";
 import type { ContainerProps } from "../../theme/index.jsx";
+import { latestPublishedPressRelease } from "../PressNews/items.server.js";
 import classes from "./component.module.css";
 
 type Columns =
@@ -50,11 +56,16 @@ jahiaComponent(
       "gap": Gap;
     } & ContainerProps &
       CTAProps,
-    { currentNode },
+    { currentNode, renderContext, currentResource },
   ) => {
     const { t } = useTranslation();
     const layoutCheck = layoutChecks[columns];
     const children = getChildNodes(currentNode, -1);
+    // The existing press-room section remains the archive of its original featured card.
+    const isLatestRelease = currentNode.getName() === "communique-a-la-une";
+    const latestReleasePath = isLatestRelease
+      ? latestPublishedPressRelease(currentNode, renderContext, currentResource)
+      : null;
     const authorStatistics =
       children.length > 0 &&
       children.every((node) => node.isNodeType("jahiacommix:authorStatistic"));
@@ -99,7 +110,11 @@ jahiaComponent(
             data-columns={columns}
             data-gap={gap}
           >
-            <RenderChildren />
+            {isLatestRelease && latestReleasePath ? (
+              <Render path={latestReleasePath} readOnly />
+            ) : (
+              (!isLatestRelease || renderContext.isEditMode()) && <RenderChildren />
+            )}
           </div>
         </div>
         {cta.ctaType !== "none" && (

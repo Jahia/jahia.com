@@ -46,6 +46,30 @@ const find = (tree, predicate) => {
 };
 
 const Filters = load("../src/views/PressNews/Filters.client.tsx").default;
+const { comparePressDates } = load("../src/views/PressNews/dateOrder.ts");
+
+test("press dates sort in both directions and leave undated items last", () => {
+  const dates = [0, 400, 100, 300];
+  assert.deepEqual([...dates].sort(comparePressDates), [400, 300, 100, 0]);
+  assert.deepEqual(
+    [...dates].sort((a, b) => comparePressDates(a, b, true)),
+    [100, 300, 400, 0],
+  );
+});
+
+test("the most recent communiqué wins independently of editorial order and press mentions", () => {
+  const { latestPressRelease, pressItemsByDate } = load("../src/views/PressNews/items.server.ts", {
+    "../ContentFolderReference/blogEntries.server.js": { timestamp: (node) => node.date },
+    "./dateOrder.js": { comparePressDates },
+  });
+  const manual = { date: 100, getPropertyAsString: () => "communique" };
+  const newer = { date: 300, getPropertyAsString: () => "communique" };
+  const mention = { date: 400, getPropertyAsString: () => "presse" };
+  const entries = [manual, mention, newer];
+  assert.equal(latestPressRelease(entries), newer);
+  assert.deepEqual(Array.from(pressItemsByDate(entries)), [mention, newer, manual]);
+});
+
 test("hiding every press filter removes the whole form, including its frame", () => {
   const tree = Filters({
     id: "news",
@@ -86,6 +110,7 @@ test("a press document remains downloadable when the generic CTA mode is none", 
       server: { render: { addCacheDependency() {} } },
     },
     "./PressCard.jsx": { default: "PressCard", pressCategoryLabel: (value) => value },
+    "../ContentFolderReference/blogEntries.server.js": { timestamp: () => 0 },
   });
   const tree = view(
     { "jcr:title": "Release", "pressDocument": document, "ctaType": "none" },
