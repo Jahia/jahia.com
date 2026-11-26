@@ -15,15 +15,7 @@ export function pressItemsByDate(items: JCRNodeWrapper[]) {
     .map(({ node }) => node);
 }
 
-export function latestPressRelease(items: JCRNodeWrapper[]) {
-  return pressItemsByDate(
-    items.filter(
-      (node) => (node.getPropertyAsString("contentType") || "communique") === "communique",
-    ),
-  )[0];
-}
-
-export function latestPublishedPressRelease(
+export function latestPublishedPressItem(
   section: JCRNodeWrapper,
   renderContext: RenderContext,
   resource: Resource,
@@ -43,7 +35,7 @@ export function latestPublishedPressRelease(
         const sources = getChildNodes(publishedSection.getParent() as JCRNodeWrapper, -1).filter(
           (node) => node.isNodeType("jahiacom:pressNews") && node.hasPermission("jcr:read"),
         );
-        const eligible = [publishedSection, ...sources]
+        const eligible = [...sources, publishedSection]
           .flatMap(pressItems)
           .filter(
             (item) =>
@@ -54,7 +46,7 @@ export function latestPublishedPressRelease(
                   (value) => value.getString() === locale.getLanguage(),
                 )),
           );
-        return latestPressRelease(eligible)?.getPath() ?? null;
+        return pressItemsByDate(eligible)[0]?.getPath() ?? null;
       },
     },
     locale,
