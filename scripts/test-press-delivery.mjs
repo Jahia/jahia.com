@@ -70,6 +70,21 @@ test("the most recent communiqué wins independently of editorial order and pres
   assert.deepEqual(Array.from(pressItemsByDate(entries)), [mention, newer, manual]);
 });
 
+test("the featured press release uses its card action instead of the section's separate CTA", () => {
+  const releasePath = "/sites/test/home/press/main/news/latest-release";
+  const { view } = load("../src/views/Section/default.server.tsx", {
+    "clsx": { default: (...values) => values.filter(Boolean).join(" ") },
+    "../PressNews/items.server.js": { latestPublishedPressRelease: () => releasePath },
+  });
+  const title = { "jcr:title": "Le dernier communiqué", "ctaType": "external" };
+  const context = { currentNode: { getName: () => "communique-a-la-une" } };
+  const rendered = view(title, context);
+  assert.equal(find(rendered, (node) => node.type === "Render")[0].props.path, releasePath);
+  assert.equal(find(rendered, (node) => node.type === "MixinCTA").length, 0);
+  const regular = view(title, { currentNode: { getName: () => "autre-section" } });
+  assert.equal(find(regular, (node) => node.type === "MixinCTA").length, 1);
+});
+
 test("hiding every press filter removes the whole form, including its frame", () => {
   const tree = Filters({
     id: "news",
