@@ -2,6 +2,7 @@ import { buildNodeUrl, jahiaComponent, server } from "@jahia/javascript-modules-
 import type { Props } from "./types.js";
 import PressCard, { pressCategoryLabel } from "./PressCard.jsx";
 import { useTranslation } from "react-i18next";
+import { timestamp as readTimestamp } from "../ContentFolderReference/blogEntries.server.js";
 
 jahiaComponent(
   { componentType: "view", nodeType: "jahiacom:pressItem" },
@@ -26,8 +27,8 @@ jahiaComponent(
     { currentNode, currentResource, renderContext },
   ) => {
     const { t } = useTranslation();
-    const timestamp = Date.parse(currentNode.getPropertyAsString("date") || date || "");
-    const validDate = Number.isFinite(timestamp);
+    const timestamp = readTimestamp(currentNode, "date") || Date.parse(date || "");
+    const validDate = Number.isFinite(timestamp) && timestamp !== 0;
     const iso = validDate ? new Date(timestamp).toISOString().slice(0, 10) : undefined;
     const locale = currentResource.getLocale().getLanguage();
     const categoryNodes = assigned?.filter((node) => node !== null) || [];

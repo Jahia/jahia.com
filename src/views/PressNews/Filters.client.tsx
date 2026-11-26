@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import classes from "./component.module.css";
 import listingClasses from "../ContentFolderReference/styles.module.css";
 import type { Props } from "./types.js";
+import { comparePressDates } from "./dateOrder.js";
 
 const defaultFilters = ["type", "query", "theme", "year", "sort"] as const;
 const defaultTypes = ["communique", "presse", "tribune", "recompense", "evenement"];
@@ -139,10 +140,12 @@ export default function Filters({
       });
       const query = normalize(field("query").value);
       const matching = cards
-        .sort(
-          (a, b) =>
-            (Number(b.dataset.timestamp) - Number(a.dataset.timestamp)) *
-            (field("sort").value === "recent" ? 1 : -1),
+        .sort((a, b) =>
+          comparePressDates(
+            Number(a.dataset.timestamp),
+            Number(b.dataset.timestamp),
+            field("sort").value === "oldest",
+          ),
         )
         .filter(
           (card) =>

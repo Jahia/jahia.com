@@ -1,9 +1,16 @@
-import { Island, jahiaComponent, RenderChildren } from "@jahia/javascript-modules-library";
+import {
+  Island,
+  jahiaComponent,
+  Render,
+  RenderChildren,
+  server,
+} from "@jahia/javascript-modules-library";
 import { useTranslation } from "react-i18next";
 import Filters from "./Filters.client.jsx";
 import classes from "./component.module.css";
 import sectionClasses from "../Section/component.module.css";
 import type { Props } from "./types.js";
+import { pressItems, pressItemsByDate } from "./items.server.js";
 
 jahiaComponent(
   { componentType: "view", nodeType: "jahiacom:pressNews" },
@@ -22,6 +29,10 @@ jahiaComponent(
   ) => {
     const { t } = useTranslation();
     const id = `press-${currentNode.getIdentifier()}`;
+    const isEditMode = renderContext.isEditMode();
+    const items = isEditMode ? [] : pressItemsByDate(pressItems(currentNode));
+    for (const item of items)
+      server.render.addCacheDependency({ path: item.getPath() }, renderContext);
     return (
       <section
         id={currentNode.getName()}
@@ -38,14 +49,18 @@ jahiaComponent(
             component={Filters}
             props={{
               id,
-              isEditMode: renderContext.isEditMode(),
+              isEditMode,
               pageSize,
               layout,
               hiddenFilters,
               filterTypes,
             }}
           >
-            <RenderChildren filter="jahiacom:pressItem" />
+            {isEditMode ? (
+              <RenderChildren filter="jahiacom:pressItem" />
+            ) : (
+              items.map((item) => <Render key={item.getIdentifier()} node={item} />)
+            )}
           </Island>
         </div>
       </section>
