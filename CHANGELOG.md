@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.6.6
+
+* Use only the selected press card's action in the latest press release section.
+
 ## 2.6.5
 
 * Automatically feature the most recent published press release and sort press-room listings by their editorial dates.
