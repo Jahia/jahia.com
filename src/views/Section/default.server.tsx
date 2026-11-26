@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import EditorHints from "../../components/EditorHints.jsx";
 import { MixinCTA, type CTAProps } from "../../mixins/CTA/server.jsx";
 import type { ContainerProps } from "../../theme/index.jsx";
-import { latestPublishedPressRelease } from "../PressNews/items.server.js";
+import { latestPublishedPressItem } from "../PressNews/items.server.js";
 import classes from "./component.module.css";
 
 type Columns =
@@ -62,9 +62,10 @@ jahiaComponent(
     const layoutCheck = layoutChecks[columns];
     const children = getChildNodes(currentNode, -1);
     // The existing press-room section remains the archive of its original featured card.
-    const isLatestRelease = currentNode.getName() === "communique-a-la-une";
-    const latestReleasePath = isLatestRelease
-      ? latestPublishedPressRelease(currentNode, renderContext, currentResource)
+    const isLatestPublication = currentNode.getName() === "communique-a-la-une";
+    const heading = isLatestPublication ? t("pressRoom.latestPublication") : title;
+    const latestPublicationPath = isLatestPublication
+      ? latestPublishedPressItem(currentNode, renderContext, currentResource)
       : null;
     const authorStatistics =
       children.length > 0 &&
@@ -76,10 +77,10 @@ jahiaComponent(
         data-theme={theme}
         data-bg={background}
       >
-        {(title || subtitle) && (
+        {(heading || subtitle) && (
           <header className={classes.header}>
             {eyebrow && <p className={classes.eyebrow}>{eyebrow}</p>}
-            {title && <h2>{title}</h2>}
+            {heading && <h2>{heading}</h2>}
             {subtitle && (
               <div className="_richtext" dangerouslySetInnerHTML={{ __html: subtitle }} />
             )}
@@ -110,14 +111,14 @@ jahiaComponent(
             data-columns={columns}
             data-gap={gap}
           >
-            {isLatestRelease && latestReleasePath ? (
-              <Render path={latestReleasePath} readOnly />
+            {isLatestPublication && latestPublicationPath ? (
+              <Render path={latestPublicationPath} readOnly />
             ) : (
-              (!isLatestRelease || renderContext.isEditMode()) && <RenderChildren />
+              (!isLatestPublication || renderContext.isEditMode()) && <RenderChildren />
             )}
           </div>
         </div>
-        {!isLatestRelease && cta.ctaType !== "none" && (
+        {!isLatestPublication && cta.ctaType !== "none" && (
           <p className="_center-4">
             <MixinCTA cta={cta} location="section" name={currentNode.getName()} />
           </p>

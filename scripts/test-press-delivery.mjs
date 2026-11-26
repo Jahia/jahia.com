@@ -57,28 +57,65 @@ test("press dates sort in both directions and leave undated items last", () => {
   );
 });
 
-test("the most recent communiqué wins independently of editorial order and press mentions", () => {
-  const { latestPressRelease, pressItemsByDate } = load("../src/views/PressNews/items.server.ts", {
+test("the newest published press item wins regardless of type", () => {
+  const path = "/sites/test/home/press/main";
+  const locale = { getLanguage: () => "fr" };
+  const item = (name, type, date, translated = true) => ({
+    date,
+    getPath: () => path + "/news/" + name,
+    isNodeType: (expected) => expected === "jahiacom:pressItem",
+    getPropertyAsString: () => type,
+    hasPermission: () => true,
+    hasI18N: () => translated,
+    hasProperty: () => false,
+  });
+  const release = item("release", "communique", 300);
+  const mention = item("mention", "presse", 400);
+  const untranslated = item("untranslated", "evenement", 500, false);
+  const area = { getPath: () => path };
+  const section = { getPath: () => path + "/featured", getParent: () => area };
+  const news = { isNodeType: (type) => type === "jahiacom:pressNews", hasPermission: () => true };
+  const children = new Map([
+    [area, [news]],
+    [section, [release]],
+    [news, [untranslated, mention]],
+  ]);
+  const { latestPublishedPressItem } = load("../src/views/PressNews/items.server.ts", {
+    "@jahia/javascript-modules-library": {
+      getChildNodes: (node) => children.get(node),
+      server: {
+        render: { addCacheDependency() {} },
+        jcr: {
+          doExecuteAsGuest({ doInJCR }, selectedLocale, workspace) {
+            assert.equal(selectedLocale, locale);
+            assert.equal(workspace, "live");
+            return doInJCR({ nodeExists: () => true, getNode: () => section });
+          },
+        },
+      },
+    },
     "../ContentFolderReference/blogEntries.server.js": { timestamp: (node) => node.date },
     "./dateOrder.js": { comparePressDates },
   });
-  const manual = { date: 100, getPropertyAsString: () => "communique" };
-  const newer = { date: 300, getPropertyAsString: () => "communique" };
-  const mention = { date: 400, getPropertyAsString: () => "presse" };
-  const entries = [manual, mention, newer];
-  assert.equal(latestPressRelease(entries), newer);
-  assert.deepEqual(Array.from(pressItemsByDate(entries)), [mention, newer, manual]);
+  assert.equal(
+    latestPublishedPressItem(section, {}, { getLocale: () => locale }),
+    mention.getPath(),
+  );
 });
 
-test("the featured press release uses its card action instead of the section's separate CTA", () => {
+test("the latest publication uses its card action instead of the section's separate CTA", () => {
   const releasePath = "/sites/test/home/press/main/news/latest-release";
   const { view } = load("../src/views/Section/default.server.tsx", {
     "clsx": { default: (...values) => values.filter(Boolean).join(" ") },
-    "../PressNews/items.server.js": { latestPublishedPressRelease: () => releasePath },
+    "../PressNews/items.server.js": { latestPublishedPressItem: () => releasePath },
   });
   const title = { "jcr:title": "Le dernier communiqué", "ctaType": "external" };
   const context = { currentNode: { getName: () => "communique-a-la-une" } };
   const rendered = view(title, context);
+  assert.equal(
+    find(rendered, (node) => node.type === "h2")[0].props.children,
+    "pressRoom.latestPublication",
+  );
   assert.equal(find(rendered, (node) => node.type === "Render")[0].props.path, releasePath);
   assert.equal(find(rendered, (node) => node.type === "MixinCTA").length, 0);
   const regular = view(title, { currentNode: { getName: () => "autre-section" } });
