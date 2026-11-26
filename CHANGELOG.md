@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.6.5
+
+* Automatically feature the most recent published press release and sort press-room listings by their editorial dates.
+
 ## 2.6.4
 
 * Add a rich-text contact section to author profiles, with support for standard HubSpot form embed codes.
