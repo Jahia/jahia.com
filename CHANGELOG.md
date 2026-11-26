@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.6.7
+
+* Feature the latest published press-room item regardless of type, using its original card and action.
+
 ## 2.6.6
 
 * Use only the selected press card's action in the latest press release section.
