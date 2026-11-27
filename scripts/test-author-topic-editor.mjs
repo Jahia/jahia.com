@@ -2,9 +2,43 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import fs from "node:fs";
 import vm from "node:vm";
+import ts from "typescript";
 const AI = "11111111-1111-4111-8111-111111111111",
   CMS = "22222222-2222-4222-8222-222222222222";
 const source = fs.readFileSync(new URL("../javascript/authors/editor.js", import.meta.url), "utf8");
+
+test("an author without a directory page uses the site's own blog listing", () => {
+  const site = "/sites/demo";
+  const path = site + "/home/resources/blog";
+  const blog = {
+    getPath: () => path,
+    getIdentifier: () => "blog",
+    isNodeType: (type) => type === "jnt:page",
+    hasPermission: () => true,
+  };
+  const listing = { getParent: () => blog, hasPermission: () => true };
+  const session = { nodeExists: (candidate) => candidate === path, getNode: () => blog };
+  const author = {
+    getPath: () => site + "/contents/Blog/authors/delphine",
+    getSession: () => session,
+  };
+  const { outputText } = ts.transpileModule(
+    fs.readFileSync(new URL("../src/views/Authors/blog.server.ts", import.meta.url), "utf8"),
+    { compilerOptions: { module: ts.ModuleKind.CommonJS } },
+  );
+  const dependencies = {
+    "@jahia/javascript-modules-library": { getNodesByJCRQuery: () => [listing] },
+    "./folder.server.js": { authorDirectoryPage: () => undefined },
+    "./queries.js": { sqlLiteral: (value) => "'" + value + "'" },
+  };
+  const exports = {};
+  vm.runInNewContext(outputText, { exports, require: (name) => dependencies[name] });
+  const depend = () => {};
+  assert.equal(exports.authorBlogPage(author, depend), blog);
+  listing.getParent = () => ({ ...blog, getIdentifier: () => "another-page" });
+  assert.equal(exports.authorBlogPage(author, depend), undefined);
+});
+
 function fixture({ readOnly = false, selected = [] } = {}) {
   const changed = [],
     requests = [];
