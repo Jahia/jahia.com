@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.6.9
+
+* Add optional transparent media logos to press-room cards, with a configurable corner position.
+
 ## 2.6.8
 
 * Resolve the author's blog filters when the Authors folder has no directory page configured.
