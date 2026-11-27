@@ -1,5 +1,9 @@
 # Jahia.com Template Set Changelog
 
+## 2.6.8
+
+* Resolve the author's blog filters when the Authors folder has no directory page configured.
+
 ## 2.6.7
 
 * Feature the latest published press-room item regardless of type, using its original card and action.
