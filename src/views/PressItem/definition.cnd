@@ -9,5 +9,7 @@
  - link (weakreference, picker) < jnt:page
  - dateLabel (string) i18n
  - image (weakreference, picker) < jmix:image
+ - mediaLogo (weakreference, picker) < jmix:image
+ - mediaLogoPosition (string, choicelist[resourceBundle]) < 'top-left', 'top-right', 'bottom-left', 'bottom-right'
  - cardTheme (string, choicelist[resourceBundle]) < 'day', 'cloudy', 'night'
  - background (string, choicelist[resourceBundle]) < 'plusses', 'stripes', 'matrix', 'bottom-grid', 'aura-top', 'aura-bottom'
