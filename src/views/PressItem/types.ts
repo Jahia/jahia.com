@@ -1,6 +1,8 @@
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import type { CTAProps } from "../../mixins/CTA/server.jsx";
 
+export type MediaLogoPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+
 export type Props = {
   "jcr:title"?: string;
   "description"?: string;
@@ -13,6 +15,8 @@ export type Props = {
   "link"?: JCRNodeWrapper;
   "dateLabel"?: string;
   "image"?: JCRNodeWrapper;
+  "mediaLogo"?: JCRNodeWrapper;
+  "mediaLogoPosition"?: MediaLogoPosition;
   "cardTheme"?: "day" | "cloudy" | "night";
   "background"?: string;
   "j:defaultCategory"?: Array<JCRNodeWrapper | null>;

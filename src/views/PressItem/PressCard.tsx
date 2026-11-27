@@ -3,10 +3,12 @@ import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
 import type { HTMLAttributes } from "react";
 import CardMedia from "../../components/CardMedia.jsx";
+import { Image } from "../../components/Image.jsx";
 import { navigationUrl } from "../../templates/navigationUrl.js";
 import classes from "../PressNews/component.module.css";
 import cardClasses from "../Card/component.module.css";
 import PressAction from "./PressAction.jsx";
+import type { MediaLogoPosition } from "./types.js";
 
 /** Preserve editorial labels while keeping common technology acronyms consistent. */
 export const pressCategoryLabel = (label: string): string =>
@@ -17,6 +19,8 @@ export default function PressCard({
   title,
   description,
   image,
+  mediaLogo,
+  mediaLogoPosition = "bottom-right",
   cardTheme,
   background,
   link,
@@ -35,6 +39,8 @@ export default function PressCard({
   title?: string;
   description?: string;
   image?: JCRNodeWrapper;
+  mediaLogo?: JCRNodeWrapper;
+  mediaLogoPosition?: MediaLogoPosition;
   cardTheme?: "day" | "cloudy" | "night";
   background?: string;
   link?: JCRNodeWrapper;
@@ -55,6 +61,15 @@ export default function PressCard({
     <article {...attributes} className={`${cardClasses.card} ${classes.release}`} data-theme="day">
       <div className={classes.releaseVisual}>
         <CardMedia image={image} theme={cardTheme} background={background} />
+        {mediaLogo && (
+          <div
+            className={classes.mediaLogo}
+            data-logo-position={mediaLogoPosition}
+            aria-hidden="true"
+          >
+            <Image image={mediaLogo} sizes={[]} alt="" />
+          </div>
+        )}
       </div>
       <div className={classes.releaseBody}>
         <div className={classes.releaseMeta}>

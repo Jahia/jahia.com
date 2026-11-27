@@ -78,7 +78,42 @@
 }
 
 .releaseVisual {
+  position: relative;
   min-height: 0;
+}
+
+.mediaLogo {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: min(34%, 7.5rem);
+  padding: 0.35rem 0.5rem;
+  pointer-events: none;
+}
+
+.mediaLogo[data-logo-position="top-left"],
+.mediaLogo[data-logo-position="top-right"] {
+  top: 0.75rem;
+  bottom: auto;
+}
+
+.mediaLogo[data-logo-position="top-left"],
+.mediaLogo[data-logo-position="bottom-left"] {
+  right: auto;
+  left: 0.75rem;
+}
+
+.mediaLogo img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 2rem;
+  object-fit: contain;
 }
 
 .releaseBody {

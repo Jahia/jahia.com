@@ -19,6 +19,8 @@ jahiaComponent(
       dateLabel,
       link,
       image,
+      mediaLogo,
+      mediaLogoPosition,
       cardTheme,
       background,
       "j:defaultCategory": assigned,
@@ -34,7 +36,7 @@ jahiaComponent(
     const categoryNodes = assigned?.filter((node) => node !== null) || [];
     const categories = categoryNodes.map((node) => pressCategoryLabel(node.getDisplayableName()));
     const destination = cta.ctaType === "internal" ? cta["j:linknode"] : undefined;
-    for (const node of [link, image, destination, document, ...categoryNodes])
+    for (const node of [link, image, mediaLogo, destination, document, ...categoryNodes])
       if (node) server.render.addCacheDependency({ path: node.getPath() }, renderContext);
     const actionHref = document
       ? buildNodeUrl(document)
@@ -48,6 +50,8 @@ jahiaComponent(
         title={title}
         description={description}
         image={image}
+        mediaLogo={mediaLogo}
+        mediaLogoPosition={mediaLogoPosition}
         cardTheme={cardTheme}
         background={background}
         link={link}
